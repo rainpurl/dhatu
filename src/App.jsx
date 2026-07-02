@@ -64,23 +64,6 @@ function stopSpeak() {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
   } catch (e) {}
 }
-/* ---------- persistence (real browser, not the Claude artifact sandbox) ---------- */
-function useLocalState(key, initial) {
-  const [state, setState] = useState(() => {
-    try {
-      const raw = window.localStorage.getItem(key);
-      return raw !== null ? JSON.parse(raw) : initial;
-    } catch (e) {
-      return initial;
-    }
-  });
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(key, JSON.stringify(state));
-    } catch (e) {}
-  }, [key, state]);
-  return [state, setState];
-}
 const shuffle = (a) => {
   const b = a.slice();
   for (let i = b.length - 1; i > 0; i--) {
@@ -245,6 +228,99 @@ const Ic = {
       <path d="M8 11V8a4 4 0 0 1 8 0v3" />
     </svg>
   ),
+  chat: (p) => (
+    <svg {...S(p)}>
+      <path d="M4 5h16v10H9l-4 4Z" />
+      <path d="M8 9h8M8 12h5" />
+    </svg>
+  ),
+  chats: (p) => (
+    <svg {...S(p)}>
+      <path d="M3 4h11v7H7l-4 3Z" />
+      <path d="M9 13v2a2 2 0 0 0 2 2h6l4 3v-9a2 2 0 0 0-2-2h-2" />
+    </svg>
+  ),
+  numbers: (p) => (
+    <svg {...S(p)}>
+      <path d="M6 8l2-1.5V17" />
+      <path d="M12.5 8.5a2.2 2.2 0 1 1 3.4 2.6L12.5 17h4" />
+    </svg>
+  ),
+  hand: (p) => (
+    <svg {...S(p)}>
+      <path d="M8 11V5.5a1.4 1.4 0 0 1 2.8 0V10" />
+      <path d="M10.8 10V4.6a1.4 1.4 0 0 1 2.8 0V10" />
+      <path d="M13.6 10.2V6.2a1.4 1.4 0 0 1 2.8 0V14a5 5 0 0 1-5 5h-.6a5 5 0 0 1-4-2l-3-4a1.5 1.5 0 0 1 2.3-1.9L8 12.5" />
+    </svg>
+  ),
+  family: (p) => (
+    <svg {...S(p)}>
+      <circle cx="8" cy="8" r="2.4" />
+      <circle cx="16" cy="8" r="2.4" />
+      <path d="M4 19a4 4 0 0 1 8 0M12 19a4 4 0 0 1 8 0" />
+    </svg>
+  ),
+  bowl: (p) => (
+    <svg {...S(p)}>
+      <path d="M4 11h16a8 8 0 0 1-16 0Z" />
+      <path d="M9 7c0-1.5 1.2-2 1.2-3M13 7c0-1.5 1.2-2 1.2-3" />
+    </svg>
+  ),
+  home: (p) => (
+    <svg {...S(p)}>
+      <path d="M4 11l8-6 8 6" />
+      <path d="M6 10v9h12v-9" />
+    </svg>
+  ),
+  blocks: (p) => (
+    <svg {...S(p)}>
+      <rect x="4" y="4" width="7" height="7" rx="1.4" />
+      <rect x="13" y="4" width="7" height="7" rx="1.4" />
+      <rect x="8.5" y="13" width="7" height="7" rx="1.4" />
+    </svg>
+  ),
+  link: (p) => (
+    <svg {...S(p)}>
+      <path d="M10 14a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1.5 1.5" />
+      <path d="M14 10a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1.5-1.5" />
+    </svg>
+  ),
+  tag: (p) => (
+    <svg {...S(p)}>
+      <path d="M4 4h8l8 8-8 8-8-8Z" />
+      <circle cx="8.5" cy="8.5" r="1.3" />
+    </svg>
+  ),
+  clock: (p) => (
+    <svg {...S(p)}>
+      <circle cx="12" cy="12" r="8" />
+      <path d="M12 8v4l3 2" />
+    </svg>
+  ),
+  steps: (p) => (
+    <svg {...S(p)}>
+      <path d="M4.5 13a2.5 2.5 0 0 1 5 0v3a2 2 0 0 1-4 0" />
+      <path d="M14.5 8a2.5 2.5 0 0 1 5 0v3a2 2 0 0 1-4 0" />
+    </svg>
+  ),
+  shirt: (p) => (
+    <svg {...S(p)}>
+      <path d="M8 4l4 3 4-3 4 3-2.5 3H18v10H6V10H3.5L8 4Z" />
+    </svg>
+  ),
+  film: (p) => (
+    <svg {...S(p)}>
+      <rect x="4" y="5" width="16" height="14" rx="2" />
+      <path d="M9 5v14M15 5v14M4 9.5h5M15 9.5h5M4 14.5h5M15 14.5h5" />
+    </svg>
+  ),
+  trophy: (p) => (
+    <svg {...S(p)}>
+      <path d="M7 4h10v4a5 5 0 0 1-10 0Z" />
+      <path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3" />
+      <path d="M12 13v3M9 20h6M10 20v-2h4v2" />
+    </svg>
+  ),
 };
 
 /* ---------- styles ---------- */
@@ -255,10 +331,17 @@ const CSS = `
   --gold:#E0A63C; --gold-dark:#B98219; --diya:#F2892E;
   --ok:#3E8E5A; --ok-dark:#2F6E44; --ok-soft:#E4F3E9;
   --no:#E23744; --no-dark:#C22233; --no-soft:#FCE7E9;
-  --ink:#33222A; --muted:#8C7C82; --line:#ECE2E5;
-  --bg:#FBF6F2; --card:#FFFFFF;
+  --ink:#33222A; --muted:#8C7C82; --line:#ECE2E5; --line-strong:#DBCBcf;
+  --bg:#F3ECE6; --card:#FBF5F1; --hover:#F0E7E1;
   --fen:'Inter',system-ui,sans-serif;
   --fgu:'Anek Gujarati','Inter',sans-serif;
+  --ease:cubic-bezier(.4,0,.2,1); --t-fast:.15s;
+  --ring:0 0 0 3px rgba(138,28,59,.22);
+  /* recessed / beveled shadow system, warm-tinted */
+  --bevel-raise:inset 0 1px 0 rgba(255,255,255,.9), 0 1px 1px rgba(70,45,40,.06), 0 3px 8px rgba(70,45,40,.10);
+  --bevel-press:inset 0 2px 6px rgba(80,45,40,.26), inset 0 -1px 0 rgba(255,255,255,.35);
+  --bevel-inset:inset 0 1.5px 4px rgba(80,45,40,.16), inset 0 -1px 0 rgba(255,255,255,.55);
+  --bevel-soft:inset 0 1px 0 rgba(255,255,255,.75), 0 1px 2px rgba(70,45,40,.08);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 .dhatu, .dhatu *{font-family:var(--fen)}
@@ -277,56 +360,64 @@ const CSS = `
   width:38px;height:38px;border-radius:12px;background:var(--brand);
   color:#fff;display:grid;place-items:center;font-family:var(--fgu);
   font-weight:800;font-size:20px;flex:none;
-  box-shadow:0 4px 0 var(--brand-dark)
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.25), inset 0 -2px 5px rgba(50,10,22,.4)
 }
 .top h1{font-size:19px;font-weight:800;margin:0;letter-spacing:-.3px}
 .top .sub{font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
 .top .spacer{flex:1}
 .chip{
   display:inline-flex;align-items:center;gap:5px;font-weight:700;font-size:13px;
-  padding:6px 10px;border-radius:999px;background:var(--card);
-  border:1px solid var(--line)
+  padding:6px 11px;border-radius:999px;background:var(--card);
+  box-shadow:var(--bevel-inset)
 }
 .chip.gold{color:var(--gold-dark)} .chip.gold svg{color:var(--gold)}
 .chip.fire{color:var(--diya)} .chip.fire svg{color:var(--diya)}
 
 /* buttons */
 .btn{
-  border:none;cursor:pointer;font-family:var(--fen);font-weight:700;
-  border-radius:16px;padding:15px 18px;font-size:16px;width:100%;
-  transition:transform .05s ease, box-shadow .05s ease;
+  border:1px solid transparent;cursor:pointer;font-family:var(--fen);font-weight:700;
+  border-radius:14px;padding:14px 18px;font-size:16px;width:100%;
+  background:var(--card);color:var(--ink);
+  box-shadow:var(--bevel-inset);
+  transition:background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), filter var(--t-fast) var(--ease);
 }
-.btn:active{transform:translateY(3px)}
-.btn.primary{background:var(--brand);color:#fff;box-shadow:0 4px 0 var(--brand-dark)}
-.btn.primary:active{box-shadow:0 1px 0 var(--brand-dark)}
-.btn.gold{background:var(--gold);color:#3b2a06;box-shadow:0 4px 0 var(--gold-dark)}
-.btn.gold:active{box-shadow:0 1px 0 var(--gold-dark)}
-.btn.ok{background:var(--ok);color:#fff;box-shadow:0 4px 0 var(--ok-dark)}
-.btn.ok:active{box-shadow:0 1px 0 var(--ok-dark)}
-.btn.ghost{background:var(--card);color:var(--ink);border:1.5px solid var(--line);box-shadow:0 3px 0 var(--line)}
-.btn.ghost:active{box-shadow:0 1px 0 var(--line)}
-.btn:disabled{opacity:.5;cursor:default;box-shadow:none;transform:none}
+.btn:hover{background:var(--hover);box-shadow:var(--bevel-raise)}
+.btn:active{box-shadow:var(--bevel-press);transform:translateY(1px)}
+.btn:focus-visible{outline:none;box-shadow:var(--ring),var(--bevel-inset)}
+.btn.primary{background:var(--brand);color:#fff;box-shadow:inset 0 1px 2px rgba(255,255,255,.22), inset 0 -3px 7px rgba(50,10,22,.42)}
+.btn.primary:hover{background:var(--brand-dark);filter:none;box-shadow:inset 0 1px 2px rgba(255,255,255,.18), inset 0 -2px 5px rgba(50,10,22,.38), 0 3px 10px rgba(138,28,59,.28)}
+.btn.primary:active{background:var(--brand-dark);box-shadow:inset 0 3px 8px rgba(50,10,22,.55);transform:translateY(1px)}
+.btn.gold{background:var(--gold);color:#3b2a06;box-shadow:inset 0 1px 2px rgba(255,255,255,.5), inset 0 -3px 7px rgba(120,80,10,.4)}
+.btn.gold:active{background:var(--gold);box-shadow:inset 0 3px 8px rgba(120,80,10,.5);transform:translateY(1px)}
+.btn.ok{background:var(--ok);color:#fff;box-shadow:inset 0 1px 2px rgba(255,255,255,.25), inset 0 -3px 7px rgba(20,60,35,.42)}
+.btn.ok:active{background:var(--ok);box-shadow:inset 0 3px 8px rgba(20,60,35,.55);transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:none}
+.btn.ghost:hover{background:var(--hover);box-shadow:var(--bevel-raise)}
+.btn.ghost:active{box-shadow:var(--bevel-press);transform:translateY(1px)}
+.btn:disabled{opacity:.5;cursor:default;box-shadow:var(--bevel-inset);transform:none;filter:none}
 .btn.sm{width:auto;padding:9px 14px;font-size:14px;border-radius:12px}
 
 /* cards */
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px}
+.card{background:var(--card);border:none;border-radius:18px;padding:16px;box-shadow:var(--bevel-raise)}
 .section-h{font-size:12px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin:22px 4px 10px}
 .section-h:first-child{margin-top:4px}
 
 /* guide row */
 .guides{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px}
 .guide{
-  border:none;text-align:left;cursor:pointer;border-radius:18px;padding:14px;
+  border:none;text-align:left;cursor:pointer;border-radius:16px;padding:14px;
   color:#fff;display:flex;flex-direction:column;gap:10px;min-height:104px;
-  box-shadow:0 4px 0 rgba(0,0,0,.14)
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), inset 0 -3px 8px rgba(0,0,0,.18), 0 2px 8px rgba(70,45,40,.12);
+  transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)
 }
-.guide:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.14)}
+.guide:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.22), inset 0 -3px 8px rgba(0,0,0,.18), 0 5px 14px rgba(70,45,40,.2)}
+.guide:active{transform:translateY(1px);box-shadow:inset 0 2px 7px rgba(0,0,0,.32)}
 .guide .gi{width:30px;height:30px}
 .guide b{font-size:15px;font-weight:800}
 .guide span{font-size:11.5px;opacity:.92;font-weight:500;margin-top:-4px}
 
 /* unit header */
-.unit-h{border-radius:20px;padding:16px 18px;color:#fff;margin:8px 0 4px;box-shadow:0 5px 0 rgba(0,0,0,.13)}
+.unit-h{border-radius:18px;padding:16px 18px;color:#fff;margin:8px 0 4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2), inset 0 -4px 10px rgba(0,0,0,.2), 0 3px 10px rgba(70,45,40,.14)}
 .unit-h h2{margin:0 0 2px;font-size:19px;font-weight:800;letter-spacing:-.3px}
 .unit-h p{margin:0;font-size:13px;opacity:.92;font-weight:500}
 
@@ -340,11 +431,11 @@ const CSS = `
 }
 .node .disc{width:66px;height:62px;border-radius:50%;display:grid;place-items:center}
 .node svg{width:28px;height:28px}
-.node.done .disc{background:var(--ok);box-shadow:0 5px 0 var(--ok-dark)}
-.node.cur .disc{background:var(--gold);color:#3b2a06;box-shadow:0 5px 0 var(--gold-dark)}
-.node.todo .disc{background:#fff;color:var(--brand);border:2px solid var(--line);box-shadow:0 5px 0 var(--line)}
-.node.check .disc{background:var(--brand);box-shadow:0 5px 0 var(--brand-dark)}
-.node:active .disc{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.node.done .disc{background:var(--ok);box-shadow:inset 0 1px 2px rgba(255,255,255,.3), inset 0 -3px 6px rgba(20,60,35,.45)}
+.node.cur .disc{background:var(--gold);color:#3b2a06;box-shadow:inset 0 1px 2px rgba(255,255,255,.5), inset 0 -3px 6px rgba(120,80,10,.45)}
+.node.todo .disc{background:var(--card);color:var(--brand);box-shadow:var(--bevel-inset)}
+.node.check .disc{background:var(--brand);box-shadow:inset 0 1px 2px rgba(255,255,255,.22), inset 0 -3px 6px rgba(50,10,22,.45)}
+.node:active .disc{transform:translateY(1px);filter:brightness(.97)}
 .node-label{font-size:12px;font-weight:700;color:var(--ink);text-align:center;max-width:120px;line-height:1.15}
 .node-label .kk{display:block;font-size:10.5px;color:var(--muted);font-weight:600}
 .startpill{position:absolute;top:-26px;left:50%;transform:translateX(-50%);
@@ -355,11 +446,13 @@ const CSS = `
 
 /* lesson engine */
 .lhead{display:flex;align-items:center;gap:12px;padding:6px 2px 14px}
-.iconbtn{width:38px;height:38px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);
-  display:grid;place-items:center;cursor:pointer;color:var(--muted);flex:none}
-.iconbtn:active{transform:translateY(2px)}
-.bar{flex:1;height:14px;border-radius:999px;background:var(--line);overflow:hidden}
-.bar > i{display:block;height:100%;background:var(--ok);border-radius:999px;transition:width .3s ease}
+.iconbtn{width:38px;height:38px;border-radius:12px;border:1px solid transparent;background:var(--card);
+  display:grid;place-items:center;cursor:pointer;color:var(--muted);flex:none;box-shadow:var(--bevel-inset);
+  transition:background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.iconbtn:hover{background:var(--hover);box-shadow:var(--bevel-raise)}
+.iconbtn:active{box-shadow:var(--bevel-press);transform:translateY(1px)}
+.bar{flex:1;height:14px;border-radius:999px;background:var(--line);overflow:hidden;box-shadow:var(--bevel-inset)}
+.bar > i{display:block;height:100%;background:var(--ok);border-radius:999px;transition:width .3s ease;box-shadow:inset 0 1px 1px rgba(255,255,255,.3)}
 .q-title{font-size:22px;font-weight:800;letter-spacing:-.4px;margin:4px 2px 18px;line-height:1.25}
 .q-sub{font-size:13px;color:var(--muted);font-weight:600;margin:-12px 2px 16px}
 
@@ -368,57 +461,62 @@ const CSS = `
 .romanline{text-align:center;color:var(--muted);font-weight:600;font-size:16px;margin-top:6px}
 .playrow{display:flex;justify-content:center;margin:14px 0}
 .playbtn{width:66px;height:66px;border-radius:50%;border:none;cursor:pointer;background:var(--brand-soft);
-  color:var(--brand);display:grid;place-items:center;box-shadow:0 4px 0 rgba(138,28,59,.18)}
+  color:var(--brand);display:grid;place-items:center;box-shadow:var(--bevel-raise);
+  transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
 .playbtn.big{width:84px;height:84px}
 .playbtn svg{width:30px;height:30px}
-.playbtn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(138,28,59,.18)}
+.playbtn:hover{box-shadow:var(--bevel-raise), 0 4px 12px rgba(138,28,59,.16)}
+.playbtn:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
 .playbtn.playing{animation:pp .7s ease infinite}
 @keyframes pp{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 
 /* option lists */
 .opts{display:flex;flex-direction:column;gap:11px;margin-top:8px}
-.opt{border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:15px 16px;
+.opt{border:1px solid transparent;background:var(--card);border-radius:14px;padding:15px 16px;
   cursor:pointer;text-align:left;font-size:17px;font-weight:600;display:flex;align-items:center;gap:12px;
-  box-shadow:0 3px 0 var(--line);transition:transform .05s}
-.opt:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
-.opt.sel{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 3px 0 rgba(138,28,59,.25)}
-.opt.good{border-color:var(--ok);background:var(--ok-soft);box-shadow:0 3px 0 var(--ok-dark)}
-.opt.bad{border-color:var(--no);background:var(--no-soft);box-shadow:0 3px 0 var(--no-dark)}
+  box-shadow:var(--bevel-raise);transition:background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.opt:hover{background:var(--hover)}
+.opt:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.opt.sel{background:var(--brand-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--brand)}
+.opt.good{background:var(--ok-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--ok)}
+.opt.bad{background:var(--no-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--no)}
 .opt .gu{font-size:20px}
 .opt .mini{font-size:12px;color:var(--muted);font-weight:600;margin-left:auto}
-.optnum{width:24px;height:24px;border-radius:8px;border:1.5px solid var(--line);display:grid;place-items:center;
-  font-size:12px;color:var(--muted);flex:none}
+.optnum{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;
+  font-size:12px;color:var(--muted);flex:none;box-shadow:var(--bevel-inset)}
 
 /* two-col options (audio/letters) */
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:8px}
-.gopt{border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:18px 10px;cursor:pointer;
-  text-align:center;box-shadow:0 3px 0 var(--line)}
-.gopt:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
-.gopt.sel{border-color:var(--brand);background:var(--brand-soft)}
-.gopt.good{border-color:var(--ok);background:var(--ok-soft)}
-.gopt.bad{border-color:var(--no);background:var(--no-soft)}
+.gopt{border:1px solid transparent;background:var(--card);border-radius:14px;padding:18px 10px;cursor:pointer;
+  text-align:center;box-shadow:var(--bevel-raise);transition:background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.gopt:hover{background:var(--hover)}
+.gopt:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.gopt.sel{background:var(--brand-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--brand)}
+.gopt.good{background:var(--ok-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--ok)}
+.gopt.bad{background:var(--no-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--no)}
 .gopt .gu{font-family:var(--fgu);font-size:34px;font-weight:700}
 .gopt small{display:block;color:var(--muted);font-weight:600;font-size:12px;margin-top:3px}
 
 /* match */
 .matchwrap{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:6px}
 .mcol{display:flex;flex-direction:column;gap:11px}
-.mtile{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:14px 10px;cursor:pointer;
-  text-align:center;font-weight:700;box-shadow:0 3px 0 var(--line);font-size:16px}
-.mtile:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.mtile{border:1px solid transparent;background:var(--card);border-radius:14px;padding:14px 10px;cursor:pointer;
+  text-align:center;font-weight:700;box-shadow:var(--bevel-raise);font-size:16px;transition:background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.mtile:hover{background:var(--hover)}
+.mtile:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
 .mtile.gu{font-family:var(--fgu);font-size:22px}
-.mtile.sel{border-color:var(--brand);background:var(--brand-soft)}
-.mtile.done{border-color:var(--ok);background:var(--ok-soft);color:var(--ok-dark);opacity:.7}
-.mtile.err{border-color:var(--no);background:var(--no-soft)}
+.mtile.sel{background:var(--brand-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--brand)}
+.mtile.done{background:var(--ok-soft);color:var(--ok-dark);opacity:.7;box-shadow:var(--bevel-inset)}
+.mtile.err{background:var(--no-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--no)}
 
 /* build (word bank) */
-.answerbox{min-height:64px;border-bottom:2px dashed var(--line);display:flex;flex-wrap:wrap;gap:8px;
+.answerbox{min-height:64px;border-bottom:2px dashed var(--line-strong);display:flex;flex-wrap:wrap;gap:8px;
   padding:8px 2px 12px;margin-bottom:10px;align-content:flex-start}
 .bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.tok{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:10px 13px;cursor:pointer;
-  font-weight:700;box-shadow:0 3px 0 var(--line);font-size:16px}
+.tok{border:1px solid transparent;background:var(--card);border-radius:12px;padding:10px 13px;cursor:pointer;
+  font-weight:700;box-shadow:var(--bevel-raise);font-size:16px;transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
 .tok.gu{font-family:var(--fgu);font-size:19px}
-.tok:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.tok:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
 .tok.used{opacity:.32;pointer-events:none}
 .tok.inans{background:var(--brand-soft);border-color:var(--brand)}
 
@@ -453,21 +551,27 @@ const CSS = `
 
 /* bottom nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;max-width:460px;margin:0 auto;background:var(--card);
-  border-top:1px solid var(--line);display:flex;justify-content:space-around;
+  box-shadow:0 -2px 10px rgba(70,45,40,.08), inset 0 1px 0 rgba(255,255,255,.6);display:flex;justify-content:space-around;
   padding:8px 4px calc(8px + env(safe-area-inset-bottom))}
 .navb{border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;
-  color:var(--muted);font-size:10.5px;font-weight:700;padding:4px 8px;border-radius:12px;flex:1}
+  color:var(--muted);font-size:10.5px;font-weight:700;padding:5px 8px;border-radius:12px;flex:1;
+  transition:background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease)}
 .navb svg{width:24px;height:24px}
-.navb.on{color:var(--brand)}
+.navb.on{color:var(--brand);background:var(--brand-soft);box-shadow:var(--bevel-inset)}
 
 /* script grid */
 .chargrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.chartile{border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:12px 6px;cursor:pointer;
-  text-align:center;box-shadow:0 3px 0 var(--line)}
-.chartile:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.chartile{border:1px solid transparent;background:var(--card);border-radius:14px;padding:12px 6px;cursor:pointer;
+  text-align:center;box-shadow:var(--bevel-raise);transition:background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.chartile:hover{background:var(--hover)}
+.chartile:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.chartile.playing{background:var(--brand-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--brand)}
 .chartile .gu{font-family:var(--fgu);font-size:30px;font-weight:700;line-height:1}
+.chartile.playing .gu{color:var(--brand)}
 .chartile small{display:block;color:var(--muted);font-weight:700;font-size:11px;margin-top:5px}
 .numgrid{grid-template-columns:repeat(5,1fr)}
+.scriptfoot{position:fixed;left:0;right:0;bottom:calc(60px + env(safe-area-inset-bottom));z-index:25;max-width:460px;margin:0 auto;padding:0 16px;pointer-events:none}
+.scriptfoot .btn{pointer-events:auto;box-shadow:inset 0 1px 2px rgba(255,255,255,.22), inset 0 -3px 7px rgba(50,10,22,.42), 0 6px 16px rgba(70,45,40,.22)}
 
 /* char detail */
 .cd-hero{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0 6px}
@@ -481,9 +585,10 @@ const CSS = `
 .canvaswrap canvas{position:absolute;inset:0;width:100%;height:100%}
 
 /* history */
-.era-card{border:1px solid var(--line);background:var(--card);border-radius:20px;overflow:hidden;cursor:pointer;
-  box-shadow:0 3px 0 var(--line);margin-bottom:12px}
-.era-card:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.era-card{border:none;background:var(--card);border-radius:18px;overflow:hidden;cursor:pointer;
+  box-shadow:var(--bevel-raise);margin-bottom:12px;transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.era-card:hover{box-shadow:var(--bevel-raise), 0 6px 16px rgba(70,45,40,.14)}
+.era-card:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
 .era-band{height:96px;position:relative;display:flex;align-items:flex-end;padding:12px 14px;color:#fff}
 .era-band .emo{position:absolute;top:10px;right:12px;font-size:30px;opacity:.9}
 .era-band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -492,6 +597,25 @@ const CSS = `
 .era-band .yr{font-size:11.5px;font-weight:700;letter-spacing:.3px;opacity:.9;margin-top:2px}
 .era-band h3{margin:0;font-size:17px;font-weight:800}
 .era-card .blurb{padding:12px 14px;font-size:13.5px;color:#4b3942;line-height:1.45}
+
+/* history: topic categories */
+.hist-intro{font-size:14px;color:#5b4a51;line-height:1.5;margin:0 4px 16px}
+.cat-card{border:none;cursor:pointer;text-align:left;border-radius:18px;padding:16px;color:#fff;width:100%;
+  display:flex;gap:14px;align-items:flex-start;margin-bottom:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2), inset 0 -4px 10px rgba(0,0,0,.2), 0 3px 10px rgba(70,45,40,.14);
+  transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.cat-card:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.2), inset 0 -4px 10px rgba(0,0,0,.2), 0 6px 16px rgba(70,45,40,.22)}
+.cat-card:active{transform:translateY(1px);box-shadow:inset 0 2px 8px rgba(0,0,0,.3)}
+.cat-emo{font-size:32px;line-height:1;flex:none;margin-top:2px}
+.cat-body h3{margin:0 0 4px;font-size:17px;font-weight:800;letter-spacing:-.2px}
+.cat-body p{margin:0;font-size:13px;line-height:1.45;opacity:.94;font-weight:500}
+.cat-count{display:inline-block;margin-top:9px;font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+  background:rgba(255,255,255,.22);padding:3px 9px;border-radius:999px}
+.cat-head{border-radius:18px;padding:18px;color:#fff;margin-bottom:14px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2), inset 0 -4px 10px rgba(0,0,0,.2), 0 3px 10px rgba(70,45,40,.14)}
+.cat-head .emo{font-size:34px;line-height:1}
+.cat-head h2{margin:6px 0 3px;font-size:21px;font-weight:800;letter-spacing:-.3px}
+.cat-head p{margin:0;font-size:13.5px;line-height:1.5;opacity:.94;font-weight:500}
 
 /* history detail */
 .hd-hero{height:190px;border-radius:20px;overflow:hidden;position:relative;display:flex;align-items:flex-end;
@@ -505,14 +629,14 @@ const CSS = `
 .body p{font-size:15px;line-height:1.6;color:#402f37;margin:0 0 12px}
 .listenrow{display:flex;gap:9px;margin:2px 0 12px;flex-wrap:wrap}
 .listenbtn{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;
-  padding:9px 14px;border-radius:999px;border:1.5px solid var(--brand);color:var(--brand);background:var(--brand-soft);
-  cursor:pointer;margin:0}
-.listenbtn:active{transform:translateY(2px)}
-.listenbtn.on{background:var(--brand);color:#fff}
-.gu-caption{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 14px;
-  font-size:17px;line-height:1.6;color:var(--ink)}
+  padding:9px 14px;border-radius:999px;border:none;color:var(--brand);background:var(--brand-soft);
+  cursor:pointer;margin:0;box-shadow:var(--bevel-raise);transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.listenbtn:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.listenbtn.on{background:var(--brand);color:#fff;box-shadow:inset 0 1px 2px rgba(255,255,255,.2), inset 0 -2px 5px rgba(50,10,22,.4)}
+.gu-caption{background:var(--card);border:none;border-radius:14px;padding:12px 14px;margin:0 0 14px;
+  font-size:17px;line-height:1.6;color:var(--ink);box-shadow:var(--bevel-inset)}
 .gword-inline{font-family:var(--fgu);font-weight:700}
-.sitebox{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:4px 0 14px}
+.sitebox{background:var(--card);border:none;border-radius:14px;padding:12px 14px;margin:4px 0 14px;box-shadow:var(--bevel-inset)}
 .sitebox b{font-size:13px} .sitebox p{font-size:13px;margin:4px 0 0;color:#4b3942;line-height:1.45}
 
 /* sources */
@@ -563,16 +687,18 @@ const CSS = `
 .onb{min-height:100vh;display:flex;flex-direction:column;padding:26px 22px calc(26px + env(safe-area-inset-bottom));max-width:460px;margin:0 auto}
 .onb .center{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:14px}
 .onb .big-mark{width:96px;height:96px;border-radius:28px;background:var(--brand);color:#fff;display:grid;place-items:center;
-  font-family:var(--fgu);font-weight:800;font-size:52px;box-shadow:0 8px 0 var(--brand-dark)}
+  font-family:var(--fgu);font-weight:800;font-size:52px;box-shadow:inset 0 2px 3px rgba(255,255,255,.22), inset 0 -5px 12px rgba(50,10,22,.42)}
 .onb h1{font-size:30px;font-weight:800;margin:6px 0 0;letter-spacing:-.5px}
 .onb .tagline{font-size:16px;color:#5b4a51;line-height:1.5;max-width:320px}
 .onb .oq{font-size:22px;font-weight:800;text-align:center;margin:0 0 4px}
 .onb .osub{font-size:14px;color:var(--muted);text-align:center;margin:0 0 20px}
-.pick{border:2px solid var(--line);background:var(--card);border-radius:18px;padding:16px;cursor:pointer;text-align:left;
-  display:flex;gap:14px;align-items:center;box-shadow:0 4px 0 var(--line);margin-bottom:12px;width:100%}
-.pick:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
-.pick.sel{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 4px 0 rgba(138,28,59,.25)}
-.pick .pic{width:46px;height:46px;border-radius:14px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:none}
+.pick{border:1px solid transparent;background:var(--card);border-radius:16px;padding:16px;cursor:pointer;text-align:left;
+  display:flex;gap:14px;align-items:center;box-shadow:var(--bevel-raise);margin-bottom:12px;width:100%;
+  transition:background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.pick:hover{background:var(--hover)}
+.pick:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.pick.sel{background:var(--brand-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--brand)}
+.pick .pic{width:46px;height:46px;border-radius:14px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:none;box-shadow:var(--bevel-inset)}
 .pick b{font-size:16px;font-weight:800} .pick p{margin:2px 0 0;font-size:13px;color:#5b4a51;line-height:1.4}
 .dots{display:flex;gap:7px;justify-content:center;margin:0 0 18px}
 .dots i{width:8px;height:8px;border-radius:50%;background:var(--line)} .dots i.on{background:var(--brand);width:22px;border-radius:999px}
@@ -581,17 +707,17 @@ const CSS = `
 .done-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   padding:26px 22px calc(26px + env(safe-area-inset-bottom));max-width:460px;margin:0 auto;position:relative}
 .done-medal{width:120px;height:120px;border-radius:50%;background:var(--gold);color:#fff;display:grid;place-items:center;
-  box-shadow:0 8px 0 var(--gold-dark);margin-bottom:8px}
+  box-shadow:inset 0 2px 3px rgba(255,255,255,.5), inset 0 -5px 12px rgba(120,80,10,.4);margin-bottom:8px}
 .done-medal svg{width:62px;height:62px}
 .done-wrap h1{font-size:28px;font-weight:800;margin:8px 0 2px}
 .done-wrap .ds{color:#5b4a51;font-size:15px;margin-bottom:18px}
 .done-stats{display:flex;gap:12px;width:100%;margin-bottom:20px}
-.done-stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 6px}
+.done-stat{flex:1;background:var(--card);border:none;border-radius:16px;padding:14px 6px;box-shadow:var(--bevel-raise)}
 .done-stat .n{font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px}
 .done-stat .n svg{width:18px;height:18px}
 .done-stat .l{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
-.unlock{width:100%;background:var(--brand-soft);border:1.5px solid var(--brand);border-radius:18px;padding:16px;margin-bottom:14px;text-align:left;display:flex;gap:12px;align-items:center}
-.unlock .ic{width:44px;height:44px;border-radius:12px;background:var(--brand);color:#fff;display:grid;place-items:center;flex:none}
+.unlock{width:100%;background:var(--brand-soft);border:none;border-radius:16px;padding:16px;margin-bottom:14px;text-align:left;display:flex;gap:12px;align-items:center;box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--brand)}
+.unlock .ic{width:44px;height:44px;border-radius:12px;background:var(--brand);color:#fff;display:grid;place-items:center;flex:none;box-shadow:inset 0 1px 2px rgba(255,255,255,.2), inset 0 -2px 5px rgba(50,10,22,.4)}
 .unlock b{font-size:15px} .unlock p{margin:2px 0 0;font-size:12.5px;color:#5b4a51}
 
 /* confetti */
@@ -604,10 +730,11 @@ const CSS = `
   position:relative}
 .speakcheck{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:8px}
 .micbtn{width:64px;height:64px;border-radius:50%;border:none;cursor:pointer;background:var(--brand);color:#fff;
-  display:grid;place-items:center;box-shadow:0 4px 0 var(--brand-dark)}
+  display:grid;place-items:center;box-shadow:inset 0 1px 2px rgba(255,255,255,.22), inset 0 -3px 8px rgba(50,10,22,.42);
+  transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
 .micbtn svg{width:26px;height:26px}
-.micbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--brand-dark)}
-.micbtn.on{background:var(--no);box-shadow:0 4px 0 var(--no-dark);animation:micpulse 1s ease infinite}
+.micbtn:active{transform:translateY(1px);box-shadow:inset 0 3px 8px rgba(50,10,22,.55)}
+.micbtn.on{background:var(--no);box-shadow:inset 0 1px 2px rgba(255,255,255,.22), inset 0 -3px 8px rgba(120,20,25,.45);animation:micpulse 1s ease infinite}
 @keyframes micpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 .speakcheck-label{font-size:12.5px;color:var(--muted);font-weight:700}
 .speakcheck-msg{font-size:13.5px;font-weight:700;text-align:center;padding:9px 14px;border-radius:12px;max-width:320px}
@@ -617,6 +744,42 @@ const CSS = `
 .speakcheck-msg .heard{display:block;margin-top:5px;font-weight:600}
 .speakcheck-msg .heard .gu{font-family:var(--fgu)}
 .speakcheck-unsupported{font-size:12.5px;color:var(--muted);text-align:center;max-width:280px}
+
+/* support link */
+.supportlink{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);
+  background:#FBEFD6;border:1.5px solid var(--gold);border-radius:16px;padding:14px;margin-top:14px}
+.supportlink:active{transform:translateY(2px)}
+.supportlink .ic{width:42px;height:42px;border-radius:12px;background:var(--gold);color:#fff;
+  display:grid;place-items:center;flex:none}
+.supportlink b{font-size:15px;display:block}
+.supportlink small{color:#6b5a2e;font-size:12px;font-weight:600;display:block;margin-top:1px}
+
+/* entrance animation for screens */
+@keyframes screenIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.scr, .scr.plain, .onb, .done-wrap{animation:screenIn .22s var(--ease)}
+
+/* wide screens: read like a website, not a phone trapped on a monitor */
+@media (min-width:820px){
+  .dhatu{max-width:1080px;padding:0 32px}
+  .scr{padding:28px 24px 48px;max-width:1080px;margin:0 auto;width:100%}
+  .scr.plain{padding-bottom:48px}
+  .guides{grid-template-columns:repeat(4,1fr);gap:16px}
+  .chargrid{grid-template-columns:repeat(8,1fr);gap:12px}
+  .numgrid{grid-template-columns:repeat(10,1fr)}
+  /* bottom nav becomes a centered floating bar */
+  .nav{max-width:640px;left:50%;transform:translateX(-50%);right:auto;border-radius:18px 18px 0 0;
+    box-shadow:0 -2px 18px rgba(70,45,40,.14), inset 0 1px 0 rgba(255,255,255,.6)}
+  .foot{max-width:640px;left:50%;transform:translateX(-50%);right:auto}
+  .scriptfoot{max-width:640px;left:50%;transform:translateX(-50%);right:auto}
+  .sheet{max-width:640px;left:50%;transform:translateX(-50%);right:auto}
+  .confetti{max-width:1080px}
+  /* wide two-column reading layout for history and vocab lists */
+  .wide-2col{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;align-items:start}
+  .onb, .done-wrap{max-width:520px}
+}
+@media (min-width:1200px){
+  .wide-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+}
 
 .spacer-lg{height:8px}
 @media (prefers-reduced-motion:reduce){
@@ -817,6 +980,20 @@ const UNITS = [
 ];
 const LESSON_ORDER = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
 
+/* Topic icon per lesson, matching what each lesson teaches */
+const LESSON_ICON = {
+  u1l1:"chat", u1l2:"numbers", u1l3:"hand",
+  u2l1:"family", u2l2:"bowl", u2l3:"home",
+  u3l1:"blocks", u3l2:"link", u3l3:"tag", u3l4:"clock",
+  u4l1:"steps", u4l2:"write",
+  u5l1:"hand", u5l2:"chats",
+  u6l1:"diya", u6l2:"shirt", u6l3:"bowl", u6l4:"film",
+};
+const lessonIcon = (l) => {
+  if (l.kind === "check") return Ic.trophy;
+  return Ic[LESSON_ICON[l.id]] || Ic.spark;
+};
+
 /* ============================ GRAMMAR GUIDE ============================ */
 const GRAMMAR = [
   { id:"g1", color:"#1E6E7E", title:"Word order (S-O-V)", summary:"Gujarati puts the verb at the very end.",
@@ -973,97 +1150,30 @@ const SIGNS = [
   { gu:"ૐ", roman:"om", hint:"the sacred syllable Om" },
 ];
 
+/* Frequency-ordered views: roughly how often a learner meets each letter, common first */
+const VOWELS_FREQ_ORDER = ["અ","આ","ઇ","ઈ","ઉ","ઊ","એ","ઓ","ઐ","ઔ","ઋ","ઍ","ઑ"];
+const _vowByGu = Object.fromEntries(VOWELS.map((v) => [v.gu, v]));
+const VOWELS_FREQ = VOWELS_FREQ_ORDER.map((g) => _vowByGu[g]).filter(Boolean);
+
+const _consByGu = {};
+CONS_ROWS.forEach((r) => r.chars.forEach((c) => { _consByGu[c.gu] = c; }));
+const CONS_FREQ_ORDER = ["ક","ર","ન","ત","મ","સ","વ","લ","પ","દ","હ","ય","જ","ગ","ધ","બ","ભ","થ","શ","ચ","છ","ખ","ડ","ટ","ળ","ણ","ફ","ઘ","ઠ","ઢ","ઝ","ષ","ઞ","ઙ"];
+const CONS_FREQ = CONS_FREQ_ORDER.map((g) => _consByGu[g]).filter(Boolean);
+
+/* Pool for the letter-learning lesson, most common first (mix of vowels + consonants) */
+const SCRIPT_LEARN_POOL = ["અ","આ","ક","ન","ર","ત","ઇ","મ","સ","વ","લ","પ","એ","દ","ઉ","હ","ય","જ","ગ","ઓ","ધ","બ","થ","શ","ચ","ખ","ળ","ણ","ડ","ટ"]
+  .map((g) => _vowByGu[g] || _consByGu[g]).filter(Boolean);
+
 /* ============================ HISTORY ============================ */
 const FP = "https://commons.wikimedia.org/wiki/Special:FilePath/";
-const ERAS = [
-  { id:"indus", yr:"c. 3000 - 1500 BCE", title:"The Indus cities", emo:"🏺", color:"#B07A3C",
-    img: FP + "Dholavira%20gujarat.jpg?width=1000",
-    blurb:"Some of the world's earliest planned cities stood in what is now Gujarat.",
-    body:[
-      "Long before there was a Gujarat, the region held major cities of the Indus Valley civilization. Dholavira, on a dry island in the Rann of Kutch, was built largely of stone, with gateways, reservoirs, and one of the earliest water-harvesting systems ever found.",
-      "At Lothal, near the Gulf of Khambhat, archaeologists uncovered what many read as a dockyard, along with bead workshops and standardized weights for trade. Goods and ideas moved between these towns and distant Mesopotamia and the Oman coast.",
-      "These sites show that careful planning, craft, and long-distance trade shaped this land from its earliest history."],
-    site:{ name:"Dholavira, Kutch", note:"A UNESCO World Heritage Site since 2021, known for its stone architecture and reservoirs." },
-    sources:["UNESCO World Heritage Centre, Dholavira: a Harappan City","Archaeological Survey of India, Gujarat excavation reports","Wikipedia, Dholavira and Lothal"] },
-
-  { id:"maurya", yr:"c. 250 BCE", title:"Ashoka's edicts", emo:"🪨", color:"#7C8A3C",
-    blurb:"A rock near Girnar carries messages carved for the public over two thousand years ago.",
-    body:[
-      "By the 3rd century BCE the region was part of the Mauryan empire. On a large boulder near Junagadh, at the foot of Girnar hill, the emperor Ashoka had edicts carved that speak of dharma, non-violence, and care for his subjects.",
-      "Later rulers added their own inscriptions to the same rock, including a record of repairs to the Sudarshana lake. Over the centuries the boulder became a layered public notice, one of the oldest in India."],
-    site:{ name:"Junagadh rock, near Girnar", note:"One stone carries inscriptions from three different dynasties across seven centuries." },
-    sources:["Archaeological Survey of India","Encyclopaedia Britannica, Ashoka and Junagadh","Wikipedia, Junagadh rock inscription"] },
-
-  { id:"vallabhi", yr:"c. 470 - 780 CE", title:"Vallabhi's learning", emo:"📜", color:"#4E7C86",
-    blurb:"A coastal kingdom whose university drew students from across Asia.",
-    body:[
-      "After the Mauryas, several dynasties rose and fell. The Maitrakas ruled from Vallabhi in Saurashtra and made it a center of trade and scholarship.",
-      "Vallabhi's monasteries and university were known well beyond the region, and travelers compared it to the great Buddhist center of Nalanda. It was a meeting point for Buddhist, Jain, and Brahmanical learning."],
-    sources:["Encyclopaedia Britannica, Maitraka dynasty","Wikipedia, Vallabhi and Maitraka dynasty"] },
-
-  { id:"solanki", yr:"c. 950 - 1300 CE", title:"The Solanki age", emo:"🛕", color:"#B0603C",
-    img: FP + "Rani%20ki%20vav%2002.jpg?width=1000",
-    blurb:"Under the Chaulukya, or Solanki, kings, Patan became a capital of art, water, and letters.",
-    body:[
-      "The Chaulukya kings, often called the Solankis, ruled much of the region from Patan. This was a high point for temple building, water architecture, and both Gujarati and Sanskrit scholarship.",
-      "Queen Udayamati's stepwell, Rani ki Vav, turns a well into an inverted temple carved with hundreds of sculptures. The scholar-monk Hemachandra, writing at this court, helped shape the grammar and literature that later fed into the Gujarati language.",
-      "Historians such as Samira Sheikh and Aparna Kapadia describe this era as the slow making of Gujarat as a region, built through courts, trade routes, and pilgrimage rather than any single fixed identity."],
-    site:{ name:"Rani ki Vav, Patan", note:"An 11th-century stepwell and UNESCO World Heritage Site, pictured on the Indian 100-rupee note." },
-    sources:["UNESCO World Heritage Centre, Rani-ki-Vav at Patan","Samira Sheikh, Forging a Region: Sultans, Traders, and Pilgrims in Gujarat, 1200-1500","Aparna Kapadia, In Praise of Kings"] },
-
-  { id:"sultanate", yr:"1407 - 1573", title:"The Gujarat Sultanate", emo:"🕌", color:"#4E6C86",
-    blurb:"An independent sultanate founded Ahmedabad and made Gujarat a trading power.",
-    body:[
-      "In 1407 Gujarat became an independent sultanate. Sultan Ahmad Shah founded Ahmedabad in 1411 on the banks of the Sabarmati river, and it grew into one of the great trading and craft cities of the age.",
-      "The sultans built a distinctive architecture that blended local carving traditions with Islamic form, seen in the mosques of Ahmedabad and the hilltop city of Champaner-Pavagadh. Gujarat's ports linked inland weavers and dyers to markets across the Indian Ocean."],
-    site:{ name:"Champaner-Pavagadh", note:"A UNESCO World Heritage Site preserving a rare, largely unchanged pre-modern city." },
-    sources:["UNESCO World Heritage Centre, Champaner-Pavagadh and Historic City of Ahmadabad","Samira Sheikh, Forging a Region","Wikipedia, Gujarat Sultanate"] },
+const CATEGORIES = [
+  { id:"ancient", title:"Ancient Foundations", blurb:"Before Gujarat had a name, this land already had planned cities, an emperor's edicts, and a university.", color:"#B0703C", emo:"🏺" },
+  { id:"kingdoms", title:"Kingdoms and Courts", blurb:"Regional dynasties built temples, water works, and the literary culture that fed into modern Gujarati.", color:"#8A1C3B", emo:"🛕" },
+  { id:"trade", title:"Trade and the Indian Ocean", blurb:"Ports, merchants, and migration linked Gujarat to Africa, Arabia, and beyond long before the word globalization existed.", color:"#1E6E7E", emo:"⛵" },
+  { id:"colonial", title:"Colonial Rule and Resistance", blurb:"British rule reorganized land and labor. Gujarat answered with a new reading public and a new form of protest.", color:"#4A5568", emo:"🧵" },
+  { id:"modern", title:"Modern Gujarat", blurb:"A linguistic state, fast growth, popular protest, and the hard questions that came with all three.", color:"#2F6E44", emo:"🏗️" },
 ];
-
-ERAS.push(
-  { id:"ocean", yr:"1573 - 1800s", title:"Ports and the ocean", emo:"⛵", color:"#3C6E7C",
-    blurb:"Surat became a global port, and Gujarati merchants spread across the seas.",
-    body:[
-      "The Mughals annexed Gujarat in 1573, and the Marathas later contested the region. Through these changes the ports kept thriving. Surat became one of the busiest harbors in the world, a gateway for pilgrims to Mecca and for trade in cotton, indigo, and spices.",
-      "Gujarati merchant and banking communities, including Jain, Hindu, Bohra, and Parsi traders, built networks reaching East Africa, Arabia, and Southeast Asia. This is the root of a Gujarati diaspora that remains global today.",
-      "The Siddi community, of African descent, also settled along this coast, one of many groups the ocean brought to Gujarat."],
-    sources:["Edward A. Alpers and Chhaya Goswami (eds.), Transregional Trade and Traders: Situating Gujarat in the Indian Ocean","Encyclopaedia Britannica, Surat","Wikipedia, Gujarat under the Mughal Empire"] },
-
-  { id:"colonial", yr:"1800s - 1947", title:"Mills, land, and print", emo:"🏭", color:"#6E5A7C",
-    blurb:"British rule reshaped land and labor, while a new Gujarati print culture took shape.",
-    body:[
-      "Under British rule, new revenue systems changed who controlled land, and textile mills in Ahmedabad drew thousands of workers into crowded neighborhoods. Historians such as Jan Breman and Sujata Patel have traced the difficult lives of these mill and rural laborers.",
-      "At the same time, printing presses and newspapers created a modern reading public. The poet Narmad and other writers helped standardize Gujarati, turning many spoken forms into a shared written language.",
-      "These decades set up the tensions of class, caste, and labor that would go on to shape the region's politics."],
-    sources:["Jan Breman, Wage Hunters and Gatherers","Sujata Patel, on the Ahmedabad textile workers' movement","'Gandhi and the Standardisation of Gujarati' (journal article)"] },
-
-  { id:"gandhi", yr:"1915 - 1947", title:"Satyagraha", emo:"🧂", color:"#7C5A2E",
-    img: FP + "Gandhi%20at%20Dandi%2C%205%20April%201930.jpg?width=1000",
-    blurb:"From Sabarmati Ashram, Gandhi turned Gujarat into a testing ground for non-violent resistance.",
-    body:[
-      "Returning from South Africa in 1915, Gandhi settled at the Sabarmati Ashram near Ahmedabad. Gujarat became a proving ground for satyagraha, his method of non-violent civil disobedience.",
-      "Campaigns in Kheda and Bardoli organized peasants against unjust taxes. In 1930 Gandhi led the Salt March, walking about 385 km from Sabarmati to the coast at Dandi to make salt in open defiance of British law.",
-      "The march drew worldwide attention and later inspired other movements, including the American civil rights struggle."],
-    site:{ name:"Sabarmati Ashram and Dandi", note:"The ashram and the salt-march route are preserved as national heritage sites." },
-    sources:["Gandhi Heritage Portal, materials on Kheda, Bardoli, and Dandi","Encyclopaedia Britannica, Salt March","Wikipedia, Salt March and Sabarmati Ashram"] },
-
-  { id:"state", yr:"1947 - 1960", title:"A state is born", emo:"🗺️", color:"#2F6E5A",
-    blurb:"A popular movement won a separate Gujarati-speaking state in 1960.",
-    body:[
-      "After independence, Gujarat was part of the large bilingual Bombay State. Many Gujaratis wanted a state organized around their own language, and the Mahagujarat movement of the late 1950s pressed this demand through protests and public campaigns.",
-      "On 1 May 1960 the state of Gujarat was created, with its capital later built at Gandhinagar. Language, identity, and politics were now closely linked, a pattern that continued in the 1974 Nav Nirman student protests against price rises and corruption."],
-    sources:["Scholarship on the Mahagujarat movement and linguistic reorganization of states","'Revisiting the Nav Nirman Andolan of Gujarat' (journal article)","Encyclopaedia Britannica, Gujarat"] },
-
-  { id:"modern", yr:"1960 - present", title:"Growth and its costs", emo:"🏗️", color:"#3C5A8A",
-    img: FP + "Statue%20of%20Unity.jpg?width=1000",
-    blurb:"Fast industrial growth, a global diaspora, and hard questions about who benefits.",
-    body:[
-      "Since the 1960s Gujarat has built a reputation for trade, industry, and entrepreneurship, with large chemical, textile, diamond-cutting, and dairy cooperative sectors. A large Gujarati diaspora, especially in East Africa, the United Kingdom, and North America, keeps close ties with the state.",
-      "Adivasi and Dalit communities have also organized to assert land rights and dignity, a history traced by scholars such as David Hardiman and Alf Gunvald Nilsen. Researchers of political economy, including Nikita Sud, examine who has gained most from Gujarat's land and industrial policies.",
-      "The state has also faced serious tests, including widespread communal violence in 2002 that displaced many families, a history documented by human-rights researchers and scholars such as Sanjeevini Badigar Lokhande. In 2018 the Statue of Unity, a monument to independence leader Sardar Vallabhbhai Patel, opened near the Narmada dam, itself a project with a long and contested history of land and displacement."],
-    site:{ name:"Statue of Unity, Kevadia", note:"At 182 meters, the tallest statue in the world, honoring Sardar Patel." },
-    sources:["David Hardiman, The Coming of the Devi: Adivasi Assertion in Western India","Nikita Sud, on the political economy of Gujarat's land policy","Sanjeevini Badigar Lokhande, Communal Violence, Forced Migration and the State: Gujarat since 2002"] }
-);
+const ERAS = [];
 
 /* ============================ SOURCES for language lessons ============================ */
 const LANG_SOURCES = [
@@ -1088,6 +1198,103 @@ function Confetti() {
       {pieces.map((p) => (
         <i key={p.id} style={{ left: p.left + "%", background: p.color, animationDuration: p.dur + "s", animationDelay: p.delay + "s", transform: `rotate(${p.rot}deg)` }} />
       ))}
+    </div>
+  );
+}
+
+function ScriptLearn({ pool, speak, onDone, onQuit }) {
+  const N = Math.min(10, pool.length);
+  // Build questions common-first: walk the pool in order
+  const questions = React.useMemo(() => {
+    const qs = [];
+    for (let i = 0; i < N; i++) {
+      const answer = pool[i];
+      const askGlyph = Math.random() < 0.5; // true: show sound, pick glyph. false: show glyph, pick sound.
+      const others = pool.filter((p) => p.gu !== answer.gu);
+      // shuffle distractors
+      for (let j = others.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [others[j], others[k]] = [others[k], others[j]]; }
+      const distract = others.slice(0, 3);
+      const opts = [answer, ...distract];
+      for (let j = opts.length - 1; j > 0; j--) { const k = Math.floor(Math.random() * (j + 1)); [opts[j], opts[k]] = [opts[k], opts[j]]; }
+      qs.push({ answer, askGlyph, opts });
+    }
+    return qs;
+  }, []);
+  const [idx, setIdx] = useState(0);
+  const [chosen, setChosen] = useState(null);
+  const [correct, setCorrect] = useState(0);
+  const [done, setDone] = useState(false);
+  const q = questions[idx];
+
+  useEffect(() => { if (q) speak(q.answer.gu); }, [idx]);
+
+  if (done) {
+    return (
+      <div className="dhatu">
+        <style>{CSS}</style>
+        <div className="done-wrap">
+          <div className="done-medal"><Ic.trophy /></div>
+          <h1>Nice work!</h1>
+          <div className="ds">You got {correct} of {questions.length} letters right.</div>
+          <button className="btn primary" style={{ maxWidth: 320 }} onClick={() => onDone(correct)}>Back to the script</button>
+        </div>
+      </div>
+    );
+  }
+
+  const pick = (o) => {
+    if (chosen) return;
+    setChosen(o);
+    if (o.gu === q.answer.gu) setCorrect((c) => c + 1);
+  };
+  const next = () => {
+    if (idx + 1 >= questions.length) { setDone(true); return; }
+    setIdx((i) => i + 1); setChosen(null);
+  };
+  const isRight = chosen && chosen.gu === q.answer.gu;
+
+  return (
+    <div className="dhatu">
+      <style>{CSS}</style>
+      <div className="scr plain">
+        <div className="lhead">
+          <button className="iconbtn" onClick={onQuit}><Ic.x /></button>
+          <div className="bar"><i style={{ width: `${(idx / questions.length) * 100}%` }} /></div>
+        </div>
+        <div className="q-title">{q.askGlyph ? "Which letter makes this sound?" : "What sound does this letter make?"}</div>
+        <div className="playrow">
+          {q.askGlyph
+            ? <div style={{ textAlign: "center" }}>
+                <div className="romanline" style={{ fontSize: 26, fontWeight: 800, color: "var(--ink)" }}>{q.answer.roman}</div>
+                <button className="playbtn" style={{ margin: "10px auto 0" }} onClick={() => speak(q.answer.gu)}><Ic.play /></button>
+              </div>
+            : <div style={{ textAlign: "center" }}>
+                <div className="bigword">{q.answer.gu}</div>
+                <button className="playbtn" style={{ margin: "10px auto 0" }} onClick={() => speak(q.answer.gu)}><Ic.play /></button>
+              </div>}
+        </div>
+        <div className="grid2">
+          {q.opts.map((o, i) => {
+            let cls = "gopt";
+            if (chosen) {
+              if (o.gu === q.answer.gu) cls += " good";
+              else if (o.gu === chosen.gu) cls += " bad";
+            }
+            return (
+              <button key={i} className={cls} onClick={() => pick(o)}>
+                {q.askGlyph ? <div className="gu">{o.gu}</div> : <div style={{ fontSize: 22, fontWeight: 800 }}>{o.roman}</div>}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      {chosen && (
+        <div className={"sheet " + (isRight ? "good" : "bad")}>
+          <div className="sh"><span className="badge">{isRight ? <Ic.check /> : <Ic.x />}</span>{isRight ? "Correct!" : "Not quite"}</div>
+          <div className="ans">{q.answer.gu} is <b>{q.answer.roman}</b></div>
+          <button className="btn primary" onClick={next}>{idx + 1 >= questions.length ? "Finish" : "Continue"}</button>
+        </div>
+      )}
     </div>
   );
 }
@@ -1169,6 +1376,24 @@ function SafeImg({ src, alt, className }) {
 }
 
 /* ============================ MAIN APP ============================ */
+/* persistence: real browser localStorage (works on the live site, unlike the in-chat sandbox) */
+function useLocalState(key, initial) {
+  const [state, setState] = useState(() => {
+    try {
+      const raw = window.localStorage.getItem(key);
+      return raw !== null ? JSON.parse(raw) : initial;
+    } catch (e) {
+      return initial;
+    }
+  });
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(state));
+    } catch (e) {}
+  }, [key, state]);
+  return [state, setState];
+}
+
 export default function App() {
   const [onboarded, setOnboarded] = useLocalState("dhatu_onboarded", false);
   const [screen, setScreen] = useState(() => (onboarded ? "learn" : "onboarding"));
@@ -1193,9 +1418,11 @@ export default function App() {
   const [showConfetti, setShowConfetti] = useState(false);
 
   const [selChar, setSelChar] = useState(null);
+  const [playChar, setPlayChar] = useState(null);
   const [selTopic, setSelTopic] = useState(null);
   const [practiceIdx, setPracticeIdx] = useState(0);
   const [selEra, setSelEra] = useState(null);
+  const [selCat, setSelCat] = useState(null);
   const [selConvo, setSelConvo] = useState(null);
   const [convoStep, setConvoStep] = useState(0);
   const [erAudioLang, setErAudioLang] = useState(null);
@@ -1225,10 +1452,8 @@ export default function App() {
     setReadWrite(true);
     setShowHistory(true);
     setVocabTab(false);
-    setOnboarded(false);
     setConfirmReset(false);
-    setOnbStep(0);
-    setScreen("onboarding");
+    setScreen("learn");
     setTab("learn");
   }
 
@@ -1432,7 +1657,7 @@ export default function App() {
                         {isRec && <div className="startpill">START</div>}
                         <button className={"node " + (done ? "done" : isRec ? "cur" : l.kind === "check" ? "check" : "todo")} onClick={() => startLesson(l.id)}>
                           <div className="disc">
-                            {done ? <Ic.check /> : l.kind === "check" ? <Ic.star /> : <Ic.spark />}
+                            {done ? <Ic.check /> : (() => { const LIcon = lessonIcon(l); return <LIcon />; })()}
                           </div>
                         </button>
                         <div className="node-label">{l.label}</div>
@@ -1598,7 +1823,7 @@ export default function App() {
         <style>{CSS}</style>
         {showConfetti && <Confetti />}
         <div className="done-wrap">
-          <div className="done-medal"><Ic.star /></div>
+          <div className="done-medal"><Ic.trophy /></div>
           <h1>Lesson complete</h1>
           <div className="ds">Well done. Here is how it went.</div>
           <div className="done-stats">
@@ -1634,121 +1859,57 @@ export default function App() {
   }
 
   /* ---------------- SCRIPT ---------------- */
+  if (screen === "scriptLearn") {
+    return (
+      <ScriptLearn
+        pool={SCRIPT_LEARN_POOL}
+        speak={(t) => speakGu(t)}
+        onDone={(earned) => { if (earned > 0) setKaudi((k) => k + earned); setScreen("script"); }}
+        onQuit={() => { stopSpeak(); setScreen("script"); }}
+      />
+    );
+  }
+
   if (screen === "script") {
-    if (selChar) {
-      return (
-        <div className="dhatu">
-          <style>{CSS}</style>
-          <div className="scr plain">
-            <div className="lhead">
-              <button className="iconbtn" onClick={() => setSelChar(null)}><Ic.back /></button>
-            </div>
-            <div className="cd-hero">
-              <div className="cd-glyph">{selChar.gu}</div>
-              <div className="cd-roman">{selChar.roman}</div>
-              {selChar.hint && <div className="cd-hint">{selChar.hint}</div>}
-            </div>
-            <div className="playrow">
-              <button className="playbtn big" onClick={() => speak(selChar.gu)}><Ic.play /></button>
-            </div>
-            <div style={{ textAlign: "center", fontSize: 13, color: "var(--muted)", fontWeight: 600, marginBottom: 4 }}>
-              Trace the letter with your finger or mouse
-            </div>
-            <WriteCanvas glyph={selChar.gu} />
-          </div>
-        </div>
-      );
-    }
-    const sections = [
-      { id: "vowels", label: "Vowels" },
-      { id: "cons", label: "Consonants" },
-      { id: "conj", label: "Conjuncts" },
-      { id: "num", label: "Numerals" },
-      { id: "signs", label: "Signs" },
-    ];
+    const tapChar = (c) => {
+      speakGu(c.gu);
+      setPlayChar(c.gu);
+      setTimeout(() => setPlayChar((p) => (p === c.gu ? null : p)), 650);
+    };
+    const Tile = (c, i) => (
+      <button key={i} className={"chartile" + (playChar === c.gu ? " playing" : "")} onClick={() => tapChar(c)} title="Tap to hear">
+        <div className="gu">{c.gu}</div>
+        <small>{c.roman}</small>
+      </button>
+    );
     return (
       <div className="dhatu">
         <style>{CSS}</style>
-        <div className="scr">
+        <div className="scr" style={{ paddingBottom: 150 }}>
           <TopBar title="Script" sub="The Gujarati abugida" />
-          <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, marginBottom: 14 }}>
-            {sections.map((s) => (
-              <button key={s.id} className="btn ghost sm" style={{ flex: "none", ...(scriptTab === s.id ? { background: "var(--brand)", color: "#fff", borderColor: "var(--brand)" } : {}) }} onClick={() => setScriptTab(s.id)}>
-                {s.label}
-              </button>
-            ))}
-          </div>
+          <p className="hist-intro">Tap any letter to hear it. Letters are ordered roughly by how often you will meet them, most common first.</p>
 
-          {scriptTab === "vowels" && (
-            <>
-              <div className="section-h">Vowels</div>
-              <div className="chargrid">
-                {VOWELS.map((v, i) => (
-                  <button key={i} className="chartile" onClick={() => setSelChar(v)}>
-                    <div className="gu">{v.gu}</div>
-                    <small>{v.roman}</small>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+          <div className="section-h">Vowels</div>
+          <div className="chargrid">{VOWELS_FREQ.map(Tile)}</div>
 
-          {scriptTab === "cons" && CONS_ROWS.map((row) => (
-            <div key={row.label}>
-              <div className="section-h">{row.label}</div>
-              <div className="chargrid">
-                {row.chars.map((c, i) => (
-                  <button key={i} className="chartile" onClick={() => setSelChar(c)}>
-                    <div className="gu">{c.gu}</div>
-                    <small>{c.roman}</small>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
+          <div className="section-h">Consonants, most common first</div>
+          <div className="chargrid">{CONS_FREQ.map(Tile)}</div>
 
-          {scriptTab === "conj" && (
-            <>
-              <div className="section-h">Conjunct and special letters</div>
-              <div className="chargrid">
-                {CONJUNCTS.map((c, i) => (
-                  <button key={i} className="chartile" onClick={() => setSelChar(c)}>
-                    <div className="gu">{c.gu}</div>
-                    <small>{c.roman}</small>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+          <div className="section-h">Numerals</div>
+          <div className="chargrid numgrid">{NUMERALS.map(Tile)}</div>
 
-          {scriptTab === "num" && (
-            <>
-              <div className="section-h">Numerals</div>
-              <div className="chargrid numgrid">
-                {NUMERALS.map((n, i) => (
-                  <button key={i} className="chartile" onClick={() => setSelChar(n)}>
-                    <div className="gu">{n.gu}</div>
-                    <small>{n.roman}</small>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+          <div className="section-h">Common signs</div>
+          <div className="chargrid">{SIGNS.map(Tile)}</div>
 
-          {scriptTab === "signs" && (
-            <>
-              <div className="section-h">Signs and symbols</div>
-              <div className="chargrid">
-                {SIGNS.map((s, i) => (
-                  <button key={i} className="chartile" onClick={() => setSelChar(s)}>
-                    <div className="gu">{s.gu}</div>
-                    <small>{s.roman}</small>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+          <div className="section-h">Conjunct letters</div>
+          <div className="chargrid">{CONJUNCTS.map(Tile)}</div>
+
           <div style={{ height: 10 }} />
+        </div>
+        <div className="scriptfoot">
+          <button className="btn primary" onClick={() => setScreen("scriptLearn")}>
+            <Ic.spark width={18} height={18} /> Learn the letters
+          </button>
         </div>
         <NavBar />
       </div>
@@ -1909,6 +2070,7 @@ export default function App() {
           <div className="scr plain">
             <div className="lhead">
               <button className="iconbtn" onClick={() => { setSelEra(null); stopSpeak(); setErAudioLang(null); }}><Ic.back /></button>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>{(CATEGORIES.find((c) => c.id === era.category) || {}).title}</div>
             </div>
             <div className="hd-hero" style={{ background: era.color }}>
               <SafeImg src={era.img} alt={era.title} />
@@ -1962,25 +2124,66 @@ export default function App() {
         </div>
       );
     }
+    // Inside a chosen category: list its eras
+    if (selCat) {
+      const cat = CATEGORIES.find((c) => c.id === selCat);
+      const eras = ERAS.filter((e) => e.category === selCat);
+      return (
+        <div className="dhatu">
+          <style>{CSS}</style>
+          <div className="scr">
+            <div className="lhead">
+              <button className="iconbtn" onClick={() => setSelCat(null)}><Ic.back /></button>
+            </div>
+            <div className="cat-head" style={{ background: cat.color }}>
+              <div className="emo">{cat.emo}</div>
+              <h2>{cat.title}</h2>
+              <p>{cat.blurb}</p>
+            </div>
+            <div className="wide-2col">
+              {eras.map((e) => (
+                <div key={e.id} className="era-card" onClick={() => setSelEra(e.id)}>
+                  <div className="era-band" style={{ background: e.color || cat.color }}>
+                    <SafeImg src={e.img} alt={e.title} />
+                    <div className="shade" />
+                    <div className="emo">{e.emo}</div>
+                    <div className="txt">
+                      <h3>{e.title}</h3>
+                      <div className="yr">{e.yr}</div>
+                    </div>
+                  </div>
+                  <div className="blurb">{e.blurb}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ height: 10 }} />
+          </div>
+          <NavBar />
+        </div>
+      );
+    }
+    // Top level: the five topic categories
     return (
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title="History" sub="Gujarat, era by era" />
-          {ERAS.map((e) => (
-            <div key={e.id} className="era-card" onClick={() => setSelEra(e.id)}>
-              <div className="era-band" style={{ background: e.color }}>
-                <SafeImg src={e.img} alt={e.title} />
-                <div className="shade" />
-                <div className="emo">{e.emo}</div>
-                <div className="txt">
-                  <h3>{e.title}</h3>
-                  <div className="yr">{e.yr}</div>
-                </div>
-              </div>
-              <div className="blurb">{e.blurb}</div>
-            </div>
-          ))}
+          <TopBar title="History" sub="Gujarat, by theme" />
+          <p className="hist-intro">Explore Gujarat's past by theme rather than a single timeline. Each thread runs from ancient times to today.</p>
+          <div className="wide-2col">
+            {CATEGORIES.map((c) => {
+              const n = ERAS.filter((e) => e.category === c.id).length;
+              return (
+                <button key={c.id} className="cat-card" style={{ background: `linear-gradient(135deg, ${c.color}, ${c.color}D0)` }} onClick={() => setSelCat(c.id)}>
+                  <div className="cat-emo">{c.emo}</div>
+                  <div className="cat-body">
+                    <h3>{c.title}</h3>
+                    <p>{c.blurb}</p>
+                    <span className="cat-count">{n} {n === 1 ? "chapter" : "chapters"}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
           <div style={{ height: 10 }} />
         </div>
         <NavBar />
@@ -2061,13 +2264,20 @@ export default function App() {
               <div className={"sw" + (vocabTab ? " on" : "")} onClick={() => setVocabTab((v) => !v)}><i /></div>
             </div>
           </div>
+          <a href="https://ko-fi.com/rainglade" target="_blank" rel="noopener noreferrer" className="supportlink">
+            <span className="ic"><Ic.coffee /></span>
+            <span>
+              <b>Support Dhatu</b>
+              <small>Buy the developer a coffee on Ko-fi</small>
+            </span>
+          </a>
           {!confirmReset ? (
             <button className="btn ghost" style={{ marginTop: 14 }} onClick={() => setConfirmReset(true)}>
               Reset progress
             </button>
           ) : (
             <div style={{ marginTop: 14 }}>
-              <button className="btn" style={{ background: "var(--no)", color: "#fff", boxShadow: "0 4px 0 var(--no-dark)" }} onClick={resetAllProgress}>
+              <button className="btn" style={{ background: "var(--no)", color: "#fff", boxShadow: "inset 0 1px 2px rgba(255,255,255,.2), inset 0 -3px 7px rgba(140,20,30,.5)" }} onClick={resetAllProgress}>
                 Tap again to confirm reset
               </button>
               <button className="btn ghost" style={{ marginTop: 8 }} onClick={() => setConfirmReset(false)}>Cancel</button>
@@ -2488,6 +2698,14 @@ TOPICS.push(
   ]}
 );
 
+Ic.coffee = (p) => (
+  <svg {...S(p)}>
+    <path d="M5 9h12v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z" />
+    <path d="M17 10h1.5a2.5 2.5 0 1 1 0 5H17" />
+    <path d="M8 3.5c0 .9-1 .9-1 1.8M12 3.5c0 .9-1 .9-1 1.8" />
+  </svg>
+);
+
 /* ============================ SPEECH RECOGNITION (pronunciation practice) ============================ */
 Ic.mic = (p) => (
   <svg {...S(p)}>
@@ -2639,10 +2857,173 @@ const ERA_GU_SUMMARY = {
   vallabhi: "વલ્લભી સૌરાષ્ટ્રમાં એક જૂનું શહેર હતું. ત્યાં એક મોટી યુનિવર્સિટી હતી. દૂર દેશોમાંથી વિદ્યાર્થીઓ ભણવા આવતા હતા.",
   solanki: "સોલંકી રાજાઓ પાટણમાં રાજ કરતા હતા. રાણી ઉદયમતિએ રાણી કી વાવ બનાવી. આ વાવ પાણી માટે અને કલા માટે બંને પ્રખ્યાત છે.",
   sultanate: "સન ૧૪૧૧માં અહમદ શાહે અમદાવાદ શહેર વસાવ્યું. અમદાવાદ વેપાર અને હસ્તકલા માટે મોટું શહેર બન્યું.",
-  ocean: "સુરત બંદર દુનિયાભરમાં જાણીતું હતું. ગુજરાતી વેપારીઓ આફ્રિકા અને અરબસ્તાન સુધી વેપાર કરતા હતા.",
+  surat_trade: "સુરત બંદર દુનિયાભરમાં જાણીતું હતું. ગુજરાતી વેપારીઓ આફ્રિકા અને અરબસ્તાન સુધી વેપાર કરતા હતા.",
+  diaspora: "ગુજરાતી વેપારીઓ વહાણમાં બેસીને દૂર દેશો ગયા. ઘણા લોકો આફ્રિકા અને પછી ઇંગ્લેન્ડ અને અમેરિકામાં વસ્યા. આજે પણ ગુજરાતી સમાજ દુનિયાભરમાં છે.",
   colonial: "અમદાવાદમાં કાપડનો ઉદ્યોગ શરૂ થયો. હજારો મજૂરો ત્યાં કામ કરતા હતા. આ સમયમાં ગુજરાતી ભાષાનાં છાપાં અને પુસ્તકો પણ વધ્યાં.",
   gandhi: "ગાંધીજી સાબરમતી આશ્રમમાં રહેતા હતા. ગાંધીજીએ મીઠાના કાયદા સામે પદયાત્રા કરી. આ પદયાત્રા આખી દુનિયામાં જાણીતી થઈ.",
   state: "૧લી મે, ૧૯૬૦ના રોજ ગુજરાત રાજ્ય બન્યું. લોકોએ ગુજરાતી ભાષા માટે પોતાનું રાજ્ય માગ્યું હતું.",
+  nav_nirman: "૧૯૭૪માં ગુજરાતનાં વિદ્યાર્થીઓએ મોંઘવારી અને ભ્રષ્ટાચાર સામે આંદોલન કર્યું. આ આંદોલનને નવનિર્માણ આંદોલન કહે છે. તેની અસર આખા દેશમાં થઈ.",
+  adivasi_dalit: "ગુજરાતમાં આદિવાસી અને દલિત સમાજ પણ છે. તેમણે પોતાના હક અને જમીન માટે લડત આપી છે. તેમની કળા અને સંસ્કૃતિ ગુજરાતનો મહત્વનો ભાગ છે.",
   modern: "આજનું ગુજરાત ઉદ્યોગ અને વેપાર માટે જાણીતું છે. ઘણા ગુજરાતીઓ દુનિયાભરમાં વસ્યા છે. પણ વિકાસ સાથે જમીન અને ન્યાયના પ્રશ્નો પણ છે.",
 };
 ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });
+
+/* ---- Category: Ancient Foundations ---- */
+ERAS.push(
+  { id:"indus", category:"ancient", yr:"c. 3300 - 1500 BCE", title:"The Indus cities", emo:"🏺",
+    img: FP + "Dholavira%20gujarat.jpg?width=1000",
+    blurb:"Some of the world's earliest planned cities stood in what is now Gujarat, complete with reservoirs and a signboard in a script no one has fully deciphered.",
+    body:[
+      "Long before there was a Gujarat, this land held major cities of the Indus Valley, or Harappan, civilization. Dholavira, on a dry island in the Rann of Kutch, was occupied from roughly 3300 BCE and built almost entirely of stone, unlike the brick cities of Harappa and Mohenjo-daro further north. It had a fortified castle, a middle town, a lower town, and a cemetery, all laid out with a precision that suggests careful planning rather than organic growth.",
+      "Its water system is what most impresses visitors and archaeologists alike: a cascading series of at least sixteen stone reservoirs captured rain and diverted stream water in a region that could go years without rainfall. Some historians read this as one of the earliest known examples of large-scale civic water engineering anywhere in the world.",
+      "At Lothal, near the Gulf of Khambhat, excavators found what many interpret as a dockyard connected to a channel, alongside bead-making workshops, a warehouse, and small stone cubes believed to be a standardized system of weights. Whether or not the 'dock' reading is correct, the site's trade goods, carnelian beads, seals, and weights, turn up as far away as sites in Mesopotamia and the Persian Gulf, evidence of contact across a huge distance with no ships that anyone has yet found.",
+      "Dholavira also preserved a large sign made of ten symbols, each roughly 37 centimeters tall, set into a gateway wall. It is often called a signboard, and it uses the same undeciphered Indus script found on seals across the wider civilization. No one currently knows what it says.",
+      "The civilization declined gradually after about 2100 BCE, likely tied to shifting river systems and climate change, and Dholavira itself was resettled in a smaller, changed form before being abandoned. What is clear from both sites is that long-distance trade, engineered water systems, and planned urban life were part of Gujarat's story from its very beginning, thousands of years before the name 'Gujarat' existed."],
+    site:{ name:"Dholavira, Kutch", note:"A UNESCO World Heritage Site since 2021, known for its stone architecture, reservoirs, and the still-undeciphered signboard." },
+    sources:["UNESCO World Heritage Centre, Dholavira: a Harappan City","Archaeological Survey of India, Gujarat excavation reports","Wikipedia, Dholavira and Lothal"] },
+
+  { id:"maurya", category:"ancient", yr:"c. 250 BCE - 450 CE", title:"Ashoka's edicts at Girnar", emo:"🪨",
+    img: FP + "Ashoka%20Rock%20Edict%20at%20Junagadh.jpg?width=1000",
+    blurb:"A single boulder near Junagadh carries messages from three different rulers, carved seven centuries apart.",
+    body:[
+      "By the 3rd century BCE the region had come under the Mauryan empire, then at its height under the emperor Ashoka. Near Junagadh, at the foot of the sacred hill of Girnar, Ashoka had fourteen edicts carved into a large granite boulder. Written in the Brahmi script and Prakrit language, they are among the earliest surviving examples of writing commissioned by an Indian ruler for public reading rather than religious ritual.",
+      "The edicts are not religious commandments so much as a ruler's public reflections after a violent war. They speak of dharma in a broad, civic sense: tolerance for all religious sects, kindness to animals, care for the welfare of subjects, and regret over the suffering his own conquest of Kalinga had caused. One line reads, in essence, that exalting one's own sect while running down others does the worst harm to one's own sect, an unusually explicit early statement of religious pluralism.",
+      "What makes the Junagadh rock unusual is that later rulers kept using it. Around 150 CE, the Western Kshatrapa ruler Rudradaman I added a long Sanskrit inscription describing repairs to the Sudarshana lake, an artificial reservoir originally built under the Mauryas, after it was damaged by storms. It is one of the earliest substantial inscriptions in classical Sanskrit anywhere in India. Two and a half centuries later, the Gupta emperor Skandagupta added a third inscription recording further repairs to the same lake after another flood.",
+      "So one boulder carries the voices of a Buddhist emperor, a Sanskrit-writing regional dynasty, and a Gupta emperor, spanning roughly seven hundred years, all drawn back to the same hill and the same lake. The building that now protects the rock was constructed in 1900 after centuries of exposure, and restored again after a partial collapse in 2014."],
+    site:{ name:"Junagadh rock, near Girnar hill", note:"One boulder carries inscriptions from three dynasties across seven centuries, protected today inside a small building." },
+    sources:["Archaeological Survey of India","Encyclopaedia Britannica, Ashoka and the Major Rock Edicts","Wikipedia, Junagadh rock inscription of Rudradaman"] },
+
+  { id:"vallabhi", category:"ancient", yr:"c. 470 - 780 CE", title:"Vallabhi's university", emo:"📜",
+    blurb:"A coastal kingdom in Saurashtra ran a university that travelers compared to the great Buddhist center of Nalanda.",
+    body:[
+      "After the Mauryas and the Western Kshatrapas, a Gupta-linked dynasty called the Maitrakas rose to power in Saurashtra and ruled from the city of Vallabhi for roughly three centuries. Vallabhi grew into a wealthy port and administrative center, and Maitraka land grants, recorded on copper plates, are one of the main sources historians use to reconstruct the period's administration, taxation, and religious patronage.",
+      "The city's lasting fame rests on its university. Chinese Buddhist pilgrims, including the monk Xuanzang (Hiuen Tsang), who traveled across India in the 7th century, described Vallabhi as a major center of Buddhist learning to rank alongside Nalanda in the east. Vallabhi's teaching, unlike Nalanda's, is described as leaning more toward Hinayana Buddhism, and the university also taught secular subjects such as logic, grammar, and administration to students who went on to serve in royal courts.",
+      "The city was not exclusively Buddhist. Jain tradition holds that an important council was held at Vallabhi to compile and finalize Jain scriptures, and Brahmanical learning coexisted alongside both. The result was a genuinely mixed religious and intellectual environment, which historians point to when cautioning against reading any single religious identity too neatly onto early Gujarat.",
+      "Vallabhi's decline came in stages: pressure from Arab raids reaching the Gujarat coast in the early 8th century, and later, according to tradition, a destructive raid that ended Maitraka rule around 780 CE. The physical university did not survive in the way Nalanda's ruins did, and much of what is known comes from travelers' accounts and copper-plate inscriptions rather than standing architecture, a reminder that not all of Gujarat's history left a visitable monument behind."],
+    sources:["Encyclopaedia Britannica, Maitraka dynasty","Wikipedia, Vallabhi and the Maitraka dynasty","Xuanzang's travel accounts (Da Tang Xiyu Ji), as discussed in secondary scholarship on Buddhist India"] }
+);
+
+/* ---- Category: Kingdoms and Courts ---- */
+ERAS.push(
+  { id:"solanki", category:"kingdoms", yr:"c. 940 - 1300 CE", title:"The Solanki age", emo:"🛕",
+    img: FP + "Rani%20ki%20vav%2002.jpg?width=1000",
+    blurb:"The Chaulukya, or Solanki, kings ruled from Patan and left behind an inverted temple built entirely underground.",
+    body:[
+      "From the 10th century, a dynasty usually called the Chaulukyas, or Solankis, ruled much of present-day Gujarat from their capital at Patan (also called Anhilwara). Their reign is often treated by historians as the period when Gujarat first began to take shape as a recognizable political and cultural region, rather than simply territory passed between larger empires.",
+      "The most striking surviving monument of this era is Rani ki Vav, the Queen's Stepwell, commissioned around 1063 by Queen Udayamati in memory of her husband, King Bhima I. Unlike a simple well, it is built as an inverted temple: seven levels of stairs descend past pillared pavilions and more than fifteen hundred sculpted panels depicting Vishnu's incarnations, celestial women, and mythological scenes, all designed so that reaching the water below felt like a pilgrimage. Buried under silt for centuries after a flood, it was rediscovered and excavated only in the late 20th century, and is now a UNESCO World Heritage Site pictured on the Indian 100-rupee note.",
+      "The Solanki court was also a center of literary and linguistic activity. The Jain scholar-monk Hemachandra, working under King Kumarapala in the 12th century, wrote grammars, lexicons, and a major treatise on Prakrit and Apabhramsha, the transitional language forms that fed into later Gujarati. His work is one of the reasons linguists can trace a continuous thread from these medieval vernaculars toward the Gujarati spoken today.",
+      "Other major temple projects from the era include the Sun Temple at Modhera, built to resemble a stepped tank leading up to a shrine aligned with the sunrise, and additions to the Jain temple complexes on Mount Abu, technically in modern Rajasthan but built under Solanki-era patronage and sharing the same architectural style, known as Maru-Gurjara.",
+      "Historians such as Samira Sheikh and Aparna Kapadia describe the Solanki period less as a single unified 'Gujarat' and more as an overlapping web of courts, trade routes, temple networks, and pilgrimage circuits, out of which a shared regional identity gradually emerged. That slower, layered process of region-building is a useful corrective to any idea that Gujarat has always existed as a fixed, timeless place."],
+    site:{ name:"Rani ki Vav, Patan", note:"An 11th-century stepwell and UNESCO World Heritage Site, with more than 1,500 sculpted panels across seven underground levels." },
+    sources:["UNESCO World Heritage Centre, Rani-ki-Vav at Patan","Samira Sheikh, Forging a Region: Sultans, Traders, and Pilgrims in Gujarat, 1200-1500","Aparna Kapadia, In Praise of Kings: Rajputs, Sultans and Poets in Fifteenth-Century Gujarat"] },
+
+  { id:"sultanate", category:"kingdoms", yr:"1407 - 1573", title:"The Gujarat Sultanate", emo:"🕌",
+    img: FP + "Siddi%20Saiyyed%20Mosque%2C%20Ahmedabad.jpg?width=1000",
+    blurb:"An independent sultanate founded Ahmedabad, built a distinctive Indo-Islamic architecture, and made Gujarat a trading power.",
+    body:[
+      "Gujarat came under Delhi Sultanate rule in the late 13th century, but by 1407 a governor named Zafar Khan declared independence, founding a sultanate that would rule Gujarat for over 150 years. His grandson, Sultan Ahmad Shah, founded a new capital in 1411 on the banks of the Sabarmati river and named it Ahmedabad. The choice of site, on a bend of the river with good defensive and trade advantages, set up a city that would remain central to Gujarat's economy for the next six centuries.",
+      "The sultanate developed a distinctive architectural style that blended local Hindu and Jain stone-carving traditions with Islamic architectural forms, producing buildings unlike anything in Delhi or Persia. Ahmedabad's Jama Masjid, built under Ahmad Shah, uses carved pillars and decorative brackets clearly descended from temple architecture. The hilltop city of Champaner, expanded under Sultan Mahmud Begada in the late 15th century and now preserved together with Pavagadh hill as a UNESCO World Heritage Site, shows the style at a full urban scale, one of the few pre-modern Islamic capitals in India to survive largely intact and unbuilt-over.",
+      "Gujarat's ports, especially Cambay (Khambhat) at this time, connected inland weavers, dyers, and bead-makers to Indian Ocean markets stretching from East Africa to Southeast Asia, and the sultans taxed and protected this trade as a central source of state revenue.",
+      "The sultanate's final chapter is marked, fittingly, by one of Ahmedabad's most famous buildings. In 1572 to 1573, right as the Mughal emperor Akbar was conquering Gujarat, an Abyssinian nobleman named Sidi Saiyyed built a small mosque in the city, now known simply as Sidi Saiyyed's Mosque. It is famous for ten carved stone lattice windows, or jalis, the most celebrated of which depicts an intertwining tree of life so finely worked in solid stone that it looks like lace. That the sultanate's architectural legacy closes with a building commissioned by a Habshi, a person of African descent risen to nobility, is a reminder that Gujarat's Islamic sultanate was itself a cosmopolitan, multi-ethnic court, not a single uniform tradition.",
+      "In 1573 the Mughals under Akbar annexed Gujarat, ending the independent sultanate, though its architectural and commercial legacy shaped the region for centuries afterward."],
+    site:{ name:"Sidi Saiyyed's Mosque, Ahmedabad", note:"Built in 1572-73, its carved stone jali lattice windows are considered an unofficial symbol of Ahmedabad." },
+    sources:["UNESCO World Heritage Centre, Champaner-Pavagadh Archaeological Park and Historic City of Ahmadabad","Samira Sheikh, Forging a Region: Sultans, Traders, and Pilgrims in Gujarat, 1200-1500","Wikipedia, Gujarat Sultanate and Sidi Saiyyed Mosque"] }
+);
+
+/* ---- Category: Trade and the Indian Ocean ---- */
+ERAS.push(
+  { id:"surat_trade", category:"trade", yr:"1573 - 1800s", title:"Surat, port to the world", emo:"⛵",
+    img: FP + "View%20of%20Surat%20from%20across%20the%20River%20Tapti%3B%20by%20A.%20van%20der%20Heen%2C%201782.jpg?width=1000",
+    blurb:"Under Mughal rule, Surat became one of the busiest ports on earth and the main gateway for the Hajj pilgrimage.",
+    body:[
+      "After the Mughal conquest of 1573, Gujarat's ports kept growing rather than declining. Surat, on the Tapi river, became the Mughal empire's principal port on the Arabian Sea and one of the busiest harbors anywhere in the world during the 17th century. Contemporary travelers described a rough, crowded town of mud-and-bamboo housing alongside grand merchant mansions and warehouses, since wealth in Surat was concentrated in trade rather than architecture.",
+      "Surat's importance was partly religious: it was the main embarkation point for Indian Muslims making the Hajj pilgrimage to Mecca, which brought the Mughal state's direct interest and protection to the port. It was also the site of early Dutch, English, French, and earlier Portuguese trading posts, making it one of the first places in India where European trading companies competed directly for access, decades before Bombay or Calcutta grew to rival it.",
+      "Surat Castle, built in the 1540s under the Gujarat Sultanate specifically to defend against repeated Portuguese raids, changed hands repeatedly over the following two centuries, from Mughal governors to a Siddi admiral in 1751 to the English East India Company in 1759, each transition a marker of who controlled Indian Ocean trade at that moment.",
+      "Surat's shipbuilding industry, concentrated along the Tapi from Athwalines to Dumas, built ocean-going vessels used across the Indian Ocean trade, and Parsi communities who had arrived centuries earlier became especially prominent in this trade and in shipbuilding. The city's fortunes declined through the 18th century as Bombay's harbor drew trade away, compounded by a catastrophic epidemic between 1790 and 1791 that killed roughly a hundred thousand people and a destructive fire in 1837, but Surat's earlier centuries established a pattern, a Gujarati coast oriented outward toward the ocean, that would shape the region's economy for centuries after."],
+    site:{ name:"Surat Castle (Old Fort)", note:"Built in 1546 to defend against Portuguese raids, restored and reopened as a heritage site in 2022." },
+    sources:["Wikipedia, History of Surat and Surat Castle","Grokipedia, Surat Castle","Encyclopaedia Britannica, Surat"] },
+
+  { id:"diaspora", category:"trade", yr:"1600s - present", title:"Merchants, migration, and diaspora", emo:"🌍",
+    img: FP + "Where%20to%20go%20from%20Surat%20a%20map%20of%20trade%20and%20travel%20routes%20through%20the%20Deccan%2C%20by%20Pierre%20du%20Val%2C%201690%20(with%20special%20praise%20for%20the%20local%20mangoes).jpg?width=1000",
+    blurb:"Gujarati trading communities built networks across the Indian Ocean that, centuries later, became a global diaspora.",
+    body:[
+      "Gujarat's outward orientation was never only about ports; it was about the merchant communities who staffed them. Jain and Hindu Vania trading families, Dawoodi Bohra and Khoja Muslim merchant networks, and Parsi shipowners and brokers each built long-distance trading relationships that stretched from the Gujarati coast to East Africa, the Arabian Peninsula, and Southeast Asia, often organized through caste and religious community institutions that extended credit, enforced contracts, and passed knowledge down through generations rather than through any state bureaucracy.",
+      "East Africa became an especially important destination. Gujarati traders were established on the Swahili coast, in ports such as Zanzibar and Mombasa, well before formal European colonization, and Gujarati merchant communities later grew substantially under British colonial rule in East Africa during the late 19th and early 20th centuries, working in trade, retail, and eventually professions and industry.",
+      "The Indian Ocean crossing also brought people to Gujarat, not only away from it. The Siddi community, descended from East Africans who arrived over centuries as sailors, soldiers, merchants, and sometimes enslaved people, settled along the Gujarat and Konkan coasts and, as in the case of Sidi Saiyyed, sometimes rose to positions of considerable power and patronage within Gujarati courts.",
+      "In the 20th century this older trading diaspora fed into a much larger wave of migration. Political pressures in East Africa after independence, especially the expulsion of Asians from Uganda in 1972, pushed many Gujarati families to migrate again, this time to Britain, Canada, and the United States, where existing East African Gujarati business and community networks helped ease the transition. Today, sizable Gujarati communities in Leicester and London, in Toronto, and across the United States trace their family histories through exactly this longer arc: Gujarat to East Africa to the West, a diaspora built in stages over more than a century.",
+      "This history complicates a simple story of Gujarat as a place people leave. It has long been a place bound outward by trade and belief as much as inward by territory, and its diaspora communities today often maintain active ties, through remittances, philanthropy, festival travel, and family visits, that keep the connection alive in both directions."],
+    sources:["Edward A. Alpers and Chhaya Goswami (eds.), Transregional Trade and Traders: Situating Gujarat in the Indian Ocean from Early Times to 1900","Scholarship on Gujarati merchant communities in East Africa and the 1972 Uganda expulsion","Wikipedia, Gujarati diaspora and Siddi people"] }
+);
+
+/* ---- Category: Colonial Rule and Resistance ---- */
+ERAS.push(
+  { id:"colonial", category:"colonial", yr:"1800s - 1947", title:"Mills, land, and print", emo:"🧵",
+    img: FP + "Calico%20Museum%20of%20Textiles%2C%20Ahmedabad%2C%201952.jpg?width=1000",
+    blurb:"British rule reorganized who owned land and who worked the looms, while a new Gujarati print culture created a modern reading public.",
+    body:[
+      "British colonial rule reached Gujarat in stages through the late 18th and 19th centuries, and it reshaped the region in two lasting ways: through the land and through the factory. New land-revenue systems changed who effectively controlled farmland and on what terms, tying cultivators to cash payments and, in bad years, to debt. Historians of rural Gujarat such as Jan Breman have documented how this pushed many agricultural laborers, often from lower-caste and Adivasi communities, into cycles of bonded and seasonal work that persisted well into the modern period.",
+      "The more visible transformation was industrial. Ahmedabad's first mechanized cotton mill opened in 1861, founded by Ranchhodlal Chhotalal, and within a few decades the city held dozens of mills. By the early 20th century Ahmedabad was widely called the Manchester of India. The Calico Mills, established in 1888 by the Sarabhai family, became one of the most modern and diversified textile operations in the country. This growth drew tens of thousands of rural migrants into dense mill neighborhoods, creating an industrial working class whose long hours, low pay, and cramped housing became a defining feature of the city. The sociologist Sujata Patel and others have written about the labor organizing that grew out of these conditions, including the Textile Labour Association that Gandhi helped shape.",
+      "The Sarabhais illustrate the era's contradictions. The same industrial fortune built from colonial-era textile capital later funded the Calico Museum of Textiles, founded in 1949, which today holds one of the world's finest collections of historic Indian handloom fabric, court textiles, and religious hangings. Industrial wealth, in other words, ended up preserving the very handcraft traditions that mechanized mills had undercut.",
+      "Alongside cloth came print. Printing presses and Gujarati-language newspapers spread through the 19th century, and reformers and writers used them to build a modern reading public. The poet and reformer Narmad (Narmadashankar Dave) is often credited as a central figure in shaping modern literary Gujarati, compiling one of the first Gujarati dictionaries and arguing for social reform in accessible prose and verse. The standardization of the written language, turning a range of regional spoken forms into a shared literary standard, was a project carried out largely in these decades, and it is one reason a learner today encounters a single written Gujarati rather than a dozen competing ones.",
+      "These decades set the stage for the region's 20th-century politics. The tensions of class, caste, land, and labor that colonial rule sharpened would run directly into the mass movements that followed."],
+    site:{ name:"Calico Museum of Textiles, Ahmedabad", note:"Founded 1949 by the Sarabhai family, it holds one of the world's premier collections of historic Indian textiles." },
+    sources:["Jan Breman, Wage Hunters and Gatherers and later work on Gujarat's labor","Sujata Patel, The Making of Industrial Relations: The Ahmedabad Textile Industry","Wikipedia, Ahmedabad textile industry, Calico Mills, and Narmad"] },
+
+  { id:"gandhi", category:"colonial", yr:"1915 - 1947", title:"Satyagraha and the Salt March", emo:"🧂",
+    img: FP + "Gandhi%20at%20Dandi%2C%205%20April%201930.jpg?width=1000",
+    blurb:"From an ashram on the Sabarmati, Gandhi turned Gujarat into the testing ground for a new kind of political resistance.",
+    body:[
+      "Mohandas Gandhi returned to India from South Africa in 1915 and, the following year, established the Sabarmati Ashram on the edge of Ahmedabad. Gujarat, his home region, became the laboratory where he developed satyagraha, his method of mass non-violent civil disobedience, into a tool capable of confronting an empire.",
+      "The early experiments were local and agrarian. In 1918 the Kheda satyagraha organized peasants to withhold land revenue after crop failures, when the colonial administration refused to suspend taxes. That same year Gandhi intervened in an Ahmedabad mill dispute on behalf of textile workers. In 1928 the Bardoli satyagraha, led on the ground by Vallabhbhai Patel, successfully resisted a steep tax increase and earned Patel the title Sardar, meaning leader or chief. These campaigns built the organizational muscle and public confidence that larger movements would need.",
+      "The defining moment came in 1930. To challenge the British salt monopoly, a tax on a necessity that fell hardest on the poor, Gandhi and a group of followers walked roughly 385 kilometers over 24 days from Sabarmati Ashram to the coastal village of Dandi. On 6 April 1930 he picked up a lump of natural salt from the shore, an act that was technically illegal, and triggered a nationwide campaign of civil disobedience in which millions made or bought untaxed salt. The photograph of Gandhi at Dandi became one of the most recognized images of the entire independence movement.",
+      "The Salt March mattered far beyond its immediate results. It demonstrated that disciplined non-violent mass action could seize the moral and international spotlight from a colonial power, and its example was studied and adapted by later movements around the world, including the American civil rights movement. That this globally influential strategy was first tested on the roads and coastline of Gujarat is central to the region's modern identity.",
+      "The Sabarmati Ashram remains preserved as a museum and memorial, and the salt-march route and Dandi itself are maintained as national heritage sites."],
+    site:{ name:"Sabarmati Ashram and Dandi", note:"The ashram in Ahmedabad and the route to the coast at Dandi are preserved as national heritage sites." },
+    sources:["Gandhi Heritage Portal, materials on Kheda, Bardoli, and the Dandi march","Encyclopaedia Britannica, Salt March (Dandi March)","Wikipedia, Salt March and Sabarmati Ashram"] }
+);
+
+/* ---- Category: Modern Gujarat ---- */
+ERAS.push(
+  { id:"state", category:"modern", yr:"1947 - 1960", title:"A state is born", emo:"🗺️",
+    img: FP + "Akshardham%20Gandhinagar%20Gujarat.jpg?width=1000",
+    blurb:"A popular movement for a Gujarati-speaking state succeeded in 1960, tying language and politics together for good.",
+    body:[
+      "When India became independent in 1947, there was no state called Gujarat. The Gujarati-speaking districts were part of the large, multilingual Bombay State, which also included Marathi-speaking regions and the city of Bombay itself. As India reorganized its internal boundaries in the 1950s, a question grew urgent across the country: should states be drawn around shared languages?",
+      "In Gujarat this took the form of the Mahagujarat movement of the late 1950s, a broad public campaign, involving students, writers, and political activists, demanding a separate state for Gujarati speakers. It ran in parallel with the Samyukta Maharashtra movement making the equivalent demand for Marathi speakers. The campaigns involved large demonstrations, and some turned confrontational, but they succeeded: on 1 May 1960, Bombay State was split into Maharashtra and Gujarat along linguistic lines.",
+      "The new state needed a capital. Rather than expand crowded Ahmedabad, planners built an entirely new capital city from scratch on the banks of the Sabarmati, naming it Gandhinagar after Mahatma Gandhi. Designed by Indian planners who had trained on the Chandigarh project, it was laid out as a grid of numbered sectors, and it remains one of the greenest planned cities in India. Its best-known landmark, the Swaminarayan Akshardham temple complex, was completed decades later in 1992.",
+      "The creation of Gujarat welded language, identity, and political power together in a way that had not existed before. From 1960 onward, to govern Gujarat was explicitly to govern a Gujarati-speaking people, and that linkage would shape the state's politics for the rest of the century."],
+    site:{ name:"Gandhinagar", note:"A purpose-built capital named after Gandhi, laid out as a grid of sectors and known as one of India's greenest cities." },
+    sources:["Scholarship on the Mahagujarat movement and the States Reorganisation era","Encyclopaedia Britannica, Gujarat and Gandhinagar","Wikipedia, Mahagujarat movement and Gandhinagar"] },
+
+  { id:"nav_nirman", category:"modern", yr:"1974", title:"The Nav Nirman movement", emo:"✊",
+    blurb:"A student protest over mess-hall fees in Ahmedabad grew into a movement that helped reshape national politics.",
+    body:[
+      "In late 1973 and early 1974, students at an engineering college in Ahmedabad protested a sharp rise in their hostel food fees. The complaint was small and specific, but it landed at a moment of severe economic strain, high inflation, food shortages, and widespread anger over corruption, and it spread with startling speed into a mass movement across Gujarat known as the Nav Nirman Andolan, meaning the movement for reconstruction or regeneration.",
+      "What began as students soon drew in middle-class residents, women's groups, and eventually much of the urban public. Protesters demanded the resignation of the state government, which they accused of corruption and mismanagement. The agitation was often intense and, at times, met with force, and it ultimately led to the dissolution of the Gujarat state assembly in 1974, a rare instance of street protest directly unseating a sitting state government.",
+      "The movement's importance reached well beyond Gujarat. It became an inspiration and a model for the broader anti-corruption movement led nationally by the veteran activist Jayaprakash Narayan, often called the JP movement, which challenged the central government and fed directly into the political crisis that produced the national Emergency of 1975 to 1977. Scholars studying Indian democracy frequently treat the Gujarat student agitation of 1974 as an early spark of that larger confrontation.",
+      "Nav Nirman is remembered as an example of how quickly a narrow local grievance could, under the right pressures, become a broad demand for political accountability, and of the recurring role students and the urban middle class have played in Gujarat's public life."],
+    sources:["'Revisiting the Nav Nirman Andolan of Gujarat' and related scholarship on 1970s Indian politics","Ghanshyam Shah, writing on social movements in Gujarat","Wikipedia, Nav Nirman Andolan"] },
+
+  { id:"adivasi_dalit", category:"modern", yr:"1900s - present", title:"Adivasi and Dalit assertion", emo:"🪧",
+    img: FP + "Pithora%20wall%20painting.JPG?width=1000",
+    blurb:"The communities often left out of the mainstream story have their own long history of organizing for land, dignity, and recognition.",
+    body:[
+      "Gujarat's history is often told through its merchants, its rulers, and its industrialists. But the region is also home to large Adivasi (tribal) populations, concentrated in the eastern hill districts, and to Dalit communities historically excluded by caste, and both have their own long histories of assertion and organizing that any honest account has to include.",
+      "The historian David Hardiman's well-known study The Coming of the Devi examined an Adivasi movement in the Surat region in the early 20th century, in which tribal communities took up a wave of religious and social reform, spread through the figure of a goddess, that also functioned as a form of resistance against the alcohol traders, moneylenders, and landlords who exploited them. It is a landmark study of how ordinary rural communities exercised agency on their own terms rather than simply following elite leaders.",
+      "More recent scholarship, including work by Alf Gunvald Nilsen on Adivasi struggles in western India, traces how these communities have organized around land rights, forest access, and dignity into the present day, often in tension with industrial and infrastructure projects that displace them. The long and contested history of displacement around the Narmada dam is one prominent example of these pressures.",
+      "This history also has a cultural dimension. The Rathwa and Bhil communities of eastern Gujarat are the makers of Pithora painting, a ritual mural tradition in which vivid horses, deities, and scenes of village life are painted on the walls of homes to fulfill vows and invite prosperity. Recognized with a Geographical Indication tag in 2021, Pithora is a reminder that Adivasi communities are not only subjects of history but originators of some of Gujarat's most distinctive art.",
+      "Including these histories is not a matter of adding a footnote. It changes the shape of the whole story, from a narrow image of Gujarat as a land of Hindu and Jain merchants into a fuller picture of a diverse society in which many communities, including Muslim, Parsi, Adivasi, and Dalit, have all shaped what Gujarat is."],
+    sources:["David Hardiman, The Coming of the Devi: Adivasi Assertion in Western India","Alf Gunvald Nilsen, Adivasis and the State: Subalternity and Citizenship in India's Bhil Heartland","Wikipedia, Pithora painting"] },
+
+  { id:"modern", category:"modern", yr:"1960 - present", title:"Growth and its costs", emo:"🏗️",
+    img: FP + "Statue%20of%20Unity.jpg?width=1000",
+    blurb:"Rapid industrial growth and a global diaspora, alongside hard and still-debated questions about who has benefited and who has paid.",
+    body:[
+      "Since 1960, Gujarat has built a national reputation for trade, manufacturing, and entrepreneurship. Its economy spans petrochemicals, pharmaceuticals, textiles, and the diamond-cutting industry of Surat, which processes a large share of the world's diamonds. One of its most celebrated successes is the Amul dairy cooperative model, based in Anand, which organized millions of small milk producers into a collective that reshaped rural incomes and became a template studied worldwide.",
+      "The state's global diaspora, built on the older Indian Ocean trading networks and expanded through 20th-century migration, keeps close ties with Gujarat through investment, philanthropy, and family, and is a significant part of the modern Gujarati story.",
+      "That growth has also come with serious and openly debated costs, and a fair account records them rather than smoothing them over. Large infrastructure projects, most prominently the Sardar Sarovar dam on the Narmada river, delivered water and power but displaced many thousands of mostly Adivasi families, prompting one of India's best-known environmental and civil-rights movements in opposition. Scholars of political economy such as Nikita Sud have examined how the benefits of Gujarat's land and industrial policies have been distributed, and who has gained the most.",
+      "The state has also faced grave tests of social peace. In 2002, Gujarat experienced large-scale communal violence in which hundreds of people, predominantly Muslims, were killed and many more displaced, an episode extensively documented by human-rights organizations, official inquiries, and scholars including Sanjeevini Badigar Lokhande. It remains a painful and politically contested subject in Indian public life, and different accounts assign responsibility differently, but the scale of the loss and displacement is not in dispute.",
+      "In 2018, near the Narmada dam, the state unveiled the Statue of Unity, a 182-meter statue of the independence leader and first Deputy Prime Minister Sardar Vallabhbhai Patel, currently the tallest statue in the world. It captures the modern state's ambitions neatly and also its tensions: a monument to a Gujarati leader of national unity, built at grand scale, on a river whose development has been contested for decades. Gujarat today is best understood not as a single success story or a single cautionary tale, but as a place where rapid growth and its real human costs sit side by side, and where the debate over how to weigh them is still very much alive."],
+    site:{ name:"Statue of Unity, Kevadia", note:"At 182 meters, currently the tallest statue in the world, honoring Sardar Vallabhbhai Patel near the Narmada dam." },
+    sources:["Nikita Sud, Liberalization, Hindu Nationalism and the State: A Biography of Gujarat","Sanjeevini Badigar Lokhande, Communal Violence, Forced Migration and the State: Gujarat since 2002","Wikipedia, Economy of Gujarat, Amul, and Statue of Unity"] }
+);
