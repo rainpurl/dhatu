@@ -916,9 +916,12 @@ const CSS = `
 .day.hit .dot{background:#FDECD9;border-color:var(--diya);color:var(--diya)}
 .badges{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .badge2{display:flex;gap:12px;align-items:center;background:var(--card);border:none;border-radius:16px;padding:12px;box-shadow:var(--bevel-inset)}
-.badge2 .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}
+.badge2 .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--line);color:var(--muted);box-shadow:var(--bevel-inset)}
 .badge2 b{font-size:14px} .badge2 small{color:var(--muted);font-size:11.5px;font-weight:600;display:block}
-.badge2.off{opacity:.45}
+/* Achieved awards turn gold */
+.badge2.won .ic{background:var(--gold);color:#3b2a06;box-shadow:var(--bevel-raise)}
+.badge2.won{box-shadow:var(--bevel-inset), inset 0 0 0 1.5px var(--gold)}
+.badge2.off{opacity:.5}
 .toggle{display:flex;align-items:center;gap:12px;padding:14px 2px;border-bottom:1px solid var(--line)}
 .toggle:last-child{border-bottom:none}
 .toggle .tt{flex:1}
@@ -3497,11 +3500,21 @@ function CourseApp({ user }) {
   /* ---------------- PROFILE ---------------- */
   if (screen === "profile") {
     const days = ["S", "M", "T", "W", "T", "F", "S"];
+    const allLessonIds = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
+    const scriptAllDone = SCRIPT_LESSONS_RESOLVED.length > 0 && SCRIPT_LESSONS_RESOLVED.every((l) => scriptDone.includes(l.id));
+    const masteryDone = allLessonIds.length > 0 && allLessonIds.every((id) => completed.includes(id));
     const badgeDefs = [
-      { id: "b1", label: "First lesson", sub: "Complete a lesson", on: completed.length >= 1, color: "#8A1C3B" },
-      { id: "b2", label: "Checkpoint", sub: "Pass a checkpoint", on: completed.some((c) => c.endsWith("c")), color: "#C77B1E" },
-      { id: "b3", label: "Wordsmith", sub: "50 Kaudi earned", on: kaudi >= 50, color: "#1E6E7E" },
-      { id: "b4", label: "Reviewer", sub: "Add words to Review", on: srs.length > 0, color: "#2F6E44" },
+      { id: "b1", label: "First lesson", sub: "Complete a lesson", icon: "spark", on: completed.length >= 1 },
+      { id: "b2", label: "Checkpoint", sub: "Pass a checkpoint", icon: "check", on: completed.some((c) => c.endsWith("c")) },
+      { id: "b3", label: "Wordsmith", sub: "100 Kaudi earned", icon: "kaudi", on: kaudi >= 100 },
+      { id: "b4", label: "Reviewer", sub: "Add words to Review", icon: "review", on: srs.length > 0 },
+      { id: "b5", label: "Literally literate", sub: "Finish every script lesson", icon: "script", on: scriptAllDone },
+      { id: "b6", label: "Saaro mitra", sub: "Follow two friends", icon: "chats", on: friendList.length >= 2 },
+      { id: "b7", label: "Satat jyot", sub: "Keep a 7-day streak", icon: "diya", on: streak >= 7 },
+      { id: "b8", label: "Amar jyot", sub: "Keep a 30-day streak", icon: "diya", on: streak >= 30 },
+      { id: "b9", label: "Dhanvaan", sub: "1000 Kaudi earned", icon: "kaudi", on: kaudi >= 1000 },
+      { id: "b10", label: "Conversationalist", sub: "5000 Kaudi earned", icon: "talk", on: kaudi >= 5000 },
+      { id: "b11", label: "Mastery", sub: "Complete every lesson", icon: "trophy", on: masteryDone },
     ];
     return (
       <div className="dhatu">
@@ -3605,15 +3618,18 @@ function CourseApp({ user }) {
 
           <div className="section-h">Badges</div>
           <div className="badges">
-            {badgeDefs.map((b) => (
-              <div key={b.id} className={"badge2" + (b.on ? "" : " off")}>
-                <div className="ic" style={{ background: b.color }}><Ic.star width={20} height={20} /></div>
-                <div>
-                  <b>{b.label}</b>
-                  <small>{b.sub}</small>
+            {badgeDefs.map((b) => {
+              const BIcon = Ic[b.icon] || Ic.star;
+              return (
+                <div key={b.id} className={"badge2" + (b.on ? " won" : " off")}>
+                  <div className="ic"><BIcon width={20} height={20} /></div>
+                  <div>
+                    <b>{b.label}</b>
+                    <small>{b.sub}</small>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="section-h">Settings</div>
