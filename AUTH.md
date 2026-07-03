@@ -82,17 +82,24 @@ To turn it on:
 2. **Add it to the staff page.** In `public/staff/index.html`, set
    `ADMIN_UIDS` to your UID, for example:
    `const ADMIN_UIDS = ["abc123yourUidHere"];`
-3. **Update the Firestore rules** to let that UID read every user record. Use
-   this version of the rules (replace `YOUR_ADMIN_UID` with your UID):
+3. **Update the Firestore rules** to let the admin UIDs read every user record.
+   The admin UIDs are listed once in the `isAdmin()` helper below; add or remove
+   UIDs there. (These must match `ADMIN_UIDS` in `public/staff/index.html`.)
 
    ```
    rules_version = '2';
    service cloud.firestore {
      match /databases/{database}/documents {
-       // private progress: owner (and the admin) only
+       function isAdmin() {
+         return request.auth != null && request.auth.uid in [
+           "NH62QQhxAYbY7sTUwgT8opdZUxo1",
+           "bmHWHEPkcxgP3I5YREiCtEBRr8H2"
+         ];
+       }
+       // private progress: owner (and the admins) only
        match /users/{uid} {
          allow read, write: if request.auth != null && request.auth.uid == uid;
-         allow read, write: if request.auth != null && request.auth.uid == "YOUR_ADMIN_UID";
+         allow read, write: if isAdmin();
        }
        // public profiles: any signed-in user can read; only the owner can write
        match /publicProfiles/{uid} {
