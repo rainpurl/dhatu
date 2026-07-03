@@ -1871,8 +1871,8 @@ const SCRIPT_LESSONS = [
   { id:"sl_s1", title:"Signs and marks", glyphs:["ં","ઁ","ઃ","્","ૐ"] },
   { id:"sl_j1", title:"Joining letters (conjuncts)", note:"When two consonants meet with no vowel between them, they form a conjunct. A mark called the virama removes the 'a' from the first consonant, so ન + ત becomes ન્ત (nta). Read both consonants together, with no vowel in between.",
     chars:[{gu:"ન્ત",roman:"nta"},{gu:"ન્દ",roman:"nda"},{gu:"સ્ત",roman:"sta"},{gu:"સ્વ",roman:"sva"},{gu:"પ્ર",roman:"pra"},{gu:"ક્ર",roman:"kra"}] },
-  { id:"sl_j2", title:"More conjuncts and special forms", note:"More common clusters, including the special fused forms ત્ર (tra), શ્ર (shra), ક્ષ (ksha), and જ્ઞ (gnya). These appear often in real Gujarati, so they are worth knowing by sight.",
-    chars:[{gu:"ગ્ર",roman:"gra"},{gu:"બ્ર",roman:"bra"},{gu:"ત્ર",roman:"tra"},{gu:"શ્ર",roman:"shra"},{gu:"ક્ષ",roman:"ksha"},{gu:"જ્ઞ",roman:"gnya"}] },
+  { id:"sl_j2", title:"More conjuncts and special forms", note:"More common clusters, including the special fused forms ત્ર (tra), શ્ર (shra), ક્ષ (kṣa), and જ્ઞ (gya). These appear often in real Gujarati, so they are worth knowing by sight.",
+    chars:[{gu:"ગ્ર",roman:"gra"},{gu:"બ્ર",roman:"bra"},{gu:"ત્ર",roman:"tra"},{gu:"શ્ર",roman:"shra"},{gu:"ક્ષ",roman:"kṣa"},{gu:"જ્ઞ",roman:"gya"}] },
 ];
 const SCRIPT_LESSONS_RESOLVED = SCRIPT_LESSONS.map((l) => ({
   ...l,
@@ -4632,13 +4632,11 @@ TOPICS.push(
   ]},
   { id:"culture", title:"Textiles, food, and culture", icon:"shirt", note:"Terms for Gujarati craft, dress, and everyday food beyond the basics.", words:[
     { gu:"પટોળું", r:"paṭoḷuṁ", en:"Patola silk" },
-    { gu:"બાંધણી", r:"baandhaṇi", en:"tie-dye cloth" },
     { gu:"ચણિયાચોળી", r:"chaṇiyaachoḷi", en:"Garba skirt and top" },
     { gu:"કેડિયું", r:"keḍiyuṁ", en:"men's Garba top" },
     { gu:"ફરસાણ", r:"pharsaaṇ", en:"savory snacks" },
     { gu:"ઊંધિયું", r:"uṅdhiyuṁ", en:"winter vegetable dish" },
     { gu:"થેપલા", r:"theplaa", en:"spiced flatbread" },
-    { gu:"દાબેલી", r:"daabeli", en:"street-food bun" },
   ]}
 );
 
@@ -4772,7 +4770,6 @@ TOPICS.push(
     { gu:"શરદી", r:"shardi", en:"a cold" },
     { gu:"દવા", r:"davaa", en:"medicine" },
     { gu:"આરામ", r:"aaraam", en:"rest" },
-    { gu:"ડૉક્ટર", r:"ḍokṭar", en:"doctor" },
   ]},
   { id:"directions", title:"Directions and travel", icon:"car", words:[
     { gu:"ડાબે", r:"ḍaabe", en:"left" },
