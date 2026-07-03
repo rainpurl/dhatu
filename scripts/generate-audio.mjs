@@ -203,11 +203,30 @@ async function synthGoogle(text, lang, voiceOverride) {
   if (!key) throw new Error("Missing GOOGLE_TTS_KEY. See AUDIO.md to get a Google Cloud Text-to-Speech key.");
   const rate = Number((lang === "en" ? process.env.EN_RATE : process.env.GU_RATE) || (lang === "en" ? "1.0" : "0.9"));
   const ipa = lang === "gu" ? PRONUNCIATION_OVERRIDES[text] : null;
+  // A Gujarati comma-list (e.g. a count "આઠ, નવ, દસ") should pause between items.
+  // Chirp3-HD runs them together and does not support SSML, so we synthesize these
+  // on a Gujarati WaveNet voice with explicit breaks between the comma-separated parts.
+  // Only short word-lists (counts, greetings, directions), not long prose that
+  // merely contains commas: every comma-separated part must be short.
+  const pauseList = lang === "gu" && !ipa && text.includes(",") && text.length <= 40 &&
+    text.split(",").every((p) => p.trim().length <= 14);
   // Vowels with a pronunciation override are synthesized by IPA on a WaveNet
   // voice (Chirp3-HD does not support SSML), giving the exact intended sound.
-  const input = ipa ? { ssml: `<speak><phoneme alphabet="ipa" ph="${ipa}">v</phoneme></speak>` } : { text };
-  const voiceName = ipa ? "en-US-Wavenet-F" : (voiceOverride || voiceFor(lang));
-  const langCd = ipa ? "en-US" : langCode(lang);
+  let input, voiceName, langCd;
+  if (ipa) {
+    input = { ssml: `<speak><phoneme alphabet="ipa" ph="${ipa}">v</phoneme></speak>` };
+    voiceName = "en-US-Wavenet-F";
+    langCd = "en-US";
+  } else if (pauseList) {
+    const parts = text.split(",").map((s) => s.trim()).filter(Boolean);
+    input = { ssml: `<speak>${parts.join('<break time="450ms"/>')}</speak>` };
+    voiceName = voiceOverride || "gu-IN-Wavenet-A";
+    langCd = "gu-IN";
+  } else {
+    input = { text };
+    voiceName = voiceOverride || voiceFor(lang);
+    langCd = langCode(lang);
+  }
   const res = await fetch(
     "https://texttospeech.googleapis.com/v1/text:synthesize?key=" + encodeURIComponent(key),
     {
