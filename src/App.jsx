@@ -3218,7 +3218,7 @@ function CourseApp({ user }) {
                   <div style={{ fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>{item.roman}</div>
                   <div style={{ fontSize: 14, marginTop: 2 }}>{item.en}</div>
                 </div>
-                <button className="playbtn" onClick={() => speak(item.gu)}><Ic.play /></button>
+                <button className="playbtn" onClick={() => speakGu(item.gu, _voiceForId(item.gu))}><Ic.play /></button>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8, marginTop: 12 }}>
                 <button className="btn sm ghost" onClick={() => gradeSrs(item, "again")}>Again</button>
@@ -3270,7 +3270,7 @@ function CourseApp({ user }) {
                   <div className="rm">{w.r}</div>
                   <div className="en">{w.en}</div>
                 </div>
-                <button className="sp" onClick={() => speak(w.gu)}><Ic.play width={16} height={16} /></button>
+                <button className="sp" onClick={() => speakGu(w.gu, _voiceForId(topic.id))}><Ic.play width={16} height={16} /></button>
               </div>
             ))}
             <button className="btn ok" style={{ marginTop: 6, marginBottom: 10 }} onClick={() => { setPracticeIdx(0); setScreen("vocabPractice"); }}>
@@ -3325,7 +3325,7 @@ function CourseApp({ user }) {
           <div className="bigword gu">{word.gu}</div>
           <div className="romanline">{word.r}</div>
           <div style={{ textAlign: "center", fontWeight: 600, marginTop: 6 }}>{word.en}</div>
-          <div className="playrow"><button className="playbtn" onClick={() => speak(word.gu)}><Ic.play /></button></div>
+          <div className="playrow"><button className="playbtn" onClick={() => speakGu(word.gu, _voiceForId(topic.id))}><Ic.play /></button></div>
           <SpeakCheck key={selTopic + "-" + practiceIdx} target={word.gu} />
           <div style={{ height: 100 }} />
         </div>
