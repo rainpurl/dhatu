@@ -980,6 +980,8 @@ const CSS = `
   display:grid;place-items:center;flex:none;box-shadow:var(--bevel-inset)}
 .contactlink b{font-size:15px}
 .wordimg{display:block;width:200px;height:200px;max-width:70%;object-fit:cover;border-radius:20px;margin:0 auto 16px;box-shadow:var(--bevel-inset), 0 8px 20px rgba(70,45,40,.12);animation:riseIn .28s var(--ease) both}
+.bodydiagram{width:150px;max-width:52%;margin:0 auto 16px;padding:12px;border-radius:20px;background:var(--card);box-shadow:var(--bevel-inset);animation:riseIn .28s var(--ease) both}
+.bodydiagram svg{width:100%;height:auto;display:block}
 
 /* account card in Profile */
 .acct{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;margin-bottom:14px;box-shadow:var(--bevel-inset)}
@@ -1835,9 +1837,6 @@ const _WORD_IMG_RAW = {
   "સ્ટેશન": "Mysore Rly Station Panorama Karnataka Apr22 A7C 01908-10.jpg",
   "બજાર": "Onions Veg Stall Ooty Market Nilgiris Aug25 A7CR 07102.jpg",
   "ઘર": "Motihari Mission house, India, ca. 1906 (IMP-CSCNWW33-OS14-1).jpg",
-  // body
-  "આંખ": "Human eye closeup.JPG",
-  "હાથ": "Open Palm of the Left Hand, Fingers.jpg",
   // weather
   "વરસાદ": "Monsoon Maharashtra India Rain Landscape (1) 06.jpg",
   "ચોમાસું": "Monsoon Maharashtra India Rain Landscape (1) 06.jpg",
@@ -1846,6 +1845,14 @@ const _WORD_IMG_RAW = {
   "શિયાળો": "Winter in Tatry Mountains - Poland.jpg",
 };
 const WORD_IMG = Object.fromEntries(Object.entries(_WORD_IMG_RAW).map(([k, v]) => [k, FP + encodeURIComponent(v) + "?width=600"]));
+
+/* Body-part words map to a highlighted region on a shared body diagram, which
+   reads more clearly (and less clinically) than photos of body parts. */
+const BODY_PARTS = {
+  "માથું": "head", "વાળ": "hair", "આંખ": "eye", "કાન": "ear", "નાક": "nose",
+  "મોઢું": "mouth", "દાંત": "mouth", "જીભ": "mouth", "ગળું": "throat",
+  "ખભો": "shoulder", "હાથ": "hand", "આંગળી": "finger", "પેટ": "stomach", "પગ": "leg",
+};
 
 /* ============================ SOURCES for language lessons ============================ */
 const LANG_SOURCES = [
@@ -2091,6 +2098,57 @@ function BodyFig({ src, cap }) {
       <img src={src} alt={cap || ""} loading="lazy" onError={() => setOk(false)} />
       {cap && <figcaption>{cap}</figcaption>}
     </figure>
+  );
+}
+
+/* A simple line-drawn figure that highlights one body part in brand color. */
+function BodyDiagram({ part }) {
+  const HI = "#8A1C3B", B = "#CDBEC3";
+  const c = (p) => (part === p ? HI : B);
+  const w = (p) => (part === p ? 3.6 : 2);
+  const hand = part === "hand" || part === "finger";
+  return (
+    <div className="bodydiagram">
+      <svg viewBox="0 0 120 214" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        {/* hair */}
+        <path d="M34 36 Q60 4 86 36" fill="none" stroke={c("hair")} strokeWidth={w("hair")} strokeLinecap="round" />
+        <path d="M40 28 Q46 18 53 24 M80 28 Q74 18 67 24" fill="none" stroke={c("hair")} strokeWidth={w("hair")} strokeLinecap="round" />
+        {/* ears */}
+        <ellipse cx="33" cy="52" rx="4.5" ry="8" fill="#fff" stroke={c("ear")} strokeWidth={w("ear")} />
+        <ellipse cx="87" cy="52" rx="4.5" ry="8" fill="#fff" stroke={c("ear")} strokeWidth={w("ear")} />
+        {/* head */}
+        <circle cx="60" cy="50" r="26" fill="#fff" stroke={c("head")} strokeWidth={w("head")} />
+        {/* eyes */}
+        <circle cx="50" cy="46" r="3.2" fill={c("eye")} />
+        <circle cx="70" cy="46" r="3.2" fill={c("eye")} />
+        {/* nose */}
+        <path d="M60 48 L56 58 L64 58 Z" fill="none" stroke={c("nose")} strokeWidth={w("nose")} strokeLinejoin="round" />
+        {/* mouth */}
+        <path d="M50 64 Q60 72 70 64" fill="none" stroke={c("mouth")} strokeWidth={w("mouth")} strokeLinecap="round" />
+        {/* neck / throat */}
+        <rect x="53" y="74" width="14" height="14" rx="3" fill="#fff" stroke={c("throat")} strokeWidth={w("throat")} />
+        {/* torso */}
+        <path d="M40 94 Q60 86 80 94 L84 152 Q60 160 36 152 Z" fill="#fff" stroke={B} strokeWidth="2" />
+        {/* shoulders */}
+        <circle cx="42" cy="96" r="6" fill="#fff" stroke={c("shoulder")} strokeWidth={w("shoulder")} />
+        <circle cx="78" cy="96" r="6" fill="#fff" stroke={c("shoulder")} strokeWidth={w("shoulder")} />
+        {/* stomach */}
+        <circle cx="60" cy="130" r="13" fill="none" stroke={c("stomach")} strokeWidth={w("stomach")} />
+        {/* arms */}
+        <path d="M42 98 L24 142" fill="none" stroke={B} strokeWidth="5" strokeLinecap="round" />
+        <path d="M78 98 L96 142" fill="none" stroke={B} strokeWidth="5" strokeLinecap="round" />
+        {/* hands */}
+        <circle cx="22" cy="147" r="7" fill="#fff" stroke={part === "hand" ? HI : B} strokeWidth={part === "hand" ? 3.6 : 2} />
+        <circle cx="98" cy="147" r="7" fill="#fff" stroke={hand ? HI : B} strokeWidth={hand ? 3.6 : 2} />
+        {/* fingers on right hand */}
+        <path d="M98 140 L98 133 M104 142 L109 138 M92 142 L87 138" fill="none" stroke={c("finger")} strokeWidth={w("finger")} strokeLinecap="round" />
+        {/* legs */}
+        <path d="M51 152 L47 200" fill="none" stroke={c("leg")} strokeWidth={part === "leg" ? 4.5 : 3} strokeLinecap="round" />
+        <path d="M69 152 L73 200" fill="none" stroke={c("leg")} strokeWidth={part === "leg" ? 4.5 : 3} strokeLinecap="round" />
+        {/* feet */}
+        <path d="M47 200 L38 204 M73 200 L82 204" fill="none" stroke={c("leg")} strokeWidth={part === "leg" ? 4.5 : 3} strokeLinecap="round" />
+      </svg>
+    </div>
   );
 }
 
@@ -3389,7 +3447,9 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
 
         {ex.t === "intro" && (
           <>
-            {WORD_IMG[ex.gu] && <img className="wordimg" src={WORD_IMG[ex.gu]} alt={ex.en} referrerPolicy="no-referrer" loading="lazy" />}
+            {BODY_PARTS[ex.gu]
+              ? <BodyDiagram part={BODY_PARTS[ex.gu]} />
+              : WORD_IMG[ex.gu] && <img className="wordimg" src={WORD_IMG[ex.gu]} alt={ex.en} referrerPolicy="no-referrer" loading="lazy" />}
             {readWrite ? (
               <>
                 <div className="bigword gu">{ex.gu}</div>
