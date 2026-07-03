@@ -777,9 +777,8 @@ const CSS = `
 .ftbtn.on{background:var(--card);color:var(--brand);box-shadow:var(--bevel-raise)}
 .ftbtn.on .ftsample{color:var(--brand)}
 /* Applied to the script screen root; retargets every letter glyph on the page */
-.sfont-2 .chargrid .gu,.sfont-2 .charinfo .gu,.sfont-2 .charinfo .ci-ex b.gu{font-family:'Rasa','Anek Gujarati',serif}
+.sfont-2 .chargrid .gu,.sfont-2 .charinfo .gu,.sfont-2 .charinfo .ci-ex b.gu{font-family:'Rasa','Anek Gujarati','Noto Sans Gujarati',serif}
 .sfont-3 .chargrid .gu,.sfont-3 .charinfo .gu,.sfont-3 .charinfo .ci-ex b.gu{font-family:'Mogra','Noto Sans Gujarati','Anek Gujarati',sans-serif}
-.gu-ext-grid .gu{font-family:'Noto Sans Gujarati','Anek Gujarati',sans-serif!important}
 .playbtn.sm{width:34px;height:34px}
 .chargrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .chartile{border:1px solid transparent;background:var(--card);border-radius:14px;padding:12px 6px;cursor:pointer;
@@ -3083,14 +3082,14 @@ function CourseApp({ user }) {
           <div className="chargrid numgrid">{NUMERALS.map(Tile)}</div>
 
           <div className="section-h">Modifiers</div>
-          <div className="chargrid gu-ext-grid">{SIGNS.map(Tile)}</div>
+          <div className="chargrid">{SIGNS.map(Tile)}</div>
 
           <div className="section-h">Conjunct letters</div>
           <div className="chargrid">{CONJUNCTS.map(Tile)}</div>
 
           <div className="section-h">Rare and borrowed consonants</div>
           <p className="hist-intro" style={{ margin: "0 4px 10px" }}>Extra letters, usually a base consonant plus a dot (nukta), for sounds from Perso-Arabic and English loanwords.</p>
-          <div className="chargrid gu-ext-grid">{RARE_CONS.map(Tile)}</div>
+          <div className="chargrid">{RARE_CONS.map(Tile)}</div>
 
           <div style={{ height: 10 }} />
         </div>
