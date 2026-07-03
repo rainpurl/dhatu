@@ -70,7 +70,10 @@ Key modules:
 Screen values (the `screen` state): `onboarding, learn, script, scriptLearn,
 review, vocab, history (Culture), profile, lesson, complete, grammar, talk,
 vocabPractice`. Bottom nav on mobile becomes a **left sidebar on desktop
-(>=900px)**.
+(>=900px)**. On desktop every page **fills the full width** (`.scr` is
+max-width:none with `5vw` side padding, not a centered column); list screens
+(Vocab, Grammar, Review, Culture) use responsive card grids (`.cardgrid`,
+`.wide-2col` = `auto-fill minmax`) so the space is used in columns.
 
 ---
 
@@ -196,7 +199,7 @@ Until rules/index are applied, social features fail quietly (app still works).
   words, roughly doubling the questions. Lessons with fewer than 3 taught
   words (grammar/note-heavy) are left unchanged. No new audio is needed since it
   reuses taught words. The **lesson-taking view is full-width on desktop**
-  (`.dhatu.lesson-view`), not the centered column used elsewhere.
+  (`.dhatu.lesson-view`); all other screens are full-width on desktop too.
   Top of the tab: a **resume card** (jumps to the next recommended lesson, shows
   overall course-completion bar), a **daily-goal strip** (3 lessons/day, tracked
   in `dhatu_dayLog`; turns green when met), and **per-unit progress bars** in each
