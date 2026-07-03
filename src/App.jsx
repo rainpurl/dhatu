@@ -5182,6 +5182,7 @@ function SpeakCheck({ target, onResult }) {
 
 /* ============================ HISTORY: Gujarati narration summaries ============================ */
 const ERA_GU_SUMMARY = {
+  language: "ગુજરાતી ભાષા સંસ્કૃતમાંથી પ્રાકૃત અને અપભ્રંશ થઈને ઊતરી આવેલી ભાષા છે, અને આજે લગભગ છ કરોડ લોકો તે બોલે છે. ગુજરાતી લિપિ દેવનાગરીમાંથી બની, પણ તેમાં ઉપરની લીટી નથી; એવું કહેવાય છે કે વેપારીઓને ઝડપથી લખવા માટે આ શૈલી અનુકૂળ હતી. પંદરમી સદીમાં નરસિંહ મહેતાએ ભક્તિનાં પદ લખ્યાં. ઓગણીસમી સદીમાં નર્મદે આધુનિક ગુજરાતી ગદ્યનો પાયો નાખ્યો અને પહેલો શબ્દકોશ બનાવ્યો. ગોવર્ધનરામ ત્રિપાઠીની નવલકથા સરસ્વતીચંદ્ર ગુજરાતી સાહિત્યની મોટી કૃતિ છે. ઝવેરચંદ મેઘાણીએ લોકસાહિત્ય ભેગું કર્યું અને ઉમાશંકર જોશીને જ્ઞાનપીઠ પુરસ્કાર મળ્યો. આજે ગુજરાતી ભાષા દુનિયાભરના ગુજરાતી સમાજમાં જીવંત છે.",
   indus: "ગુજરાત નામ પડ્યું તે પહેલાં પણ અહીં સિંધુ ખીણની સભ્યતાનાં મોટાં શહેરો હતાં. કચ્છના રણમાં આવેલું ધોળાવીરા લગભગ સાડા ચાર હજાર વર્ષ જૂનું છે અને તે આખું પથ્થરથી બનેલું હતું. ત્યાં વરસાદનું પાણી સાચવવા માટે સોળ જેટલા મોટા હોજ બનાવેલા હતા, જે દુનિયાની સૌથી જૂની જળ-વ્યવસ્થાઓમાંની એક ગણાય છે. ખંભાતના અખાત પાસે આવેલા લોથલમાં એક ગોદી અને મણકા બનાવવાનાં કારખાનાં મળી આવ્યાં છે. અહીંના લોકો દૂર મેસોપોટેમિયા સુધી વેપાર કરતા હતા. લગભગ ૨૧૦૦ ઈસવીસન પૂર્વે આ સભ્યતા ધીરે ધીરે ઓસરી ગઈ.",
   maurya: "જૂનાગઢ પાસે ગિરનાર ડુંગરની તળેટીમાં એક મોટો પથ્થર છે. ઈસવીસન પૂર્વે ત્રીજી સદીમાં સમ્રાટ અશોકે તેના ઉપર ચૌદ આજ્ઞાલેખ કોતરાવ્યા હતા. આ સંદેશા બ્રાહ્મી લિપિમાં લખાયેલા છે અને શાંતિ, દયા તથા બધા ધર્મો પ્રત્યે સહિષ્ણુતા વિશે વાત કરે છે. પછીથી બીજા બે રાજાઓએ પણ આ જ પથ્થર પર પોતાના લેખ ઉમેર્યા. રુદ્રદામન અને સ્કંદગુપ્તે સુદર્શન નામના તળાવના સમારકામ વિશે લખ્યું. આમ એક જ પથ્થર પર લગભગ સાતસો વર્ષના ત્રણ રાજવંશોના સંદેશા જોવા મળે છે.",
   vallabhi: "વલ્લભી સૌરાષ્ટ્રમાં આવેલું એક જૂનું અને ધનવાન બંદર-શહેર હતું. મૈત્રક વંશના રાજાઓ લગભગ ત્રણસો વર્ષ સુધી અહીંથી રાજ કરતા હતા. વલ્લભી તેની મોટી વિદ્યાપીઠ માટે પ્રખ્યાત હતું. ચીનથી આવેલા યાત્રી હ્યુ-એન-ત્સાંગે તેને નાલંદા જેવી મહાન વિદ્યાપીઠ ગણાવી હતી. અહીં બૌદ્ધ ધર્મની સાથે તર્કશાસ્ત્ર અને વ્યાકરણ પણ ભણાવાતું. જૈન અને બ્રાહ્મણ વિદ્યા પણ સાથે ચાલતી, એટલે આ શહેર જુદા જુદા ધર્મોનું કેન્દ્ર હતું. લગભગ ૭૮૦ ઈસવીસનમાં આ નગરનું પતન થયું.",
@@ -5630,6 +5631,17 @@ ERAS.push(
 );
 
 /* attach each era's Gujarati summary (must run after all eras are pushed) */
+ERAS.push(
+  { id:"language", category:"modern", yr:"1800s - present", title:"The Gujarati language and its writers",
+    blurb:"How the language you are learning took shape, from a merchant's quick hand to a novel, a folk-song collector, and a diaspora that keeps it alive.",
+    body:[
+      "Gujarati is an Indo-Aryan language, descended from Sanskrit through the intermediate stages of Prakrit and Apabhramsha, and it is spoken today by roughly sixty million people. It is the official language of the state of Gujarat, but it lives far beyond those borders, carried by generations of merchants and migrants to East Africa, Britain, and North America, which makes it one of the most widely spoken South Asian languages in the global diaspora.",
+      "The Gujarati script grew out of the same Devanagari writing used for Sanskrit and Hindi, but it developed a distinctive, flowing form without the horizontal line across the top of each letter. This top-lineless style is often linked to the account books and correspondence of Gujarat's merchant communities, who needed to write quickly, and by the 19th century it had become the standard printed form of the language.",
+      "The foundations were laid early. In the 12th century the Jain scholar Hemachandra wrote grammars of the Apabhramsha speech that lay behind Gujarati, and in the 15th century the poet Narsinh Mehta composed devotional verse that later writers treated as a starting point. But the modern language took shape in the 19th century, above all through Narmadashankar Dave, known simply as Narmad, a poet, essayist, and reformer who compiled an early Gujarati dictionary and is often called a father of modern Gujarati prose.",
+      "The decades that followed produced a rich literature. Govardhanram Tripathi's vast novel Saraswatichandra, published in four volumes between 1887 and 1901, is a landmark of the Gujarati novel and a sweeping portrait of a society in flux. In the 20th century Jhaverchand Meghani traveled Saurashtra collecting its folk songs and ballads and was honored by Gandhi as a national poet, while the poet and scholar Umashankar Joshi received the Jnanpith Award, one of India's highest literary honors, in 1967.",
+      "For a language often overshadowed in national conversation by Hindi and English, Gujarati has an unusually strong everyday life: a lively press, film and theater, a deep devotional and folk tradition, and a diaspora that keeps teaching it to children far from Gujarat. Learning it is a way into all of that."],
+    sources:["Scholarship on the history of the Gujarati language and its literature","Encyclopaedia Britannica, Gujarati language","Wikipedia, Gujarati literature, Narmad, Govardhanram Tripathi, and Umashankar Joshi"] });
+
 ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });
 
 /* ---------------- auth gate ---------------- */
