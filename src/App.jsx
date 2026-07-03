@@ -1068,6 +1068,9 @@ const CSS = `
 }
 /* desktop: left sidebar nav and a centered content column (web-first, not a phone on a monitor) */
 @media (min-width:900px){
+  /* the lesson-taking view fills the full width on desktop, not a centered box */
+  .dhatu.lesson-view{max-width:none;padding:0}
+  .dhatu.lesson-view .scr{max-width:none;margin:0;padding:26px 5vw 130px;width:100%}
   .nav{
     top:0;bottom:0;left:0;right:auto;width:240px;height:100vh;max-width:none;
     flex-direction:column;justify-content:flex-start;align-items:stretch;gap:5px;
@@ -3166,7 +3169,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
   const usedIdx = new Set(buildAns.map((a) => a.i));
 
   return (
-    <div className="dhatu">
+    <div className="dhatu lesson-view">
       <style>{CSS}</style>
       <div className="scr">
         <Header />
@@ -4072,6 +4075,45 @@ Object.assign(LESSONS, {
 UNITS.push({ id:"u15", ku:"Unit 15", title:"Travel and directions", sub:"Left and right, asking the way, and getting around", color:"#3F7E7E",
   lessons:[ {id:"u15l1",label:"Left and right"}, {id:"u15l2",label:"Getting there"}, {id:"u15c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u15l1", "u15l2", "u15c");
+
+/* Roughly double the practice in every lesson by appending auto-generated
+   reinforcement questions (listen and match) built from each lesson's own taught
+   words. This reuses words that already have audio, so no new clips are needed.
+   Lessons without enough vocabulary (grammar/note-heavy ones) are left as-is. */
+function _rotate(arr, n) { const a = arr.slice(); const k = ((n % a.length) + a.length) % a.length; return a.slice(k).concat(a.slice(0, k)); }
+function _uniq(arr) { return arr.filter((v, i) => arr.indexOf(v) === i); }
+function expandLesson(l) {
+  const ex = Array.isArray(l.ex) ? l.ex : [];
+  const pairs = []; const seen = new Set();
+  for (const e of ex) {
+    if (e.t === "intro" && e.gu && e.en) { if (!seen.has(e.gu)) { seen.add(e.gu); pairs.push({ gu: e.gu, en: e.en, roman: e.roman || "" }); } }
+    else if (e.t === "match" && Array.isArray(e.pairs)) { for (const p of e.pairs) { if (p.gu && p.en && !seen.has(p.gu)) { seen.add(p.gu); pairs.push({ gu: p.gu, en: p.en, roman: "" }); } } }
+  }
+  if (pairs.length < 3) return ex;
+  const ens = pairs.map((p) => p.en);
+  const need = ex.filter((e) => e.t !== "note").length;
+  const listened = new Set(ex.filter((e) => e.t === "listen").map((e) => e.say));
+  const extras = [];
+  const mkListen = (p, i) => {
+    const others = ens.filter((e) => e !== p.en);
+    const opts = _uniq([p.en, others[i % others.length], others[(i + 1) % others.length]]).slice(0, 3);
+    if (opts.length < 2) return null;
+    return { t: "listen", say: p.gu, roman: p.roman, options: _rotate(opts, i + 1), answer: p.en };
+  };
+  // first pass: a listen for each taught word not already quizzed by listening
+  let i = 0;
+  for (const p of pairs) { if (extras.length >= need) break; if (listened.has(p.gu)) continue; const q = mkListen(p, i++); if (q) extras.push(q); }
+  // an extra matching round
+  if (extras.length < need && pairs.length >= 4) extras.push({ t: "match", pairs: pairs.slice(0, 4).map((p) => ({ gu: p.gu, en: p.en })) });
+  // second pass: reinforce again (varied distractors) until we reach the target
+  i = 2;
+  for (const p of pairs) { if (extras.length >= need) break; const q = mkListen(p, i++); if (q) extras.push(q); }
+  if (!extras.length) return ex;
+  const out = ex.slice();
+  if (out.length && out[out.length - 1].t === "speak") { const sp = out.pop(); return [...out, ...extras, sp]; }
+  return [...out, ...extras];
+}
+Object.keys(LESSONS).forEach((k) => { LESSONS[k].ex = expandLesson(LESSONS[k]); });
 
 /* ============================ VOCAB: festivals + textiles (added) ============================ */
 TOPICS.push(
