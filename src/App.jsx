@@ -150,6 +150,38 @@ const Ic = {
       <circle cx="12.2" cy="16.9" r="1" fill="currentColor" />
     </svg>
   ),
+  cup: (p) => (
+    <svg {...S(p)}>
+      <path d="M5 8h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V8Z" />
+      <path d="M16 9h2.5a2 2 0 0 1 0 4H16" />
+      <path d="M8 3c-.5 1 .5 2 0 3M11.5 3c-.5 1 .5 2 0 3" />
+    </svg>
+  ),
+  car: (p) => (
+    <svg {...S(p)}>
+      <path d="M5 11l1.6-4A2 2 0 0 1 8.5 6h7a2 2 0 0 1 1.9 1.3L19 11" />
+      <rect x="3" y="11" width="18" height="6" rx="2" />
+      <circle cx="7.5" cy="17.5" r="1.4" />
+      <circle cx="16.5" cy="17.5" r="1.4" />
+    </svg>
+  ),
+  palette: (p) => (
+    <svg {...S(p)}>
+      <path d="M12 3a9 9 0 1 0 0 18 1.6 1.6 0 0 0 1.6-1.6c0-.9.7-1.6 1.6-1.6H17a4 4 0 0 0 4-4 8 8 0 0 0-9-8.8Z" />
+      <circle cx="8.5" cy="10.5" r="1" />
+      <circle cx="12" cy="8" r="1" />
+      <circle cx="15.5" cy="10.5" r="1" />
+    </svg>
+  ),
+  paw: (p) => (
+    <svg {...S(p)}>
+      <ellipse cx="12" cy="15" rx="4" ry="3.2" />
+      <circle cx="6.5" cy="10" r="1.5" />
+      <circle cx="10" cy="7.5" r="1.5" />
+      <circle cx="14" cy="7.5" r="1.5" />
+      <circle cx="17.5" cy="10" r="1.5" />
+    </svg>
+  ),
   learn: (p) => (
     <svg {...S(p)}>
       <path d="M6 21V4" />
@@ -731,7 +763,7 @@ const CSS = `
 .wordcard{display:flex;align-items:center;gap:12px;background:var(--card);border:none;
   border-radius:16px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--bevel-inset)}
 .wordcard .cue{width:40px;height:40px;border-radius:12px;background:var(--brand-soft);display:grid;place-items:center;
-  font-size:22px;flex:none}
+  color:var(--brand);flex:none}
 .wordcard .gu{font-family:var(--fgu);font-size:20px;font-weight:700}
 .wordcard .rm{font-size:12px;color:var(--muted);font-weight:600}
 .wordcard .en{font-size:14px;margin-top:1px}
@@ -927,6 +959,14 @@ const CSS = `
   .dhatu:has(> .nav) .scriptfoot{left:240px;right:0;max-width:760px;margin:0 auto;transform:none}
   .guides{grid-template-columns:repeat(2,1fr)}
   .chargrid{grid-template-columns:repeat(6,1fr)}
+  /* keep the lesson path a tight, centered winding column instead of scattering
+     the nodes across the full width; make the circles bigger */
+  .dhatu:has(> .nav) .path{max-width:380px;margin:0 auto}
+  .dhatu:has(> .nav) .node-row{height:96px}
+  .dhatu:has(> .nav) .node{width:88px;height:84px}
+  .dhatu:has(> .nav) .node .disc{width:84px;height:80px}
+  .dhatu:has(> .nav) .node svg{width:36px;height:36px}
+  .dhatu:has(> .nav) .node-label{font-size:13px}
 }
 @media (min-width:1200px){
   .wide-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
@@ -1170,14 +1210,14 @@ const GRAMMAR = [
 
 /* ============================ CONVERSATIONS ============================ */
 const CONVERSATIONS = [
-  { id:"c1", title:"Saying hello", icon:"👋", turns:[
+  { id:"c1", title:"Saying hello", icon:"hand", turns:[
     { who:"them", gu:"નમસ્તે! કેમ છો?", roman:"namaste! kem chho?", en:"Hello! How are you?" },
     { who:"you", gu:"હું મજામાં છું, આભાર. તમે?", roman:"huṁ majaamaan chuṁ, aabhaar. tame?", en:"I'm well, thanks. You?", choices:["હું મજામાં છું","ના, આભાર","આવજો"] },
     { who:"them", gu:"હું પણ મજામાં છું.", roman:"huṁ paṇ majaamaan chuṁ.", en:"I'm well too." },
     { who:"you", gu:"તમારું નામ શું છે?", roman:"tamaaruṁ naam shuṁ chhe?", en:"What is your name?" },
     { who:"them", gu:"મારું નામ મીરા છે.", roman:"maaruṁ naam Meeraa chhe.", en:"My name is Meera." },
   ]},
-  { id:"c2", title:"At the tea stall", icon:"☕", turns:[
+  { id:"c2", title:"At the tea stall", icon:"cup", turns:[
     { who:"them", gu:"આવો! શું જોઈએ?", roman:"aavo! shuṁ joie?", en:"Welcome! What would you like?" },
     { who:"you", gu:"મને એક ચા જોઈએ.", roman:"mane ek chaa joie.", en:"I'd like one tea.", choices:["મને એક ચા જોઈએ","પાણી","આભાર"] },
     { who:"them", gu:"ખાંડ સાથે?", roman:"khaanḍ saathe?", en:"With sugar?" },
@@ -1185,7 +1225,7 @@ const CONVERSATIONS = [
     { who:"them", gu:"લો, તમારી ચા.", roman:"lo, tamaari chaa.", en:"Here, your tea." },
     { who:"you", gu:"આભાર!", roman:"aabhaar!", en:"Thank you!" },
   ]},
-  { id:"c3", title:"Asking the way", icon:"🧭", turns:[
+  { id:"c3", title:"Asking the way", icon:"target", turns:[
     { who:"you", gu:"માફ કરો, બજાર ક્યાં છે?", roman:"maaf karo, bajaar kyaan chhe?", en:"Excuse me, where is the market?" },
     { who:"them", gu:"સીધા જાઓ, પછી ડાબે.", roman:"seedhaa jaao, pachhi ḍaabe.", en:"Go straight, then left." },
     { who:"you", gu:"કેટલું દૂર છે?", roman:"keṭluṁ door chhe?", en:"How far is it?", choices:["કેટલું દૂર છે?","આભાર","હા"] },
@@ -1196,74 +1236,74 @@ const CONVERSATIONS = [
 
 /* ============================ VOCAB TOPICS ============================ */
 const TOPICS = [
-  { id:"slang", title:"Modern slang", icon:"😎", tag:"New", note:"Casual words younger people actually use. Fun with friends, but skip them in formal settings.", words:[
-    { gu:"મસ્ત", r:"mast", en:"awesome / cool", cue:"🤩" },
-    { gu:"જબરું", r:"jabaruṁ", en:"amazing", cue:"🔥" },
-    { gu:"ધમાલ", r:"dhamaal", en:"a blast / great fun", cue:"🎉" },
-    { gu:"શું ચાલે?", r:"shu chaale?", en:"what's up?", cue:"👋" },
-    { gu:"ટેન્શન નહીં", r:"ṭension nahi", en:"no worries", cue:"😌" },
-    { gu:"લોચો", r:"locho", en:"a mix-up / mess", cue:"😅" },
+  { id:"slang", title:"Modern slang", icon:"spark", tag:"New", note:"Casual words younger people actually use. Fun with friends, but skip them in formal settings.", words:[
+    { gu:"મસ્ત", r:"mast", en:"awesome / cool" },
+    { gu:"જબરું", r:"jabaruṁ", en:"amazing" },
+    { gu:"ધમાલ", r:"dhamaal", en:"a blast / great fun" },
+    { gu:"શું ચાલે?", r:"shu chaale?", en:"what's up?" },
+    { gu:"ટેન્શન નહીં", r:"ṭension nahi", en:"no worries" },
+    { gu:"લોચો", r:"locho", en:"a mix-up / mess" },
   ]},
-  { id:"family", title:"Family", icon:"👪", words:[
-    { gu:"માતા", r:"maataa", en:"mother", cue:"👩" },
-    { gu:"પિતા", r:"pitaa", en:"father", cue:"👨" },
-    { gu:"ભાઈ", r:"bhaai", en:"brother", cue:"🧑" },
-    { gu:"બહેન", r:"bahen", en:"sister", cue:"👧" },
-    { gu:"દાદા", r:"daadaa", en:"grandfather", cue:"👴" },
-    { gu:"દાદી", r:"daadi", en:"grandmother", cue:"👵" },
+  { id:"family", title:"Family", icon:"family", words:[
+    { gu:"માતા", r:"maataa", en:"mother" },
+    { gu:"પિતા", r:"pitaa", en:"father" },
+    { gu:"ભાઈ", r:"bhaai", en:"brother" },
+    { gu:"બહેન", r:"bahen", en:"sister" },
+    { gu:"દાદા", r:"daadaa", en:"grandfather" },
+    { gu:"દાદી", r:"daadi", en:"grandmother" },
   ]},
-  { id:"numbers", title:"Numbers 1-10", icon:"🔢", words:[
-    { gu:"એક", r:"ek", en:"one", cue:"1️⃣" },
-    { gu:"બે", r:"be", en:"two", cue:"2️⃣" },
-    { gu:"ત્રણ", r:"traṇ", en:"three", cue:"3️⃣" },
-    { gu:"ચાર", r:"chaar", en:"four", cue:"4️⃣" },
-    { gu:"પાંચ", r:"paanch", en:"five", cue:"5️⃣" },
-    { gu:"છ", r:"chha", en:"six", cue:"6️⃣" },
-    { gu:"સાત", r:"saat", en:"seven", cue:"7️⃣" },
-    { gu:"આઠ", r:"aaṭh", en:"eight", cue:"8️⃣" },
-    { gu:"નવ", r:"nav", en:"nine", cue:"9️⃣" },
-    { gu:"દસ", r:"das", en:"ten", cue:"🔟" },
+  { id:"numbers", title:"Numbers 1-10", icon:"numbers", words:[
+    { gu:"એક", r:"ek", en:"one" },
+    { gu:"બે", r:"be", en:"two" },
+    { gu:"ત્રણ", r:"traṇ", en:"three" },
+    { gu:"ચાર", r:"chaar", en:"four" },
+    { gu:"પાંચ", r:"paanch", en:"five" },
+    { gu:"છ", r:"chha", en:"six" },
+    { gu:"સાત", r:"saat", en:"seven" },
+    { gu:"આઠ", r:"aaṭh", en:"eight" },
+    { gu:"નવ", r:"nav", en:"nine" },
+    { gu:"દસ", r:"das", en:"ten" },
   ]},
-  { id:"food", title:"Food and drink", icon:"🍲", words:[
-    { gu:"ભાત", r:"bhaat", en:"rice", cue:"🍚" },
-    { gu:"રોટલી", r:"roṭli", en:"roti", cue:"🫓" },
-    { gu:"દાળ", r:"daaḷ", en:"lentils", cue:"🥣" },
-    { gu:"શાક", r:"shaak", en:"vegetable curry", cue:"🥘" },
-    { gu:"દૂધ", r:"doodh", en:"milk", cue:"🥛" },
-    { gu:"ચા", r:"chaa", en:"tea", cue:"☕" },
-    { gu:"કેરી", r:"keri", en:"mango", cue:"🥭" },
+  { id:"food", title:"Food and drink", icon:"bowl", words:[
+    { gu:"ભાત", r:"bhaat", en:"rice" },
+    { gu:"રોટલી", r:"roṭli", en:"roti" },
+    { gu:"દાળ", r:"daaḷ", en:"lentils" },
+    { gu:"શાક", r:"shaak", en:"vegetable curry" },
+    { gu:"દૂધ", r:"doodh", en:"milk" },
+    { gu:"ચા", r:"chaa", en:"tea" },
+    { gu:"કેરી", r:"keri", en:"mango" },
   ]},
-  { id:"verbs", title:"Common verbs", icon:"🏃", words:[
-    { gu:"ખાવું", r:"khaavuṁ", en:"to eat", cue:"🍽️" },
-    { gu:"પીવું", r:"peevuṁ", en:"to drink", cue:"🥤" },
-    { gu:"જવું", r:"javuṁ", en:"to go", cue:"🚶" },
-    { gu:"આવવું", r:"aavvuṁ", en:"to come", cue:"👋" },
-    { gu:"કરવું", r:"karvuṁ", en:"to do", cue:"🛠️" },
-    { gu:"બોલવું", r:"bolvuṁ", en:"to speak", cue:"💬" },
+  { id:"verbs", title:"Common verbs", icon:"steps", words:[
+    { gu:"ખાવું", r:"khaavuṁ", en:"to eat" },
+    { gu:"પીવું", r:"peevuṁ", en:"to drink" },
+    { gu:"જવું", r:"javuṁ", en:"to go" },
+    { gu:"આવવું", r:"aavvuṁ", en:"to come" },
+    { gu:"કરવું", r:"karvuṁ", en:"to do" },
+    { gu:"બોલવું", r:"bolvuṁ", en:"to speak" },
   ]},
-  { id:"transport", title:"Getting around", icon:"🚗", words:[
-    { gu:"ગાડી", r:"gaaḍi", en:"car", cue:"🚗" },
-    { gu:"બસ", r:"bas", en:"bus", cue:"🚌" },
-    { gu:"ટ્રેન", r:"ṭren", en:"train", cue:"🚆" },
-    { gu:"રિક્ષા", r:"riksaa", en:"auto-rickshaw", cue:"🛺" },
-    { gu:"સાઇકલ", r:"saaikal", en:"bicycle", cue:"🚲" },
-    { gu:"વિમાન", r:"vimaan", en:"airplane", cue:"✈️" },
+  { id:"transport", title:"Getting around", icon:"car", words:[
+    { gu:"ગાડી", r:"gaaḍi", en:"car" },
+    { gu:"બસ", r:"bas", en:"bus" },
+    { gu:"ટ્રેન", r:"ṭren", en:"train" },
+    { gu:"રિક્ષા", r:"riksaa", en:"auto-rickshaw" },
+    { gu:"સાઇકલ", r:"saaikal", en:"bicycle" },
+    { gu:"વિમાન", r:"vimaan", en:"airplane" },
   ]},
-  { id:"colors", title:"Colors", icon:"🎨", words:[
-    { gu:"લાલ", r:"laal", en:"red", cue:"🔴" },
-    { gu:"વાદળી", r:"vaadaḷi", en:"blue", cue:"🔵" },
-    { gu:"લીલો", r:"leelo", en:"green", cue:"🟢" },
-    { gu:"પીળો", r:"peeḷo", en:"yellow", cue:"🟡" },
-    { gu:"કાળો", r:"kaaḷo", en:"black", cue:"⚫" },
-    { gu:"સફેદ", r:"safed", en:"white", cue:"⚪" },
+  { id:"colors", title:"Colors", icon:"palette", words:[
+    { gu:"લાલ", r:"laal", en:"red" },
+    { gu:"વાદળી", r:"vaadaḷi", en:"blue" },
+    { gu:"લીલો", r:"leelo", en:"green" },
+    { gu:"પીળો", r:"peeḷo", en:"yellow" },
+    { gu:"કાળો", r:"kaaḷo", en:"black" },
+    { gu:"સફેદ", r:"safed", en:"white" },
   ]},
-  { id:"animals", title:"Animals", icon:"🐾", words:[
-    { gu:"કૂતરો", r:"kootro", en:"dog", cue:"🐕" },
-    { gu:"બિલાડી", r:"bilaaḍi", en:"cat", cue:"🐈" },
-    { gu:"ગાય", r:"gaay", en:"cow", cue:"🐄" },
-    { gu:"હાથી", r:"haathi", en:"elephant", cue:"🐘" },
-    { gu:"વાઘ", r:"vaagh", en:"tiger", cue:"🐅" },
-    { gu:"પક્ષી", r:"pakshi", en:"bird", cue:"🐦" },
+  { id:"animals", title:"Animals", icon:"paw", words:[
+    { gu:"કૂતરો", r:"kootro", en:"dog" },
+    { gu:"બિલાડી", r:"bilaaḍi", en:"cat" },
+    { gu:"ગાય", r:"gaay", en:"cow" },
+    { gu:"હાથી", r:"haathi", en:"elephant" },
+    { gu:"વાઘ", r:"vaagh", en:"tiger" },
+    { gu:"પક્ષી", r:"pakshi", en:"bird" },
   ]},
 ];
 
@@ -1541,6 +1581,12 @@ function SafeImg({ src, alt, className }) {
   const [ok, setOk] = useState(true);
   if (!src || !ok) return null;
   return <img src={src} alt={alt} className={className} onError={() => setOk(false)} />;
+}
+
+// Render an icon by its Ic key (used for topic and conversation icons).
+function TopicIcon({ name, size = 24 }) {
+  const C = Ic[name] || Ic.tag;
+  return <C width={size} height={size} />;
 }
 
 // Inline body figure that removes itself entirely if the image fails to load.
@@ -1922,7 +1968,7 @@ function CourseApp({ user }) {
                 <div className="bar"><i style={{ width: `${((convoStep + 1) / convo.turns.length) * 100}%` }} /></div>
               </div>
             </div>
-            <div style={{ textAlign: "center", fontSize: 40, marginBottom: 6 }}>{convo.icon}</div>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 6, color: "var(--brand)" }}><TopicIcon name={convo.icon} size={40} /></div>
             <div className="q-title" style={{ textAlign: "center" }}>{convo.title}</div>
             <div className="card" style={{ marginTop: 10 }}>
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--muted)", marginBottom: 8 }}>
@@ -1971,7 +2017,7 @@ function CourseApp({ user }) {
           </div>
           {CONVERSATIONS.map((c) => (
             <button key={c.id} className="card" style={{ width: "100%", textAlign: "left", marginBottom: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 14 }} onClick={() => { setSelConvo(c.id); setConvoStep(0); }}>
-              <div style={{ fontSize: 30 }}>{c.icon}</div>
+              <div style={{ color: "var(--brand)", display: "flex" }}><TopicIcon name={c.icon} size={28} /></div>
               <div>
                 <div style={{ fontWeight: 800, fontSize: 16 }}>{c.title}</div>
                 <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 2 }}>{c.turns.length} lines</div>
@@ -2120,7 +2166,7 @@ function CourseApp({ user }) {
           <TopBar title="Review" sub={`${due.length} due now`} />
           {srs.length === 0 && (
             <div className="card" style={{ textAlign: "center", padding: 28 }}>
-              <div style={{ fontSize: 34, marginBottom: 8 }}>🗂️</div>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, color: "var(--muted)" }}><Ic.vocab width={32} height={32} /></div>
               <div style={{ fontWeight: 800, marginBottom: 4 }}>Nothing to review yet</div>
               <div style={{ fontSize: 13.5, color: "var(--muted)" }}>Add words from Vocab, or finish lessons to build your review pile.</div>
             </div>
@@ -2145,7 +2191,7 @@ function CourseApp({ user }) {
           ))}
           {srs.length > 0 && due.length === 0 && (
             <div className="card" style={{ textAlign: "center", padding: 28 }}>
-              <div style={{ fontSize: 34, marginBottom: 8 }}>✅</div>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, color: "var(--ok)" }}><Ic.check width={32} height={32} /></div>
               <div style={{ fontWeight: 800, marginBottom: 4 }}>All caught up</div>
               <div style={{ fontSize: 13.5, color: "var(--muted)" }}>{srs.length} words are scheduled for later.</div>
             </div>
@@ -2168,7 +2214,7 @@ function CourseApp({ user }) {
             <div className="lhead">
               <button className="iconbtn" onClick={() => setSelTopic(null)}><Ic.back /></button>
               <div>
-                <h1 style={{ fontSize: 19, fontWeight: 800, margin: 0 }}>{topic.icon} {topic.title}</h1>
+                <h1 style={{ fontSize: 19, fontWeight: 800, margin: 0, display: "flex", alignItems: "center", gap: 8, color: "var(--ink)" }}><span style={{ color: "var(--brand)", display: "flex" }}><TopicIcon name={topic.icon} size={22} /></span>{topic.title}</h1>
               </div>
             </div>
             {topic.note && (
@@ -2178,7 +2224,7 @@ function CourseApp({ user }) {
             )}
             {topic.words.map((w, i) => (
               <div key={i} className="wordcard">
-                <div className="cue">{w.cue}</div>
+                <div className="cue"><TopicIcon name={topic.icon} size={22} /></div>
                 <div>
                   <div className="gu">{w.gu}</div>
                   <div className="rm">{w.r}</div>
@@ -2205,7 +2251,7 @@ function CourseApp({ user }) {
           <TopBar title="Vocab" sub="Words by topic" />
           {TOPICS.map((t) => (
             <button key={t.id} className="card" style={{ width: "100%", textAlign: "left", marginBottom: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 14 }} onClick={() => setSelTopic(t.id)}>
-              <div style={{ fontSize: 28 }}>{t.icon}</div>
+              <div style={{ color: "var(--brand)", display: "flex" }}><TopicIcon name={t.icon} size={28} /></div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 800, fontSize: 16 }}>{t.title}{t.tag && <span className="tag">{t.tag}</span>}</div>
                 <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 2 }}>{t.words.length} words</div>
@@ -2234,7 +2280,6 @@ function CourseApp({ user }) {
             <div className="chip gold">{practiceIdx + 1}/{topic.words.length}</div>
           </div>
           <div className="q-title" style={{ textAlign: "center" }}>Say this word</div>
-          <div style={{ textAlign: "center", fontSize: 36, marginBottom: 2 }}>{word.cue}</div>
           <div className="bigword gu">{word.gu}</div>
           <div className="romanline">{word.r}</div>
           <div style={{ textAlign: "center", fontWeight: 600, marginTop: 6 }}>{word.en}</div>
@@ -2823,7 +2868,7 @@ const CULTURE_SOURCES_FILM = ["Times of India, on the Gujarati cinema revival an
 Object.assign(LESSONS, {
   u6l1: { title:"Festivals and Garba", sources: CULTURE_SOURCES_FEST, ex: [
     { t:"intro", gu:"તહેવાર", roman:"tehvaar", en:"festival" },
-    { t:"intro", gu:"નવરાત્રિ", roman:"navraatri", en:"Navratri", sub:"Nine nights of dance and worship honoring the goddess Shakti." },
+    { t:"intro", gu:"નવરાત્રિ", roman:"navraatri", en:"Navratri", sub:"Nine nights of dance and worship honoring the deity Shakti." },
     { t:"intro", gu:"ગરબા", roman:"garbaa", en:"Garba, the circular dance" },
     { t:"note", title:"Three layers of Garba", body:[
       "Garba can be read on three levels at once. As devotion, it honors Amba, or Shakti, with dancers circling a lamp or image.",
@@ -2903,23 +2948,23 @@ Object.assign(LESSONS, {
 
 /* ============================ VOCAB: festivals + textiles (added) ============================ */
 TOPICS.push(
-  { id:"festivals", title:"Festivals and fairs", icon:"🪔", words:[
-    { gu:"તહેવાર", r:"tehvaar", en:"festival", cue:"🎉" },
-    { gu:"નવરાત્રિ", r:"navraatri", en:"Navratri", cue:"💃" },
-    { gu:"ગરબા", r:"garbaa", en:"Garba dance", cue:"🕺" },
-    { gu:"ઉત્તરાયણ", r:"uttaraayan", en:"kite festival", cue:"🪁" },
-    { gu:"દિવાળી", r:"divaaḷi", en:"Diwali", cue:"🪔" },
-    { gu:"મેળો", r:"melo", en:"fair", cue:"🎪" },
+  { id:"festivals", title:"Festivals and fairs", icon:"diya", words:[
+    { gu:"તહેવાર", r:"tehvaar", en:"festival" },
+    { gu:"નવરાત્રિ", r:"navraatri", en:"Navratri" },
+    { gu:"ગરબા", r:"garbaa", en:"Garba dance" },
+    { gu:"ઉત્તરાયણ", r:"uttaraayan", en:"kite festival" },
+    { gu:"દિવાળી", r:"divaaḷi", en:"Diwali" },
+    { gu:"મેળો", r:"melo", en:"fair" },
   ]},
-  { id:"culture", title:"Textiles, food, and culture", icon:"🧵", note:"Terms for Gujarati craft, dress, and everyday food beyond the basics.", words:[
-    { gu:"પટોળું", r:"paṭoḷuṁ", en:"Patola silk", cue:"🧣" },
-    { gu:"બાંધણી", r:"baandhaṇi", en:"tie-dye cloth", cue:"👘" },
-    { gu:"ચણિયાચોળી", r:"chaṇiyaachoḷi", en:"Garba skirt and top", cue:"💃" },
-    { gu:"કેડિયું", r:"keḍiyuṁ", en:"men's Garba top", cue:"👕" },
-    { gu:"ફરસાણ", r:"pharsaaṇ", en:"savory snacks", cue:"🍥" },
-    { gu:"ઊંધિયું", r:"uṅdhiyuṁ", en:"winter vegetable dish", cue:"🍲" },
-    { gu:"થેપલા", r:"theplaa", en:"spiced flatbread", cue:"🫓" },
-    { gu:"દાબેલી", r:"daabeli", en:"street-food bun", cue:"🥪" },
+  { id:"culture", title:"Textiles, food, and culture", icon:"shirt", note:"Terms for Gujarati craft, dress, and everyday food beyond the basics.", words:[
+    { gu:"પટોળું", r:"paṭoḷuṁ", en:"Patola silk" },
+    { gu:"બાંધણી", r:"baandhaṇi", en:"tie-dye cloth" },
+    { gu:"ચણિયાચોળી", r:"chaṇiyaachoḷi", en:"Garba skirt and top" },
+    { gu:"કેડિયું", r:"keḍiyuṁ", en:"men's Garba top" },
+    { gu:"ફરસાણ", r:"pharsaaṇ", en:"savory snacks" },
+    { gu:"ઊંધિયું", r:"uṅdhiyuṁ", en:"winter vegetable dish" },
+    { gu:"થેપલા", r:"theplaa", en:"spiced flatbread" },
+    { gu:"દાબેલી", r:"daabeli", en:"street-food bun" },
   ]}
 );
 
@@ -2984,9 +3029,8 @@ function _micErrorMessage(err) {
     case "audio-capture":
       return "No microphone was found on this device.";
     case "language-not-supported":
-      return "This browser can't recognize Gujarati speech yet. Tap below to continue, or try Chrome.";
     case "network":
-      return "Speech check needs an internet connection. Try again.";
+      return "This browser can't check Gujarati speech here. Tap below to continue, or try Chrome on a phone.";
     default:
       return "The mic ran into a problem. Try again, or tap below to continue.";
   }
@@ -3118,7 +3162,7 @@ const ERA_GU_SUMMARY = {
 
 /* ---- Category: Ancient Foundations ---- */
 ERAS.push(
-  { id:"indus", category:"ancient", yr:"c. 3300 - 1500 BCE", title:"The Indus cities", emo:"🏺",
+  { id:"indus", category:"ancient", yr:"c. 3300 - 1500 BCE", title:"The Indus cities",
     img: FP + "Dholavira%20gujarat.jpg?width=1000",
     figures:[{ src: FP + "Lothal_Dockyard.jpg?width=1000", cap:"The excavated dockyard at Lothal, near the Gulf of Khambhat." }],
     blurb:"Some of the world's earliest planned cities stood in what is now Gujarat, complete with reservoirs and a signboard in a script no one has fully deciphered.",
@@ -3131,7 +3175,7 @@ ERAS.push(
     site:{ name:"Dholavira, Kutch", note:"A UNESCO World Heritage Site since 2021, known for its stone architecture, reservoirs, and the still-undeciphered signboard." },
     sources:["UNESCO World Heritage Centre, Dholavira: a Harappan City","Archaeological Survey of India, Gujarat excavation reports","Wikipedia, Dholavira and Lothal"] },
 
-  { id:"maurya", category:"ancient", yr:"c. 250 BCE - 450 CE", title:"Ashoka's edicts at Girnar", emo:"🪨",
+  { id:"maurya", category:"ancient", yr:"c. 250 BCE - 450 CE", title:"Ashoka's edicts at Girnar",
     img: FP + "Ashoka%20Rock%20Edict%20at%20Junagadh.jpg?width=1000",
     figures:[{ src: FP + "Uparkot%20fort%20of%20Junagadh.jpg?width=1000", cap:"Uparkot fort at Junagadh, below Girnar hill where the edicts are carved." }],
     blurb:"A single boulder near Junagadh carries messages from three different rulers, carved seven centuries apart.",
@@ -3143,7 +3187,7 @@ ERAS.push(
     site:{ name:"Junagadh rock, near Girnar hill", note:"One boulder carries inscriptions from three dynasties across seven centuries, protected today inside a small building." },
     sources:["Archaeological Survey of India","Encyclopaedia Britannica, Ashoka and the Major Rock Edicts","Wikipedia, Junagadh rock inscription of Rudradaman"] },
 
-  { id:"vallabhi", category:"ancient", yr:"c. 470 - 780 CE", title:"Vallabhi's university", emo:"📜",
+  { id:"vallabhi", category:"ancient", yr:"c. 470 - 780 CE", title:"Vallabhi's university",
     img: FP + "Five%20Bronzes%20Valabhipur.jpg?width=1000",
     figures:[{ src: FP + "7th-century%20Khimeshwar%20Mahadev%20Temple%2C%20Kuchadi%20Porbandar%20Gujarat%20159.jpg?width=1000", cap:"A 7th-century temple in Saurashtra, from the Maitraka period of Vallabhi." }],
     blurb:"A coastal kingdom in Saurashtra ran a university that travelers compared to the great Buddhist center of Nalanda.",
@@ -3157,7 +3201,7 @@ ERAS.push(
 
 /* ---- Category: Kingdoms and Courts ---- */
 ERAS.push(
-  { id:"solanki", category:"kingdoms", yr:"c. 940 - 1300 CE", title:"The Solanki age", emo:"🛕",
+  { id:"solanki", category:"kingdoms", yr:"c. 940 - 1300 CE", title:"The Solanki age",
     img: FP + "Rani%20ki%20vav%2002.jpg?width=1000",
     figures:[{ src: FP + "Sun%20Temple%2C%20Modhera%2008.jpg?width=1000", cap:"The Sun Temple at Modhera, built under the Solanki kings." }],
     blurb:"The Chaulukya, or Solanki, kings ruled from Patan and left behind an inverted temple built entirely underground.",
@@ -3170,7 +3214,7 @@ ERAS.push(
     site:{ name:"Rani ki Vav, Patan", note:"An 11th-century stepwell and UNESCO World Heritage Site, with more than 1,500 sculpted panels across seven underground levels." },
     sources:["UNESCO World Heritage Centre, Rani-ki-Vav at Patan","Samira Sheikh, Forging a Region: Sultans, Traders, and Pilgrims in Gujarat, 1200-1500","Aparna Kapadia, In Praise of Kings: Rajputs, Sultans and Poets in Fifteenth-Century Gujarat"] },
 
-  { id:"sultanate", category:"kingdoms", yr:"1407 - 1573", title:"The Gujarat Sultanate", emo:"🕌",
+  { id:"sultanate", category:"kingdoms", yr:"1407 - 1573", title:"The Gujarat Sultanate",
     img: FP + "Siddi%20Saiyyed%20Mosque%2C%20Ahmedabad.jpg?width=1000",
     figures:[{ src: FP + "Sidi%20Saiyyed%20jali.jpg?width=1000", cap:"The carved stone tree lattice of the Sidi Saiyyed mosque, Ahmedabad." }],
     blurb:"An independent sultanate founded Ahmedabad, built a distinctive Indo-Islamic architecture, and made Gujarat a trading power.",
@@ -3198,7 +3242,7 @@ ERAS.push(
 
 /* ---- Category: Trade and the Indian Ocean ---- */
 ERAS.push(
-  { id:"surat_trade", category:"trade", yr:"1573 - 1800s", title:"Surat, port to the world", emo:"⛵",
+  { id:"surat_trade", category:"trade", yr:"1573 - 1800s", title:"Surat, port to the world",
     img: FP + "View%20of%20Surat%20from%20across%20the%20River%20Tapti%3B%20by%20A.%20van%20der%20Heen%2C%201782.jpg?width=1000",
     figures:[{ src: FP + "Surat%20Fort%2C%20front%20View.jpg?width=1000", cap:"Surat Castle, built in the 1540s to defend the port from raids." }],
     blurb:"Under Mughal rule, Surat became one of the busiest ports on earth and the main gateway for the Hajj pilgrimage.",
@@ -3210,7 +3254,7 @@ ERAS.push(
     site:{ name:"Surat Castle (Old Fort)", note:"Built in 1546 to defend against Portuguese raids, restored and reopened as a heritage site in 2022." },
     sources:["Wikipedia, History of Surat and Surat Castle","Grokipedia, Surat Castle","Encyclopaedia Britannica, Surat"] },
 
-  { id:"diaspora", category:"trade", yr:"1600s - present", title:"Merchants, migration, and diaspora", emo:"🌍",
+  { id:"diaspora", category:"trade", yr:"1600s - present", title:"Merchants, migration, and diaspora",
     img: FP + "Where%20to%20go%20from%20Surat%20a%20map%20of%20trade%20and%20travel%20routes%20through%20the%20Deccan%2C%20by%20Pierre%20du%20Val%2C%201690%20(with%20special%20praise%20for%20the%20local%20mangoes).jpg?width=1000",
     blurb:"Gujarati trading communities built networks across the Indian Ocean that, centuries later, became a global diaspora.",
     body:[
@@ -3224,7 +3268,7 @@ ERAS.push(
 
 /* ---- Category: Colonial Rule and Resistance ---- */
 ERAS.push(
-  { id:"colonial", category:"colonial", yr:"1800s - 1947", title:"Mills, land, and print", emo:"🧵",
+  { id:"colonial", category:"colonial", yr:"1800s - 1947", title:"Mills, land, and print",
     img: FP + "Calico%20Museum%20of%20Textiles%2C%20Ahmedabad%2C%201952.jpg?width=1000",
     figures:[{ src: FP + "Calico_Mills_1.jpg?width=1000", cap:"The Calico Mills, part of Ahmedabad's cotton-mill industry." }],
     blurb:"British rule reorganized who owned land and who worked the looms, while a new Gujarati print culture created a modern reading public.",
@@ -3237,7 +3281,7 @@ ERAS.push(
     site:{ name:"Calico Museum of Textiles, Ahmedabad", note:"Founded 1949 by the Sarabhai family, it holds one of the world's premier collections of historic South Asian textiles." },
     sources:["Jan Breman, Wage Hunters and Gatherers and later work on Gujarat's labor","Sujata Patel, The Making of Industrial Relations: The Ahmedabad Textile Industry","Wikipedia, Ahmedabad textile industry, Calico Mills, and Narmad"] },
 
-  { id:"gandhi", category:"colonial", yr:"1915 - 1947", title:"Satyagraha and the Salt March", emo:"🧂",
+  { id:"gandhi", category:"colonial", yr:"1915 - 1947", title:"Satyagraha and the Salt March",
     img: FP + "Gandhi%20at%20Dandi%2C%205%20April%201930.jpg?width=1000",
     figures:[{ src: FP + "Sabarmati%20Ashram%20-%20Ahmedabad%20-%20Gujarat%20-%20DSC001.jpg?width=1000", cap:"Sabarmati Ashram, Gandhi's base on the edge of Ahmedabad." }],
     blurb:"From an ashram on the Sabarmati, Gandhi turned Gujarat into the testing ground for a new kind of political resistance.",
@@ -3253,7 +3297,7 @@ ERAS.push(
 
 /* ---- Category: Modern Gujarat ---- */
 ERAS.push(
-  { id:"state", category:"modern", yr:"1947 - 1960", title:"A state is born", emo:"🗺️",
+  { id:"state", category:"modern", yr:"1947 - 1960", title:"A state is born",
     img: FP + "Akshardham%20Gandhinagar%20Gujarat.jpg?width=1000",
     figures:[{ src: FP + "Gandhinagar_Vidhansabha1.jpg?width=1000", cap:"The Gujarat legislative assembly in Gandhinagar, the purpose-built capital." }],
     blurb:"A popular movement for a Gujarati-speaking state succeeded in 1960, tying language and politics together for good.",
@@ -3265,7 +3309,7 @@ ERAS.push(
     site:{ name:"Gandhinagar", note:"A purpose-built capital named after Gandhi, laid out as a grid of sectors and known as one of India's greenest cities." },
     sources:["Scholarship on the Mahagujarat movement and the States Reorganisation era","Encyclopaedia Britannica, Gujarat and Gandhinagar","Wikipedia, Mahagujarat movement and Gandhinagar"] },
 
-  { id:"nav_nirman", category:"modern", yr:"1974", title:"The Nav Nirman movement", emo:"✊",
+  { id:"nav_nirman", category:"modern", yr:"1974", title:"The Nav Nirman movement",
     blurb:"A student protest over mess-hall fees in Ahmedabad grew into a movement that helped reshape national politics.",
     body:[
       "In late 1973 and early 1974, students at an engineering college in Ahmedabad protested a sharp rise in their hostel food fees. The complaint was small and specific, but it landed at a moment of severe economic strain, high inflation, food shortages, and widespread anger over corruption, and it spread with startling speed into a mass movement across Gujarat known as the Nav Nirman Andolan, meaning the movement for reconstruction or regeneration.",
@@ -3274,19 +3318,19 @@ ERAS.push(
       "Nav Nirman is remembered as an example of how quickly a narrow local grievance could, under the right pressures, become a broad demand for political accountability, and of the recurring role students and the urban middle class have played in Gujarat's public life."],
     sources:["'Revisiting the Nav Nirman Andolan of Gujarat' and related scholarship on 1970s Indian politics","Ghanshyam Shah, writing on social movements in Gujarat","Wikipedia, Nav Nirman Andolan"] },
 
-  { id:"adivasi_dalit", category:"modern", yr:"1900s - present", title:"Adivasi and Dalit assertion", emo:"🪧",
+  { id:"adivasi_dalit", category:"modern", yr:"1900s - present", title:"Adivasi and Dalit assertion",
     img: FP + "Pithora%20wall%20painting.JPG?width=1000",
     figures:[{ src: FP + "Sardar%20Sarovar%20Dam%202.jpg?width=1000", cap:"The Sardar Sarovar Dam on the Narmada, long contested over displacement." }],
     blurb:"The communities often left out of the mainstream story have their own long history of organizing for land, dignity, and recognition.",
     body:[
       "Gujarat's history is often told through its merchants, its rulers, and its industrialists. But the region is also home to large Adivasi (tribal) populations, concentrated in the eastern hill districts, and to Dalit communities historically excluded by caste, and both have their own long histories of assertion and organizing that any honest account has to include.",
-      "The historian David Hardiman's well-known study The Coming of the Devi examined an Adivasi movement in the Surat region in the early 20th century, in which tribal communities took up a wave of religious and social reform, spread through the figure of a goddess, that also functioned as a form of resistance against the alcohol traders, moneylenders, and landlords who exploited them. It is a landmark study of how ordinary rural communities exercised agency on their own terms rather than simply following elite leaders.",
+      "The historian David Hardiman's well-known study The Coming of the Devi examined an Adivasi movement in the Surat region in the early 20th century, in which tribal communities took up a wave of religious and social reform, spread through the figure of a deity, that also functioned as a form of resistance against the alcohol traders, moneylenders, and landlords who exploited them. It is a landmark study of how ordinary rural communities exercised agency on their own terms rather than simply following elite leaders.",
       "More recent scholarship, including work by Alf Gunvald Nilsen on Adivasi struggles in western India, traces how these communities have organized around land rights, forest access, and dignity into the present day, often in tension with industrial and infrastructure projects that displace them. The long and contested history of displacement around the Narmada dam is one prominent example of these pressures.",
       "This history also has a cultural dimension. The Rathwa and Bhil communities of eastern Gujarat are the makers of Pithora painting, a ritual mural tradition in which vivid horses, deities, and scenes of village life are painted on the walls of homes to fulfill vows and invite prosperity. Recognized with a Geographical Indication tag in 2021, Pithora is a reminder that Adivasi communities are not only subjects of history but originators of some of Gujarat's most distinctive art.",
       "Including these histories is not a matter of adding a footnote. It changes the shape of the whole story, from a narrow image of Gujarat as a land of Hindu and Jain merchants into a fuller picture of a diverse society in which many communities, including Muslim, Parsi, Adivasi, and Dalit, have all shaped what Gujarat is."],
     sources:["David Hardiman, The Coming of the Devi: Adivasi Assertion in Western India","Alf Gunvald Nilsen, Adivasis and the State: Subalternity and Citizenship in India's Bhil Heartland","Wikipedia, Pithora painting"] },
 
-  { id:"modern", category:"modern", yr:"1960 - present", title:"Growth and its costs", emo:"🏗️",
+  { id:"modern", category:"modern", yr:"1960 - present", title:"Growth and its costs",
     img: FP + "Statue%20of%20Unity.jpg?width=1000",
     figures:[{ src: FP + "Sabarmati%20Riverfront%20Ahmedabad.jpg?width=1000", cap:"The Sabarmati Riverfront in Ahmedabad, a marquee urban project." }],
     blurb:"Rapid industrial growth and a global diaspora, alongside hard and still-debated questions about who has benefited and who has paid.",
