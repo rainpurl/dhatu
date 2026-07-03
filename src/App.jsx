@@ -1062,12 +1062,19 @@ const CSS = `
   .scriptfoot{max-width:640px;left:50%;transform:translateX(-50%);right:auto}
   .sheet{max-width:640px;left:50%;transform:translateX(-50%);right:auto}
   .confetti{max-width:1080px}
-  /* wide two-column reading layout for history and vocab lists */
-  .wide-2col{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;align-items:start}
+  /* responsive card grids so content fills the width instead of a narrow column */
+  .wide-2col{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+  .cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;align-items:start}
+  .cardgrid > *{margin-bottom:0 !important}
   .onb, .done-wrap{max-width:520px}
 }
+.cardgrid{display:flex;flex-direction:column;gap:12px}
+.cardgrid > *{margin-bottom:0 !important}
 /* desktop: left sidebar nav and a centered content column (web-first, not a phone on a monitor) */
 @media (min-width:900px){
+  /* every page fills the width on desktop instead of sitting in a centered box */
+  .dhatu{max-width:none}
+  .dhatu .scr{max-width:none;margin:0;padding:34px 5vw 72px;width:100%}
   /* the lesson-taking view fills the full width on desktop, not a centered box */
   .dhatu.lesson-view{max-width:none;padding:0}
   .dhatu.lesson-view .scr{max-width:none;margin:0;padding:26px 5vw 130px;width:100%}
@@ -1082,21 +1089,18 @@ const CSS = `
   .navb svg{width:25px;height:25px}
   .navb:hover{background:var(--hover)}
   .navb.on{color:var(--brand);background:var(--brand-soft);box-shadow:var(--bevel-inset)}
-  /* offset the content only on screens that actually have the sidebar */
+  /* offset the content only on screens that actually have the sidebar; content
+     fills the full width beside the sidebar rather than sitting in a centered box */
   .dhatu:has(> .nav){padding-left:240px;max-width:none}
-  .dhatu:has(> .nav) .scr{max-width:880px;margin:0 auto;padding:34px 44px 72px;width:100%}
+  .dhatu:has(> .nav) .scr{max-width:none;margin:0;padding:34px 5vw 72px;width:100%}
   .dhatu:has(> .nav) .scr.plain{padding-bottom:72px}
   .dhatu:has(> .nav) .top .brandmark{display:none}
   .dhatu:has(> .nav) .scriptfoot{left:240px;right:0;max-width:760px;margin:0 auto;transform:none}
   .guides{grid-template-columns:repeat(2,1fr)}
   .chargrid{grid-template-columns:repeat(6,1fr)}
-  /* keep the lesson list a comfortable reading width on desktop */
-  .dhatu:has(> .nav) .lpath{max-width:560px;margin:0 auto}
-  .dhatu:has(> .nav) .unit-h{max-width:560px;margin-left:auto;margin-right:auto}
 }
 @media (min-width:1200px){
   .wide-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
-  .dhatu:has(> .nav) .scr{max-width:960px}
   /* reserve space on the right and pin the rail beside the sidebar-offset content */
   .dhatu.withrail{padding-right:300px}
   .dhatu.withrail .rail{
@@ -2438,6 +2442,7 @@ function CourseApp({ user }) {
               <h1 style={{ fontSize: 19, fontWeight: 800, margin: 0 }}>Grammar guide</h1>
             </div>
           </div>
+          <div className="cardgrid">
           {GRAMMAR.map((g) => (
             <div key={g.id} className="note" style={{ marginBottom: 14, borderLeft: `4px solid ${g.color}` }}>
               <h3>{g.title}</h3>
@@ -2458,6 +2463,7 @@ function CourseApp({ user }) {
               </div>
             </div>
           ))}
+          </div>
         </div>
       </div>
     );
@@ -2699,6 +2705,7 @@ function CourseApp({ user }) {
               <div style={{ fontSize: 13.5, color: "var(--muted)" }}>Add words from Vocab, or finish lessons to build your review pile.</div>
             </div>
           )}
+          <div className="cardgrid">
           {due.map((item, i) => (
             <div key={i} className="card" style={{ marginBottom: 12 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -2717,6 +2724,7 @@ function CourseApp({ user }) {
               </div>
             </div>
           ))}
+          </div>
           {srs.length > 0 && due.length === 0 && (
             <div className="card" style={{ textAlign: "center", padding: 28 }}>
               <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, color: "var(--ok)" }}><Ic.check width={32} height={32} /></div>
@@ -2777,8 +2785,9 @@ function CourseApp({ user }) {
         <style>{CSS}</style>
         <div className="scr">
           <TopBar title="Vocab" sub="Words by topic" />
+          <div className="cardgrid">
           {TOPICS.map((t) => (
-            <button key={t.id} className="card" style={{ width: "100%", textAlign: "left", marginBottom: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 14 }} onClick={() => setSelTopic(t.id)}>
+            <button key={t.id} className="card" style={{ width: "100%", textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", gap: 14 }} onClick={() => setSelTopic(t.id)}>
               <div style={{ color: "var(--brand)", display: "flex" }}><TopicIcon name={t.icon} size={28} /></div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 800, fontSize: 16 }}>{t.title}{t.tag && <span className="tag">{t.tag}</span>}</div>
@@ -2786,6 +2795,7 @@ function CourseApp({ user }) {
               </div>
             </button>
           ))}
+          </div>
           <div style={{ height: 10 }} />
         </div>
         <NavBar />
