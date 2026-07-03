@@ -1,303 +1,294 @@
-# Dhātu (ધાતુ): Project Handoff
+# Dhātu (ધાતુ) — Project Handoff
 
-This document is written so a new chat (or a new developer) can pick up the project
-with no prior context. Read it top to bottom before making changes.
+Read this top to bottom before making changes. It is written so a new chat or
+developer can continue with no prior context.
 
 ---
 
 ## 1. What this is
 
-**Dhātu** is a web app that teaches **Gujarati to English speakers**. It is
-research-based (grounded in second-language-acquisition evidence), Duolingo-inspired
-in feel, but Gujarati-only. It covers sounds, script, grammar, vocabulary,
-conversation practice, and a "History of Gujarat" section.
+**Dhātu** is a web app that teaches **Gujarati to English speakers**:
+research-based, Duolingo-inspired in feel but Gujarati-only. It covers sounds,
+script, grammar, vocabulary, conversation practice, and a **Culture** section
+(history, faith, food, textiles). `dhātu` means "root" (as in a verb root).
 
-- **Live site:** https://dhatu.pages.dev
+- **Live site:** https://dhatu.pages.dev  (Cloudflare Pages, auto-deploys on push to `main`)
+- **Repo:** https://github.com/rainpurl/dhatu
 - **Support link in-app:** https://ko-fi.com/rainglade
-- **Name meaning:** *dhātu* means "root" (as in a verb root), fitting a language app.
 
 ---
 
-## 2. Tech stack and how it is deployed
+## 2. Environment and workflow quirks (IMPORTANT, read first)
 
-- **Single-file React app.** Essentially the entire app lives in `src/App.jsx`
-  (~3,000 lines): all screens, all content, all CSS, all icons. This is deliberate
-  and keeps deployment trivial, but it means edits must be careful (see Gotchas).
-- **Build tool:** Vite 8 (`vite build` → outputs to `dist/`).
-- **Framework:** React 18 (`react`, `react-dom`). No Redux/Zustand, no router library,
-  no UI component library. State is plain React hooks. Navigation is a manual
-  screen state machine (see section 4).
-- **No backend.** Everything is client-side. Progress is saved in the browser via
-  `localStorage`.
-- **Fonts:** loaded from Google Fonts inside the CSS string: **Anek Gujarati** for
-  Gujarati text (class `gu`), **Inter** for Latin text.
-- **Images:** the History section pulls cover images directly from Wikimedia Commons
-  (`Special:FilePath/...` URLs). No local image files.
-- **Hosting:** **Cloudflare Pages**, connected to a **GitHub repo**, auto-deploying
-  on every push to the `main` branch.
-  - Build command: `npm run build`
-  - Build output directory: `dist`
-
-### Deploy / update flow (current)
-The user updates the live site by **replacing `src/App.jsx` through the GitHub web
-interface**. Because Cloudflare builds from source, replacing that one file updates
-the whole app. Steps: open repo → `src` folder → edit or upload `App.jsx` → commit to
-`main` → Cloudflare rebuilds automatically in a minute or two.
-
-### Run locally
-```
-npm install
-npm run dev      # local dev server with hot reload
-npm run build    # production build into dist/
-npm run preview  # serve the built dist/ locally
-```
+- **Working folder:** `/Users/rain/Documents/GitHub/dhatu` (GitHub Desktop clone).
+  It is inside iCloud-synced Documents, which once caused the folder to vanish
+  mid-session. If files act strange, suspect iCloud.
+- **Node is NOT installed system-wide** on this Mac (`node`/`npm` are absent from
+  PATH, no Homebrew). A working copy of Node 22 was downloaded to the scratchpad
+  at:
+  `/private/tmp/claude-501/-Users-rain-Documents-dhatu/e0ccfccd-3caf-4e51-bd6a-6d1cdcab137a/scratchpad/node-v22.13.1-darwin-arm64/bin`
+  (may not persist across sessions; re-download Node 22 from nodejs.org if gone).
+  To build: `export PATH="<that bin>:$PATH"` then `npm run build`. Vite 8 needs
+  Node 20.19+ or 22.12+.
+- **GitHub Desktop auto-commits and pushes** in the background. Commits you make
+  on the CLI sometimes get pre-empted and land as commits named "Update App.jsx".
+  This is harmless (code is preserved) but means `git push` from the CLI is
+  usually unnecessary and CLI credentials are not set up (push from Desktop).
+- **The user drives GitHub.** Do not assume you can push; the user pushes via
+  Desktop. Commit locally; they publish.
+- **Live preview is blocked** for signed-in screens: the app requires Google
+  sign-in and this environment cannot complete OAuth. To eyeball UI, rasterize a
+  static HTML mock of the relevant CSS with `qlmanage -t -s 500 -o <dir> f.html`
+  then read the PNG. This is how the logo and Learn-path redesigns were verified.
 
 ---
 
-## 3. IMPORTANT: the two copies of the app
+## 3. Tech stack and architecture
 
-There are (or were) **two versions of the same app** that must not be confused:
+- **Single-file React app:** essentially everything lives in `src/App.jsx`
+  (~3,800 lines): all screens, content, CSS (one big template string injected via
+  `<style>{CSS}</style>`), and SVG icons (the `Ic` object). Edits must be careful;
+  prefer targeted string replacements and watch brace balance.
+- **Build:** Vite 8 (`vite build` to `dist/`). React 18. No router (screen state
+  machine via a `screen` string). No UI library. State is plain hooks.
+- **Auth/DB:** Firebase (Google sign-in + Firestore). See section 4.
+- **Fonts:** Anek Gujarati (class `gu`) + Inter, from Google Fonts in the CSS.
+- **Images:** Culture covers/inline photos are hotlinked from Wikimedia Commons
+  via `FP + "<url-encoded filename>?width=1000"` (FP = Special:FilePath base).
+- **Audio:** pre-generated mp3s in `public/audio/` served as static assets.
+- **Staff portal:** a separate static page at `public/staff/` served at `/staff`.
 
-1. **The deployable web project**: this repo. `src/App.jsx` uses **real
-   `localStorage`** for persistence via a `useLocalState` hook. **This is the source
-   of truth going forward.**
-2. **The in-chat artifact**: a single `.jsx` file used inside the Claude chat so the
-   user could see a live preview. The Claude artifact sandbox **blocks
-   `localStorage`**, so that version used plain in-memory `useState` instead of
-   `useLocalState`, and omitted the reset-progress logic.
+Key modules:
+- `src/App.jsx` — the whole app.
+- `src/firebase.js` — auth, per-user Firestore progress sync, public profiles,
+  usernames, following, pokes.
+- `src/firebaseConfig.js` — public Firebase web config (safe to commit).
+- `scripts/generate-audio.mjs` — the audio generator (`npm run audio`).
+- `public/staff/index.html` — the staff portal.
+- `AUDIO.md`, `AUTH.md` — plain setup guides for the owner.
 
-**They are otherwise identical.** The web `src/App.jsx` was last synced FROM the
-artifact, then had the persistence pieces re-applied. The ONLY differences are:
-
-- `src/App.jsx` has a `useLocalState(key, initial)` hook (defined just above
-  `export default function App()`).
-- Persisted state uses `useLocalState("dhatu_...", default)` instead of `useState`.
-- There is an `onboarded` flag, a `confirmReset` flag, a `resetAllProgress()`
-  function, and a "Reset progress" UI in the Profile screen.
-
-### If you need an in-chat live preview in a new chat
-Take `src/App.jsx` and make a temporary artifact copy where you:
-- delete the `useLocalState` hook,
-- change each `useLocalState("dhatu_x", d)` back to `useState(d)`,
-- change `const [screen, setScreen] = useState(() => (onboarded ? "learn" : "onboarding"));`
-  back to `useState("onboarding");` and drop the `onboarded` line,
-- (optional) drop the reset UI.
-
-Do the real work in `src/App.jsx` and treat the artifact as a disposable preview, so
-the two do not drift again.
+Screen values (the `screen` state): `onboarding, learn, script, scriptLearn,
+review, vocab, history (Culture), profile, lesson, complete, grammar, talk,
+vocabPractice`. Bottom nav on mobile becomes a **left sidebar on desktop
+(>=900px)**.
 
 ---
 
-## 4. Architecture of `src/App.jsx`
+## 4. Accounts (Firebase) — required sign-in
 
-Rough top-to-bottom layout of the file:
+- Sign-in is **required** (no guest mode), **Google only** (phone/SMS was
+  rejected because SMS costs money; see the no-cost rule).
+- On first sign-in the user must **pick a unique username** (enforced via a
+  Firestore `usernames` registry + transaction). Changeable later in Profile.
+- Per-user progress (all `dhatu_` localStorage keys) syncs to
+  `users/{uid}.progress`. Cloud is authoritative on sign-in (local is cleared
+  then repopulated, so an admin reset propagates).
+- **Public profile** (`publicProfiles/{uid}`) exposes only username, name, photo,
+  streak, Kaudi, so friends can see stats without seeing private progress.
+- **Social:** follow by username, see friends' streak/Kaudi, poke them, receive
+  pokes. All in the Profile tab.
+- **Staff portal** at `/staff`: password gate (`rain`) plus Google sign-in
+  restricted to admin UID(s); lists all users with streak/Kaudi/lessons and a
+  per-user **Reset** button.
 
-1. **Imports**: `React, { useState, useEffect, useRef }`.
-2. **TTS helpers**: `_loadVoices`, `_pickVoice`, `speak`, `speakEn`, `speakGu`,
-   `stopSpeak`. Uses the browser Web Speech API. Prefers Google/Neural/Natural voices.
-3. **`useLocalState` hook**: localStorage-backed state (web version only).
-4. **Small utilities**: `shuffle`, a Levenshtein-based similarity for speech checking, etc.
-5. **`Ic` object**: all SVG icons as small components (`Ic.learn`, `Ic.check`,
-   `Ic.trophy`, topic icons like `Ic.family`, `Ic.bowl`, `Ic.film`, etc.). A few icons
-   (e.g. `Ic.coffee`) are assigned after the object literal via `Ic.coffee = (p) => ...`.
-6. **`CSS`**: one big template-string stylesheet injected via `<style>{CSS}</style>`.
-   Contains the recessed/bevel design tokens in `:root` and all component styles,
-   plus responsive `@media (min-width:820px)` and `(min-width:1200px)` rules.
-7. **Content data** (all authored inline, Gujarati verified):
-   - `UNITS`: 6 units, each with `lessons` (`{id, label, kind?}`).
-     `LESSON_ORDER` is the flattened lesson id list.
-   - `LESSON_ICON` map + `lessonIcon(l)` helper: topic icon per lesson.
-   - Lesson exercise content (intro, hvpt, letter, match, listen, build, fill, note,
-     speak). **HVPT** = High-Variability Phonetic Training, the research differentiator.
-   - `GRAMMAR` (6 topics), `CONVERSATIONS` (3), `TOPICS` (vocab lists).
-   - Script data: `VOWELS`, `CONS_ROWS` (7 phonetic groups), `CONJUNCTS`, `NUMERALS`,
-     `SIGNS`. Frequency-ordered views: `VOWELS_FREQ`, `CONS_FREQ` (with their
-     `_ORDER` arrays), and `SCRIPT_LEARN_POOL` (common-first mix for the letter quiz).
-   - History: `FP` (Wikimedia FilePath base), `CATEGORIES` (5 themes),
-     `ERAS` (13 in-depth chapters, each `{id, category, yr, title, emo, img?, blurb,
-     body[], site?, sources[]}`), `ERA_GU_SUMMARY` (per-era Gujarati summary).
-8. **Components:** `SafeImg` (image with graceful colored-banner fallback),
-   `ScriptLearn` (the letter-learning quiz screen), `WriteCanvas` (finger-trace
-   canvas: **currently unused** after the script rebuild, kept but harmless),
-   plus inline `TopBar`, `NavBar`, `LessonRunner`, etc. inside `App`.
-9. **`App`**: holds all state and renders the current screen.
+### Owner setup still required (see AUTH.md for the walkthrough)
+1. Firebase console (project **dhatu-9f586**): enable **Google** sign-in; create
+   **Firestore**; add `dhatu.pages.dev` to Authorized domains.
+2. Paste your Firebase **User UID** into `ADMIN_UIDS` in
+   `public/staff/index.html`.
+3. Publish the **complete Firestore rules** from AUTH.md (covers `users`,
+   `publicProfiles`, `usernames`, `pokes`, plus admin read/write).
+4. Create the **pokes composite index** when Firestore prompts (one-click link on
+   first query: `to` asc, `at` desc).
 
-### Screen state machine
-`screen` is a string; each value renders a full screen. Values:
-`onboarding, learn, script, scriptLearn, review, vocab, history, profile, lesson,
-complete, grammar, talk, vocabPractice`.
-
-Bottom nav tabs: **Learn / Script (if readWrite) / Review / Vocab (if vocabTab) /
-History (if showHistory) / Profile**. There is no Home tab; default screen is Learn.
-
-### localStorage keys
-`dhatu_onboarded, dhatu_readWrite, dhatu_showHistory, dhatu_vocabTab, dhatu_kaudi,
-dhatu_streak, dhatu_completed, dhatu_srs, dhatu_weekHit`. `resetAllProgress()` clears
-all of these.
+Until rules/index are applied, social features fail quietly (app still works).
 
 ---
 
-## 5. Locked design decisions (do not silently change)
+## 5. Audio pipeline
 
-- **Visual style:** recessed (soft inset shadows) everywhere, NOT flat Duolingo-style
-  hard drop shadows. Tokens live in `:root`: `--bevel-raise`, `--bevel-press`,
-  `--bevel-inset`, `--bevel-soft`, plus `--sink-*` for colored recessed surfaces.
-  Selected/correct/wrong states use colored inset rings, not borders.
-  - **One intentional exception:** the Learn-path **lesson nodes** (`.node .disc`)
-    are raised 3D circles (colored bottom edge via `--edge`, press-down on active),
-    Duolingo-style, because that is the primary tappable element. Do not
-    "recess" these back; it was a deliberate choice.
-- **Palette:** warm **maroon + gold**. Key vars: `--brand:#8A1C3B`, `--gold:#E0A63C`,
-  `--diya:#F2892E`, plus ok/no greens/reds and warm neutrals. (An alternate blue/paper
-  palette was considered and rejected; keep maroon/gold.)
-- **Light mode only** for now.
-- **Fonts:** Anek Gujarati (Gujarati) + Inter (Latin).
-- **Gamification naming:** points are **Kaudi** (cowrie shell, `Ic.kaudi`); streak is a
-  **diya** lamp (`Ic.diya`). No hearts, no lives.
-- **Lesson icons:** each lesson shows a topic-matching icon (chat, numbers, family,
-  bowl, home, blocks, link, tag, clock, steps, pen, diya, shirt, film...). Checkpoints
-  and the lesson-complete medal use `Ic.trophy`.
-- **Onboarding** (3 steps) sets `readWrite` and `showHistory`. If `readWrite` is false,
-  the Script tab is hidden, `letter` exercises are filtered out, and romanization leads.
-  The Vocab tab stays hidden until the first lesson is complete (`vocabTab`).
-
-### Hard content/style rules (from the user)
-- **NO em dashes anywhere** (in code, UI copy, or docs). Use commas, "to", or rewrite.
-  Verify with: `grep -c $'\u2014' src/App.jsx` → must be `0`.
-- **No AI-artifact "eyebrow"/kicker labels** above headings.
-- **No Anthropic / AI branding** anywhere in the app.
-- **Decolonial language (important).** Refer to "India" only as the post-1947
-  country. For anything pre-partition (ancient, medieval, colonial-era
-  geography, travel, civilization, peoples), use "the subcontinent" or "South
-  Asia". Keep proper nouns as-is (Indian Ocean, Archaeological Survey of India,
-  Times of India, National Film Award, the 100-rupee note, book/source titles).
-  Never equate the political **state** of Gujarat (created 1960) with the older
-  **cultural/linguistic** Gujarat; frame the state as a modern political
-  construct. Apply this to all new Culture content.
-- **Nothing may cost money, ever (hard line).** No paid APIs/plans at runtime.
-  Audio is pre-generated once (free tier) and served static. Auth/DB is Firebase
-  Spark (free, no billing attached). This is why phone/SMS login was rejected
-  (SMS costs money) and sign-in is Google-only.
-- **Accounts:** sign-in is **required** (no guest access), **Google-only**. See
-  AUTH.md. Progress syncs per-user via Firestore.
-- **Web is a first-class experience**, not a scaled-down phone app. The native
-  iOS/Android apps will be a separate codebase. A proper desktop web layout
-  (sidebar nav, full width, right rail, Duolingo-web style) is a pending task.
+- All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
+  `public/audio/` with `manifest.json` (currently **356 clips**). The app's
+  `speak()` plays a clip when the manifest has one, else falls back to browser
+  TTS. A missing manifest just means TTS-as-before.
+- **Voices:** Google **Chirp3-HD** (`gu-IN-Chirp3-HD-Aoede`,
+  `en-US-Chirp3-HD-Aoede`), the most natural tier. These replaced robotic WaveNet.
+- **Vowel IPA overrides:** four vowels (ઇ ɪ, ઐ ɛː, ઔ ɔː, ઍ æ) are synthesized by
+  IPA via SSML on a WaveNet voice, because TTS mispronounces isolated glyphs.
+  This is baked into the generator (`PRONUNCIATION_OVERRIDES`) so re-runs keep the
+  correct sounds. ઑ was left as-is (owner said it is correct).
+- **Self-heal:** the generator retries any suspiciously small (<1800 byte) clip
+  with a WaveNet voice, because Chirp3-HD occasionally returns near-silence for
+  very short words.
+- **Regenerating after content changes** (needs a Google TTS API key + local
+  Node):
+  ```
+  GOOGLE_TTS_KEY=<key> npm run audio          # idempotent; skips existing clips
+  # then remove orphaned clips not in the manifest:
+  python3 - <<'PY'
+  import json,os; d="public/audio"; m=json.load(open(d+"/manifest.json"))
+  keep=set(m["items"].values())|{"manifest.json"}
+  [os.remove(d+"/"+f) for f in os.listdir(d) if f.endswith(".mp3") and f not in keep]
+  PY
+  ```
+  Then commit `public/audio/`. The generator extracts every pure-Gujarati string
+  (word/phrase fields, script letters, per-chapter Gujarati summaries) and each
+  chapter's English `body.join(" ")`, so it auto-syncs with content.
+- **API key:** the owner pasted a Google TTS key several times; it was used to
+  generate audio. **Advise rotating it** (it appeared in chat). To generate you
+  only need it once; audio is static after that (no runtime cost).
 
 ---
 
-## 6. What is done
+## 6. Locked design decisions (do not silently change)
 
-- Full onboarding, Learn path (6 units), lessons with 9 exercise types incl. HVPT.
-- Review (spaced repetition), Vocab tab with themed word lists + practice mode.
-- Grammar guide (6 topics), Conversations (3), Talk practice with speech recognition.
-- **Script page (rebuilt):** one scrollable page, letters ordered most-common to
-  least-common, tap a letter to hear it (brief highlight), persistent "Learn the
-  letters" button opening the `ScriptLearn` quiz (tests both letter→sound and
-  sound→letter, common-first, awards Kaudi).
-- **History (rebuilt by theme):** opens to 5 topic categories (Ancient Foundations,
-  Kingdoms and Courts, Trade and the Indian Ocean, Colonial Rule and Resistance,
-  Modern Gujarat); each expands to its chapters; each chapter opens an in-depth,
-  sourced entry with dual "Listen in English / Listen in Gujarati" buttons, plus
-  verified inline photos. 15 chapters total (now called the **Culture** tab), each
-  emoji-free with photo covers (all but `nav_nirman`) and a full Gujarati summary.
-  Top of the tab shows a fun-fact card that rotates every 10 hours.
-- **Audio: DONE.** ~327 pre-recorded Chirp3-HD clips in `public/audio/` for all
-  Gujarati speech and English chapter narration; playback falls back to browser
-  TTS if a clip is missing. See section 7 and AUDIO.md.
-- **Accounts: DONE.** Required Google sign-in (Firebase), per-user progress synced
-  to Firestore, staff portal at `/staff` (see AUTH.md).
-- **Recessed restyle** universal; **desktop web layout** with a left sidebar and
-  centered content (≥900px); paisley (bandhani keri) logo; all emojis replaced
-  with SVG icons; animation pass; real daily-streak tracking.
-- **Persistence** via localStorage mirrored to Firestore; **Reset progress** and
-  **Sign out** in Profile; Ko-fi support link in Profile.
-- Verified: builds cleanly with `vite build`; 0 em dashes; 0 flat hard-shadows; 0 emojis.
-
----
-
-## 7. What is pending / next steps
-
-Most earlier items are DONE (audio generated in Chirp3-HD, accounts, staff portal,
-desktop layout, emoji removal, streak). What remains:
-
-1. **Audio is generated and committed** (`public/audio/`, ~327 Chirp3-HD clips,
-   `manifest.json`). To refresh after content changes: `GOOGLE_TTS_KEY=... npm run
-   audio` (idempotent, skips existing), then delete orphaned mp3s not in the
-   manifest, and commit. Voices default to `gu-IN-Chirp3-HD-Aoede` /
-   `en-US-Chirp3-HD-Aoede`. The playback layer plays these and falls back to
-   browser TTS if a clip is missing.
-2. **Staff portal setup** (`public/staff/`, served at `/staff`): the owner must
-   paste their Firebase Auth UID into `ADMIN_UIDS` and add the admin line to the
-   Firestore rules (see AUTH.md). Until then it shows "Not authorized."
-3. **`nav_nirman` still has no cover image** (no free-licensed one found); it uses
-   the clean colored hero. Do not fabricate image URLs: verify any candidate with
-   `curl -sI -L "<FilePath URL>"` (expect 200, 429 means retry).
-4. **Gujarati speech-check is unreliable** because the browser Web Speech API
-   barely supports gu-IN (errors surface as network/language-not-supported). It
-   degrades to an "I said it out loud" self-confirm. Truly reliable checking would
-   need a paid cloud speech-to-text service, which conflicts with the zero-cost
-   rule, so it is intentionally left as graceful fallback.
-5. **Gujarati chapter narration** is a full multi-sentence *summary* per chapter,
-   not a verbatim translation of the English body (a deliberate accuracy choice).
-6. **Optional:** the unused `WriteCanvas` tracing component could be wired into the
-   ScriptLearn flow or removed.
+- **Recessed theme everywhere** (soft inset shadows), NOT flat hard drop shadows.
+  Tokens in `:root`: `--bevel-raise/press/inset/soft` and `--sink-brand/gold/ok/
+  no/dark` for colored recessed surfaces. Selected states use colored inset rings.
+  - **One intentional exception:** the Learn-path **lesson node badges**
+    (`.lrow .lbadge` and the older `.node .disc`) are raised 3D circles (colored
+    bottom edge via `--edge`, press-down on active). Do not recess these back.
+- **Learn tab layout:** a **vertical "lesson journey"** (list of lesson cards
+  connected by a spine), NOT a scattered circle path. Each row: icon badge,
+  title, status (Completed / Continue / Start / Checkpoint), chevron.
+- **Palette:** warm maroon + gold. `--brand:#8A1C3B`, `--gold:#E0A63C`,
+  `--diya:#F2892E`. Light mode only.
+- **Logo:** a **bandhani keri (paisley)** SVG (`Ic.logo`), dotted; used in top
+  bar, onboarding, sign-in, favicon. (An earlier dot-rosette was rejected.)
+- **NO em dashes** anywhere (code, UI, docs). Verify: `grep -c $'—'
+  src/App.jsx` must be `0`.
+- **NO emojis** in the app UI. All icons are SVG (`Ic.*`); topic/lesson icons map
+  through `LESSON_ICON`/`TopicIcon`. Verify no emoji chars in `src/App.jsx`.
+- **Decolonial language (important):** refer to "India" only as the post-1947
+  country. For anything pre-partition use "the subcontinent" or "South Asia".
+  Keep proper nouns (Indian Ocean, Archaeological Survey of India, etc.). Never
+  equate the political **state** of Gujarat (formed 1960) with the older
+  cultural/linguistic Gujarat.
+- **Deity language:** use "deity", not "god/goddess", for non-Abrahamic figures.
+- **Nothing may cost money, ever (hard line):** no paid APIs/plans at runtime.
+  Audio is generated once (free tier) and served static. Firebase Spark plan
+  (free, no billing attached). This is why phone/SMS auth was rejected and why
+  reliable Gujarati speech-to-text (which would need a paid service) was not used.
+- **Gamification:** points are **Kaudi** (cowrie shell, `Ic.kaudi`); streak is a
+  **diya** (`Ic.diya`). A lesson awards **at most 10 Kaudi**, minus 2 per wrong
+  answer (floor 2). **Streak repair** costs **30 Kaudi** (Profile, when a day was
+  missed). No hearts/lives.
+- **Web is first-class**, not a scaled-down phone app. Native iOS/Android will be
+  a separate codebase.
+- No AI/Anthropic branding; no AI-artifact "eyebrow"/kicker labels.
 
 ---
 
-## 8. Gotchas and conventions
+## 7. Feature inventory (current)
 
-- **Single huge file:** when editing `src/App.jsx`, prefer targeted string replacements
-  over rewriting large blocks. After any structural edit, watch brace balance
-  (a dropped `}` after editing a screen block has bitten this project before).
-- **Always verify before shipping:**
-  - Syntax/build: `npm run build` (from the project root; installs first if needed).
-    A quick alternative during editing is esbuild:
-    `npx esbuild src/App.jsx --bundle --format=esm --outfile=/tmp/t.js --external:react --external:react-dom`.
-  - Em-dash sweep: `grep -c $'\u2014' src/App.jsx` must be `0`.
-  - Flat-shadow sweep (should be 0): `grep -c "box-shadow:0 [0-9]px 0 " src/App.jsx`.
-- **Wikimedia images:** build URLs as `FP + "<url-encoded filename>?width=1000"`.
-  Filenames are case-sensitive and space-sensitive. Verify each returns HTTP 200 before
-  adding. Rate-limited responses (429) mean retry after a short wait, not a bad URL.
-- **`node_modules` is not in this zip** (it is git-ignored and large). Run
-  `npm install` after unzipping.
-- **Node version:** the existing Cloudflare build already succeeds with the current
-  config, so no `.nvmrc` was added. If a future dependency bump requires a newer Node,
-  set a `NODE_VERSION` environment variable in Cloudflare Pages settings or add a
-  `.nvmrc` file, rather than guessing.
+- **Learn:** units with the vertical lesson journey; 9 exercise types (intro,
+  hvpt = High-Variability Phonetic Training, letter, match, listen, build, fill,
+  note, speak). Tapping any Gujarati word in an exercise plays its audio.
+  "Snooze speaking/listening for 5 min" buttons on those exercise types.
+- **Script:** one scrollable page of letters (common-first); tap a letter to hear
+  it and see a sound hint in a caption; "Learn the letters" quiz (ScriptLearn).
+- **Review:** spaced repetition (SRS).
+- **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
+- **Culture:** 5 categories (Ancient Foundations, Kingdoms and Courts, Trade and
+  the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat), each with
+  photo cover cards; **20 chapters** with photo covers + inline photos, dual
+  "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
+  summary per chapter), sources. A "Did you know?" fun-fact card rotates every
+  10 hours (one fact notes the kaudi shell as early Gujarati currency).
+- **Grammar guide:** 8 topics. **Conversations (Talk):** 5 dialogues with speaking
+  practice.
+- **Profile:** account card (name, @username, change username), stats, streak
+  repair, this-week activity, **Friends** (follow by username, see streak/Kaudi,
+  poke, pokes received), badges, settings (read/write, Culture tab, Vocab tab),
+  Ko-fi support, sign out. Real daily-streak tracking (via `dhatu_lastActive`).
 
----
-
-## 9. User preferences (apply in any new chat)
-
-- **Ask questions instead of assuming** important things.
-- Keep answers **factual, clean, and succinct** (not over-humanized).
-- If a turn will take **more than ~10 seconds**, state a time estimate first.
-- The user has **built websites but not apps**; explain app/deploy steps plainly.
-- Reiterate: **no em dashes**, no AI-artifact kicker labels, no AI/Anthropic branding.
+Speech check note: browser speech recognition barely supports gu-IN, so speaking
+checks degrade to an "I said it out loud" self-confirm with a calm (not red)
+message. This is a platform limit, intentionally left as graceful fallback.
 
 ---
 
-## 10. File map
+## 8. Content inventory
+
+- **Culture chapters (20):** indus, maurya, vallabhi, dwarka; solanki, sultanate,
+  palitana, narsinh, somnath; surat_trade, diaspora, textiles; colonial, gandhi;
+  state, nav_nirman, adivasi_dalit, modern, kutch, food.
+- **Vocab topics:** slang, family (expanded kinship: older/younger sibling,
+  maternal/paternal, kaka/mota bapa/mama/foi/masi), numbers, food, verbs,
+  transport, colors, animals, time, greetings, market, festivals, culture.
+- **Grammar (8):** word order, postpositions, gender/my, present tense, past/-e
+  marker, polite you, negation, questions.
+- **Conversations (5):** hello, tea stall, asking the way, market haggling,
+  meeting family.
+- **Only `nav_nirman` lacks a cover image** (no free-licensed one found; clean
+  colored hero). Do not fabricate image URLs; verify each with
+  `curl -sI -L "<FilePath URL>"` (expect 200; 429 means retry).
+
+---
+
+## 9. Pending / next steps
+
+1. **Owner: finish Firebase setup** (section 4 / AUTH.md): rules, admin UID,
+   pokes index, authorized domain. Social + staff features need this.
+2. **Owner: rotate the Google TTS API key.**
+3. **Verify the vowel sounds live** (ઇ ઐ ઔ ઍ). They are IPA-specified so they are
+   the target sounds, but confirm by ear; IPA can be tuned per glyph, or a native
+   recording can be dropped in (playback already resolves a clip per glyph).
+4. **Verify social features live** (follow/poke) after rules + index; could not be
+   tested multi-user from here.
+5. Open ideas discussed: unit progress bars on the Learn tab; a desktop right
+   rail; more Culture chapters or lessons; teaching the new vocab topics (time,
+   market, greetings) as actual lessons; native-recorded vowels.
+
+---
+
+## 10. Gotchas and verification
+
+- After any edit, build and check invariants (with local Node on PATH):
+  ```
+  npm run build
+  grep -c $'—' src/App.jsx        # em dashes, must be 0
+  python3 -c "import re;print(len(re.findall('[\U0001F000-\U0001FAFF☀-➿⬀-⯿]',open('src/App.jsx').read())))"  # emojis, must be 0
+  ```
+- **Inline chapter photos** live in a per-chapter `figures:[{src, cap, after?}]`
+  array (separate from `body`, so they do not affect the English narration audio).
+  A figure with no `after` renders after paragraph index 1; `after:N` places it
+  after paragraph N. (A bug where figures without `after` never rendered was
+  fixed; keep that default.)
+- **Adding a Culture chapter:** push it into the right `ERAS.push(...)` block with
+  `{id, category, yr, title, img, figures?, blurb, body[], site?, sources[]}` (no
+  `emo` field, those were removed), and add its Gujarati summary to
+  `ERA_GU_SUMMARY[id]`. Then regenerate audio (section 5).
+- **Wikimedia images:** verify every URL returns 200 before adding. Filenames are
+  case- and space-sensitive; encode spaces `%20`, commas `%2C`; parentheses can be
+  literal.
+- `node_modules`, `dist`, and `.claude` are gitignored.
+
+---
+
+## 11. File map
 
 ```
-dhatu-web/
+dhatu/
 ├── HANDOFF.md            <- this document
+├── AUDIO.md              <- how to generate audio (owner guide)
+├── AUTH.md               <- Firebase + staff-portal setup, full Firestore rules
 ├── README.md
-├── AUDIO.md              <- how to generate pre-recorded audio (plain steps)
-├── index.html            <- title, favicon (maroon ધા), meta
-├── package.json          <- react 18, vite 8, @vitejs/plugin-react; "audio" script
-├── package-lock.json
-├── vite.config.js        <- react plugin, outDir dist
-├── .gitignore            <- node_modules, dist, .DS_Store, *.log, .wrangler
+├── index.html            <- title, bandhani favicon, meta
+├── package.json          <- react 18, vite 8, firebase; "audio" script
+├── vite.config.js
 ├── scripts/
-│   └── generate-audio.mjs <- cloud-TTS audio generator (npm run audio)
-├── public/               <- static assets; public/audio/ appears after generating
-│   └── audio/            <- generated mp3s + manifest.json (commit these)
+│   └── generate-audio.mjs  <- cloud-TTS generator (npm run audio)
+├── public/
+│   ├── audio/            <- generated mp3s + manifest.json (committed)
+│   └── staff/index.html  <- staff portal, served at /staff
 └── src/
-    ├── main.jsx          <- React entry, mounts <App/> in StrictMode
+    ├── main.jsx          <- mounts <App/>
+    ├── firebase.js       <- auth, sync, usernames, following, pokes
+    ├── firebaseConfig.js <- public web config
     └── App.jsx           <- THE APP (all screens, content, CSS, icons)
 ```
 
-To continue in a new chat: attach this file and (ideally) `src/App.jsx`, state which of
-the pending items to tackle, and confirm the audio decision if that is the next focus.
+To continue in a new chat: attach this file, state which pending item to tackle,
+and remember the environment quirks in section 2 (local Node path, GitHub Desktop
+auto-push, no live preview behind auth).
