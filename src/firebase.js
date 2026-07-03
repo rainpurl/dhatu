@@ -33,6 +33,22 @@ let currentUsername = null;
 
 const PREFIX = "dhatu_";
 
+/* The chosen username, remembered locally and tagged with the uid it belongs to.
+   Kept OUTSIDE the dhatu_ progress prefix so it survives a progress clear, and
+   uid-gated so a shared device never shows one account's name for another. This
+   is what stops the "pick a username" screen from reappearing on every refresh
+   when Firestore is briefly unreachable or its rules are not published yet. */
+const UNAME_KEY = "dhatu.username";
+function readLocalUsername(uid) {
+  try {
+    const o = JSON.parse(window.localStorage.getItem(UNAME_KEY));
+    return o && o.uid === uid ? o.name : null;
+  } catch (e) { return null; }
+}
+function writeLocalUsername(uid, name) {
+  try { window.localStorage.setItem(UNAME_KEY, JSON.stringify({ uid, name })); } catch (e) {}
+}
+
 const _n = (k) => { try { return JSON.parse(window.localStorage.getItem(PREFIX + k)); } catch (e) { return null; } };
 
 /* Public profile: the only fields other users can see (streak, Kaudi, name).
@@ -89,6 +105,9 @@ export function signOutUser() {
 export async function loadProgressToLocal(user) {
   const uid = typeof user === "string" ? user : user && user.uid;
   if (!uid) return;
+  // Start from the locally remembered username so a failed/slow cloud read does
+  // not send an already-registered user back to the username screen.
+  currentUsername = readLocalUsername(uid);
   try {
     const ref = doc(db, "users", uid);
     // Keep a small profile on the doc so the staff view can show who each user is.
@@ -100,7 +119,9 @@ export async function loadProgressToLocal(user) {
       ).catch(() => {});
     }
     const snap = await getDoc(ref);
-    currentUsername = (snap.exists() && snap.data().username) || null;
+    const cloudName = (snap.exists() && snap.data().username) || null;
+    if (cloudName) currentUsername = cloudName;
+    if (currentUsername) writeLocalUsername(uid, currentUsername);
     if (snap.exists() && snap.data().progress) {
       // Cloud is the source of truth on sign-in: clear local first so an admin
       // reset (empty cloud progress) actually takes effect on the device.
@@ -190,6 +211,7 @@ export async function setUsername(name) {
     tx.set(doc(db, "users", currentUid), { username: clean }, { merge: true });
   });
   currentUsername = clean;
+  writeLocalUsername(currentUid, clean);
   if (prev && prev.toLowerCase() !== lc) {
     deleteDoc(doc(db, "usernames", prev.toLowerCase())).catch(() => {});
   }
