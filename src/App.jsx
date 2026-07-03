@@ -1117,6 +1117,17 @@ const LESSONS = {
     { t:"listen", say:"સાત", roman:"saat", options:["seven","six","ten"], answer:"seven" },
     { t:"speak", gu:"આઠ, નવ, દસ", roman:"aaṭh, nav, das", en:"eight, nine, ten" },
   ]},
+  u1l5: { title: "Greetings and courtesy", ex: [
+    { t:"intro", gu:"નમસ્તે", roman:"namaste", en:"hello / greetings" },
+    { t:"intro", gu:"આવજો", roman:"aavjo", en:"goodbye (lit. 'come again')" },
+    { t:"intro", gu:"આભાર", roman:"aabhaar", en:"thank you" },
+    { t:"intro", gu:"મહેરબાની કરીને", roman:"meherbaani karine", en:"please" },
+    { t:"intro", gu:"કેમ છો?", roman:"kem chho?", en:"how are you? (polite)" },
+    { t:"match", pairs:[{gu:"નમસ્તે",en:"hello"},{gu:"આવજો",en:"goodbye"},{gu:"આભાર",en:"thank you"},{gu:"કેમ છો?",en:"how are you?"}] },
+    { t:"listen", say:"મહેરબાની કરીને", roman:"meherbaani karine", options:["please","thank you","goodbye"], answer:"please" },
+    { t:"listen", say:"આભાર", roman:"aabhaar", options:["thank you","hello","sorry"], answer:"thank you" },
+    { t:"speak", gu:"નમસ્તે, કેમ છો?", roman:"namaste, kem chho?", en:"Hello, how are you?" },
+  ]},
   u1c: { title: "Checkpoint", check:true, ex: [
     { t:"listen", say:"ત્રણ", roman:"traṇ", options:["three","one","water"], answer:"three" },
     { t:"match", pairs:[{gu:"એક",en:"one"},{gu:"પાણી",en:"water"},{gu:"હા",en:"yes"},{gu:"ના",en:"no"}] },
@@ -1362,7 +1373,7 @@ const LESSONS = {
 
 const UNITS = [
   { id:"u1", ku:"Unit 1", title:"Sounds and first words", sub:"Greetings, water, numbers, yes and no", color:"#8A1C3B",
-    lessons:[ {id:"u1l1",label:"First words"}, {id:"u1l2",label:"Numbers 1-5"}, {id:"u1l3",label:"Yes, no, sorry"}, {id:"u1l4",label:"Numbers 6-10"}, {id:"u1c",label:"Checkpoint",kind:"check"} ] },
+    lessons:[ {id:"u1l1",label:"First words"}, {id:"u1l2",label:"Numbers 1-5"}, {id:"u1l3",label:"Yes, no, sorry"}, {id:"u1l4",label:"Numbers 6-10"}, {id:"u1l5",label:"Greetings and courtesy"}, {id:"u1c",label:"Checkpoint",kind:"check"} ] },
   { id:"u2", ku:"Unit 2", title:"Everyday words", sub:"Family, food, home, colors, animals, and travel", color:"#1E6E7E",
     lessons:[ {id:"u2l1",label:"Family"}, {id:"u2l2",label:"Food and drink"}, {id:"u2l3",label:"Around the house"}, {id:"u2l4",label:"Colors"}, {id:"u2l5",label:"Animals"}, {id:"u2l6",label:"Getting around"}, {id:"u2c",label:"Checkpoint",kind:"check"} ] },
   { id:"u3", ku:"Unit 3", title:"Grammar and sentences", sub:"Word order, postpositions, gender, present tense", color:"#C77B1E",
@@ -1376,7 +1387,7 @@ const LESSON_ORDER = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
 
 /* Topic icon per lesson, matching what each lesson teaches */
 const LESSON_ICON = {
-  u1l1:"chat", u1l2:"guNine", u1l3:"hand", u1l4:"numbers",
+  u1l1:"chat", u1l2:"guNine", u1l3:"hand", u1l4:"numbers", u1l5:"hand",
   u2l1:"family", u2l2:"bowl", u2l3:"home", u2l4:"palette", u2l5:"paw", u2l6:"car",
   u3l1:"blocks", u3l2:"link", u3l3:"tag", u3l4:"clock", u3l5:"steps",
   u4l1:"steps", u4l2:"write", u4l3:"clock",
