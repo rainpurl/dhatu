@@ -2028,7 +2028,7 @@ function CourseApp({ user }) {
     if (screen !== "lesson" || !activeLesson || feedback) return;
     const lesson = LESSONS[activeLesson];
     if (!lesson) return;
-    const list = lesson.ex.filter((e) => readWrite || e.t !== "letter");
+    const list = lesson.ex.filter((e) => readWrite ? true : ["intro","listen","note","speak"].includes(e.t));
     const cur = list[exIdx];
     if (cur && isSnoozed(cur.t)) goNextExercise();
     // eslint-disable-next-line
@@ -2155,7 +2155,7 @@ function CourseApp({ user }) {
   function goNextExercise() {
     setFeedback(null);
     const lesson = LESSONS[activeLesson];
-    const list = lesson.ex.filter((e) => readWrite || e.t !== "letter");
+    const list = lesson.ex.filter((e) => readWrite ? true : ["intro","listen","note","speak"].includes(e.t));
     if (exIdx + 1 >= list.length) {
       completeLesson();
     } else {
@@ -2518,7 +2518,7 @@ function CourseApp({ user }) {
   /* ---------------- LESSON ENGINE ---------------- */
   if (screen === "lesson" && activeLesson) {
     const lesson = LESSONS[activeLesson];
-    const list = lesson.ex.filter((e) => readWrite || e.t !== "letter");
+    const list = lesson.ex.filter((e) => readWrite ? true : ["intro","listen","note","speak"].includes(e.t));
     const ex = list[exIdx] || list[0];
     const progress = ((exIdx + (feedback ? 1 : 0)) / list.length) * 100;
 
@@ -3182,10 +3182,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
                 <div className="romanline">{ex.roman}</div>
               </>
             ) : (
-              <>
-                <div className="bigword" style={{ fontSize: 32 }}>{ex.roman}</div>
-                <div className="romanline gu" style={{ fontSize: 22 }}>{ex.gu}</div>
-              </>
+              <div className="bigword" style={{ fontSize: 32 }}>{ex.roman}</div>
             )}
             <div className="playrow"><button className="playbtn big" onClick={() => speak(ex.gu)}><Ic.play /></button></div>
             <div style={{ textAlign: "center", fontWeight: 700, fontSize: 17 }}>{ex.en}</div>
@@ -3305,7 +3302,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
             <div className="exrow">
               {ex.ex.map((e, i) => (
                 <div key={i} className="exline">
-                  <div className="gu">{e.gu}</div>
+                  {readWrite && <div className="gu">{e.gu}</div>}
                   <div className="rm">{e.roman}</div>
                   <div className="en">{e.en}</div>
                 </div>
@@ -4091,7 +4088,9 @@ function expandLesson(l) {
   }
   if (pairs.length < 3) return ex;
   const ens = pairs.map((p) => p.en);
-  const need = ex.filter((e) => e.t !== "note").length;
+  // A moderate top-up, not a hard doubling: one fresh listen per not-yet-quizzed
+  // word plus one extra match, capped so nothing gets repetitive.
+  const CAP = 6;
   const listened = new Set(ex.filter((e) => e.t === "listen").map((e) => e.say));
   const extras = [];
   const mkListen = (p, i) => {
@@ -4100,14 +4099,11 @@ function expandLesson(l) {
     if (opts.length < 2) return null;
     return { t: "listen", say: p.gu, roman: p.roman, options: _rotate(opts, i + 1), answer: p.en };
   };
-  // first pass: a listen for each taught word not already quizzed by listening
+  // a listen for each taught word not already quizzed by listening
   let i = 0;
-  for (const p of pairs) { if (extras.length >= need) break; if (listened.has(p.gu)) continue; const q = mkListen(p, i++); if (q) extras.push(q); }
-  // an extra matching round
-  if (extras.length < need && pairs.length >= 4) extras.push({ t: "match", pairs: pairs.slice(0, 4).map((p) => ({ gu: p.gu, en: p.en })) });
-  // second pass: reinforce again (varied distractors) until we reach the target
-  i = 2;
-  for (const p of pairs) { if (extras.length >= need) break; const q = mkListen(p, i++); if (q) extras.push(q); }
+  for (const p of pairs) { if (extras.length >= CAP) break; if (listened.has(p.gu)) continue; const q = mkListen(p, i++); if (q) extras.push(q); }
+  // one extra matching round for reinforcement
+  if (extras.length < CAP && pairs.length >= 4) extras.push({ t: "match", pairs: pairs.slice(0, 4).map((p) => ({ gu: p.gu, en: p.en })) });
   if (!extras.length) return ex;
   const out = ex.slice();
   if (out.length && out[out.length - 1].t === "speak") { const sp = out.pop(); return [...out, ...extras, sp]; }
