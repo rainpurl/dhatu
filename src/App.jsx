@@ -426,7 +426,7 @@ const Ic = {
 
 /* ---------- styles ---------- */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Anek+Gujarati:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anek+Gujarati:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Rasa:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 :root{
   --brand:#8A1C3B; --brand-dark:#6B1330; --brand-soft:#F8E7EC;
   --gold:#E0A63C; --gold-dark:#B98219; --diya:#F2892E;
@@ -766,6 +766,19 @@ const CSS = `
 .charinfo .ci-ex b{color:var(--brand)}
 .charinfo .ci-ex b.gu{font-family:var(--fgu);font-weight:700}
 .charinfo .ci-ex i{color:var(--muted);font-style:normal;font-size:12px}
+/* Script style toggle: switch the letter font between three faces */
+.fonttoggle{display:flex;gap:6px;background:var(--bg);border-radius:14px;padding:5px;margin:0 0 14px;box-shadow:var(--bevel-inset)}
+.ftbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid transparent;background:transparent;border-radius:10px;padding:7px 4px;cursor:pointer;color:var(--muted)}
+.ftbtn .ftsample{font-size:22px;font-weight:700;line-height:1;color:var(--ink)}
+.ftbtn .ftlabel{font-size:11px;font-weight:800;letter-spacing:.2px}
+.ftbtn.sf1 .ftsample{font-family:'Anek Gujarati','Inter',sans-serif}
+.ftbtn.sf2 .ftsample{font-family:'Rasa','Anek Gujarati',serif}
+.ftbtn.sf3 .ftsample{font-family:'Noto Sans Gujarati','Anek Gujarati',sans-serif}
+.ftbtn.on{background:var(--card);color:var(--brand);box-shadow:var(--bevel-raise)}
+.ftbtn.on .ftsample{color:var(--brand)}
+/* Applied to the script screen root; retargets every letter glyph on the page */
+.sfont-2 .chargrid .gu,.sfont-2 .charinfo .gu,.sfont-2 .charinfo .ci-ex b.gu{font-family:'Rasa','Anek Gujarati',serif}
+.sfont-3 .chargrid .gu,.sfont-3 .charinfo .gu,.sfont-3 .charinfo .ci-ex b.gu{font-family:'Noto Sans Gujarati','Anek Gujarati',sans-serif}
 .playbtn.sm{width:34px;height:34px}
 .chargrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .chartile{border:1px solid transparent;background:var(--card);border-radius:14px;padding:12px 6px;cursor:pointer;
@@ -2356,6 +2369,7 @@ function CourseApp({ user }) {
   const [selChar, setSelChar] = useState(null);
   const [playChar, setPlayChar] = useState(null);
   const [charInfo, setCharInfo] = useState(null);
+  const [scriptFont, setScriptFont] = useLocalState("dhatu_scriptFont", 1);
   const [friendList, setFriendList] = useState([]);
   const [pokeList, setPokeList] = useState([]);
   const [friendInput, setFriendInput] = useState("");
@@ -3019,11 +3033,19 @@ function CourseApp({ user }) {
       </button>
     );
     return (
-      <div className="dhatu script-shell">
+      <div className={"dhatu script-shell sfont-" + scriptFont}>
         <style>{CSS}</style>
         <div className="scr" style={{ paddingBottom: 150 }}>
           <TopBar title="Script" sub="The Gujarati abugida" />
-          <p className="hist-intro">Tap any letter to hear it and see how it sounds. Letters are ordered roughly by how often you will meet them, most common first.</p>
+          <p className="hist-intro">Tap any letter to hear it and see how it sounds. Letters are ordered roughly by how often you will meet them.</p>
+          <div className="fonttoggle">
+            {[1, 2, 3].map((n) => (
+              <button key={n} className={"ftbtn sf" + n + (scriptFont === n ? " on" : "")} onClick={() => setScriptFont(n)}>
+                <span className="ftsample">અ</span>
+                <span className="ftlabel">Style {n}</span>
+              </button>
+            ))}
+          </div>
           {charInfo && (
             <div className="charinfo">
               <span className="gu">{charInfo.gu}</span>
@@ -3044,7 +3066,7 @@ function CourseApp({ user }) {
           <div className="section-h">Vowels</div>
           <div className="chargrid">{VOWELS_FREQ.map(Tile)}</div>
 
-          <div className="section-h">Consonants, most common first</div>
+          <div className="section-h">Consonants</div>
           <div className="chargrid">{CONS_FREQ.map(Tile)}</div>
 
           <div className="section-h">Numerals</div>
