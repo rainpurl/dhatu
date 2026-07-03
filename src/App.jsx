@@ -1106,6 +1106,17 @@ const LESSONS = {
     { t:"match", pairs:[{gu:"હા",en:"yes"},{gu:"ના",en:"no"},{gu:"માફ કરો",en:"sorry"},{gu:"આભાર",en:"thanks"}] },
     { t:"speak", gu:"ના, આભાર", roman:"naa, aabhaar", en:"no, thank you" },
   ]},
+  u1l4: { title: "Numbers 6 to 10", ex: [
+    { t:"intro", gu:"છ", roman:"chha", en:"six" },
+    { t:"intro", gu:"સાત", roman:"saat", en:"seven" },
+    { t:"intro", gu:"આઠ", roman:"aaṭh", en:"eight" },
+    { t:"intro", gu:"નવ", roman:"nav", en:"nine" },
+    { t:"intro", gu:"દસ", roman:"das", en:"ten" },
+    { t:"match", pairs:[{gu:"છ",en:"six"},{gu:"સાત",en:"seven"},{gu:"આઠ",en:"eight"},{gu:"નવ",en:"nine"}] },
+    { t:"listen", say:"દસ", roman:"das", options:["ten","nine","eight"], answer:"ten" },
+    { t:"listen", say:"સાત", roman:"saat", options:["seven","six","ten"], answer:"seven" },
+    { t:"speak", gu:"આઠ, નવ, દસ", roman:"aaṭh, nav, das", en:"eight, nine, ten" },
+  ]},
   u1c: { title: "Checkpoint", check:true, ex: [
     { t:"listen", say:"ત્રણ", roman:"traṇ", options:["three","one","water"], answer:"three" },
     { t:"match", pairs:[{gu:"એક",en:"one"},{gu:"પાણી",en:"water"},{gu:"હા",en:"yes"},{gu:"ના",en:"no"}] },
@@ -1143,6 +1154,46 @@ const LESSONS = {
     { t:"match", pairs:[{gu:"ઘર",en:"house"},{gu:"મેજ",en:"table"},{gu:"પુસ્તક",en:"book"},{gu:"પર",en:"on"}] },
     { t:"build", en:"The book is on the table.", answer:["પુસ્તક","મેજ","પર","છે"], extra:["ઘર","માટે"], roman:"pustak mej par chhe" },
     { t:"speak", gu:"ઘર મોટું છે", roman:"ghar moṭuṁ chhe", en:"The house is big." },
+  ]},
+
+  u2l4: { title: "Colors", ex: [
+    { t:"intro", gu:"લાલ", roman:"laal", en:"red" },
+    { t:"intro", gu:"લીલો", roman:"leelo", en:"green" },
+    { t:"intro", gu:"પીળો", roman:"peeḷo", en:"yellow" },
+    { t:"intro", gu:"વાદળી", roman:"vaadaḷi", en:"blue" },
+    { t:"intro", gu:"કાળો", roman:"kaaḷo", en:"black" },
+    { t:"match", pairs:[{gu:"લાલ",en:"red"},{gu:"લીલો",en:"green"},{gu:"પીળો",en:"yellow"},{gu:"કાળો",en:"black"}] },
+    { t:"listen", say:"વાદળી", roman:"vaadaḷi", options:["blue","green","red"], answer:"blue" },
+    { t:"build", en:"The book is red.", answer:["પુસ્તક","લાલ","છે"], extra:["લીલો","ઘર"], roman:"pustak laal chhe" },
+    { t:"speak", gu:"આ લાલ છે", roman:"aa laal chhe", en:"This is red." },
+  ]},
+  u2l5: { title: "Animals", ex: [
+    { t:"intro", gu:"કૂતરો", roman:"kootro", en:"dog" },
+    { t:"intro", gu:"બિલાડી", roman:"bilaaḍi", en:"cat" },
+    { t:"intro", gu:"ગાય", roman:"gaay", en:"cow" },
+    { t:"intro", gu:"હાથી", roman:"haathi", en:"elephant" },
+    { t:"intro", gu:"વાઘ", roman:"vaagh", en:"tiger" },
+    { t:"match", pairs:[{gu:"કૂતરો",en:"dog"},{gu:"બિલાડી",en:"cat"},{gu:"ગાય",en:"cow"},{gu:"હાથી",en:"elephant"}] },
+    { t:"listen", say:"વાઘ", roman:"vaagh", options:["tiger","cow","cat"], answer:"tiger" },
+    { t:"listen", say:"કૂતરો", roman:"kootro", options:["dog","elephant","cow"], answer:"dog" },
+    { t:"speak", gu:"આ બિલાડી છે", roman:"aa bilaaḍi chhe", en:"This is a cat." },
+  ]},
+  u2l6: { title: "Getting around", ex: [
+    { t:"intro", gu:"ગાડી", roman:"gaaḍi", en:"car" },
+    { t:"intro", gu:"બસ", roman:"bas", en:"bus" },
+    { t:"intro", gu:"ટ્રેન", roman:"ṭren", en:"train" },
+    { t:"intro", gu:"રિક્ષા", roman:"riksaa", en:"auto-rickshaw" },
+    { t:"match", pairs:[{gu:"ગાડી",en:"car"},{gu:"બસ",en:"bus"},{gu:"ટ્રેન",en:"train"},{gu:"રિક્ષા",en:"rickshaw"}] },
+    { t:"listen", say:"બસ", roman:"bas", options:["bus","car","train"], answer:"bus" },
+    { t:"build", en:"Where is the rickshaw?", answer:["રિક્ષા","ક્યાં","છે"], extra:["બસ","ગાડી"], roman:"riksaa kyaan chhe?" },
+    { t:"speak", gu:"ટ્રેન ક્યાં છે?", roman:"ṭren kyaan chhe?", en:"Where is the train?" },
+  ]},
+  u2c: { title: "Checkpoint", check:true, ex: [
+    { t:"listen", say:"ગાય", roman:"gaay", options:["cow","dog","cat"], answer:"cow" },
+    { t:"match", pairs:[{gu:"માતા",en:"mother"},{gu:"ભાત",en:"rice"},{gu:"લાલ",en:"red"},{gu:"ગાડી",en:"car"}] },
+    { t:"fill", pre:"પુસ્તક મેજ", post:"છે", options:["પર","માટે","સાથે"], answer:"પર", gu:"પુસ્તક મેજ પર છે", en:"The book is on the table.", why:"પર means 'on' and follows the noun." },
+    { t:"build", en:"This is my brother.", answer:["આ","મારો","ભાઈ","છે"], extra:["બહેન","લાલ"], roman:"aa maaro bhaai chhe" },
+    { t:"speak", gu:"આ મારી ગાડી છે", roman:"aa maari gaaḍi chhe", en:"This is my car." },
   ]},
 
   u3l1: { title: "Word order", ex: [
@@ -1247,6 +1298,21 @@ const LESSONS = {
     { t:"listen", say:"કેમ છો?", roman:"kem chho?", options:["how are you?","what's your name?","goodbye"], answer:"how are you?" },
     { t:"speak", gu:"હું મજામાં છું, આભાર", roman:"huṁ majaamaan chuṁ, aabhaar", en:"I'm well, thank you." },
   ]},
+  u5l3: { title: "Casual talk", ex: [
+    { t:"note", title:"Words for friends, not formal settings", body:[
+      "These are relaxed, everyday words younger people use with friends.",
+      "They are fun and friendly, but skip them with elders, at work, or in formal writing."], ex:[
+      {gu:"મસ્ત",roman:"mast",en:"awesome / cool"},
+      {gu:"શું ચાલે?",roman:"shu chaale?",en:"what's up?"},
+      {gu:"ટેન્શન નહીં",roman:"ṭension nahi",en:"no worries"}] },
+    { t:"intro", gu:"મસ્ત", roman:"mast", en:"awesome / cool" },
+    { t:"intro", gu:"જબરું", roman:"jabaruṁ", en:"amazing" },
+    { t:"intro", gu:"ધમાલ", roman:"dhamaal", en:"a blast / great fun" },
+    { t:"intro", gu:"ટેન્શન નહીં", roman:"ṭension nahi", en:"no worries" },
+    { t:"match", pairs:[{gu:"મસ્ત",en:"awesome"},{gu:"જબરું",en:"amazing"},{gu:"ધમાલ",en:"a blast"},{gu:"શું ચાલે?",en:"what's up?"}] },
+    { t:"listen", say:"ટેન્શન નહીં", roman:"ṭension nahi", options:["no worries","what's up?","amazing"], answer:"no worries" },
+    { t:"speak", gu:"શું ચાલે?", roman:"shu chaale?", en:"What's up?" },
+  ]},
   u5c: { title: "Checkpoint", check:true, ex: [
     { t:"match", pairs:[{gu:"કેમ છો?",en:"how are you?"},{gu:"મજામાં",en:"I'm well"},{gu:"આવજો",en:"goodbye"},{gu:"નમસ્તે",en:"hello"}] },
     { t:"build", en:"What is your name?", answer:["તમારું","નામ","શું","છે"], extra:["મારું","મજામાં"], roman:"tamaaruṁ naam shuṁ chhe?" },
@@ -1258,25 +1324,25 @@ const LESSONS = {
 
 const UNITS = [
   { id:"u1", ku:"Unit 1", title:"Sounds and first words", sub:"Greetings, water, numbers, yes and no", color:"#8A1C3B",
-    lessons:[ {id:"u1l1",label:"First words"}, {id:"u1l2",label:"Numbers 1-5"}, {id:"u1l3",label:"Yes, no, sorry"}, {id:"u1c",label:"Checkpoint",kind:"check"} ] },
-  { id:"u2", ku:"Unit 2", title:"Everyday words", sub:"Family, food, and the home", color:"#1E6E7E",
-    lessons:[ {id:"u2l1",label:"Family"}, {id:"u2l2",label:"Food and drink"}, {id:"u2l3",label:"Around the house"} ] },
+    lessons:[ {id:"u1l1",label:"First words"}, {id:"u1l2",label:"Numbers 1-5"}, {id:"u1l3",label:"Yes, no, sorry"}, {id:"u1l4",label:"Numbers 6-10"}, {id:"u1c",label:"Checkpoint",kind:"check"} ] },
+  { id:"u2", ku:"Unit 2", title:"Everyday words", sub:"Family, food, home, colors, animals, and travel", color:"#1E6E7E",
+    lessons:[ {id:"u2l1",label:"Family"}, {id:"u2l2",label:"Food and drink"}, {id:"u2l3",label:"Around the house"}, {id:"u2l4",label:"Colors"}, {id:"u2l5",label:"Animals"}, {id:"u2l6",label:"Getting around"}, {id:"u2c",label:"Checkpoint",kind:"check"} ] },
   { id:"u3", ku:"Unit 3", title:"Grammar and sentences", sub:"Word order, postpositions, gender, present tense", color:"#C77B1E",
     lessons:[ {id:"u3l1",label:"Word order"}, {id:"u3l2",label:"Postpositions"}, {id:"u3l3",label:"My, your, gender"}, {id:"u3l4",label:"Present tense"} ] },
   { id:"u4", ku:"Unit 4", title:"Talking about the past", sub:"Went and came, and the -e marker", color:"#A23E52",
     lessons:[ {id:"u4l1",label:"Went and came"}, {id:"u4l2",label:"The -e marker"}, {id:"u4c",label:"Checkpoint",kind:"check"} ] },
   { id:"u5", ku:"Unit 5", title:"Conversation and politeness", sub:"Polite 'you' and everyday phrases", color:"#2F6E44",
-    lessons:[ {id:"u5l1",label:"Polite 'you'"}, {id:"u5l2",label:"Everyday phrases"}, {id:"u5c",label:"Checkpoint",kind:"check"} ] },
+    lessons:[ {id:"u5l1",label:"Polite 'you'"}, {id:"u5l2",label:"Everyday phrases"}, {id:"u5l3",label:"Casual talk"}, {id:"u5c",label:"Checkpoint",kind:"check"} ] },
 ];
 const LESSON_ORDER = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
 
 /* Topic icon per lesson, matching what each lesson teaches */
 const LESSON_ICON = {
-  u1l1:"chat", u1l2:"guNine", u1l3:"hand",
-  u2l1:"family", u2l2:"bowl", u2l3:"home",
+  u1l1:"chat", u1l2:"guNine", u1l3:"hand", u1l4:"numbers",
+  u2l1:"family", u2l2:"bowl", u2l3:"home", u2l4:"palette", u2l5:"paw", u2l6:"car",
   u3l1:"blocks", u3l2:"link", u3l3:"tag", u3l4:"clock",
   u4l1:"steps", u4l2:"write",
-  u5l1:"hand", u5l2:"chats",
+  u5l1:"hand", u5l2:"chats", u5l3:"spark",
   u6l1:"diya", u6l2:"shirt", u6l3:"bowl", u6l4:"film",
 };
 const lessonIcon = (l) => {
