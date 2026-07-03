@@ -2,10 +2,10 @@
   "version": 1,
   "provider": "google",
   "voices": {
-    "gu": "gu-IN-Wavenet-A",
-    "en": "en-US-Wavenet-F"
+    "gu": "gu-IN-Chirp3-HD-Aoede",
+    "en": "en-US-Chirp3-HD-Aoede"
   },
-  "generatedAt": "2026-07-03T01:21:29.770Z",
+  "generatedAt": "2026-07-03T01:40:30.575Z",
   "count": 299,
   "items": {
     "gu|નમસ્તે": "gu-8a8b300a2e.mp3",

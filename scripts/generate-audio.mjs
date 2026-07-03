@@ -75,7 +75,9 @@ const LIMIT = (() => {
 const PROVIDER = (process.env.TTS_PROVIDER || "google").toLowerCase();
 
 const DEFAULT_VOICE = {
-  google: { gu: "gu-IN-Standard-A", en: "en-US-Wavenet-F" },
+  // Chirp3-HD are Google's most natural voices; using one persona (Aoede) across
+  // both languages gives a consistent narrator.
+  google: { gu: "gu-IN-Chirp3-HD-Aoede", en: "en-US-Chirp3-HD-Aoede" },
   azure: { gu: "gu-IN-DhwaniNeural", en: "en-US-AriaNeural" },
 };
 
