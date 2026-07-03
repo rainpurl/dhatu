@@ -134,22 +134,20 @@ const S = (p) => ({
   ...p,
 });
 const Ic = {
-  // Bandhani rosette: the dot-cluster motif of Gujarati tie-dye, used as the app mark
+  // Bandhani keri (paisley): the iconic Gujarati tie-dye/textile motif, dotted like bandhani
   logo: (p) => (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
-      <circle cx="12" cy="12" r="2.6" />
-      <circle cx="18.2" cy="12" r="1.5" />
-      <circle cx="16.38" cy="16.38" r="1.5" />
-      <circle cx="12" cy="18.2" r="1.5" />
-      <circle cx="7.62" cy="16.38" r="1.5" />
-      <circle cx="5.8" cy="12" r="1.5" />
-      <circle cx="7.62" cy="7.62" r="1.5" />
-      <circle cx="12" cy="5.8" r="1.5" />
-      <circle cx="16.38" cy="7.62" r="1.5" />
-      <circle cx="18.9" cy="18.9" r="1" opacity=".85" />
-      <circle cx="5.1" cy="18.9" r="1" opacity=".85" />
-      <circle cx="5.1" cy="5.1" r="1" opacity=".85" />
-      <circle cx="18.9" cy="5.1" r="1" opacity=".85" />
+    <svg viewBox="0 0 24 24" fill="none" {...p}>
+      <path
+        d="M12.6 21.4C7.1 21.4 3.6 16.9 3.6 12 3.6 6.5 8 2.4 13.6 2.4c4.5 0 7.6 3.3 7.6 7.3 0 3.5-2.7 6.1-6 6.1-2.9 0-5-2.2-5-5 0-2.3 1.8-4 4-4 1.7 0 2.9 1 3.2 2.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="13.4" cy="11.3" r="1.45" fill="currentColor" />
+      <circle cx="7.4" cy="12.6" r="1.05" fill="currentColor" />
+      <circle cx="9.6" cy="7.4" r="1" fill="currentColor" />
+      <circle cx="12.2" cy="16.9" r="1" fill="currentColor" />
     </svg>
   ),
   learn: (p) => (
@@ -593,11 +591,11 @@ const CSS = `
 .tok.inans{background:var(--brand-soft);border-color:var(--brand)}
 
 /* note / intro cards */
-.note{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+.note{background:var(--card);border:none;border-radius:20px;padding:18px;box-shadow:var(--bevel-inset)}
 .note h3{margin:0 0 8px;font-size:18px;font-weight:800}
 .note p{margin:0 0 10px;font-size:15px;line-height:1.5;color:#4b3942}
 .exrow{display:flex;flex-direction:column;gap:8px;margin-top:6px}
-.exline{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+.exline{background:var(--bg);border:none;border-radius:12px;padding:11px 13px;box-shadow:var(--bevel-inset)}
 .exline .gu{font-family:var(--fgu);font-size:19px;font-weight:600}
 .exline .rm{color:var(--muted);font-size:12.5px;font-weight:600;margin-top:1px}
 .exline .en{font-size:13.5px;margin-top:2px}
@@ -672,6 +670,10 @@ const CSS = `
 
 /* history: topic categories */
 .hist-intro{font-size:14px;color:#5b4a51;line-height:1.5;margin:0 4px 16px}
+.factcard{background:var(--card);border-radius:16px;padding:14px 16px;margin:2px 0 16px;box-shadow:var(--bevel-inset)}
+.factcard .factlabel{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:6px}
+.factcard .factlabel svg{color:var(--gold)}
+.factcard p{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink);font-weight:500}
 .cat-card{border:none;cursor:pointer;text-align:left;border-radius:18px;overflow:hidden;padding:0;width:100%;
   background:var(--card);margin-bottom:12px;box-shadow:var(--bevel-raise);
   transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
@@ -726,8 +728,8 @@ const CSS = `
 .sources li i{color:var(--muted)}
 
 /* vocab */
-.wordcard{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
-  border-radius:16px;padding:12px 14px;margin-bottom:10px}
+.wordcard{display:flex;align-items:center;gap:12px;background:var(--card);border:none;
+  border-radius:16px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--bevel-inset)}
 .wordcard .cue{width:40px;height:40px;border-radius:12px;background:var(--brand-soft);display:grid;place-items:center;
   font-size:22px;flex:none}
 .wordcard .gu{font-family:var(--fgu);font-size:20px;font-weight:700}
@@ -741,7 +743,7 @@ const CSS = `
 
 /* profile */
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:6px 0 4px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px}
+.stat{background:var(--card);border:none;border-radius:18px;padding:14px;box-shadow:var(--bevel-inset)}
 .stat .n{font-size:26px;font-weight:800;display:flex;align-items:center;gap:7px}
 .stat .n svg{width:22px;height:22px}
 .stat .l{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px}
@@ -750,7 +752,7 @@ const CSS = `
 .day .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:1.5px solid var(--line)}
 .day.hit .dot{background:#FDECD9;border-color:var(--diya);color:var(--diya)}
 .badges{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.badge2{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}
+.badge2{display:flex;gap:12px;align-items:center;background:var(--card);border:none;border-radius:16px;padding:12px;box-shadow:var(--bevel-inset)}
 .badge2 .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}
 .badge2 b{font-size:14px} .badge2 small{color:var(--muted);font-size:11.5px;font-weight:600;display:block}
 .badge2.off{opacity:.45}
@@ -1304,6 +1306,22 @@ const CATEGORIES = [
   { id:"colonial", title:"Colonial Rule and Resistance", blurb:"British rule reorganized land and labor. Gujarat answered with a new reading public and a new form of protest.", color:"#4A5568", img: FP + "Gandhi%20at%20Dandi%2C%205%20April%201930.jpg?width=1000" },
   { id:"modern", title:"Modern Gujarat", blurb:"A linguistic state, fast growth, popular protest, and the hard questions that came with all three.", color:"#2F6E44", img: FP + "Statue%20of%20Unity.jpg?width=1000" },
 ];
+
+/* Cultural fun facts, rotated once every 10 hours on the Culture tab */
+const CULTURE_FACTS = [
+  "Gujarat has the longest coastline of any state in the country, roughly 1,600 kilometers.",
+  "The Gir Forest in Gujarat is the only place in the world where Asiatic lions still live in the wild.",
+  "Patola silk from Patan is a double-ikat weave, dyed so the pattern reads identically on both sides of the cloth.",
+  "A single bandhani cloth can involve tying many thousands of tiny knots by hand before it is dyed.",
+  "Dholavira, a city in Gujarat over 4,500 years old, had one of the earliest large-scale water-harvesting systems anywhere.",
+  "Gujarati is spoken by well over 50 million people around the world.",
+  "During Navratri, Gujarat holds some of the largest garba and dandiya-raas celebrations found anywhere.",
+  "On Uttarayan each January, the skies over Gujarat fill with kites for a day-long festival.",
+  "The Rann of Kutch, a vast white salt desert, hosts a months-long cultural festival every winter.",
+  "The Modhera Sun Temple was laid out so that light reaches the inner shrine around the equinox.",
+  "The Amul dairy cooperative, based in Anand, reshaped rural incomes and is studied as a model worldwide.",
+  "A traditional Gujarati thali is built to balance sweet, salty, and spicy flavors in a single meal.",
+];
 const ERAS = [];
 
 /* ============================ SOURCES for language lessons ============================ */
@@ -1739,7 +1757,6 @@ function CourseApp({ user }) {
       <div className="brandmark"><Ic.logo width={24} height={24} /></div>
       <div>
         <h1>{title}</h1>
-        {sub && <div className="sub">{sub}</div>}
       </div>
       <div className="spacer" />
       <div className="chip gold"><Ic.kaudi width={15} height={15} />{kaudi}</div>
@@ -1844,7 +1861,6 @@ function CourseApp({ user }) {
             <button className="iconbtn" onClick={() => setScreen("learn")}><Ic.back /></button>
             <div>
               <h1 style={{ fontSize: 19, fontWeight: 800, margin: 0 }}>Grammar guide</h1>
-              <div className="sub" style={{ marginTop: 1 }}>Six patterns that matter most</div>
             </div>
           </div>
           {GRAMMAR.map((g) => (
@@ -1932,7 +1948,6 @@ function CourseApp({ user }) {
             <button className="iconbtn" onClick={() => setScreen("learn")}><Ic.back /></button>
             <div>
               <h1 style={{ fontSize: 19, fontWeight: 800, margin: 0 }}>Conversations</h1>
-              <div className="sub" style={{ marginTop: 1 }}>Walk through real exchanges</div>
             </div>
           </div>
           {CONVERSATIONS.map((c) => (
@@ -2335,7 +2350,11 @@ function CourseApp({ user }) {
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title="Culture" sub="Gujarat, by theme" />
+          <TopBar title="Culture" />
+          <div className="factcard">
+            <div className="factlabel"><Ic.bulb width={15} height={15} /> Did you know?</div>
+            <p>{CULTURE_FACTS[Math.floor(Date.now() / (10 * 3600 * 1000)) % CULTURE_FACTS.length]}</p>
+          </div>
           <p className="hist-intro">Explore Gujarat's history and culture by theme rather than a single timeline. Each thread runs from ancient times to today.</p>
           <div className="wide-2col">
             {CATEGORIES.map((c) => {
