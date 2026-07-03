@@ -1723,6 +1723,7 @@ const VOWELS = [
   { gu:"ઉ", roman:"u", hint:"a short 'u'", ex:{en:"put"} },
   { gu:"ઊ", roman:"uu", hint:"a long 'oo'", ex:{en:"boot"} },
   { gu:"ઋ", roman:"ru", hint:"a vocalic r, in Sanskrit loanwords", ex:{gu:"ઋતુ", roman:"ritu"} },
+  { gu:"ૡ", roman:"ḹ", hint:"a vocalic 'l', only in old Sanskrit words; very rare" },
   { gu:"એ", roman:"e", hint:"a long 'e' sound", ex:{en:"they"} },
   { gu:"ઐ", roman:"ai", hint:"an 'eh' sound, not 'eye'", ex:{en:"bed"} },
   { gu:"ઓ", roman:"o", hint:"a long 'o' sound", ex:{en:"go"} },
@@ -1751,7 +1752,8 @@ const CONS_ROWS = [
     {gu:"વ",roman:"va",hint:"between v and w",ex:{en:"van"}},{gu:"ળ",roman:"ḷa",hint:"a retroflex l",ex:{gu:"કાળો",roman:"kaaḷo"}}] },
   { label:"Sibilants and H", chars:[
     {gu:"શ",roman:"sha",ex:{en:"shoe"}},{gu:"ષ",roman:"ṣa",hint:"a retroflex 'sha', mostly in Sanskrit loanwords",ex:{gu:"ભાષા",roman:"bhaaṣaa"}},
-    {gu:"સ",roman:"sa",ex:{en:"sun"}},{gu:"હ",roman:"ha",ex:{en:"hat"}}] },
+    {gu:"સ",roman:"sa",ex:{en:"sun"}},{gu:"હ",roman:"ha",ex:{en:"hat"}},
+    {gu:"ૹ",roman:"za",hint:"a modern letter for the 'z' sound in borrowed words",ex:{en:"zebra"}}] },
 ];
 const CONJUNCTS = [
   { gu:"ક્ષ", roman:"kṣa", hint:"a blend of ક + ષ, as in પક્ષી (bird)" },
@@ -1768,16 +1770,19 @@ const SIGNS = [
   { gu:"ઁ", roman:"candrabindu", hint:"nasalizes the whole vowel, as in ચાંદ" },
   { gu:"્", roman:"halant", hint:"removes the built-in 'a' from a consonant" },
   { gu:"ૐ", roman:"om", hint:"the sacred syllable Om" },
+  { gu:"।", roman:"danda", hint:"a vertical bar used as a full stop, like a period" },
+  { gu:"॥", roman:"double danda", hint:"marks the end of a verse or a section" },
+  { gu:"ઽ", roman:"avagraha", hint:"marks an elided 'a', mostly in Sanskrit text" },
 ];
 
 /* Frequency-ordered views: roughly how often a learner meets each letter, common first */
-const VOWELS_FREQ_ORDER = ["અ","આ","ઇ","ઈ","ઉ","ઊ","એ","ઓ","ઐ","ઔ","ઋ","ઍ","ઑ"];
+const VOWELS_FREQ_ORDER = ["અ","આ","ઇ","ઈ","ઉ","ઊ","એ","ઓ","ઐ","ઔ","ઋ","ઍ","ઑ","ૡ"];
 const _vowByGu = Object.fromEntries(VOWELS.map((v) => [v.gu, v]));
 const VOWELS_FREQ = VOWELS_FREQ_ORDER.map((g) => _vowByGu[g]).filter(Boolean);
 
 const _consByGu = {};
 CONS_ROWS.forEach((r) => r.chars.forEach((c) => { _consByGu[c.gu] = c; }));
-const CONS_FREQ_ORDER = ["ક","ર","ન","ત","મ","સ","વ","લ","પ","દ","હ","ય","જ","ગ","ધ","બ","ભ","થ","શ","ચ","છ","ખ","ડ","ટ","ળ","ણ","ફ","ઘ","ઠ","ઢ","ઝ","ષ","ઞ","ઙ"];
+const CONS_FREQ_ORDER = ["ક","ર","ન","ત","મ","સ","વ","લ","પ","દ","હ","ય","જ","ગ","ધ","બ","ભ","થ","શ","ચ","છ","ખ","ડ","ટ","ળ","ણ","ફ","ઘ","ઠ","ઢ","ઝ","ષ","ઞ","ઙ","ૹ"];
 const CONS_FREQ = CONS_FREQ_ORDER.map((g) => _consByGu[g]).filter(Boolean);
 
 /* Pool for the letter-learning lesson, most common first (mix of vowels + consonants) */
@@ -4732,6 +4737,46 @@ TOPICS.push(
     { gu:"છાપકામ", r:"chhaapkaam", en:"block printing" },
     { gu:"ગળી", r:"gaḷi", en:"indigo" },
     { gu:"ઘરચોળું", r:"gharcholuṁ", en:"a bridal cloth" },
+  ]}
+);
+
+/* ============================ VOCAB: home, produce, clothing (added) ============================ */
+TOPICS.push(
+  { id:"household", title:"Around the house", icon:"home", words:[
+    { gu:"ઘર", r:"ghar", en:"house / home" },
+    { gu:"ઓરડો", r:"orḍo", en:"room" },
+    { gu:"રસોડું", r:"rasoḍuṁ", en:"kitchen" },
+    { gu:"બારણું", r:"baarṇuṁ", en:"door" },
+    { gu:"બારી", r:"baari", en:"window" },
+    { gu:"ખુરશી", r:"khurshi", en:"chair" },
+    { gu:"મેજ", r:"mej", en:"table" },
+    { gu:"પલંગ", r:"palang", en:"bed" },
+    { gu:"દીવો", r:"deevo", en:"lamp" },
+    { gu:"ચાવી", r:"chaavi", en:"key" },
+  ]},
+  { id:"produce", title:"Fruits and vegetables", icon:"bowl", words:[
+    { gu:"કેળું", r:"keḷuṁ", en:"banana" },
+    { gu:"સફરજન", r:"safarjan", en:"apple" },
+    { gu:"દ્રાક્ષ", r:"draaksh", en:"grapes" },
+    { gu:"જામફળ", r:"jaamphaḷ", en:"guava" },
+    { gu:"દાડમ", r:"daaḍam", en:"pomegranate" },
+    { gu:"બટાકા", r:"baṭaakaa", en:"potato" },
+    { gu:"ટમેટું", r:"ṭameṭuṁ", en:"tomato" },
+    { gu:"રીંગણ", r:"reengaṇ", en:"eggplant" },
+    { gu:"ભીંડો", r:"bheenḍo", en:"okra" },
+    { gu:"ગાજર", r:"gaajar", en:"carrot" },
+  ]},
+  { id:"clothing", title:"Clothes to wear", icon:"shirt", note:"Everyday dress. Gujarat mixes South Asian garments like the saree and kurta with Western clothes.", words:[
+    { gu:"કપડાં", r:"kapḍaan", en:"clothes" },
+    { gu:"સાડી", r:"saaḍi", en:"saree" },
+    { gu:"ઝભ્ભો", r:"jhabbho", en:"kurta" },
+    { gu:"પહેરણ", r:"paheraṇ", en:"shirt" },
+    { gu:"ચણિયો", r:"chaṇiyo", en:"a long skirt (chaniyo)" },
+    { gu:"ધોતી", r:"dhoti", en:"dhoti" },
+    { gu:"દુપટ્ટો", r:"dupaṭṭo", en:"scarf / dupatta" },
+    { gu:"ટોપી", r:"ṭopi", en:"cap" },
+    { gu:"ચંપલ", r:"champal", en:"sandals" },
+    { gu:"જૂતાં", r:"jootaan", en:"shoes" },
   ]}
 );
 
