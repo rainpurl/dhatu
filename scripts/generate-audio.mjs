@@ -189,7 +189,7 @@ async function synth(text, lang) {
   return synthGoogle(text, lang);
 }
 
-async function synthGoogle(text, lang) {
+async function synthGoogle(text, lang, voiceOverride) {
   const key = process.env.GOOGLE_TTS_KEY;
   if (!key) throw new Error("Missing GOOGLE_TTS_KEY. See AUDIO.md to get a Google Cloud Text-to-Speech key.");
   const rate = Number((lang === "en" ? process.env.EN_RATE : process.env.GU_RATE) || (lang === "en" ? "1.0" : "0.9"));
@@ -200,7 +200,7 @@ async function synthGoogle(text, lang) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         input: { text },
-        voice: { languageCode: langCode(lang), name: voiceFor(lang) },
+        voice: { languageCode: langCode(lang), name: voiceOverride || voiceFor(lang) },
         audioConfig: { audioEncoding: "MP3", speakingRate: rate },
       }),
     }
@@ -308,7 +308,15 @@ async function main() {
       continue;
     }
     try {
-      const buf = await synthWithRetry(it.text, it.lang);
+      let buf = await synthWithRetry(it.text, it.lang);
+      // Chirp3-HD occasionally returns near-silence for very short words; fall
+      // back to a reliable WaveNet voice when the clip is suspiciously small.
+      if (buf.length < 1800 && PROVIDER !== "azure") {
+        try {
+          const fb = await synthGoogle(it.text, it.lang, it.lang === "en" ? "en-US-Wavenet-F" : "gu-IN-Wavenet-A");
+          if (fb.length > buf.length) buf = fb;
+        } catch (e) {}
+      }
       fs.writeFileSync(dest, buf);
       made++;
       process.stdout.write(`\r  generated ${made}  (skipped ${skipped}, failed ${failed})   `);
