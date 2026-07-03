@@ -69,7 +69,7 @@ Key modules:
 
 Screen values (the `screen` state): `onboarding, learn, script, scriptLearn,
 review, vocab, history (Culture), profile, lesson, complete, grammar, talk,
-vocabPractice`. Bottom nav on mobile becomes a **left sidebar on desktop
+vocabPractice, scriptLessons`. Bottom nav on mobile becomes a **left sidebar on desktop
 (>=900px)**. On desktop every page **fills the full width** (`.scr` is
 max-width:none with `5vw` side padding, not a centered column); list screens
 (Vocab, Grammar, Review, Culture) use responsive card grids (`.cardgrid`,
@@ -105,6 +105,14 @@ max-width:none with `5vw` side padding, not a centered column); list screens
    first query: `to` asc, `at` desc).
 
 Until rules/index are applied, social features fail quietly (app still works).
+
+**Sync safety (do not regress):** `loadProgressToLocal` only replaces local when
+the cloud doc has real `dhatu_` progress keys; an **empty or missing cloud doc
+never clears local** (it re-seeds cloud from local instead). `scheduleSave`
+**skips writing an empty snapshot**. Together these prevent the data-loss bug
+where an empty `{}` progress object wiped a device. Tradeoff: a staff **Reset**
+(which writes `progress:{}`) will not force-wipe a device that still has local
+progress; it fully resets only accounts with no local copy.
 
 ---
 
@@ -212,7 +220,13 @@ Until rules/index are applied, social features fail quietly (app still works).
   hear it (no separate sound button). A **sticky** letter-info bar shows the roman,
   a short hint, and an **example** (an English word when the sound exists in
   English, else a Gujarati word; `ex:{en}` or `ex:{gu,roman}` on each letter).
-  "Learn the letters" quiz (ScriptLearn).
+  **"Learn the letters"** opens a menu (`scriptLessons` screen) of a sequenced
+  curriculum (`SCRIPT_LESSONS`, ~12 lessons: core vowels, core consonants, then
+  aspirates/palatals/retroflexes/sibilants, numerals, signs) following the
+  script-methodology research doc. Each lesson is a 10-question ScriptLearn quiz
+  over its glyph group; completion is tracked in `dhatu_scriptDone` and shown as a
+  progress journey. (Matras and conjuncts from the doc are not yet lessons; they
+  need a CV-building exercise format, a good next step.)
 - **Review:** spaced repetition (SRS).
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
