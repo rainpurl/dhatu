@@ -47,6 +47,24 @@ Project: **dhatu-9f586** at [console.firebase.google.com](https://console.fireba
 
 That is all. Push the code, and sign-in will work on the live site.
 
+### Make the sign-in popup say "Dhatu Learning" (not the firebase URL)
+
+By default the Google sign-in popup reads "to continue to
+dhatu-9f586.firebaseapp.com". To show a friendly name instead:
+
+1. Go to the **Google Cloud console** for the same project (dhatu-9f586):
+   [console.cloud.google.com](https://console.cloud.google.com) → APIs & Services
+   → **OAuth consent screen**.
+2. Set **App name** to `Dhatu Learning`, pick a support email, and (optionally)
+   upload an app logo. Save.
+3. The account chooser and consent screen will then show **Dhatu Learning**.
+
+Note: the `dhatu-9f586.firebaseapp.com` domain can still appear in small print
+because it is the auth domain (`authDomain` in `src/firebaseConfig.js`). To
+replace that domain entirely you would add a custom domain and set it as
+`authDomain`, which needs DNS setup; setting the OAuth **App name** above is the
+simple change that covers what users actually read.
+
 ---
 
 ## Staff portal (dhatu.pages.dev/staff)
