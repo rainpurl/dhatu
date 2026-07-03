@@ -1,4 +1,4 @@
-# Dhātu (ધાતુ) — Project Handoff
+# Dhātu (ધાતુ): Project Handoff
 
 Read this top to bottom before making changes. It is written so a new chat or
 developer can continue with no prior context.
@@ -59,13 +59,13 @@ script, grammar, vocabulary, conversation practice, and a **Culture** section
 - **Staff portal:** a separate static page at `public/staff/` served at `/staff`.
 
 Key modules:
-- `src/App.jsx` — the whole app.
-- `src/firebase.js` — auth, per-user Firestore progress sync, public profiles,
+- `src/App.jsx`: the whole app.
+- `src/firebase.js`: auth, per-user Firestore progress sync, public profiles,
   usernames, following, pokes.
-- `src/firebaseConfig.js` — public Firebase web config (safe to commit).
-- `scripts/generate-audio.mjs` — the audio generator (`npm run audio`).
-- `public/staff/index.html` — the staff portal.
-- `AUDIO.md`, `AUTH.md` — plain setup guides for the owner.
+- `src/firebaseConfig.js`: public Firebase web config (safe to commit).
+- `scripts/generate-audio.mjs`: the audio generator (`npm run audio`).
+- `public/staff/index.html`: the staff portal.
+- `AUDIO.md`, `AUTH.md`: plain setup guides for the owner.
 
 Screen values (the `screen` state): `onboarding, learn, script, scriptLearn,
 review, vocab, history (Culture), profile, lesson, complete, grammar, talk,
@@ -74,7 +74,7 @@ vocabPractice`. Bottom nav on mobile becomes a **left sidebar on desktop
 
 ---
 
-## 4. Accounts (Firebase) — required sign-in
+## 4. Accounts (Firebase): required sign-in
 
 - Sign-in is **required** (no guest mode), **Google only** (phone/SMS was
   rejected because SMS costs money; see the no-cost rule).
@@ -155,7 +155,7 @@ Until rules/index are applied, social features fail quietly (app still works).
   `--diya:#F2892E`. Light mode only.
 - **Logo:** a **bandhani keri (paisley)** SVG (`Ic.logo`), dotted; used in top
   bar, onboarding, sign-in, favicon. (An earlier dot-rosette was rejected.)
-- **NO em dashes** anywhere (code, UI, docs). Verify: `grep -c $'—'
+- **NO em dashes** anywhere (code, UI, docs). Verify: `grep -c $'\u2014'
   src/App.jsx` must be `0`.
 - **NO emojis** in the app UI. All icons are SVG (`Ic.*`); topic/lesson icons map
   through `LESSON_ICON`/`TopicIcon`. Verify no emoji chars in `src/App.jsx`.
@@ -247,7 +247,7 @@ message. This is a platform limit, intentionally left as graceful fallback.
 - After any edit, build and check invariants (with local Node on PATH):
   ```
   npm run build
-  grep -c $'—' src/App.jsx        # em dashes, must be 0
+  grep -c $'\u2014' src/App.jsx        # em dashes, must be 0
   python3 -c "import re;print(len(re.findall('[\U0001F000-\U0001FAFF☀-➿⬀-⯿]',open('src/App.jsx').read())))"  # emojis, must be 0
   ```
 - **Inline chapter photos** live in a per-chapter `figures:[{src, cap, after?}]`
