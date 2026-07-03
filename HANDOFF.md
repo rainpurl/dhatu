@@ -188,7 +188,10 @@ Until rules/index are applied, social features fail quietly (app still works).
   Top of the tab: a **resume card** (jumps to the next recommended lesson, shows
   overall course-completion bar), a **daily-goal strip** (3 lessons/day, tracked
   in `dhatu_dayLog`; turns green when met), and **per-unit progress bars** in each
-  unit header (X/Y lessons, "Done" pill when complete).
+  unit header (X/Y lessons, "Done" pill when complete). On wide desktop (>=1200px)
+  a fixed **right rail** (`.rail`, on the `.dhatu.withrail` Learn root) shows
+  streak, Kaudi, course progress, daily goal, and a Continue button; it is hidden
+  below 1200px.
 - **Script:** one scrollable page of letters (common-first); tap a letter to hear
   it and see a sound hint in a caption; "Learn the letters" quiz (ScriptLearn).
 - **Review:** spaced repetition (SRS).
@@ -260,9 +263,10 @@ message. This is a platform limit, intentionally left as graceful fallback.
    recording can be dropped in (playback already resolves a clip per glyph).
 4. **Verify social features live** (follow/poke) after rules + index; could not be
    tested multi-user from here.
-5. Open ideas discussed: unit progress bars on the Learn tab; a desktop right
-   rail; more Culture chapters or lessons; teaching the new vocab topics (time,
-   market, greetings) as actual lessons; native-recorded vowels.
+5. Open ideas discussed: more Culture chapters; native-recorded vowels. (Done
+   since the first handoff: unit progress bars, resume card, daily-goal tracker,
+   the desktop right rail on Learn, and teaching the extra vocab topics as
+   lessons.)
 
 ---
 
