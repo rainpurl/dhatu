@@ -139,10 +139,14 @@ all of these.
 
 ## 5. Locked design decisions (do not silently change)
 
-- **Visual style:** recessed / beveled (soft inset shadows), NOT flat Duolingo-style
-  hard drop shadows. Bevel tokens live in `:root`: `--bevel-raise`, `--bevel-press`,
-  `--bevel-inset`, `--bevel-soft`. Selected/correct/wrong states use colored inset
-  rings, not borders.
+- **Visual style:** recessed (soft inset shadows) everywhere, NOT flat Duolingo-style
+  hard drop shadows. Tokens live in `:root`: `--bevel-raise`, `--bevel-press`,
+  `--bevel-inset`, `--bevel-soft`, plus `--sink-*` for colored recessed surfaces.
+  Selected/correct/wrong states use colored inset rings, not borders.
+  - **One intentional exception:** the Learn-path **lesson nodes** (`.node .disc`)
+    are raised 3D circles (colored bottom edge via `--edge`, press-down on active),
+    Duolingo-style, because that is the primary tappable element. Do not
+    "recess" these back; it was a deliberate choice.
 - **Palette:** warm **maroon + gold**. Key vars: `--brand:#8A1C3B`, `--gold:#E0A63C`,
   `--diya:#F2892E`, plus ok/no greens/reds and warm neutrals. (An alternate blue/paper
   palette was considered and rejected; keep maroon/gold.)
