@@ -214,6 +214,10 @@ const VOICE_VARIANTS = [
   { tag: "v3", gu: "gu-IN-Chirp3-HD-Kore" },
 ];
 const VARIANT_MAX_LEN = 70;
+// Isolated conjunct glyphs (a cluster with no vowel) that the alternate Chirp3
+// voices vowel-break (e.g. ન્ન read as "nana"). Skip variants for these so the
+// script tab falls back to the correct default-voice clip in every style.
+const VARIANT_SKIP = new Set(["ક્ષ", "જ્ઞ", "શ્રી", "ત્ર", "ન્ન"]);
 
 /* ---------------- providers ---------------- */
 function voiceFor(lang) {
@@ -410,6 +414,7 @@ async function main() {
       if (it.lang !== "gu") continue;
       if (it.text.length > VARIANT_MAX_LEN) continue;
       if (PRONUNCIATION_OVERRIDES[it.text]) continue; // special IPA/Arabic clips stay single-voice
+      if (VARIANT_SKIP.has(it.text)) continue; // isolated conjuncts the alt voices mangle
       for (const v of VOICE_VARIANTS) {
         const key = keyFor(it.text, it.lang) + "|" + v.tag;
         const file = fileForVoice(it.text, it.lang, v.gu);
