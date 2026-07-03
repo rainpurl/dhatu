@@ -1247,6 +1247,21 @@ const LESSONS = {
     { t:"build", en:"We drink milk.", answer:["અમે","દૂધ","પીઈએ","છીએ"], extra:["પીઉં","છું"], roman:"ame doodh piie chhie" },
     { t:"speak", gu:"તમે ક્યાં જાઓ છો?", roman:"tame kyaan jaao chho?", en:"Where are you going?" },
   ]},
+  u3l5: { title: "Action words", ex: [
+    { t:"note", title:"The -વું ending means 'to ...'", body:[
+      "You have already used these verbs in sentences. Their dictionary form ends in -વું, which works like the English 'to': ખાવું = to eat.",
+      "To use one, drop -વું and add an ending that matches the subject: હું ખાઉં છું = I eat."], ex:[
+      {gu:"ખાવું",roman:"khaavuṁ",en:"to eat"},
+      {gu:"પીવું",roman:"peevuṁ",en:"to drink"},
+      {gu:"જવું",roman:"javuṁ",en:"to go"}] },
+    { t:"intro", gu:"આવવું", roman:"aavvuṁ", en:"to come" },
+    { t:"intro", gu:"કરવું", roman:"karvuṁ", en:"to do" },
+    { t:"intro", gu:"બોલવું", roman:"bolvuṁ", en:"to speak" },
+    { t:"match", pairs:[{gu:"ખાવું",en:"to eat"},{gu:"પીવું",en:"to drink"},{gu:"જવું",en:"to go"},{gu:"આવવું",en:"to come"}] },
+    { t:"listen", say:"બોલવું", roman:"bolvuṁ", options:["to speak","to do","to eat"], answer:"to speak" },
+    { t:"listen", say:"કરવું", roman:"karvuṁ", options:["to do","to come","to drink"], answer:"to do" },
+    { t:"speak", gu:"મને જવું છે", roman:"mane javuṁ chhe", en:"I want to go." },
+  ]},
 
   u4l1: { title: "Went and came", ex: [
     { t:"intro", gu:"ગયો", roman:"gayo", en:"went (m.)", sub:"ગઈ for a female subject." },
@@ -1268,6 +1283,18 @@ const LESSONS = {
     { t:"fill", pre:"મેં કેરી", post:"", options:["ખાધી","ખાધો","ખાધું"], answer:"ખાધી", gu:"મેં કેરી ખાધી", en:"I ate a mango.", why:"The verb agrees with કેરી (feminine), so ખાધી." },
     { t:"build", en:"Kishor read the paper.", answer:["કિશોરે","કાગળ","વાંચ્યો"], extra:["વાંચી","મેં"], roman:"kishore kaagaḷ vaanchyo" },
     { t:"speak", gu:"મેં ચા પીધી", roman:"meṁ chaa peedhi", en:"I drank tea." },
+  ]},
+  u4l3: { title: "Time and days", ex: [
+    { t:"intro", gu:"આજે", roman:"aaje", en:"today" },
+    { t:"intro", gu:"આવતીકાલે", roman:"aavtikaale", en:"tomorrow" },
+    { t:"intro", gu:"સવાર", roman:"savaar", en:"morning" },
+    { t:"intro", gu:"બપોર", roman:"bapor", en:"afternoon" },
+    { t:"intro", gu:"રાત", roman:"raat", en:"night" },
+    { t:"match", pairs:[{gu:"આજે",en:"today"},{gu:"ગઈકાલે",en:"yesterday"},{gu:"સવાર",en:"morning"},{gu:"રાત",en:"night"}] },
+    { t:"listen", say:"આવતીકાલે", roman:"aavtikaale", options:["tomorrow","today","yesterday"], answer:"tomorrow" },
+    { t:"listen", say:"બપોર", roman:"bapor", options:["afternoon","morning","night"], answer:"afternoon" },
+    { t:"build", en:"I went home yesterday.", answer:["હું","ગઈકાલે","ઘરે","ગયો"], extra:["આજે","જાઉં"], roman:"huṁ gaikaale ghare gayo" },
+    { t:"speak", gu:"આજે સવાર છે", roman:"aaje savaar chhe", en:"It is morning today." },
   ]},
   u4c: { title: "Checkpoint", check:true, ex: [
     { t:"fill", pre:"તે ઘરે", post:"", options:["ગયો","ગઈ","ગયું"], answer:"ગયો", gu:"તે ઘરે ગયો", en:"He went home.", why:"Masculine subject takes ગયો." },
@@ -1313,6 +1340,17 @@ const LESSONS = {
     { t:"listen", say:"ટેન્શન નહીં", roman:"ṭension nahi", options:["no worries","what's up?","amazing"], answer:"no worries" },
     { t:"speak", gu:"શું ચાલે?", roman:"shu chaale?", en:"What's up?" },
   ]},
+  u5l4: { title: "At the market", ex: [
+    { t:"intro", gu:"દુકાન", roman:"dukaan", en:"shop" },
+    { t:"intro", gu:"પૈસા", roman:"paisaa", en:"money" },
+    { t:"intro", gu:"કેટલું?", roman:"keṭluṁ?", en:"how much?" },
+    { t:"intro", gu:"સસ્તું", roman:"sastuṁ", en:"cheap" },
+    { t:"intro", gu:"મોંઘું", roman:"monghuṁ", en:"expensive" },
+    { t:"match", pairs:[{gu:"દુકાન",en:"shop"},{gu:"પૈસા",en:"money"},{gu:"સસ્તું",en:"cheap"},{gu:"મોંઘું",en:"expensive"}] },
+    { t:"listen", say:"મોંઘું", roman:"monghuṁ", options:["expensive","cheap","money"], answer:"expensive" },
+    { t:"build", en:"How much is this?", answer:["આ","કેટલું","છે"], extra:["પૈસા","દુકાન"], roman:"aa keṭluṁ chhe?" },
+    { t:"speak", gu:"આ કેટલું છે?", roman:"aa keṭluṁ chhe?", en:"How much is this?" },
+  ]},
   u5c: { title: "Checkpoint", check:true, ex: [
     { t:"match", pairs:[{gu:"કેમ છો?",en:"how are you?"},{gu:"મજામાં",en:"I'm well"},{gu:"આવજો",en:"goodbye"},{gu:"નમસ્તે",en:"hello"}] },
     { t:"build", en:"What is your name?", answer:["તમારું","નામ","શું","છે"], extra:["મારું","મજામાં"], roman:"tamaaruṁ naam shuṁ chhe?" },
@@ -1328,11 +1366,11 @@ const UNITS = [
   { id:"u2", ku:"Unit 2", title:"Everyday words", sub:"Family, food, home, colors, animals, and travel", color:"#1E6E7E",
     lessons:[ {id:"u2l1",label:"Family"}, {id:"u2l2",label:"Food and drink"}, {id:"u2l3",label:"Around the house"}, {id:"u2l4",label:"Colors"}, {id:"u2l5",label:"Animals"}, {id:"u2l6",label:"Getting around"}, {id:"u2c",label:"Checkpoint",kind:"check"} ] },
   { id:"u3", ku:"Unit 3", title:"Grammar and sentences", sub:"Word order, postpositions, gender, present tense", color:"#C77B1E",
-    lessons:[ {id:"u3l1",label:"Word order"}, {id:"u3l2",label:"Postpositions"}, {id:"u3l3",label:"My, your, gender"}, {id:"u3l4",label:"Present tense"} ] },
-  { id:"u4", ku:"Unit 4", title:"Talking about the past", sub:"Went and came, and the -e marker", color:"#A23E52",
-    lessons:[ {id:"u4l1",label:"Went and came"}, {id:"u4l2",label:"The -e marker"}, {id:"u4c",label:"Checkpoint",kind:"check"} ] },
-  { id:"u5", ku:"Unit 5", title:"Conversation and politeness", sub:"Polite 'you' and everyday phrases", color:"#2F6E44",
-    lessons:[ {id:"u5l1",label:"Polite 'you'"}, {id:"u5l2",label:"Everyday phrases"}, {id:"u5l3",label:"Casual talk"}, {id:"u5c",label:"Checkpoint",kind:"check"} ] },
+    lessons:[ {id:"u3l1",label:"Word order"}, {id:"u3l2",label:"Postpositions"}, {id:"u3l3",label:"My, your, gender"}, {id:"u3l4",label:"Present tense"}, {id:"u3l5",label:"Action words"} ] },
+  { id:"u4", ku:"Unit 4", title:"Talking about the past", sub:"Went and came, the -e marker, and telling time", color:"#A23E52",
+    lessons:[ {id:"u4l1",label:"Went and came"}, {id:"u4l2",label:"The -e marker"}, {id:"u4l3",label:"Time and days"}, {id:"u4c",label:"Checkpoint",kind:"check"} ] },
+  { id:"u5", ku:"Unit 5", title:"Conversation and politeness", sub:"Polite 'you', everyday phrases, and the market", color:"#2F6E44",
+    lessons:[ {id:"u5l1",label:"Polite 'you'"}, {id:"u5l2",label:"Everyday phrases"}, {id:"u5l3",label:"Casual talk"}, {id:"u5l4",label:"At the market"}, {id:"u5c",label:"Checkpoint",kind:"check"} ] },
 ];
 const LESSON_ORDER = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
 
@@ -1340,9 +1378,9 @@ const LESSON_ORDER = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
 const LESSON_ICON = {
   u1l1:"chat", u1l2:"guNine", u1l3:"hand", u1l4:"numbers",
   u2l1:"family", u2l2:"bowl", u2l3:"home", u2l4:"palette", u2l5:"paw", u2l6:"car",
-  u3l1:"blocks", u3l2:"link", u3l3:"tag", u3l4:"clock",
-  u4l1:"steps", u4l2:"write",
-  u5l1:"hand", u5l2:"chats", u5l3:"spark",
+  u3l1:"blocks", u3l2:"link", u3l3:"tag", u3l4:"clock", u3l5:"steps",
+  u4l1:"steps", u4l2:"write", u4l3:"clock",
+  u5l1:"hand", u5l2:"chats", u5l3:"spark", u5l4:"tag",
   u6l1:"diya", u6l2:"shirt", u6l3:"bowl", u6l4:"film",
 };
 const lessonIcon = (l) => {
