@@ -1753,10 +1753,21 @@ const SCRIPT_LESSONS = [
   { id:"sl_c5", title:"Palatals: ch, chh, j, jh", glyphs:["ચ","છ","જ","ઝ"] },
   { id:"sl_c6", title:"Retroflex: ta, tha, da, dha, na", glyphs:["ટ","ઠ","ડ","ઢ","ણ"] },
   { id:"sl_c7", title:"Sibilants and rare nasals", glyphs:["શ","ષ","ળ","ઙ","ઞ"] },
+  { id:"sl_m1", title:"Vowel signs (matras) 1", note:"A vowel sign, or matra, changes the vowel of a consonant. ક is 'ka'; add a sign to get કા (kaa), કિ (ki), કી (kii), and so on. Note that the sign in કિ is written to the LEFT of the consonant even though it is pronounced after it.",
+    chars:[{gu:"ક",roman:"ka"},{gu:"કા",roman:"kaa"},{gu:"કિ",roman:"ki"},{gu:"કી",roman:"kii"},{gu:"કુ",roman:"ku"},{gu:"કૂ",roman:"kuu"},{gu:"કે",roman:"ke"},{gu:"કો",roman:"ko"}] },
+  { id:"sl_m2", title:"Vowel signs (matras) 2", note:"The same signs work on every consonant. Here they are on પ: પ (pa), પા (paa), પિ (pi), and so on. Once you know the signs, you can read any consonant with any vowel.",
+    chars:[{gu:"પ",roman:"pa"},{gu:"પા",roman:"paa"},{gu:"પિ",roman:"pi"},{gu:"પી",roman:"pii"},{gu:"પુ",roman:"pu"},{gu:"પૂ",roman:"puu"},{gu:"પે",roman:"pe"},{gu:"પો",roman:"po"}] },
   { id:"sl_n1", title:"Numerals: 0 to 9", glyphs:["૦","૧","૨","૩","૪","૫","૬","૭","૮","૯"] },
   { id:"sl_s1", title:"Signs and marks", glyphs:["ં","ઁ","ઃ","્","ૐ"] },
+  { id:"sl_j1", title:"Joining letters (conjuncts)", note:"When two consonants meet with no vowel between them, they form a conjunct. A mark called the virama removes the 'a' from the first consonant, so ન + ત becomes ન્ત (nta). Read both consonants together, with no vowel in between.",
+    chars:[{gu:"ન્ત",roman:"nta"},{gu:"ન્દ",roman:"nda"},{gu:"સ્ત",roman:"sta"},{gu:"સ્વ",roman:"sva"},{gu:"પ્ર",roman:"pra"},{gu:"ક્ર",roman:"kra"}] },
+  { id:"sl_j2", title:"More conjuncts and special forms", note:"More common clusters, including the special fused forms ત્ર (tra), શ્ર (shra), ક્ષ (ksha), and જ્ઞ (gnya). These appear often in real Gujarati, so they are worth knowing by sight.",
+    chars:[{gu:"ગ્ર",roman:"gra"},{gu:"બ્ર",roman:"bra"},{gu:"ત્ર",roman:"tra"},{gu:"શ્ર",roman:"shra"},{gu:"ક્ષ",roman:"ksha"},{gu:"જ્ઞ",roman:"gnya"}] },
 ];
-const SCRIPT_LESSONS_RESOLVED = SCRIPT_LESSONS.map((l) => ({ ...l, chars: l.glyphs.map((g) => _allChars[g]).filter(Boolean) }));
+const SCRIPT_LESSONS_RESOLVED = SCRIPT_LESSONS.map((l) => ({
+  ...l,
+  chars: l.chars ? l.chars : l.glyphs.map((g) => _allChars[g]).filter(Boolean),
+}));
 const SCRIPT_LESSON_ORDER = SCRIPT_LESSONS.map((l) => l.id);
 
 /* ============================ HISTORY ============================ */
@@ -1841,7 +1852,8 @@ function Confetti() {
   );
 }
 
-function ScriptLearn({ pool, title, speak, onDone, onQuit }) {
+function ScriptLearn({ pool, title, note, speak, onDone, onQuit }) {
+  const [started, setStarted] = useState(!note);
   const N = 10; // always a 10-question lesson; cycle the glyph set if it is smaller
   // Build questions: cycle through this lesson's glyphs, alternating direction.
   const questions = React.useMemo(() => {
@@ -1865,7 +1877,34 @@ function ScriptLearn({ pool, title, speak, onDone, onQuit }) {
   const [done, setDone] = useState(false);
   const q = questions[idx];
 
-  useEffect(() => { if (q) speak(q.answer.gu); }, [idx]);
+  useEffect(() => { if (q && started) speak(q.answer.gu); }, [idx, started]);
+
+  if (!started) {
+    return (
+      <div className="dhatu">
+        <style>{CSS}</style>
+        <div className="scr plain">
+          <div className="lhead">
+            <button className="iconbtn" onClick={onQuit}><Ic.x /></button>
+            <div><h1 style={{ fontSize: 19, fontWeight: 800, margin: 0 }}>{title}</h1></div>
+          </div>
+          <div className="note" style={{ marginTop: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 6 }}>
+              <span style={{ color: "var(--gold-dark)" }}><Ic.bulb width={20} height={20} /></span>
+              <h3 style={{ margin: 0 }}>Before you start</h3>
+            </div>
+            <p>{note}</p>
+            <div className="exrow">
+              {pool.slice(0, 4).map((c, i) => (
+                <div key={i} className="exline"><div className="gu">{c.gu}</div><div className="rm">{c.roman}</div></div>
+              ))}
+            </div>
+          </div>
+          <button className="btn primary" style={{ marginTop: 16 }} onClick={() => setStarted(true)}>Start</button>
+        </div>
+      </div>
+    );
+  }
 
   if (done) {
     return (
@@ -1874,8 +1913,8 @@ function ScriptLearn({ pool, title, speak, onDone, onQuit }) {
         <div className="done-wrap">
           <div className="done-medal"><Ic.trophy /></div>
           <h1>Nice work!</h1>
-          <div className="ds">You got {correct} of {questions.length} letters right.</div>
-          <button className="btn primary" style={{ maxWidth: 320 }} onClick={() => onDone(correct)}>Back to the script</button>
+          <div className="ds">You got {correct} of {questions.length} right.</div>
+          <button className="btn primary" style={{ maxWidth: 320 }} onClick={() => onDone(correct)}>Back to the lessons</button>
         </div>
       </div>
     );
@@ -2721,6 +2760,7 @@ function CourseApp({ user }) {
       <ScriptLearn
         pool={lesson.chars}
         title={lesson.title}
+        note={lesson.note}
         speak={(t) => speakGu(t)}
         onDone={(earned) => {
           if (earned > 0) setKaudi((k) => k + earned);
