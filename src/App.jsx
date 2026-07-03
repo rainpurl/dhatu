@@ -182,6 +182,11 @@ const Ic = {
       <circle cx="17.5" cy="10" r="1.5" />
     </svg>
   ),
+  guNine: (p) => (
+    <svg viewBox="0 0 24 24" {...p}>
+      <text x="12" y="19" textAnchor="middle" fontSize="21" fontWeight="800" fill="currentColor" fontFamily="'Anek Gujarati','Inter',sans-serif">૯</text>
+    </svg>
+  ),
   learn: (p) => (
     <svg {...S(p)}>
       <path d="M6 21V4" />
@@ -893,6 +898,13 @@ const CSS = `
 .acct-info b{font-size:16px;font-weight:800;display:block}
 .acct-info small{color:var(--muted);font-size:12.5px;font-weight:600;display:block;margin-top:1px}
 
+/* streak repair card */
+.heal{display:flex;align-items:center;gap:12px;background:#FBEFD6;border-radius:16px;padding:12px 14px;margin-bottom:16px;box-shadow:var(--bevel-inset)}
+.heal-ic{width:42px;height:42px;border-radius:12px;background:var(--diya);color:#fff;display:grid;place-items:center;flex:none;box-shadow:var(--sink-gold)}
+.heal-tx{flex:1}.heal-tx b{font-size:14.5px;display:block}
+.heal-tx small{color:#6b5a2e;font-size:12px;font-weight:600;display:block;margin-top:1px}
+.heal .btn{width:auto;flex:none}
+
 /* sign-in gate */
 .gate{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   gap:16px;padding:26px 22px calc(26px + env(safe-area-inset-bottom));max-width:460px;margin:0 auto}
@@ -1011,10 +1023,12 @@ const LESSONS = {
   u1l2: { title: "Numbers 1 to 5", ex: [
     { t:"intro", gu:"એક", roman:"ek", en:"one" },
     { t:"intro", gu:"બે", roman:"be", en:"two" },
-    { t:"listen", say:"ત્રણ", roman:"traṇ", options:["three","two","five"], answer:"three" },
-    { t:"match", pairs:[{gu:"એક",en:"one"},{gu:"બે",en:"two"},{gu:"ત્રણ",en:"three"},{gu:"ચાર",en:"four"}] },
+    { t:"intro", gu:"ત્રણ", roman:"traṇ", en:"three" },
+    { t:"listen", say:"ત્રણ", roman:"traṇ", options:["three","two","one"], answer:"three" },
+    { t:"intro", gu:"ચાર", roman:"chaar", en:"four" },
     { t:"intro", gu:"પાંચ", roman:"paanch", en:"five" },
-    { t:"letter", glyph:"ચ", options:["cha","ja","ta","sa"], answer:"cha" },
+    { t:"match", pairs:[{gu:"એક",en:"one"},{gu:"બે",en:"two"},{gu:"ત્રણ",en:"three"},{gu:"ચાર",en:"four"}] },
+    { t:"listen", say:"પાંચ", roman:"paanch", options:["five","four","two"], answer:"five" },
     { t:"speak", gu:"એક, બે, ત્રણ", roman:"ek, be, traṇ", en:"one, two, three" },
   ]},
   u1l3: { title: "Yes, no, sorry", ex: [
@@ -1191,7 +1205,7 @@ const LESSON_ORDER = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
 
 /* Topic icon per lesson, matching what each lesson teaches */
 const LESSON_ICON = {
-  u1l1:"chat", u1l2:"numbers", u1l3:"hand",
+  u1l1:"chat", u1l2:"guNine", u1l3:"hand",
   u2l1:"family", u2l2:"bowl", u2l3:"home",
   u3l1:"blocks", u3l2:"link", u3l3:"tag", u3l4:"clock",
   u4l1:"steps", u4l2:"write",
@@ -1414,6 +1428,7 @@ const CATEGORIES = [
 
 /* Cultural fun facts, rotated once every 10 hours on the Culture tab */
 const CULTURE_FACTS = [
+  "The cowrie shell, or kaudi, was one of the earliest forms of money used in Gujarat and across the region. It is also the reward you collect in this app.",
   "Gujarat has the longest coastline of any state in the country, roughly 1,600 kilometers.",
   "The Gir Forest in Gujarat is the only place in the world where Asiatic lions still live in the wild.",
   "Patola silk from Patan is a double-ikat weave, dyed so the pattern reads identically on both sides of the cloth.",
@@ -1795,6 +1810,23 @@ function CourseApp({ user }) {
     setLastActive(today);
   }
 
+  // Streak repair: spend Kaudi to rescue a streak after a missed day.
+  const STREAK_HEAL_COST = 50;
+  function streakBroken() {
+    if (!lastActive || streak < 1) return false;
+    const now = new Date();
+    const y = new Date(now);
+    y.setDate(now.getDate() - 1);
+    return lastActive !== _dstr(now) && lastActive !== _dstr(y);
+  }
+  function healStreak() {
+    if (kaudi < STREAK_HEAL_COST || !streakBroken()) return;
+    const y = new Date();
+    y.setDate(y.getDate() - 1);
+    setKaudi((k) => k - STREAK_HEAL_COST);
+    setLastActive(_dstr(y));
+  }
+
   function completeLesson() {
     stopSpeak();
     if (activeLesson && !completed.includes(activeLesson)) {
@@ -1970,7 +2002,6 @@ function CourseApp({ user }) {
                   return (
                     <div key={l.id} className="node-row">
                       <div className="node-wrap" style={{ transform: `translateX(${off}px)` }}>
-                        {isRec && <div className="startpill">START</div>}
                         <button className={"node " + (done ? "done" : isRec ? "cur" : l.kind === "check" ? "check" : "todo")} onClick={() => startLesson(l.id)}>
                           <div className="disc">
                             {done ? <Ic.check /> : (() => { const LIcon = lessonIcon(l); return <LIcon />; })()}
@@ -2572,6 +2603,17 @@ function CourseApp({ user }) {
               <div className="l">Lessons done</div>
             </div>
           </div>
+
+          {streakBroken() && (
+            <div className="heal">
+              <div className="heal-ic"><Ic.diya width={22} height={22} /></div>
+              <div className="heal-tx">
+                <b>Your {streak}-day streak is at risk</b>
+                <small>You missed a day. Repair it for {STREAK_HEAL_COST} Kaudi.</small>
+              </div>
+              <button className="btn gold sm" disabled={kaudi < STREAK_HEAL_COST} onClick={healStreak}>Repair</button>
+            </div>
+          )}
 
           <div className="section-h">This week</div>
           <div className="card">
@@ -3503,7 +3545,23 @@ ERAS.push(
       "Kutch is just as famous for what its people make. It is one of the richest craft regions anywhere, home to bandhani tie-dye, a dazzling range of community embroidery styles, Ajrakh block printing, the rare Rogan painting done with a stylus and thickened oil paint, and lippan mud-and-mirror wall work. Many of these skills are held by specific pastoral and artisan communities and passed down within families.",
       "The 2001 Bhuj earthquake devastated Kutch and killed many thousands, but the region rebuilt, and its crafts, sustained partly by cooperatives and design partnerships, remain a living economy rather than a museum piece, and a major part of how Gujarat presents its culture to the world."],
     site:{ name:"Rann of Kutch and Bhuj", note:"A seasonal white salt desert with the winter Rann Utsav; Bhuj is the craft hub of the district." },
-    sources:["Gujarat Tourism, Kutch and Rann Utsav","Asia InCH Encyclopedia of Intangible Cultural Heritage, Kutch crafts","Wikipedia, Kutch district and Rann of Kutch"] }
+    sources:["Gujarat Tourism, Kutch and Rann Utsav","Asia InCH Encyclopedia of Intangible Cultural Heritage, Kutch crafts","Wikipedia, Kutch district and Rann of Kutch"] },
+
+  { id:"food", category:"modern", yr:"living tradition", title:"Gujarati food, a layered system",
+    img: FP + "Gujarati%20Thali.jpg?width=1000",
+    figures:[
+      { src: FP + "Gujarati%20traditional%20dhokla.jpg?width=1000", cap:"Dhokla, a steamed, fermented snack from the wider dhokla family." },
+      { src: FP + "Undhiyu.jpg?width=1000", cap:"Undhiyu, the mixed winter vegetable dish tied to the Uttarayan season.", after:3 },
+    ],
+    blurb:"Gujarati food is not one 'sweet vegetarian cuisine' but a layered system shaped by trade, ecology, religion, and migration.",
+    body:[
+      "Gujarati food is often flattened into a single idea, sweet vegetarian food, but it is better understood as a whole food system, shaped over centuries by maritime trade, regional ecology, religious ethics, farming seasons, and migration. Seeing it that way explains the sheer range, from fiery Kathiawadi village cooking to delicate steamed snacks to festival feasts.",
+      "The clearest window into it is the thali, a platter that is really a balanced meal in miniature. A full thali brings together shaak (vegetables), kathol (pulses), dal or kadhi, rice or khichdi, rotli, farsan (savory snacks), pickle, chutney, and a sweet. The art is balance: sweet, sour, salty, and spicy notes, and soft and crisp textures, are meant to play off one another. The common line that Gujarati food is simply sweet misses this logic entirely.",
+      "This food also has a deep history. Gujarat has been tied to sea trade since Lothal, a Harappan port, and later through Khambhat and Surat, so the pantry absorbed ingredients and techniques from across the Arabian Sea. Some staples are surprisingly recent: chili, potato, and tomato only reached kitchens across the subcontinent after they crossed the oceans in the early modern period, so dishes that feel timeless are actually layered in time.",
+      "It is also strongly regional. Kathiawad and Saurashtra are known for assertive, garlicky, chili-forward cooking; Kutch leans on millet like bajra rotla and pastoral dairy; north Gujarat is dairy-rich; and the wetter south, around Surat, is famous for winter undhiyu and a lively street-food culture. The idea of one uniform, mild, sweet Gujarati taste is a myth.",
+      "Finally, it is shaped by community and belief, and not in one direction. Many Jains avoid root vegetables; Swaminarayan practice avoids onion and garlic; fasting days bring a whole farali cuisine of samo, rajgira, potato, and peanuts; and Dawoodi Bohra communities share a course-structured thaal that includes meat. So Gujarati food is not a single Hindu-vegetarian category but a set of overlapping traditions, tied together by dishes like dhokla and khaman, the travel breads thepla and khakhra that followed Gujaratis around the world, dal dhokli, handvo, and the winter feast of undhiyu."],
+    site:{ name:"A Gujarati thali", note:"The best introduction is a full thali, where the balance of sweet, sour, salty, and spicy across many small dishes is the whole point." },
+    sources:["Gujarat Tourism, Gujarati cuisine and thali pages","UNESCO World Heritage Centre, Lothal (Harappan port)","Springer, traditional fermented foods of western India","NCERT and NIOS materials on early-modern crop transfers"] }
 );
 
 /* attach each era's Gujarati summary (must run after all eras are pushed) */
