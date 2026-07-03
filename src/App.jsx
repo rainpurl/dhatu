@@ -1837,6 +1837,10 @@ const _WORD_IMG_RAW = {
   "સ્ટેશન": "Mysore Rly Station Panorama Karnataka Apr22 A7C 01908-10.jpg",
   "બજાર": "Onions Veg Stall Ooty Market Nilgiris Aug25 A7CR 07102.jpg",
   "ઘર": "Motihari Mission house, India, ca. 1906 (IMP-CSCNWW33-OS14-1).jpg",
+  "દવાખાનું": "District hospital Kanhangad.jpg",
+  "ગામ": "Typical house in rural Kotra tehsil, Udaipur district, Rajasthan.jpg",
+  "શહેર": "Mumbai 03-2016 10 skyline of Lotus Colony.jpg",
+  "રસ્તો": "Rural Roads in India (Chhattisgarh).jpg",
   // weather
   "વરસાદ": "Monsoon Maharashtra India Rain Landscape (1) 06.jpg",
   "ચોમાસું": "Monsoon Maharashtra India Rain Landscape (1) 06.jpg",
