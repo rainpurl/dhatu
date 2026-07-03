@@ -194,47 +194,50 @@ all of these.
 - **History (rebuilt by theme):** opens to 5 topic categories (Ancient Foundations,
   Kingdoms and Courts, Trade and the Indian Ocean, Colonial Rule and Resistance,
   Modern Gujarat); each expands to its chapters; each chapter opens an in-depth,
-  sourced entry with dual "Listen in English / Listen in Gujarati" buttons. 13 chapters
-  total, balanced and sourced.
-- **Image covers:** 11 of 13 history chapters have verified Wikimedia Commons covers.
-- **Recessed restyle** applied across every component; responsive desktop layout
-  (wider grids, centered floating nav/footer bars on screens ≥820px).
-- **Persistence** via localStorage; **Reset progress** control in Profile; Ko-fi
-  support link in Profile.
-- Verified: builds cleanly with `vite build`; 0 em dashes; 0 flat hard-shadows.
+  sourced entry with dual "Listen in English / Listen in Gujarati" buttons, plus
+  verified inline photos. 15 chapters total (now called the **Culture** tab), each
+  emoji-free with photo covers (all but `nav_nirman`) and a full Gujarati summary.
+  Top of the tab shows a fun-fact card that rotates every 10 hours.
+- **Audio: DONE.** ~327 pre-recorded Chirp3-HD clips in `public/audio/` for all
+  Gujarati speech and English chapter narration; playback falls back to browser
+  TTS if a clip is missing. See section 7 and AUDIO.md.
+- **Accounts: DONE.** Required Google sign-in (Firebase), per-user progress synced
+  to Firestore, staff portal at `/staff` (see AUTH.md).
+- **Recessed restyle** universal; **desktop web layout** with a left sidebar and
+  centered content (≥900px); paisley (bandhani keri) logo; all emojis replaced
+  with SVG icons; animation pass; real daily-streak tracking.
+- **Persistence** via localStorage mirrored to Firestore; **Reset progress** and
+  **Sign out** in Profile; Ko-fi support link in Profile.
+- Verified: builds cleanly with `vite build`; 0 em dashes; 0 flat hard-shadows; 0 emojis.
 
 ---
 
 ## 7. What is pending / next steps
 
-1. **Audio (pipeline BUILT, not yet generated).** Decision made: option (a),
-   cloud-generated audio via a script. The pipeline exists and builds cleanly;
-   the user still needs to run it once with an API key, then commit the output.
-   - **Playback layer** (in `src/App.jsx`, the speech helpers near the top):
-     `speak()` now checks a manifest and plays a pre-recorded file when one
-     exists, otherwise falls back to the old browser TTS. Purely additive, so
-     the app is unchanged until audio is generated. Manifest is fetched from
-     `/audio/manifest.json`; a missing manifest just means TTS-as-before.
-   - **Generator:** `scripts/generate-audio.mjs` (run via `npm run audio`).
-     Scans `src/App.jsx` for every pure-Gujarati string (word/phrase fields, the
-     script letters, and the 13 per-era history summaries), calls a cloud TTS
-     API, and writes one mp3 per phrase to `public/audio/` plus `manifest.json`.
-     Idempotent (skips existing files), no npm deps (Node 18+ built-in fetch),
-     supports Google (default) and Azure via env vars. About 284 phrases / 3.2k
-     characters total, well within free tiers.
-   - **How to finish:** follow `AUDIO.md` (get a Google Cloud TTS key, run
-     `GOOGLE_TTS_KEY=... npm run audio`, commit `public/audio/`, push).
-   - **Scope note:** Gujarati only for now (the silent case). English history
-     narration still uses browser TTS; the generator can be extended to English
-     later. Extraction is keyed on "pure Gujarati string" (has a Gujarati
-     letter/digit, no Latin letters), so it auto-syncs as content changes.
-2. **Two history chapters without cover images:** `vallabhi` (Maitraka-era Vallabhi
-   university, a ruined site) and `nav_nirman` (the 1974 Nav Nirman protests). No
-   free-licensed Wikimedia image was found for either; they currently use the clean
-   `SafeImg` colored-banner + emoji fallback. Do not fabricate image URLs: verify any
-   candidate with a real request first (e.g. `curl -sI -L "<FilePath URL>"` → 200).
-3. **Optional:** the unused `WriteCanvas` tracing component could be re-integrated into
-   the ScriptLearn flow if letter-writing practice is wanted, or removed.
+Most earlier items are DONE (audio generated in Chirp3-HD, accounts, staff portal,
+desktop layout, emoji removal, streak). What remains:
+
+1. **Audio is generated and committed** (`public/audio/`, ~327 Chirp3-HD clips,
+   `manifest.json`). To refresh after content changes: `GOOGLE_TTS_KEY=... npm run
+   audio` (idempotent, skips existing), then delete orphaned mp3s not in the
+   manifest, and commit. Voices default to `gu-IN-Chirp3-HD-Aoede` /
+   `en-US-Chirp3-HD-Aoede`. The playback layer plays these and falls back to
+   browser TTS if a clip is missing.
+2. **Staff portal setup** (`public/staff/`, served at `/staff`): the owner must
+   paste their Firebase Auth UID into `ADMIN_UIDS` and add the admin line to the
+   Firestore rules (see AUTH.md). Until then it shows "Not authorized."
+3. **`nav_nirman` still has no cover image** (no free-licensed one found); it uses
+   the clean colored hero. Do not fabricate image URLs: verify any candidate with
+   `curl -sI -L "<FilePath URL>"` (expect 200, 429 means retry).
+4. **Gujarati speech-check is unreliable** because the browser Web Speech API
+   barely supports gu-IN (errors surface as network/language-not-supported). It
+   degrades to an "I said it out loud" self-confirm. Truly reliable checking would
+   need a paid cloud speech-to-text service, which conflicts with the zero-cost
+   rule, so it is intentionally left as graceful fallback.
+5. **Gujarati chapter narration** is a full multi-sentence *summary* per chapter,
+   not a verbatim translation of the English body (a deliberate accuracy choice).
+6. **Optional:** the unused `WriteCanvas` tracing component could be wired into the
+   ScriptLearn flow or removed.
 
 ---
 
