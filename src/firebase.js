@@ -82,6 +82,10 @@ function localSnapshot() {
   return out;
 }
 
+function localIsEmpty() {
+  return Object.keys(localSnapshot()).length === 0;
+}
+
 export function onAuthChange(cb) {
   return onAuthStateChanged(auth, (u) => {
     currentUid = u ? u.uid : null;
@@ -122,15 +126,18 @@ export async function loadProgressToLocal(user) {
     const cloudName = (snap.exists() && snap.data().username) || null;
     if (cloudName) currentUsername = cloudName;
     if (currentUsername) writeLocalUsername(uid, currentUsername);
-    if (snap.exists() && snap.data().progress) {
-      // Cloud is the source of truth on sign-in: clear local first so an admin
-      // reset (empty cloud progress) actually takes effect on the device.
-      const data = snap.data().progress;
+    const cloud = (snap.exists() && snap.data().progress) || null;
+    const cloudKeys = cloud ? Object.keys(cloud).filter((k) => k.startsWith(PREFIX)) : [];
+    if (cloudKeys.length > 0) {
+      // Cloud has real saved progress: it is authoritative on sign-in, so replace
+      // local with it. We only get here when there is genuine data to restore.
       clearLocalProgress();
-      Object.entries(data).forEach(([k, v]) => {
-        if (k.startsWith(PREFIX) && typeof v === "string") window.localStorage.setItem(k, v);
-      });
-    } else {
+      cloudKeys.forEach((k) => { if (typeof cloud[k] === "string") window.localStorage.setItem(k, cloud[k]); });
+    } else if (!localIsEmpty()) {
+      // No real cloud progress yet, but this device has some. Seed the cloud from
+      // local. Critically, we do NOT clear local when the cloud doc is empty or
+      // missing: an empty/absent cloud doc must never wipe a device whose progress
+      // simply has not synced yet (that was a data-loss bug).
       await setDoc(ref, { progress: localSnapshot(), updatedAt: Date.now() }, { merge: true });
     }
     updatePublicProfile();
@@ -155,10 +162,15 @@ export function scheduleSave() {
   if (_saveTimer) clearTimeout(_saveTimer);
   _saveTimer = setTimeout(async () => {
     if (!currentUid) return;
+    const snapshot = localSnapshot();
+    // Never overwrite the cloud copy with an empty snapshot. Local can be briefly
+    // empty (right after a clear, a sign-out race, or before load finishes); saving
+    // that would wipe good cloud progress.
+    if (Object.keys(snapshot).length === 0) return;
     try {
       await setDoc(
         doc(db, "users", currentUid),
-        { progress: localSnapshot(), updatedAt: Date.now() },
+        { progress: snapshot, updatedAt: Date.now() },
         { merge: true }
       );
       updatePublicProfile();
