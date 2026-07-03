@@ -2335,12 +2335,10 @@ function CourseApp({ user }) {
             <button className="guide" style={{ background: "linear-gradient(135deg,#1E6E7E,#164F5A)" }} onClick={() => setScreen("grammar")}>
               <Ic.book className="gi" />
               <b>Grammar guide</b>
-              <span>Core patterns, explained</span>
             </button>
             <button className="guide" style={{ background: "linear-gradient(135deg,#C77B1E,#96590F)" }} onClick={() => setScreen("talk")}>
               <Ic.talk className="gi" />
               <b>Conversations</b>
-              <span>Walk through real dialogues</span>
             </button>
           </div>
 
@@ -2357,7 +2355,7 @@ function CourseApp({ user }) {
                 <div className="unit-top">
                   <div>
                     <h2>{u.ku}: {u.title}</h2>
-                    <p>{u.sub}</p>
+                    {!open && <p>{u.sub}</p>}
                   </div>
                   <span className="unit-hr">
                     <span className="unit-count">{uComplete ? "Done" : uDone + "/" + uTotal}</span>
@@ -3059,7 +3057,7 @@ function CourseApp({ user }) {
           {friendMsg && <div className="friendmsg">{friendMsg}</div>}
           {friendList.length === 0 ? (
             <div className="card" style={{ textAlign: "center", padding: 20 }}>
-              <div style={{ fontSize: 13.5, color: "var(--muted)" }}>Follow friends by username to see their streak and Kaudi, and poke them.</div>
+              <div style={{ fontSize: 13.5, color: "var(--muted)" }}>Follow friends by username.</div>
             </div>
           ) : (
             friendList.map((f) => (
@@ -3108,6 +3106,15 @@ function CourseApp({ user }) {
             <span>
               <b>Support Dhatu</b>
               <small>Buy the developer a coffee on Ko-fi</small>
+            </span>
+          </a>
+          <a href="mailto:dhatulearning@katr.es" className="supportlink" style={{ marginTop: 10 }}>
+            <span className="ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>
+            </span>
+            <span>
+              <b>Contact support</b>
+              <small>dhatulearning@katr.es</small>
             </span>
           </a>
           <button className="btn ghost" style={{ marginTop: 14 }} onClick={async () => { await signOutUser(); clearLocalProgress(); }}>
