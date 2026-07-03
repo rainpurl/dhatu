@@ -81,6 +81,7 @@ const PRONUNCIATION_OVERRIDES = {
   "ઐ": "ɛː",  // "eh", as in "bed"
   "ઔ": "ɔː",  // "aw", as in "bought"
   "ઍ": "æ",   // "a", as in "apple"
+  "ૹ": "zə",  // za: a modern letter for the 'z' sound; TTS is silent on the bare glyph
 };
 
 const DEFAULT_VOICE = {
@@ -115,7 +116,9 @@ function extractGujarati(source) {
 function isSpokenGujarati(text) {
   if (!text) return false;
   if (/[A-Za-z]/.test(text)) return false;
-  return /[અ-હ૦-૯ૐ]/.test(text);
+  // Range covers the core letters, digits, and Om; ૹ (za) is added explicitly
+  // because it sits past હ in Unicode but is a real, spoken consonant.
+  return /[અ-હ૦-૯ૐૹ]/.test(text);
 }
 
 /* English: the History/Culture screen speaks each chapter's body joined by a
