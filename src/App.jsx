@@ -1707,6 +1707,8 @@ const CATEGORIES = [
   { id:"trade", title:"Trade and the Indian Ocean", blurb:"Ports, merchants, and migration linked Gujarat to Africa, Arabia, and beyond long before the word globalization existed.", color:"#1E6E7E", img: FP + "View%20of%20Surat%20from%20across%20the%20River%20Tapti%3B%20by%20A.%20van%20der%20Heen%2C%201782.jpg?width=1000" },
   { id:"colonial", title:"Colonial Rule and Resistance", blurb:"British rule reorganized land and labor. Gujarat answered with a new reading public and a new form of protest.", color:"#4A5568", img: FP + "Gandhi%20at%20Dandi%2C%205%20April%201930.jpg?width=1000" },
   { id:"modern", title:"Modern Gujarat", blurb:"A linguistic state, fast growth, popular protest, and the hard questions that came with all three.", color:"#2F6E44", img: FP + "Statue%20of%20Unity.jpg?width=1000" },
+  { id:"textile", title:"Textiles and Fashion", blurb:"Tie-dye, block print, and double-ikat silk: how Gujarat became one of the great cloth-making regions of the world.", color:"#6E4CA0", img: FP + "Gujarat%20Bandhej%20Saree.jpg?width=1000" },
+  { id:"foodways", title:"Food and Cooking", blurb:"The thali, the street plate, and the faith and trade that shaped a cuisine far richer than 'just vegetarian'.", color:"#B5651D", img: FP + "Gujarati%20Thali%20at%20Vishalla.jpg?width=1000" },
 ];
 
 /* Cultural fun facts, rotated once every 10 hours on the Culture tab */
@@ -4700,7 +4702,7 @@ ERAS.push(
     site:{ name:"Iranshah Atash Behram, Udvada", note:"The most sacred Zoroastrian fire temple in the subcontinent, a Parsi pilgrimage center on the south Gujarat coast." },
     sources:["Encyclopaedia Britannica, Parsi","Scholarship on Zoroastrians and Parsi migration in South Asia","Wikipedia, Parsis, Qissa-i Sanjan, and Udvada"] },
 
-  { id:"textiles", category:"trade", yr:"medieval - present", title:"Textiles and fashion, the cloth of Gujarat",
+  { id:"textiles", category:"textile", yr:"medieval - present", title:"Textiles and fashion, the cloth of Gujarat",
     img: FP + "Gujarat%20Bandhej%20Saree.jpg?width=1000",
     figures:[
       { src: FP + "Gujarat%20patola.jpg?width=1000", cap:"A Patan patola, woven in double ikat so the pattern reads on both faces." },
@@ -4871,7 +4873,7 @@ ERAS.push(
     site:{ name:"Gir National Park, Saurashtra", note:"The last wild home of the Asiatic lion, protected since the early 20th century." },
     sources:["Gujarat Forest Department, Gir and the Asiatic lion census","IUCN Red List, Panthera leo (Asiatic population)","Wikipedia, Gir National Park and Asiatic lion"] },
 
-  { id:"food", category:"modern", yr:"living tradition", title:"Gujarati food, a layered system",
+  { id:"food", category:"foodways", yr:"living tradition", title:"Gujarati food, a layered system",
     img: FP + "Gujarati%20Thali.jpg?width=1000",
     figures:[
       { src: FP + "Gujarati%20traditional%20dhokla.jpg?width=1000", cap:"Dhokla, a steamed, fermented snack from the wider dhokla family." },
