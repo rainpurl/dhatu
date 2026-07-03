@@ -979,6 +979,7 @@ const CSS = `
 .contactlink .ic{width:42px;height:42px;border-radius:12px;background:var(--bg);color:var(--muted);
   display:grid;place-items:center;flex:none;box-shadow:var(--bevel-inset)}
 .contactlink b{font-size:15px}
+.wordimg{display:block;width:200px;height:200px;max-width:70%;object-fit:cover;border-radius:20px;margin:0 auto 16px;box-shadow:var(--bevel-inset), 0 8px 20px rgba(70,45,40,.12);animation:riseIn .28s var(--ease) both}
 
 /* account card in Profile */
 .acct{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;margin-bottom:14px;box-shadow:var(--bevel-inset)}
@@ -1787,6 +1788,31 @@ const CULTURE_FACTS = [
   "A traditional Gujarati thali is built to balance sweet, salty, and spicy flavors in a single meal.",
 ];
 const ERAS = [];
+
+/* Pictures for concrete nouns, shown when a word is introduced in a lesson.
+   Keyed by the Gujarati word; filenames are Wikimedia Commons files (verified),
+   encoded at runtime so the source stays readable. */
+const _WORD_IMG_RAW = {
+  "કૂતરો": "Dülmen, Hausdülmen, Golden Retriever -- 2022 -- 5945.jpg",
+  "બિલાડી": "Cat November 2010-1a.jpg",
+  "ગાય": "Cow (Fleckvieh breed) Oeschinensee Slaunger 2009-07-07.jpg",
+  "હાથી": "Sri Lankan elephant (Elephas maximus maximus) female and young 6.jpg",
+  "વાઘ": "Bengal tiger (Panthera tigris tigris) female 3.jpg",
+  "ઘોડો": "Beautiful Brown Horse (198516275).jpeg",
+  "બકરી": "Domestic goat feeding on capeweed.jpg",
+  "માછલી": "Carassius auratus auratus (goldfish) 2.jpg",
+  "વાંદરો": "Rhesus macaque (Macaca mulatta mulatta), male, Gokarna.jpg",
+  "પક્ષી": "House sparrow male in Prospect Park (53532).jpg",
+  "સાપ": "Naja-naja-kobra-kopf.jpg",
+  "ભાત": "Steamed rice in bowl 01.jpg",
+  "રોટલી": "Chapati making at the Chokhi Dhani Resort Panchkula 08.jpg",
+  "દૂધ": "Bowl milk glass.jpg",
+  "ચા": "Masala Tea 2.jpg",
+  "કેરી": "Alphonso mango with spongy seed.jpg",
+  "દાળ": "Dal Fry Recipe In Dhaba Style From Indian Cuisine By Sonia Goyal.jpg",
+  "શાક": "Punjabi sabzi with Gujarati touch made from mixed vegetables.JPG",
+};
+const WORD_IMG = Object.fromEntries(Object.entries(_WORD_IMG_RAW).map(([k, v]) => [k, FP + encodeURIComponent(v) + "?width=600"]));
 
 /* ============================ SOURCES for language lessons ============================ */
 const LANG_SOURCES = [
@@ -3301,6 +3327,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
 
         {ex.t === "intro" && (
           <>
+            {WORD_IMG[ex.gu] && <img className="wordimg" src={WORD_IMG[ex.gu]} alt={ex.en} referrerPolicy="no-referrer" loading="lazy" />}
             {readWrite ? (
               <>
                 <div className="bigword gu">{ex.gu}</div>
