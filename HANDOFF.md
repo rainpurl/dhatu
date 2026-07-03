@@ -108,7 +108,7 @@ Until rules/index are applied, social features fail quietly (app still works).
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **619 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **646 clips**). The app's
   `speak()` plays a clip when the manifest has one, else falls back to browser
   TTS. A missing manifest just means TTS-as-before.
 - **Voices:** Google **Chirp3-HD** (`gu-IN-Chirp3-HD-Aoede`,
@@ -212,13 +212,14 @@ Until rules/index are applied, social features fail quietly (app still works).
   "Learn the letters" quiz (ScriptLearn).
 - **Review:** spaced repetition (SRS).
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
-- **Culture:** 5 categories (Ancient Foundations, Kingdoms and Courts, Trade and
-  the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat), each with
+- **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
+  the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat, Textiles and
+  Fashion, Food and Cooking), each with
   photo cover cards; **28 chapters** with photo covers + inline photos, dual
   "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
   summary per chapter), sources. A "Did you know?" fun-fact card rotates every
   10 hours (one fact notes the kaudi shell as early Gujarati currency).
-- **Grammar guide:** 8 topics. **Conversations (Talk):** 5 dialogues with speaking
+- **Grammar guide:** 8 topics. **Conversations (Talk):** 7 dialogues with speaking
   practice.
 - **Profile:** account card (name, @username, change username), stats, streak
   repair, this-week activity, **Friends** (follow by username, see streak/Kaudi,
@@ -267,8 +268,8 @@ message. This is a platform limit, intentionally left as graceful fallback.
   lesson was extended with દિવાળી (Diwali).
 - **Grammar (9):** word order, postpositions, gender/my, present tense, past/-e
   marker, polite you, negation, questions, future tense.
-- **Conversations (5):** hello, tea stall, asking the way, market haggling,
-  meeting family.
+- **Conversations (7):** hello, tea stall, asking the way, market haggling,
+  meeting family, at the doctor, at the station.
 - **Only `nav_nirman` lacks a cover image** (no free-licensed one found; clean
   colored hero). Do not fabricate image URLs; verify each with
   `curl -sI -L "<FilePath URL>"` (expect 200; 429 means retry).
