@@ -1437,7 +1437,7 @@ const LESSON_ICON = {
   u7l1:"palette", u7l2:"link", u7l3:"shirt", u7l4:"book", u7l5:"palette", u7l6:"palette",
   u8l1:"bowl", u8l2:"cup", u8l3:"bowl", u8l4:"book", u8l5:"cup", u8l6:"bowl", u8l7:"temple",
   u9l1:"star", u9l2:"profile", u9l3:"bulb", u9l4:"temple",
-  u10l1:"numbers", u10l2:"numbers", u10l3:"numbers", u10l4:"tag",
+  u10l1:"numbers", u10l2:"numbers", u10l3:"numbers", u10l4:"tag", u10l5:"numbers", u10l6:"numbers", u10l7:"numbers",
   u11l1:"clock", u11l2:"clock", u11l3:"steps",
   u12l1:"spark", u12l2:"talk",
   u13l1:"profile", u13l2:"chats",
@@ -1572,6 +1572,11 @@ const TOPICS = [
     { gu:"દૂધ", r:"doodh", en:"milk" },
     { gu:"ચા", r:"chaa", en:"tea" },
     { gu:"કેરી", r:"keri", en:"mango" },
+    { gu:"પાણી", r:"paṇi", en:"water" },
+    { gu:"ખાંડ", r:"khaanḍ", en:"sugar" },
+    { gu:"મીઠું", r:"meeṭhuṁ", en:"salt" },
+    { gu:"તેલ", r:"tel", en:"oil" },
+    { gu:"ઘઉં", r:"ghauṁ", en:"wheat" },
   ]},
   { id:"verbs", title:"Common verbs", icon:"steps", words:[
     { gu:"ખાવું", r:"khaavuṁ", en:"to eat" },
@@ -1580,6 +1585,11 @@ const TOPICS = [
     { gu:"આવવું", r:"aavvuṁ", en:"to come" },
     { gu:"કરવું", r:"karvuṁ", en:"to do" },
     { gu:"બોલવું", r:"bolvuṁ", en:"to speak" },
+    { gu:"લખવું", r:"lakhvuṁ", en:"to write" },
+    { gu:"વાંચવું", r:"vaanchvuṁ", en:"to read" },
+    { gu:"જોવું", r:"jovuṁ", en:"to see" },
+    { gu:"સાંભળવું", r:"saambhaḷvuṁ", en:"to hear / listen" },
+    { gu:"સમજવું", r:"samajvuṁ", en:"to understand" },
   ]},
   { id:"transport", title:"Getting around", icon:"car", words:[
     { gu:"ગાડી", r:"gaaḍi", en:"car" },
@@ -1596,6 +1606,10 @@ const TOPICS = [
     { gu:"પીળો", r:"peeḷo", en:"yellow" },
     { gu:"કાળો", r:"kaaḷo", en:"black" },
     { gu:"સફેદ", r:"safed", en:"white" },
+    { gu:"નારંગી", r:"naarangi", en:"orange" },
+    { gu:"ગુલાબી", r:"gulaabi", en:"pink" },
+    { gu:"જાંબલી", r:"jaambli", en:"purple" },
+    { gu:"કથ્થાઈ", r:"kaththaai", en:"brown" },
   ]},
   { id:"animals", title:"Animals", icon:"paw", words:[
     { gu:"કૂતરો", r:"kootro", en:"dog" },
@@ -1604,6 +1618,11 @@ const TOPICS = [
     { gu:"હાથી", r:"haathi", en:"elephant" },
     { gu:"વાઘ", r:"vaagh", en:"tiger" },
     { gu:"પક્ષી", r:"pakshi", en:"bird" },
+    { gu:"ઘોડો", r:"ghoḍo", en:"horse" },
+    { gu:"બકરી", r:"bakri", en:"goat" },
+    { gu:"માછલી", r:"maachhli", en:"fish" },
+    { gu:"સાપ", r:"saap", en:"snake" },
+    { gu:"વાંદરો", r:"vaandro", en:"monkey" },
   ]},
 ];
 
@@ -3805,17 +3824,61 @@ Object.assign(LESSONS, {
     { t:"build", en:"This is twenty rupees.", answer:["આ","વીસ","રૂપિયા","છે"], extra:["પૈસા","સો"], roman:"aa vees roopiyaa chhe" },
     { t:"speak", gu:"આ કેટલું છે?", roman:"aa keṭluṁ chhe?", en:"How much is this?" },
   ]},
+  u10l5: { title:"Twenty-one to ninety-nine", ex: [
+    { t:"note", title:"After twenty", body:[
+      "Gujarati has a separate word for each ten: વીસ (20), ત્રીસ (30), ચાળીસ (40), પચાસ (50), સાઠ (60), સિત્તેર (70), એંસી (80), નેવું (90).",
+      "The numbers in between are single fused words, with the unit coming first: એકવીસ (21) and પચ્ચીસ (25), for example. They are irregular, so they are learned by ear more than by rule.",
+      "The good news is that once you know 1 to 99, everything larger is built from just a few place-value words."], ex:[
+      {gu:"એકવીસ",roman:"ekvees",en:"21"},
+      {gu:"પચ્ચીસ",roman:"pachchees",en:"25"}] },
+    { t:"intro", gu:"સાઠ", roman:"saaṭh", en:"60" },
+    { t:"intro", gu:"સિત્તેર", roman:"sitter", en:"70" },
+    { t:"intro", gu:"એંસી", roman:"eṁsi", en:"80" },
+    { t:"intro", gu:"નેવું", roman:"nevuṁ", en:"90" },
+    { t:"match", pairs:[{gu:"સાઠ",en:"60"},{gu:"સિત્તેર",en:"70"},{gu:"એંસી",en:"80"},{gu:"નેવું",en:"90"}] },
+    { t:"listen", say:"એંસી", roman:"eṁsi", options:["80","70","90"], answer:"80" },
+    { t:"speak", gu:"સાઠ, સિત્તેર, એંસી", roman:"saaṭh, sitter, eṁsi", en:"60, 70, 80" },
+  ]},
+  u10l6: { title:"Hundreds and thousands", ex: [
+    { t:"note", title:"Building bigger numbers", body:[
+      "A hundred is સો and a thousand is હજાર. Two hundred is બસો, three hundred ત્રણસો, five hundred પાંચસો.",
+      "You build a number from the largest part first: એકસો પચ્ચીસ is 125, and બે હજાર is 2000.",
+      "So with the tens and units you already know, plus સો and હજાર, you can already say numbers well into the thousands."], ex:[
+      {gu:"એકસો",roman:"ekso",en:"100"},
+      {gu:"બે હજાર",roman:"be hajaar",en:"2000"}] },
+    { t:"intro", gu:"સો", roman:"so", en:"100" },
+    { t:"intro", gu:"બસો", roman:"baso", en:"200" },
+    { t:"intro", gu:"પાંચસો", roman:"paanchso", en:"500" },
+    { t:"intro", gu:"હજાર", roman:"hajaar", en:"1,000" },
+    { t:"match", pairs:[{gu:"સો",en:"100"},{gu:"બસો",en:"200"},{gu:"પાંચસો",en:"500"},{gu:"હજાર",en:"1,000"}] },
+    { t:"listen", say:"હજાર", roman:"hajaar", options:["1,000","100","500"], answer:"1,000" },
+    { t:"speak", gu:"બે હજાર", roman:"be hajaar", en:"two thousand (2000)" },
+  ]},
+  u10l7: { title:"Lakh, crore, and big numbers", ex: [
+    { t:"note", title:"The place-value system", body:[
+      "Above the thousand, numbers here follow the South Asian system. A hundred thousand is a લાખ, and ten million is a કરોડ.",
+      "So the places run: units, tens, hundreds (સો), thousands (હજાર), lakhs (લાખ), crores (કરોડ). In digits a lakh is written 1,00,000 and a crore 1,00,00,000.",
+      "To say any number, name each part from the largest down, like બે લાખ (200,000) or પાંચ કરોડ. With સો, હજાર, લાખ, and કરોડ you can now count to any number."], ex:[
+      {gu:"લાખ",roman:"laakh",en:"100,000"},
+      {gu:"કરોડ",roman:"karoḍ",en:"10,000,000"}] },
+    { t:"intro", gu:"હજાર", roman:"hajaar", en:"1,000" },
+    { t:"intro", gu:"લાખ", roman:"laakh", en:"100,000 (a lakh)" },
+    { t:"intro", gu:"કરોડ", roman:"karoḍ", en:"10,000,000 (a crore)" },
+    { t:"match", pairs:[{gu:"સો",en:"100"},{gu:"હજાર",en:"1,000"},{gu:"લાખ",en:"100,000"},{gu:"કરોડ",en:"10,000,000"}] },
+    { t:"listen", say:"લાખ", roman:"laakh", options:["100,000","1,000","10,000,000"], answer:"100,000" },
+    { t:"speak", gu:"એક લાખ", roman:"ek laakh", en:"one lakh (100,000)" },
+  ]},
   u10c: { title:"Checkpoint", check:true, ex: [
-    { t:"match", pairs:[{gu:"પંદર",en:"15"},{gu:"વીસ",en:"20"},{gu:"પચાસ",en:"50"},{gu:"રૂપિયા",en:"rupees"}] },
+    { t:"match", pairs:[{gu:"વીસ",en:"20"},{gu:"એંસી",en:"80"},{gu:"હજાર",en:"1,000"},{gu:"લાખ",en:"100,000"}] },
     { t:"listen", say:"અગિયાર", roman:"agiyaar", options:["11","12","20"], answer:"11" },
-    { t:"listen", say:"સો", roman:"so", options:["100","50","15"], answer:"100" },
+    { t:"listen", say:"કરોડ", roman:"karoḍ", options:["10,000,000","100,000","1,000"], answer:"10,000,000" },
     { t:"build", en:"This is twenty rupees.", answer:["આ","વીસ","રૂપિયા","છે"], extra:["તેર","ભાવ"], roman:"aa vees roopiyaa chhe" },
     { t:"speak", gu:"આ કેટલું છે?", roman:"aa keṭluṁ chhe?", en:"How much is this?" },
   ]},
 });
-UNITS.push({ id:"u10", ku:"Unit 10", title:"Numbers and shopping", sub:"Numbers 11 to 100, prices, and the market", color:"#B7791F",
-  lessons:[ {id:"u10l1",label:"Numbers 11-15"}, {id:"u10l2",label:"Numbers 16-20"}, {id:"u10l3",label:"Counting by tens"}, {id:"u10l4",label:"Shopping and prices"}, {id:"u10c",label:"Checkpoint",kind:"check"} ] });
-LESSON_ORDER.push("u10l1", "u10l2", "u10l3", "u10l4", "u10c");
+UNITS.push({ id:"u10", ku:"Unit 10", title:"Numbers and counting", sub:"Count to any number, plus prices and shopping", color:"#B7791F",
+  lessons:[ {id:"u10l1",label:"Numbers 11-15"}, {id:"u10l2",label:"Numbers 16-20"}, {id:"u10l3",label:"Counting by tens"}, {id:"u10l5",label:"21 to 99"}, {id:"u10l6",label:"Hundreds and thousands"}, {id:"u10l7",label:"Lakh, crore, big numbers"}, {id:"u10l4",label:"Shopping and prices"}, {id:"u10c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u10l1", "u10l2", "u10l3", "u10l5", "u10l6", "u10l7", "u10l4", "u10c");
 
 /* ============================ MODULE: Time and routine ============================ */
 Object.assign(LESSONS, {
@@ -4083,6 +4146,11 @@ TOPICS.push(
     { gu:"હાથ", r:"haath", en:"hand" },
     { gu:"પગ", r:"pag", en:"leg / foot" },
     { gu:"પેટ", r:"peṭ", en:"stomach" },
+    { gu:"દાંત", r:"daant", en:"teeth" },
+    { gu:"જીભ", r:"jeebh", en:"tongue" },
+    { gu:"ગળું", r:"gaḷuṁ", en:"throat" },
+    { gu:"ખભો", r:"khabho", en:"shoulder" },
+    { gu:"આંગળી", r:"aangḷi", en:"finger" },
   ]},
   { id:"weather", title:"Weather and seasons", icon:"bulb", words:[
     { gu:"વરસાદ", r:"varsaad", en:"rain" },
@@ -4132,6 +4200,17 @@ TOPICS.push(
     { gu:"ચાળીસ", r:"chaaḷees", en:"40" },
     { gu:"પચાસ", r:"pachaas", en:"50" },
     { gu:"સો", r:"so", en:"100" },
+    { gu:"એકવીસ", r:"ekvees", en:"21" },
+    { gu:"પચ્ચીસ", r:"pachchees", en:"25" },
+    { gu:"સાઠ", r:"saaṭh", en:"60" },
+    { gu:"સિત્તેર", r:"sitter", en:"70" },
+    { gu:"એંસી", r:"eṁsi", en:"80" },
+    { gu:"નેવું", r:"nevuṁ", en:"90" },
+    { gu:"બસો", r:"baso", en:"200" },
+    { gu:"પાંચસો", r:"paanchso", en:"500" },
+    { gu:"હજાર", r:"hajaar", en:"1,000" },
+    { gu:"લાખ", r:"laakh", en:"100,000 (a lakh)" },
+    { gu:"કરોડ", r:"karoḍ", en:"10,000,000 (a crore)" },
   ]},
   { id:"days", title:"Days of the week", icon:"clock", words:[
     { gu:"સોમવાર", r:"somvaar", en:"Monday" },
