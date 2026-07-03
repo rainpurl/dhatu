@@ -1497,6 +1497,7 @@ const LESSON_ICON = {
   u13l1:"profile", u13l2:"chats",
   u14l1:"profile", u14l2:"bulb",
   u15l1:"steps", u15l2:"car",
+  u16l1:"bulb", u16l2:"chats", u16l3:"steps",
 };
 const lessonIcon = (l) => {
   if (l.kind === "check") return Ic.trophy;
@@ -4643,6 +4644,58 @@ Object.assign(LESSONS, {
 UNITS.push({ id:"u15", ku:"Unit 15", title:"Travel and directions", sub:"Left and right, asking the way, and getting around", color:"#3F7E7E",
   lessons:[ {id:"u15l1",label:"Left and right"}, {id:"u15l2",label:"Getting there"}, {id:"u15c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u15l1", "u15l2", "u15c");
+
+/* ============================ MODULE: Putting it together (advanced) ============================ */
+Object.assign(LESSONS, {
+  u16l1: { title:"Reasons and opinions", ex: [
+    { t:"intro", gu:"કારણ કે", roman:"kaaraṇ ke", en:"because" },
+    { t:"intro", gu:"તેથી", roman:"tethi", en:"so / therefore" },
+    { t:"intro", gu:"મને લાગે છે", roman:"mane laage chhe", en:"I think / it seems to me" },
+    { t:"note", title:"Giving a reason", body:[
+      "Put કારણ કે (because) before the reason clause: it comes after what it explains.",
+      "Use તેથી (so, therefore) before the result: વરસાદ છે, તેથી હું ઘરે છું."], ex:[
+      {gu:"વરસાદ છે, તેથી હું ઘરે છું",roman:"varsaad chhe, tethi huṁ ghare chuṁ",en:"It is raining, so I am at home."}] },
+    { t:"note", title:"Saying what you think", body:[
+      "Add કે (that) after મને લાગે છે to introduce an opinion.",
+      "Inside the કે clause the order stays subject, object, verb."], ex:[
+      {gu:"મને લાગે છે કે તે સાચું છે",roman:"mane laage chhe ke te saachuṁ chhe",en:"I think that it is true."}] },
+    { t:"build", en:"It is raining, so I am at home.", answer:["વરસાદ","છે","તેથી","હું","ઘરે","છું"], extra:["કારણ","દૂર"], roman:"varsaad chhe tethi huṁ ghare chuṁ" },
+    { t:"speak", gu:"મને લાગે છે કે તે સરસ છે", roman:"mane laage chhe ke te saras chhe", en:"I think it is nice." },
+  ]},
+  u16l2: { title:"Telling a short story", ex: [
+    { t:"intro", gu:"ગઈકાલે", roman:"gaikaale", en:"yesterday" },
+    { t:"intro", gu:"પછી", roman:"pachhi", en:"then / after" },
+    { t:"intro", gu:"ઊઠ્યો", roman:"ooṭhyo", en:"woke up (past)" },
+    { t:"note", title:"Putting events in order", body:[
+      "Chain actions with પછી (then, after) to narrate a sequence.",
+      "Past verbs often take the -e doer marker and agree with the object, as you saw earlier."], ex:[
+      {gu:"હું ઊઠ્યો, પછી ચા પીધી",roman:"huṁ ooṭhyo, pachhi chaa peedhi",en:"I woke up, then drank tea."}] },
+    { t:"build", en:"Yesterday I went to the market.", answer:["ગઈકાલે","હું","બજાર","ગયો"], extra:["આજે","ઘરે"], roman:"gaikaale huṁ bajaar gayo" },
+    { t:"speak", gu:"સવારે હું ઊઠ્યો અને ચા પીધી", roman:"savaare huṁ ooṭhyo ane chaa peedhi", en:"In the morning I woke up and drank tea." },
+    { t:"speak", gu:"પછી હું બજાર ગયો", roman:"pachhi huṁ bajaar gayo", en:"Then I went to the market." },
+  ]},
+  u16l3: { title:"Making comparisons", ex: [
+    { t:"intro", gu:"કરતાં", roman:"kartaan", en:"than" },
+    { t:"intro", gu:"વધારે", roman:"vadhaare", en:"more" },
+    { t:"intro", gu:"સૌથી", roman:"sauthi", en:"most" },
+    { t:"note", title:"More and most", body:[
+      "To compare two things, use કરતાં (than) after the thing compared against.",
+      "For the top one in a group, use સૌથી (most) before the adjective."], ex:[
+      {gu:"આ કરતાં તે મોટું છે",roman:"aa kartaan te moṭuṁ chhe",en:"That is bigger than this."},
+      {gu:"આ સૌથી સારું છે",roman:"aa sauthi saaruṁ chhe",en:"This is the best."}] },
+    { t:"build", en:"This is the best.", answer:["આ","સૌથી","સારું","છે"], extra:["વધારે","મોટું"], roman:"aa sauthi saaruṁ chhe" },
+    { t:"speak", gu:"તે મારા કરતાં ઊંચો છે", roman:"te maaraa kartaan ooncho chhe", en:"He is taller than me." },
+  ]},
+  u16c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"કારણ કે",en:"because"},{gu:"તેથી",en:"so"},{gu:"કરતાં",en:"than"},{gu:"સૌથી",en:"most"}] },
+    { t:"listen", say:"વધારે", roman:"vadhaare", options:["more","than","yesterday"], answer:"more" },
+    { t:"build", en:"It is raining, so I am at home.", answer:["વરસાદ","છે","તેથી","હું","ઘરે","છું"], extra:["કારણ","પછી"], roman:"varsaad chhe tethi huṁ ghare chuṁ" },
+    { t:"speak", gu:"મને લાગે છે કે તે સાચું છે", roman:"mane laage chhe ke te saachuṁ chhe", en:"I think that it is true." },
+  ]},
+});
+UNITS.push({ id:"u16", ku:"Unit 16", title:"Putting it together", sub:"Reasons, opinions, telling a story, and comparing things", color:"#6B4E9E",
+  lessons:[ {id:"u16l1",label:"Reasons and opinions"}, {id:"u16l2",label:"Telling a short story"}, {id:"u16l3",label:"Making comparisons"}, {id:"u16c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u16l1", "u16l2", "u16l3", "u16c");
 
 /* Roughly double the practice in every lesson by appending auto-generated
    reinforcement questions (listen and match) built from each lesson's own taught
