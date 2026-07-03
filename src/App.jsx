@@ -982,6 +982,9 @@ const CSS = `
 .wordimg{display:block;width:200px;height:200px;max-width:70%;object-fit:cover;border-radius:20px;margin:0 auto 16px;box-shadow:var(--bevel-inset), 0 8px 20px rgba(70,45,40,.12);animation:riseIn .28s var(--ease) both}
 .bodydiagram{width:150px;max-width:52%;margin:0 auto 16px;padding:12px;border-radius:20px;background:var(--card);box-shadow:var(--bevel-inset);animation:riseIn .28s var(--ease) both}
 .bodydiagram svg{width:100%;height:auto;display:block}
+.familytree{width:260px;max-width:80%;margin:0 auto 16px;padding:12px 14px;border-radius:20px;background:var(--card);box-shadow:var(--bevel-inset);animation:riseIn .28s var(--ease) both}
+.familytree svg{width:100%;height:auto;display:block}
+.colorswatch{width:160px;height:160px;max-width:55%;margin:0 auto 16px;border-radius:24px;box-shadow:inset 0 0 0 1px rgba(70,45,40,.14), 0 8px 20px rgba(70,45,40,.14);animation:riseIn .28s var(--ease) both}
 
 /* account card in Profile */
 .acct{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;margin-bottom:14px;box-shadow:var(--bevel-inset)}
@@ -1850,6 +1853,23 @@ const _WORD_IMG_RAW = {
 };
 const WORD_IMG = Object.fromEntries(Object.entries(_WORD_IMG_RAW).map(([k, v]) => [k, FP + encodeURIComponent(v) + "?width=600"]));
 
+/* Colors show a color swatch rather than a photo. */
+const COLOR_SWATCH = {
+  "લાલ": "#D22B2B", "લીલો": "#2E9E4F", "પીળો": "#F2C230", "વાદળી": "#2E6FD6",
+  "કાળો": "#222222", "સફેદ": "#FFFFFF", "નારંગી": "#F2842E", "ગુલાબી": "#E86AA6",
+  "જાંબલી": "#7A3FB0", "કથ્થાઈ": "#8B5A2B",
+};
+
+/* Family words highlight a person on a small family tree, which also makes the
+   Gujarati maternal/paternal and older/younger distinctions visible. */
+const FAMILY_NODE = {
+  "માતા": "mother", "મમ્મી": "mother", "પિતા": "father", "પપ્પા": "father",
+  "ભાઈ": ["broO", "broY"], "બહેન": ["sisO", "sisY"],
+  "મોટા ભાઈ": "broO", "નાના ભાઈ": "broY", "મોટી બહેન": "sisO", "નાની બહેન": "sisY",
+  "દાદા": "dada", "દાદી": "dadi", "નાના": "nana", "નાની": "nani", "બા": ["dadi", "nani"],
+  "કાકા": "kaka", "મોટા બાપા": "motabapa", "મામા": "mama", "ફોઈ": "foi", "માસી": "masi",
+};
+
 /* Body-part words map to a highlighted region on a shared body diagram, which
    reads more clearly (and less clinically) than photos of body parts. */
 const BODY_PARTS = {
@@ -2102,6 +2122,46 @@ function BodyFig({ src, cap }) {
       <img src={src} alt={cap || ""} loading="lazy" onError={() => setOk(false)} />
       {cap && <figcaption>{cap}</figcaption>}
     </figure>
+  );
+}
+
+/* A small family tree that highlights the person named by a kinship word.
+   Father's side is on the left, mother's side on the right, so the diagram makes
+   the maternal/paternal distinction (and older/younger siblings) visible. */
+function FamilyTree({ node }) {
+  const HI = "#8A1C3B", B = "#CDBEC3";
+  const on = (id) => (Array.isArray(node) ? node.includes(id) : node === id);
+  const fig = (id, x, y, tall) => {
+    const hit = on(id);
+    const col = hit ? HI : B;
+    const sw = hit ? 3 : 1.8;
+    const r = 5.2;
+    const h = tall ? 17 : 13;
+    return (
+      <g key={id}>
+        <circle cx={x} cy={y} r={r} fill="#fff" stroke={col} strokeWidth={sw} />
+        <path d={`M${x - 6} ${y + r + h} L${x - 4.5} ${y + r + 2} Q${x} ${y + r - 1} ${x + 4.5} ${y + r + 2} L${x + 6} ${y + r + h}`} fill="#fff" stroke={col} strokeWidth={sw} strokeLinejoin="round" strokeLinecap="round" />
+      </g>
+    );
+  };
+  return (
+    <div className="familytree">
+      <svg viewBox="0 0 220 168" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <text x="8" y="12" fill="var(--muted)" fontSize="8" fontWeight="700">father's side</text>
+        <text x="212" y="12" textAnchor="end" fill="var(--muted)" fontSize="8" fontWeight="700">mother's side</text>
+        <line x1="110" y1="18" x2="110" y2="160" stroke="var(--line)" strokeWidth="1.5" strokeDasharray="3 4" />
+        {/* grandparents */}
+        {fig("dada", 26, 26)}{fig("dadi", 54, 26)}
+        {fig("nana", 166, 26)}{fig("nani", 194, 26)}
+        {/* parents and their siblings */}
+        {fig("motabapa", 18, 82)}{fig("kaka", 42, 82)}{fig("foi", 66, 82)}{fig("father", 92, 82)}
+        {fig("mother", 128, 82)}{fig("mama", 154, 82)}{fig("masi", 178, 82)}
+        {/* me and siblings */}
+        {fig("broO", 72, 132, true)}{fig("sisO", 90, 132, true)}
+        <g><circle cx="107" cy="138" r="5.2" fill="var(--gold)" stroke="#B07E1C" strokeWidth="1.8" /><text x="107" y="164" textAnchor="middle" fill="var(--muted)" fontSize="7.5" fontWeight="700">you</text></g>
+        {fig("broY", 124, 132)}{fig("sisY", 142, 132)}
+      </svg>
+    </div>
   );
 }
 
@@ -3453,6 +3513,10 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
           <>
             {BODY_PARTS[ex.gu]
               ? <BodyDiagram part={BODY_PARTS[ex.gu]} />
+              : FAMILY_NODE[ex.gu]
+              ? <FamilyTree node={FAMILY_NODE[ex.gu]} />
+              : COLOR_SWATCH[ex.gu]
+              ? <div className="colorswatch" style={{ background: COLOR_SWATCH[ex.gu] }} />
               : WORD_IMG[ex.gu] && <img className="wordimg" src={WORD_IMG[ex.gu]} alt={ex.en} referrerPolicy="no-referrer" loading="lazy" />}
             {readWrite ? (
               <>
