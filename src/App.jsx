@@ -1781,8 +1781,6 @@ const CONJUNCTS = [
   { gu:"જ્ઞ", roman:"gya", hint:"a blend of જ + ઞ, as in જ્ઞાન (knowledge)" },
   { gu:"શ્રી", roman:"shri", hint:"an honorific meaning 'holy' or 'Mr.', very common in names" },
   { gu:"ત્ર", roman:"tra", hint:"a blend of ત + ર, as in ત્રણ (three)" },
-  { gu:"પ્ર", roman:"pra", hint:"a blend of પ + ર, as in પ્રેમ (love)" },
-  { gu:"સ્ત", roman:"sta", hint:"a blend of સ + ત, as in નમસ્તે (hello)" },
   { gu:"ન્ન", roman:"nna", hint:"a doubled ન, as in અન્ન (grain)" },
 ];
 const RARE_CONS = [
