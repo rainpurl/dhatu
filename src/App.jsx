@@ -789,6 +789,8 @@ const CSS = `
 .micbtn svg{width:26px;height:26px}
 .micbtn:active{transform:translateY(1px);box-shadow:inset 0 3px 8px rgba(50,10,22,.55)}
 .micbtn.on{background:var(--no);box-shadow:var(--sink-no);animation:micpulse 1s ease infinite}
+.snoozerow{display:flex;justify-content:center;margin-top:16px}
+.snoozerow .btn{width:auto}
 @keyframes micpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 .speakcheck-label{font-size:12.5px;color:var(--muted);font-weight:700}
 .speakcheck-msg{font-size:13.5px;font-weight:700;text-align:center;padding:9px 14px;border-radius:12px;max-width:320px}
@@ -1506,12 +1508,26 @@ function CourseApp({ user }) {
   const [convoStep, setConvoStep] = useState(0);
   const [erAudioLang, setErAudioLang] = useState(null);
   const [scriptTab, setScriptTab] = useState("vowels");
+  const [snooze, setSnooze] = useState({ speak: 0, listen: 0 });
+  const isSnoozed = (t) => (t === "speak" && Date.now() < snooze.speak) || (t === "listen" && Date.now() < snooze.listen);
+  const snoozeType = (t) => setSnooze((s) => ({ ...s, [t]: Date.now() + 5 * 60 * 1000 }));
 
   useEffect(() => {
     try {
       if (window.speechSynthesis) window.speechSynthesis.getVoices();
     } catch (e) {}
   }, []);
+
+  // Skip past speaking/listening exercises while their type is snoozed.
+  useEffect(() => {
+    if (screen !== "lesson" || !activeLesson || feedback) return;
+    const lesson = LESSONS[activeLesson];
+    if (!lesson) return;
+    const list = lesson.ex.filter((e) => readWrite || e.t !== "letter");
+    const cur = list[exIdx];
+    if (cur && isSnoozed(cur.t)) goNextExercise();
+    // eslint-disable-next-line
+  }, [screen, activeLesson, exIdx, snooze, feedback]);
 
   function finishOnboarding() {
     setOnboarded(true);
@@ -1889,6 +1905,7 @@ function CourseApp({ user }) {
       onCorrect={answerCorrect}
       onNext={goNextExercise}
       onExit={exitLesson}
+      onSnooze={snoozeType}
     />;
   }
 
@@ -2387,7 +2404,7 @@ function CourseApp({ user }) {
 }
 
 /* ============================ LESSON RUNNER ============================ */
-function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback, setFeedback, onCorrect, onNext, onExit }) {
+function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback, setFeedback, onCorrect, onNext, onExit, onSnooze }) {
   const [picked, setPicked] = useState(null);
   const [matchLeft, setMatchLeft] = useState(null);
   const [matchDone, setMatchDone] = useState([]);
@@ -2539,6 +2556,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
                 </button>
               ))}
             </div>
+            <div className="snoozerow"><button className="btn ghost sm" onClick={() => onSnooze && onSnooze("listen")}>Snooze listening for 5 min</button></div>
           </>
         )}
 
@@ -2613,6 +2631,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
                 else if (r.verdict === "close") onCorrect(5);
               }}
             />
+            <div className="snoozerow"><button className="btn ghost sm" onClick={() => onSnooze && onSnooze("speak")}>Snooze speaking for 5 min</button></div>
           </>
         )}
 
@@ -2841,6 +2860,25 @@ function _gradeSpeech(heard, target) {
   return { heard, score, verdict };
 }
 
+function _micErrorMessage(err) {
+  switch (err) {
+    case "no-speech":
+    case "aborted":
+      return "Didn't catch that. Try again.";
+    case "not-allowed":
+    case "service-not-allowed":
+      return "Microphone access is blocked. Allow it in your browser settings.";
+    case "audio-capture":
+      return "No microphone was found on this device.";
+    case "language-not-supported":
+      return "This browser can't recognize Gujarati speech yet. Tap below to continue, or try Chrome.";
+    case "network":
+      return "Speech check needs an internet connection. Try again.";
+    default:
+      return "The mic ran into a problem. Try again, or tap below to continue.";
+  }
+}
+
 function useVoiceCheck(lang) {
   const [supported] = useState(() => !!_getRecognitionCtor());
   const [listening, setListening] = useState(false);
@@ -2872,7 +2910,7 @@ function useVoiceCheck(lang) {
         setResult(_gradeSpeech(heard, target));
       };
       rec.onerror = (e) => {
-        setErr(e && e.error === "not-allowed" ? "denied" : "error");
+        setErr((e && e.error) || "error");
         setListening(false);
       };
       rec.onend = () => setListening(false);
@@ -2927,8 +2965,12 @@ function SpeakCheck({ target, onResult }) {
         <Ic.mic />
       </button>
       <div className="speakcheck-label">{vc.listening ? "Listening..." : "Tap and say it"}</div>
-      {vc.err === "denied" && <div className="speakcheck-msg bad">Microphone access was blocked. Check your browser settings.</div>}
-      {vc.err === "error" && <div className="speakcheck-msg bad">Didn't catch that. Try again.</div>}
+      {vc.err && <div className="speakcheck-msg bad">{_micErrorMessage(vc.err)}</div>}
+      {vc.err && vc.err !== "no-speech" && vc.err !== "aborted" && (
+        <button className="btn ghost sm" onClick={() => onResult && onResult({ verdict: "skip", score: 0, heard: "" })}>
+          I said it out loud
+        </button>
+      )}
       {vc.result && (
         <div className={"speakcheck-msg " + (vc.result.verdict === "good" ? "good" : vc.result.verdict === "close" ? "close" : "bad")}>
           {vc.result.verdict === "good" && "Nice, that's a strong match."}
