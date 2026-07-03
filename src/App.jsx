@@ -1822,6 +1822,28 @@ const _WORD_IMG_RAW = {
   "કેરી": "Alphonso mango with spongy seed.jpg",
   "દાળ": "Dal Fry Recipe In Dhaba Style From Indian Cuisine By Sonia Goyal.jpg",
   "શાક": "Punjabi sabzi with Gujarati touch made from mixed vegetables.JPG",
+  // transport
+  "ગાડી": "MHV Tata Indica 01.jpg",
+  "બસ": "City Bus Hyd.jpg",
+  "ટ્રેન": "Indian Pacific passenger train 2025.jpg",
+  "રિક્ષા": "Auto rickshaw in Ahmedabad.jpg",
+  "સાઇકલ": "White single-speed bicycle on yellow background.png",
+  "વિમાન": "AirAsia A320 VT-MLE Landing Chennai Aug22 D72 24870.jpg",
+  // places
+  "મંદિર": "Sun Temple, Modhera - Sabha Mandap 01.jpg",
+  "શાળા": "AMSOM Building Ahmedabad University Gujarat Jul22 A7C 02063.jpg",
+  "સ્ટેશન": "Mysore Rly Station Panorama Karnataka Apr22 A7C 01908-10.jpg",
+  "બજાર": "Onions Veg Stall Ooty Market Nilgiris Aug25 A7CR 07102.jpg",
+  "ઘર": "Motihari Mission house, India, ca. 1906 (IMP-CSCNWW33-OS14-1).jpg",
+  // body
+  "આંખ": "Human eye closeup.JPG",
+  "હાથ": "Open Palm of the Left Hand, Fingers.jpg",
+  // weather
+  "વરસાદ": "Monsoon Maharashtra India Rain Landscape (1) 06.jpg",
+  "ચોમાસું": "Monsoon Maharashtra India Rain Landscape (1) 06.jpg",
+  "વાદળ": "Stratocumulus and cumulus over Gåseberg.jpg",
+  "તડકો": "Bright Shades Of Sky Ans Sparkling Sun , Aligarh.jpg",
+  "શિયાળો": "Winter in Tatry Mountains - Poland.jpg",
 };
 const WORD_IMG = Object.fromEntries(Object.entries(_WORD_IMG_RAW).map(([k, v]) => [k, FP + encodeURIComponent(v) + "?width=600"]));
 
