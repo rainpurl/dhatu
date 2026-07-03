@@ -1603,6 +1603,11 @@ function BodyFig({ src, cap }) {
 
 /* ============================ MAIN APP ============================ */
 /* persistence: real browser localStorage (works on the live site, unlike the in-chat sandbox) */
+/* local calendar date as YYYY-MM-DD, for streak tracking */
+function _dstr(d) {
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
 function useLocalState(key, initial) {
   const [state, setState] = useState(() => {
     try {
@@ -1631,10 +1636,11 @@ function CourseApp({ user }) {
   const [vocabTab, setVocabTab] = useLocalState("dhatu_vocabTab", false);
 
   const [kaudi, setKaudi] = useLocalState("dhatu_kaudi", 0);
-  const [streak, setStreak] = useLocalState("dhatu_streak", 1);
+  const [streak, setStreak] = useLocalState("dhatu_streak", 0);
   const [completed, setCompleted] = useLocalState("dhatu_completed", []);
   const [srs, setSrs] = useLocalState("dhatu_srs", []);
-  const [weekHit, setWeekHit] = useLocalState("dhatu_weekHit", [true, true, false, false, false, false, false]);
+  const [weekHit, setWeekHit] = useLocalState("dhatu_weekHit", [false, false, false, false, false, false, false]);
+  const [lastActive, setLastActive] = useLocalState("dhatu_lastActive", "");
 
   const [activeLesson, setActiveLesson] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
@@ -1683,13 +1689,14 @@ function CourseApp({ user }) {
 
   function resetAllProgress() {
     try {
-      ["dhatu_onboarded", "dhatu_readWrite", "dhatu_showHistory", "dhatu_vocabTab", "dhatu_kaudi", "dhatu_streak", "dhatu_completed", "dhatu_srs", "dhatu_weekHit"].forEach((k) => window.localStorage.removeItem(k));
+      ["dhatu_onboarded", "dhatu_readWrite", "dhatu_showHistory", "dhatu_vocabTab", "dhatu_kaudi", "dhatu_streak", "dhatu_completed", "dhatu_srs", "dhatu_weekHit", "dhatu_lastActive"].forEach((k) => window.localStorage.removeItem(k));
     } catch (e) {}
     setKaudi(0);
-    setStreak(1);
+    setStreak(0);
     setCompleted([]);
     setSrs([]);
-    setWeekHit([true, true, false, false, false, false, false]);
+    setWeekHit([false, false, false, false, false, false, false]);
+    setLastActive("");
     setReadWrite(true);
     setShowHistory(true);
     setVocabTab(false);
@@ -1720,12 +1727,34 @@ function CourseApp({ user }) {
     setScreen("learn");
   }
 
+  // Update the day streak and this-week activity when the learner is active.
+  function recordActivity() {
+    const now = new Date();
+    const today = _dstr(now);
+    if (lastActive === today) return;
+    const yd = new Date(now);
+    yd.setDate(now.getDate() - 1);
+    setStreak((s) => (lastActive === _dstr(yd) ? s + 1 : 1));
+    const dow = now.getDay();
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - dow);
+    weekStart.setHours(0, 0, 0, 0);
+    const sameWeek = lastActive && new Date(lastActive + "T00:00:00") >= weekStart;
+    setWeekHit((prev) => {
+      const base = sameWeek ? prev.slice() : [false, false, false, false, false, false, false];
+      base[dow] = true;
+      return base;
+    });
+    setLastActive(today);
+  }
+
   function completeLesson() {
     stopSpeak();
     if (activeLesson && !completed.includes(activeLesson)) {
       setCompleted((c) => [...c, activeLesson]);
     }
     setKaudi((k) => k + sessionKaudi);
+    recordActivity();
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 1800);
     setScreen("complete");
@@ -2948,6 +2977,33 @@ Object.assign(LESSONS, {
 
 /* ============================ VOCAB: festivals + textiles (added) ============================ */
 TOPICS.push(
+  { id:"time", title:"Time and days", icon:"clock", words:[
+    { gu:"આજે", r:"aaje", en:"today" },
+    { gu:"ગઈકાલે", r:"gaikaale", en:"yesterday" },
+    { gu:"આવતીકાલે", r:"aavtikaale", en:"tomorrow" },
+    { gu:"સવાર", r:"savaar", en:"morning" },
+    { gu:"બપોર", r:"bapor", en:"afternoon" },
+    { gu:"રાત", r:"raat", en:"night" },
+    { gu:"અઠવાડિયું", r:"aṭhvaaḍiyuṁ", en:"week" },
+  ]},
+  { id:"greetings", title:"Greetings and polite words", icon:"hand", words:[
+    { gu:"નમસ્તે", r:"namaste", en:"hello" },
+    { gu:"આવજો", r:"aavjo", en:"goodbye" },
+    { gu:"આભાર", r:"aabhaar", en:"thank you" },
+    { gu:"માફ કરો", r:"maaf karo", en:"sorry / excuse me" },
+    { gu:"મહેરબાની કરીને", r:"meherbaani karine", en:"please" },
+    { gu:"કેમ છો?", r:"kem chho?", en:"how are you?" },
+    { gu:"મજામાં", r:"majaamaan", en:"doing well" },
+  ]},
+  { id:"market", title:"At the market", icon:"tag", words:[
+    { gu:"દુકાન", r:"dukaan", en:"shop" },
+    { gu:"પૈસા", r:"paisaa", en:"money" },
+    { gu:"ભાવ", r:"bhaav", en:"price" },
+    { gu:"કેટલું?", r:"keṭluṁ?", en:"how much?" },
+    { gu:"સસ્તું", r:"sastuṁ", en:"cheap" },
+    { gu:"મોંઘું", r:"monghuṁ", en:"expensive" },
+    { gu:"ખરીદવું", r:"kharidvuṁ", en:"to buy" },
+  ]},
   { id:"festivals", title:"Festivals and fairs", icon:"diya", words:[
     { gu:"તહેવાર", r:"tehvaar", en:"festival" },
     { gu:"નવરાત્રિ", r:"navraatri", en:"Navratri" },
