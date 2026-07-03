@@ -235,7 +235,7 @@ progress; it fully resets only accounts with no local copy.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
   the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat, Textiles and
   Fashion, Food and Cooking), each with
-  photo cover cards; **28 chapters** with photo covers + inline photos, dual
+  photo cover cards; **33 chapters** with photo covers + inline photos, dual
   "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
   summary per chapter), sources. A "Did you know?" fun-fact card rotates every
   10 hours (one fact notes the kaudi shell as early Gujarati currency).
@@ -254,11 +254,19 @@ message. This is a platform limit, intentionally left as graceful fallback.
 
 ## 8. Content inventory
 
-- **Culture chapters (28):** indus, maurya, vallabhi, dwarka; solanki, modhera,
-  sultanate, palitana, narsinh, somnath; surat_trade, diaspora, parsi, textiles; colonial,
-  many_rulers, peasant, gandhi, rajkot, partition, junagadh (the Colonial Rule and
-  Resistance category, expanded from the deep-research report); state, nav_nirman,
-  adivasi_dalit, modern, kutch, gir, food.
+**Scale (current):** 15 Learn units / 75 lessons; 16 "Learn the letters" script
+lessons; ~29 vocab topics; 9 grammar patterns; 7 conversations; 7 Culture
+categories / 33 chapters; 670 audio clips; ~34 noun images + body/family diagrams
++ color swatches.
+
+- **Culture: 7 categories, 33 chapters.** Ancient: indus, maurya, vallabhi,
+  dwarka. Kingdoms: solanki, modhera, sultanate, palitana, narsinh, somnath.
+  Trade: surat_trade, diaspora, parsi. Colonial Rule and Resistance (expanded from
+  a deep-research report): colonial, many_rulers, peasant, gandhi, rajkot,
+  partition, junagadh. Modern: state, nav_nirman, adivasi_dalit, modern, kutch,
+  gir. Textiles and Fashion: textiles, t_bandhani, t_patola. Food and Cooking:
+  food, f_street, f_faith, f_ports. (Textiles/Food are Culture *modules* built
+  from the two md files; the Learn Units 7/8 are separate.)
 - **Vocab topics:** slang, family (expanded kinship: older/younger sibling,
   maternal/paternal, kaka/mota bapa/mama/foi/masi), numbers, food, verbs,
   transport, colors, animals, time, greetings, market, festivals, culture,
@@ -298,24 +306,26 @@ message. This is a platform limit, intentionally left as graceful fallback.
 
 ## 9. Pending / next steps
 
-1. **Owner: finish Firebase setup** (section 4 / AUTH.md): rules, admin UID,
-   pokes index, authorized domain. Social + staff features need this.
-2. **Owner: rotate the Google TTS API key.**
-2b. **Audio for all current lessons is generated and committed** (403 clips). The
-   new vocab lessons and Units 7-8 (khaman, dhokla, kadhi, khichdi, handvo, samo,
-   farali, kapaas, rang, vanaat, mashru, saadi, vepaar, gharcholu, bandar, etc.)
-   are voiced with the Chirp3-HD voices; 4 orphaned clips from the deleted Unit 6
-   lessons were removed. Only re-run `npm run audio` after adding new Gujarati
-   content (it is idempotent and self-syncing).
-3. **Verify the vowel sounds live** (ઇ ઐ ઔ ઍ). They are IPA-specified so they are
-   the target sounds, but confirm by ear; IPA can be tuned per glyph, or a native
-   recording can be dropped in (playback already resolves a clip per glyph).
-4. **Verify social features live** (follow/poke) after rules + index; could not be
-   tested multi-user from here.
-5. Open ideas discussed: more Culture chapters; native-recorded vowels. (Done
-   since the first handoff: unit progress bars, resume card, daily-goal tracker,
-   the desktop right rail on Learn, and teaching the extra vocab topics as
-   lessons.)
+1. **Owner: publish the Firestore rules in the Firebase console** (the rules are
+   NOT deployed from the repo). Use the full block in AUTH.md; the two admin UIDs
+   are already set in `public/staff/index.html` and in AUTH.md's `isAdmin()`. Also:
+   enable Google sign-in, create Firestore, add `dhatu.pages.dev` authorized
+   domain, create the pokes composite index, and (optional) set the OAuth consent
+   **App name** to "Dhatu Learning" so the sign-in popup reads nicely (AUTH.md).
+2. **Owner: rotate the Google TTS API key** (it appeared in chat repeatedly and
+   was used again this session). Audio is fully static, so nothing needs a live key.
+3. **All current content is voiced** (**670 clips**). Re-run `npm run audio` only
+   after adding new Gujarati content; it is idempotent and self-syncing. (If you
+   change the pause-list rule in the generator, delete the affected clips first.)
+4. **Verify the vowel sounds live** (ઇ ઐ ઔ ઍ) and **social features** (follow/poke,
+   after rules + index) by ear / multi-user; neither could be tested from here.
+5. Open ideas not yet done: matras/conjuncts have letter-recognition lessons but
+   no handwriting/CV-*building* exercises; more noun images (abstract weather,
+   feelings, verbs stay text-only by nature); native-recorded vowels; more Culture
+   chapters. (Done this session: sequenced "Learn the letters" curriculum incl.
+   matra/conjunct lessons, noun visuals (photos + body/family diagrams + color
+   swatches), full-width desktop, collapsible completed units, sticky script bar,
+   auto-play on listening questions, and a data-loss fix in the sync layer.)
 
 ---
 
