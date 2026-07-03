@@ -81,7 +81,16 @@ const PRONUNCIATION_OVERRIDES = {
   "ઐ": "ɛː",  // "eh", as in "bed"
   "ઔ": "ɔː",  // "aw", as in "bought"
   "ઍ": "æ",   // "a", as in "apple"
-  "ૹ": "zə",  // za: a modern letter for the 'z' sound; TTS is silent on the bare glyph
+  // Rare/borrowed consonants (nukta letters): TTS is silent on the bare glyphs,
+  // so we synthesize the target sound by IPA, exactly like the vowels above.
+  "ૹ": "ʒə",      // zha, like the 's' in "vision"
+  "ફ઼": "fə",     // fa, the 'f' sound
+  "ખ઼": "xə",     // kha (Perso-Arabic)
+  "ગ઼": "ɣə", // gha (Perso-Arabic)
+  "જ઼": "zə",     // za, the 'z' sound
+  "ક઼": "qə",     // qa (Perso-Arabic)
+  "ચ઼": "tsə",    // a 'ts' sound in loanwords
+  "ત૽": "tə",     // the English 't' in "top"
 };
 
 const DEFAULT_VOICE = {

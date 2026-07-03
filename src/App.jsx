@@ -426,7 +426,7 @@ const Ic = {
 
 /* ---------- styles ---------- */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Anek+Gujarati:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anek+Gujarati:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 :root{
   --brand:#8A1C3B; --brand-dark:#6B1330; --brand-soft:#F8E7EC;
   --gold:#E0A63C; --gold-dark:#B98219; --diya:#F2892E;
@@ -435,7 +435,7 @@ const CSS = `
   --ink:#33222A; --muted:#8C7C82; --line:#ECE2E5; --line-strong:#DBCBcf;
   --bg:#F3ECE6; --card:#FBF5F1; --hover:#F0E7E1;
   --fen:'Inter',system-ui,sans-serif;
-  --fgu:'Anek Gujarati','Inter',sans-serif;
+  --fgu:'Anek Gujarati','Noto Sans Gujarati','Inter',sans-serif;
   --ease:cubic-bezier(.4,0,.2,1); --t-fast:.15s;
   --ring:0 0 0 3px rgba(138,28,59,.22);
   /* recessed shadow system, warm-tinted: everything is carved in, nothing is raised */
@@ -460,6 +460,7 @@ const CSS = `
 }
 .scr{flex:1;overflow-y:auto;padding:18px 16px 108px}
 .scr.plain{padding-bottom:24px}
+.script-shell{height:100dvh;overflow:hidden}
 
 /* top bar */
 .top{display:flex;align-items:center;gap:10px;margin-bottom:16px}
@@ -1760,8 +1761,7 @@ const CONS_ROWS = [
     {gu:"વ",roman:"va",hint:"between v and w",ex:{en:"van"}},{gu:"ળ",roman:"ḷa",hint:"a retroflex l",ex:{gu:"કાળો",roman:"kaaḷo"}}] },
   { label:"Sibilants and H", chars:[
     {gu:"શ",roman:"sha",ex:{en:"shoe"}},{gu:"ષ",roman:"ṣa",hint:"a retroflex 'sha', mostly in Sanskrit loanwords",ex:{gu:"ભાષા",roman:"bhaaṣaa"}},
-    {gu:"સ",roman:"sa",ex:{en:"sun"}},{gu:"હ",roman:"ha",ex:{en:"hat"}},
-    {gu:"ૹ",roman:"za",hint:"a modern letter for the 'z' sound in borrowed words",ex:{en:"zebra"}}] },
+    {gu:"સ",roman:"sa",ex:{en:"sun"}},{gu:"હ",roman:"ha",ex:{en:"hat"}}] },
 ];
 const CONJUNCTS = [
   { gu:"ક્ષ", roman:"kṣa", hint:"a blend of ક + ષ, as in પક્ષી (bird)" },
@@ -1771,6 +1771,16 @@ const CONJUNCTS = [
   { gu:"પ્ર", roman:"pra", hint:"a blend of પ + ર, as in પ્રેમ (love)" },
   { gu:"સ્ત", roman:"sta", hint:"a blend of સ + ત, as in નમસ્તે (hello)" },
   { gu:"ન્ન", roman:"nna", hint:"a doubled ન, as in અન્ન (grain)" },
+];
+const RARE_CONS = [
+  { gu:"ફ઼", roman:"fa", hint:"the 'f' sound, in borrowed words", ex:{en:"far"} },
+  { gu:"જ઼", roman:"za", hint:"the 'z' sound, in borrowed words", ex:{en:"zebra"} },
+  { gu:"ૹ", roman:"zha", hint:"like the 's' in 'vision'", ex:{gu:"વિૹન", roman:"vizhan"} },
+  { gu:"ખ઼", roman:"kha", hint:"a raspy kh from Perso-Arabic (خ)", ex:{gu:"ખ઼રાબ", roman:"kharaab"} },
+  { gu:"ગ઼", roman:"gha", hint:"a throaty gh from Perso-Arabic (غ)", ex:{gu:"ગ઼ઝલ", roman:"ghazal"} },
+  { gu:"ક઼", roman:"qa", hint:"a deep 'q' from Perso-Arabic (ق)", ex:{gu:"ક઼લમ", roman:"qalam"} },
+  { gu:"ચ઼", roman:"tsa", hint:"a hard 'ts' sound, in borrowed words", ex:{gu:"ચ઼લાત", roman:"tsalaat"} },
+  { gu:"ત૽", roman:"ta", hint:"the English hard 't', as in 'top'", ex:{en:"top"} },
 ];
 const NUMERALS = [
   { gu:"૦", roman:"0" }, { gu:"૧", roman:"1" }, { gu:"૨", roman:"2" }, { gu:"૩", roman:"3" }, { gu:"૪", roman:"4" },
@@ -1794,7 +1804,7 @@ const VOWELS_FREQ = VOWELS_FREQ_ORDER.map((g) => _vowByGu[g]).filter(Boolean);
 
 const _consByGu = {};
 CONS_ROWS.forEach((r) => r.chars.forEach((c) => { _consByGu[c.gu] = c; }));
-const CONS_FREQ_ORDER = ["ક","ર","ન","ત","મ","સ","વ","લ","પ","દ","હ","ય","જ","ગ","ધ","બ","ભ","થ","શ","ચ","છ","ખ","ડ","ટ","ળ","ણ","ફ","ઘ","ઠ","ઢ","ઝ","ષ","ઞ","ઙ","ૹ"];
+const CONS_FREQ_ORDER = ["ક","ર","ન","ત","મ","સ","વ","લ","પ","દ","હ","ય","જ","ગ","ધ","બ","ભ","થ","શ","ચ","છ","ખ","ડ","ટ","ળ","ણ","ફ","ઘ","ઠ","ઢ","ઝ","ષ","ઞ","ઙ"];
 const CONS_FREQ = CONS_FREQ_ORDER.map((g) => _consByGu[g]).filter(Boolean);
 
 /* Pool for the letter-learning lesson, most common first (mix of vowels + consonants) */
@@ -1803,7 +1813,7 @@ const SCRIPT_LEARN_POOL = ["અ","આ","ક","ન","ર","ત","ઇ","મ","સ"
 
 /* Every teachable glyph, keyed by its Gujarati character, for the letter lessons. */
 const _allChars = {};
-[...VOWELS, ...CONS_ROWS.flatMap((r) => r.chars), ...NUMERALS, ...SIGNS].forEach((c) => { _allChars[c.gu] = c; });
+[...VOWELS, ...CONS_ROWS.flatMap((r) => r.chars), ...RARE_CONS, ...NUMERALS, ...SIGNS].forEach((c) => { _allChars[c.gu] = c; });
 
 /* "Learn the letters" curriculum: an ordered set of short lessons that together
    cover the whole script, sequenced along the lines of the script-methodology
@@ -3009,7 +3019,7 @@ function CourseApp({ user }) {
       </button>
     );
     return (
-      <div className="dhatu">
+      <div className="dhatu script-shell">
         <style>{CSS}</style>
         <div className="scr" style={{ paddingBottom: 150 }}>
           <TopBar title="Script" sub="The Gujarati abugida" />
@@ -3045,6 +3055,10 @@ function CourseApp({ user }) {
 
           <div className="section-h">Conjunct letters</div>
           <div className="chargrid">{CONJUNCTS.map(Tile)}</div>
+
+          <div className="section-h">Rare and borrowed consonants</div>
+          <p className="hist-intro" style={{ margin: "0 4px 10px" }}>Extra letters, usually a base consonant plus a dot (nukta), for sounds from Perso-Arabic and English loanwords.</p>
+          <div className="chargrid">{RARE_CONS.map(Tile)}</div>
 
           <div style={{ height: 10 }} />
         </div>
