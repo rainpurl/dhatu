@@ -1505,6 +1505,12 @@ const GRAMMAR = [
   { id:"g9", color:"#2F8F6B", title:"The future tense", summary:"An ending on the verb says the action will happen.",
     points:["Add a future ending to the verb stem: જવું becomes જઈશ, જશે, જઈશું.","હું જઈશ (I will go), તું જશે or તમે જશો (you will go), તે જશે (he/she will go), અમે જઈશું (we will go).","The same shape gives આવીશ (I will come) and કરીશ (I will do)."],
     examples:[{gu:"હું કાલે આવીશ",roman:"huṁ kaale aaveesh",en:"I will come tomorrow."},{gu:"આપણે મળીશું",roman:"aapaṇe maḷeeshuṁ",en:"we will meet"},{gu:"તમે શું કરશો?",roman:"tame shuṁ karsho?",en:"what will you do?"}] },
+  { id:"g10", color:"#B23A6B", title:"Commands and requests", summary:"Ask someone to do something by adding an ending to the verb stem.",
+    points:["The polite command adds -o to the stem: આપો (give), કરો (do), જાઓ (go), સાંભળો (listen).","The plain form for a close friend drops it: આપ (give), જા (go).","Soften any command with મહેરબાની કરીને (please)."],
+    examples:[{gu:"પાણી આપો",roman:"paṇi aapo",en:"Give water."},{gu:"અહીં આવો",roman:"ahiṁ aavo",en:"Come here."},{gu:"મહેરબાની કરીને બેસો",roman:"meherbaani karine beso",en:"Please sit."}] },
+  { id:"g11", color:"#6E4CA0", title:"Want, like, and need", summary:"For wanting and liking, the person takes મને, not હું.",
+    points:["જોઈએ means 'is wanted or needed': મને ચા જોઈએ (I want tea).","ગમે છે means 'is pleasing', so it is how you say you like something.","The thing is the subject; the person takes the -ને ending: મને, તમને, તેને."],
+    examples:[{gu:"મને પાણી જોઈએ",roman:"mane paṇi joie",en:"I need water."},{gu:"મને કેરી ગમે છે",roman:"mane keri game chhe",en:"I like mangoes."},{gu:"તમને શું જોઈએ?",roman:"tamne shuṁ joie?",en:"What would you like?"}] },
 ];
 
 /* ============================ CONVERSATIONS ============================ */
@@ -1562,6 +1568,45 @@ const CONVERSATIONS = [
     { who:"you", gu:"હું અમેરિકાથી છું.", roman:"huṁ amerikaathi chuṁ.", en:"I am from America." },
     { who:"them", gu:"તમે ગુજરાતી સરસ બોલો છો!", roman:"tame gujaraati saras bolo chho!", en:"You speak Gujarati well!" },
     { who:"you", gu:"આભાર! હું શીખું છું.", roman:"aabhaar! huṁ shikhuṁ chuṁ.", en:"Thank you! I am learning." },
+  ]},
+  { id:"c8", title:"Making plans", icon:"spark", turns:[
+    { who:"them", gu:"આવતીકાલે તમે શું કરશો?", roman:"aavtikaale tame shuṁ karsho?", en:"What will you do tomorrow?" },
+    { who:"you", gu:"હું બજાર જઈશ.", roman:"huṁ bajaar jaish.", en:"I will go to the market.", choices:["હું બજાર જઈશ","હું ઘરે છું","આભાર"] },
+    { who:"them", gu:"હું પણ આવું?", roman:"huṁ paṇ aavuṁ?", en:"Shall I come too?" },
+    { who:"you", gu:"હા, સાથે જઈએ.", roman:"haa, saathe jaie.", en:"Yes, let's go together." },
+    { who:"them", gu:"કેટલા વાગ્યે?", roman:"keṭlaa vaagye?", en:"At what time?" },
+    { who:"you", gu:"સવારે દસ વાગ્યે.", roman:"savaare das vaagye.", en:"At ten in the morning." },
+  ]},
+  { id:"c9", title:"Talking about work", icon:"gear", turns:[
+    { who:"them", gu:"તમે શું કામ કરો છો?", roman:"tame shuṁ kaam karo chho?", en:"What work do you do?" },
+    { who:"you", gu:"હું શિક્ષક છું.", roman:"huṁ shikshak chuṁ.", en:"I am a teacher.", choices:["હું શિક્ષક છું","હું વિદ્યાર્થી છું","આભાર"] },
+    { who:"them", gu:"ક્યાં કામ કરો છો?", roman:"kyaan kaam karo chho?", en:"Where do you work?" },
+    { who:"you", gu:"એક શાળામાં.", roman:"ek shaaḷaamaan.", en:"At a school." },
+    { who:"them", gu:"તમને ગમે છે?", roman:"tamne game chhe?", en:"Do you like it?" },
+    { who:"you", gu:"હા, બહુ ગમે છે.", roman:"haa, bahu game chhe.", en:"Yes, I like it a lot." },
+  ]},
+  { id:"c10", title:"What time is it?", icon:"clock", turns:[
+    { who:"you", gu:"અત્યારે કેટલા વાગ્યા છે?", roman:"atyaare keṭlaa vaagyaa chhe?", en:"What time is it now?" },
+    { who:"them", gu:"સાડા આઠ વાગ્યા છે.", roman:"saaḍaa aaṭh vaagyaa chhe.", en:"It is half past eight." },
+    { who:"you", gu:"ટ્રેન ક્યારે ઉપડે છે?", roman:"ṭren kyaare upaḍe chhe?", en:"When does the train leave?", choices:["ટ્રેન ક્યારે ઉપડે છે?","કેમ છો?","આભાર"] },
+    { who:"them", gu:"નવ વાગ્યે.", roman:"nav vaagye.", en:"At nine." },
+    { who:"you", gu:"તો ઉતાવળ કરીએ.", roman:"to utaavaḷ karie.", en:"Then let's hurry." },
+  ]},
+  { id:"c11", title:"On the phone", icon:"talk", turns:[
+    { who:"them", gu:"હેલો, કોણ બોલે છે?", roman:"helo, koṇ bole chhe?", en:"Hello, who is speaking?" },
+    { who:"you", gu:"હું રાજ બોલું છું.", roman:"huṁ Raaj boluṁ chuṁ.", en:"This is Raj speaking.", choices:["હું રાજ બોલું છું","આવજો","હા"] },
+    { who:"them", gu:"કેમ છો, રાજ?", roman:"kem chho, Raaj?", en:"How are you, Raj?" },
+    { who:"you", gu:"મજામાં. મીરા ઘરે છે?", roman:"majaamaan. Meeraa ghare chhe?", en:"Well. Is Meera home?" },
+    { who:"them", gu:"હા, એક મિનિટ.", roman:"haa, ek miniṭ.", en:"Yes, one minute." },
+  ]},
+  { id:"c12", title:"Buying clothes", icon:"shirt", turns:[
+    { who:"them", gu:"આવો, શું જોઈએ?", roman:"aavo, shuṁ joie?", en:"Welcome, what would you like?" },
+    { who:"you", gu:"મને એક સાડી બતાવો.", roman:"mane ek saaḍi bataavo.", en:"Show me a saree.", choices:["મને એક સાડી બતાવો","કેમ છો?","આભાર"] },
+    { who:"them", gu:"આ લાલ સાડી સરસ છે.", roman:"aa laal saaḍi saras chhe.", en:"This red saree is nice." },
+    { who:"you", gu:"કેટલાની છે?", roman:"keṭlaani chhe?", en:"How much is it?" },
+    { who:"them", gu:"પાંચસો રૂપિયા.", roman:"paanchso rupiyaa.", en:"Five hundred rupees." },
+    { who:"you", gu:"થોડું ઓછું કરો.", roman:"thoḍuṁ ochhuṁ karo.", en:"Make it a little less." },
+    { who:"them", gu:"ઠીક છે, ચારસો આપો.", roman:"ṭhik chhe, chaarso aapo.", en:"Okay, give four hundred." },
   ]},
 ];
 
@@ -1673,7 +1718,7 @@ const TOPICS = [
 const VOWELS = [
   { gu:"અ", roman:"a", hint:"a short 'uh' sound", ex:{en:"but"} },
   { gu:"આ", roman:"aa", hint:"a long 'aa'; not really in English", ex:{gu:"કાકા", roman:"kaakaa"} },
-  { gu:"ઇ", roman:"i", hint:"a short 'i'", ex:{en:"sit"} },
+  { gu:"ઇ", roman:"i", hint:"a short 'i'", ex:{en:"bit"} },
   { gu:"ઈ", roman:"ii", hint:"a long 'ee'", ex:{en:"see"} },
   { gu:"ઉ", roman:"u", hint:"a short 'u'", ex:{en:"put"} },
   { gu:"ઊ", roman:"uu", hint:"a long 'oo'", ex:{en:"boot"} },
@@ -1905,7 +1950,7 @@ function Confetti() {
   );
 }
 
-function ScriptLearn({ pool, title, note, speak, onDone, onQuit }) {
+function ScriptLearn({ pool, title, note, speak, onDone, onNext, nextTitle, onQuit }) {
   const [started, setStarted] = useState(!note);
   const N = 10; // always a 10-question lesson; cycle the glyph set if it is smaller
   // Build questions: cycle through this lesson's glyphs, alternating direction.
@@ -1967,7 +2012,12 @@ function ScriptLearn({ pool, title, note, speak, onDone, onQuit }) {
           <div className="done-medal"><Ic.trophy /></div>
           <h1>Nice work!</h1>
           <div className="ds">You got {correct} of {questions.length} right.</div>
-          <button className="btn primary" style={{ maxWidth: 320 }} onClick={() => onDone(correct)}>Back to the lessons</button>
+          {onNext && (
+            <button className="btn primary" style={{ maxWidth: 320 }} onClick={() => onNext(correct)}>
+              {nextTitle ? `Continue: ${nextTitle}` : "Continue to next lesson"}
+            </button>
+          )}
+          <button className={"btn " + (onNext ? "ghost" : "primary")} style={{ maxWidth: 320, marginTop: onNext ? 10 : 0 }} onClick={() => onDone(correct)}>Back to the lessons</button>
         </div>
       </div>
     );
@@ -2900,17 +2950,23 @@ function CourseApp({ user }) {
 
   if (screen === "scriptLearn") {
     const lesson = SCRIPT_LESSONS_RESOLVED.find((l) => l.id === selScriptLesson) || SCRIPT_LESSONS_RESOLVED[0];
+    const curPos = SCRIPT_LESSON_ORDER.indexOf(lesson.id);
+    const nextId = curPos >= 0 && curPos + 1 < SCRIPT_LESSON_ORDER.length ? SCRIPT_LESSON_ORDER[curPos + 1] : null;
+    const nextLesson = nextId ? SCRIPT_LESSONS_RESOLVED.find((l) => l.id === nextId) : null;
+    const finish = (earned) => {
+      if (earned > 0) setKaudi((k) => k + earned);
+      setScriptDone((d) => (d.includes(lesson.id) ? d : [...d, lesson.id]));
+    };
     return (
       <ScriptLearn
+        key={lesson.id}
         pool={lesson.chars}
         title={lesson.title}
         note={lesson.note}
+        nextTitle={nextLesson ? nextLesson.title : null}
         speak={(t) => speakGu(t)}
-        onDone={(earned) => {
-          if (earned > 0) setKaudi((k) => k + earned);
-          setScriptDone((d) => (d.includes(lesson.id) ? d : [...d, lesson.id]));
-          setScreen("scriptLessons");
-        }}
+        onDone={(earned) => { finish(earned); setScreen("scriptLessons"); }}
+        onNext={nextLesson ? (earned) => { finish(earned); stopSpeak(); setSelScriptLesson(nextId); setScreen("scriptLearn"); } : null}
         onQuit={() => { stopSpeak(); setScreen("scriptLessons"); }}
       />
     );
