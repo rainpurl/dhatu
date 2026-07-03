@@ -1688,6 +1688,13 @@ const CONVERSATIONS = [
     { who:"them", gu:"ઠીક છે, એંસી.", roman:"ṭhik chhe, eṁsi.", en:"Okay, eighty." },
     { who:"you", gu:"ચાલો, જઈએ.", roman:"chaalo, jaie.", en:"Alright, let's go." },
   ]},
+  { id:"c19", title:"Talking about the weather", icon:"chat", turns:[
+    { who:"them", gu:"આજે બહુ ગરમી છે.", roman:"aaje bahu garmi chhe.", en:"It is very hot today." },
+    { who:"you", gu:"હા, પાણી પીઓ.", roman:"haa, paṇi pio.", en:"Yes, drink water.", choices:["હા, પાણી પીઓ","આભાર","ના"] },
+    { who:"them", gu:"ચોમાસું ક્યારે આવશે?", roman:"chomaasuṁ kyaare aavshe?", en:"When will the monsoon come?" },
+    { who:"you", gu:"જૂનમાં, કદાચ.", roman:"joonmaan, kadaach.", en:"In June, maybe." },
+    { who:"them", gu:"વરસાદ સારો પડે તો સારું.", roman:"varsaad saaro paḍe to saaruṁ.", en:"It would be good if it rains well." },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
@@ -5061,6 +5068,22 @@ TOPICS.push(
     { gu:"ચૂકવવું", r:"chookavvuṁ", en:"to pay" },
     { gu:"બચત", r:"bachat", en:"savings" },
     { gu:"ઉધાર", r:"udhaar", en:"credit / loan" },
+  ]}
+);
+
+/* ============================ VOCAB: describing people (added) ============================ */
+TOPICS.push(
+  { id:"people", title:"Describing people", icon:"profile", words:[
+    { gu:"હોશિયાર", r:"hoshiyaar", en:"clever" },
+    { gu:"બહાદુર", r:"bahaadur", en:"brave" },
+    { gu:"મજબૂત", r:"majboot", en:"strong" },
+    { gu:"શાંત", r:"shaant", en:"calm" },
+    { gu:"મહેનતુ", r:"mahenatu", en:"hardworking" },
+    { gu:"દયાળુ", r:"dayaaḷu", en:"kind" },
+    { gu:"રમૂજી", r:"ramooji", en:"funny" },
+    { gu:"શરમાળ", r:"sharmaaḷ", en:"shy" },
+    { gu:"આળસુ", r:"aaḷasu", en:"lazy" },
+    { gu:"પ્રખ્યાત", r:"prakhyaat", en:"famous" },
   ]}
 );
 
