@@ -703,6 +703,9 @@ const CSS = `
 .hd-hero .yr{font-size:12px;font-weight:700;letter-spacing:.3px;opacity:.9;margin-top:3px}
 .hd-hero h2{margin:0;font-size:22px;font-weight:800;letter-spacing:-.3px}
 .body p{font-size:15px;line-height:1.6;color:#402f37;margin:0 0 12px}
+.bodyfig{margin:4px 0 16px}
+.bodyfig img{width:100%;border-radius:16px;display:block;box-shadow:var(--bevel-raise);background:var(--line)}
+.bodyfig figcaption{font-size:12.5px;color:var(--muted);font-weight:600;line-height:1.4;margin-top:7px;padding:0 2px}
 .listenrow{display:flex;gap:9px;margin:2px 0 12px;flex-wrap:wrap}
 .listenbtn{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;
   padding:9px 14px;border-radius:999px;border:none;color:var(--brand);background:var(--brand-soft);
@@ -1503,6 +1506,18 @@ function SafeImg({ src, alt, className }) {
   return <img src={src} alt={alt} className={className} onError={() => setOk(false)} />;
 }
 
+// Inline body figure that removes itself entirely if the image fails to load.
+function BodyFig({ src, cap }) {
+  const [ok, setOk] = useState(true);
+  if (!src || !ok) return null;
+  return (
+    <figure className="bodyfig">
+      <img src={src} alt={cap || ""} loading="lazy" onError={() => setOk(false)} />
+      {cap && <figcaption>{cap}</figcaption>}
+    </figure>
+  );
+}
+
 /* ============================ MAIN APP ============================ */
 /* persistence: real browser localStorage (works on the live site, unlike the in-chat sandbox) */
 function useLocalState(key, initial) {
@@ -2249,7 +2264,14 @@ function CourseApp({ user }) {
               <div className="gu-caption gu">{era.guSummary}</div>
             )}
             <div className="body">
-              {era.body.map((p, i) => <p key={i}>{p}</p>)}
+              {era.body.map((p, i) => (
+                <React.Fragment key={i}>
+                  <p>{p}</p>
+                  {(era.figures || []).filter((f) => f.after === i).map((f, j) => (
+                    <BodyFig key={"fig" + i + "-" + j} src={f.src} cap={f.cap} />
+                  ))}
+                </React.Fragment>
+              ))}
             </div>
             {era.site && (
               <div className="sitebox">
@@ -3059,6 +3081,7 @@ const ERA_GU_SUMMARY = {
 ERAS.push(
   { id:"indus", category:"ancient", yr:"c. 3300 - 1500 BCE", title:"The Indus cities", emo:"🏺",
     img: FP + "Dholavira%20gujarat.jpg?width=1000",
+    figures:[{ src: FP + "Lothal_Dockyard.jpg?width=1000", cap:"The excavated dockyard at Lothal, near the Gulf of Khambhat." }],
     blurb:"Some of the world's earliest planned cities stood in what is now Gujarat, complete with reservoirs and a signboard in a script no one has fully deciphered.",
     body:[
       "Long before there was a Gujarat, this land held major cities of the Indus Valley, or Harappan, civilization. Dholavira, on a dry island in the Rann of Kutch, was occupied from roughly 3300 BCE and built almost entirely of stone, unlike the brick cities of Harappa and Mohenjo-daro further north. It had a fortified castle, a middle town, a lower town, and a cemetery, all laid out with a precision that suggests careful planning rather than organic growth.",
@@ -3071,6 +3094,7 @@ ERAS.push(
 
   { id:"maurya", category:"ancient", yr:"c. 250 BCE - 450 CE", title:"Ashoka's edicts at Girnar", emo:"🪨",
     img: FP + "Ashoka%20Rock%20Edict%20at%20Junagadh.jpg?width=1000",
+    figures:[{ src: FP + "Uparkot%20fort%20of%20Junagadh.jpg?width=1000", cap:"Uparkot fort at Junagadh, below Girnar hill where the edicts are carved." }],
     blurb:"A single boulder near Junagadh carries messages from three different rulers, carved seven centuries apart.",
     body:[
       "By the 3rd century BCE the region had come under the Mauryan empire, then at its height under the emperor Ashoka. Near Junagadh, at the foot of the sacred hill of Girnar, Ashoka had fourteen edicts carved into a large granite boulder. Written in the Brahmi script and Prakrit language, they are among the earliest surviving examples of writing commissioned by a ruler in the subcontinent for public reading rather than religious ritual.",
@@ -3082,6 +3106,7 @@ ERAS.push(
 
   { id:"vallabhi", category:"ancient", yr:"c. 470 - 780 CE", title:"Vallabhi's university", emo:"📜",
     img: FP + "Five%20Bronzes%20Valabhipur.jpg?width=1000",
+    figures:[{ src: FP + "7th-century%20Khimeshwar%20Mahadev%20Temple%2C%20Kuchadi%20Porbandar%20Gujarat%20159.jpg?width=1000", cap:"A 7th-century temple in Saurashtra, from the Maitraka period of Vallabhi." }],
     blurb:"A coastal kingdom in Saurashtra ran a university that travelers compared to the great Buddhist center of Nalanda.",
     body:[
       "After the Mauryas and the Western Kshatrapas, a Gupta-linked dynasty called the Maitrakas rose to power in Saurashtra and ruled from the city of Vallabhi for roughly three centuries. Vallabhi grew into a wealthy port and administrative center, and Maitraka land grants, recorded on copper plates, are one of the main sources historians use to reconstruct the period's administration, taxation, and religious patronage.",
@@ -3095,6 +3120,7 @@ ERAS.push(
 ERAS.push(
   { id:"solanki", category:"kingdoms", yr:"c. 940 - 1300 CE", title:"The Solanki age", emo:"🛕",
     img: FP + "Rani%20ki%20vav%2002.jpg?width=1000",
+    figures:[{ src: FP + "Sun%20Temple%2C%20Modhera%2008.jpg?width=1000", cap:"The Sun Temple at Modhera, built under the Solanki kings." }],
     blurb:"The Chaulukya, or Solanki, kings ruled from Patan and left behind an inverted temple built entirely underground.",
     body:[
       "From the 10th century, a dynasty usually called the Chaulukyas, or Solankis, ruled much of present-day Gujarat from their capital at Patan (also called Anhilwara). Their reign is often treated by historians as the period when Gujarat first began to take shape as a recognizable political and cultural region, rather than simply territory passed between larger empires.",
@@ -3107,6 +3133,7 @@ ERAS.push(
 
   { id:"sultanate", category:"kingdoms", yr:"1407 - 1573", title:"The Gujarat Sultanate", emo:"🕌",
     img: FP + "Siddi%20Saiyyed%20Mosque%2C%20Ahmedabad.jpg?width=1000",
+    figures:[{ src: FP + "Sidi%20Saiyyed%20jali.jpg?width=1000", cap:"The carved stone tree lattice of the Sidi Saiyyed mosque, Ahmedabad." }],
     blurb:"An independent sultanate founded Ahmedabad, built a distinctive Indo-Islamic architecture, and made Gujarat a trading power.",
     body:[
       "Gujarat came under Delhi Sultanate rule in the late 13th century, but by 1407 a governor named Zafar Khan declared independence, founding a sultanate that would rule Gujarat for over 150 years. His grandson, Sultan Ahmad Shah, founded a new capital in 1411 on the banks of the Sabarmati river and named it Ahmedabad. The choice of site, on a bend of the river with good defensive and trade advantages, set up a city that would remain central to Gujarat's economy for the next six centuries.",
@@ -3122,6 +3149,7 @@ ERAS.push(
 ERAS.push(
   { id:"surat_trade", category:"trade", yr:"1573 - 1800s", title:"Surat, port to the world", emo:"⛵",
     img: FP + "View%20of%20Surat%20from%20across%20the%20River%20Tapti%3B%20by%20A.%20van%20der%20Heen%2C%201782.jpg?width=1000",
+    figures:[{ src: FP + "Surat%20Fort%2C%20front%20View.jpg?width=1000", cap:"Surat Castle, built in the 1540s to defend the port from raids." }],
     blurb:"Under Mughal rule, Surat became one of the busiest ports on earth and the main gateway for the Hajj pilgrimage.",
     body:[
       "After the Mughal conquest of 1573, Gujarat's ports kept growing rather than declining. Surat, on the Tapi river, became the Mughal empire's principal port on the Arabian Sea and one of the busiest harbors anywhere in the world during the 17th century. Contemporary travelers described a rough, crowded town of mud-and-bamboo housing alongside grand merchant mansions and warehouses, since wealth in Surat was concentrated in trade rather than architecture.",
@@ -3147,6 +3175,7 @@ ERAS.push(
 ERAS.push(
   { id:"colonial", category:"colonial", yr:"1800s - 1947", title:"Mills, land, and print", emo:"🧵",
     img: FP + "Calico%20Museum%20of%20Textiles%2C%20Ahmedabad%2C%201952.jpg?width=1000",
+    figures:[{ src: FP + "Calico_Mills_1.jpg?width=1000", cap:"The Calico Mills, part of Ahmedabad's cotton-mill industry." }],
     blurb:"British rule reorganized who owned land and who worked the looms, while a new Gujarati print culture created a modern reading public.",
     body:[
       "British colonial rule reached Gujarat in stages through the late 18th and 19th centuries, and it reshaped the region in two lasting ways: through the land and through the factory. New land-revenue systems changed who effectively controlled farmland and on what terms, tying cultivators to cash payments and, in bad years, to debt. Historians of rural Gujarat such as Jan Breman have documented how this pushed many agricultural laborers, often from lower-caste and Adivasi communities, into cycles of bonded and seasonal work that persisted well into the modern period.",
@@ -3159,6 +3188,7 @@ ERAS.push(
 
   { id:"gandhi", category:"colonial", yr:"1915 - 1947", title:"Satyagraha and the Salt March", emo:"🧂",
     img: FP + "Gandhi%20at%20Dandi%2C%205%20April%201930.jpg?width=1000",
+    figures:[{ src: FP + "Sabarmati%20Ashram%20-%20Ahmedabad%20-%20Gujarat%20-%20DSC001.jpg?width=1000", cap:"Sabarmati Ashram, Gandhi's base on the edge of Ahmedabad." }],
     blurb:"From an ashram on the Sabarmati, Gandhi turned Gujarat into the testing ground for a new kind of political resistance.",
     body:[
       "Mohandas Gandhi returned to the subcontinent from South Africa in 1915 and, the following year, established the Sabarmati Ashram on the edge of Ahmedabad. Gujarat, his home region, became the laboratory where he developed satyagraha, his method of mass non-violent civil disobedience, into a tool capable of confronting an empire.",
@@ -3174,6 +3204,7 @@ ERAS.push(
 ERAS.push(
   { id:"state", category:"modern", yr:"1947 - 1960", title:"A state is born", emo:"🗺️",
     img: FP + "Akshardham%20Gandhinagar%20Gujarat.jpg?width=1000",
+    figures:[{ src: FP + "Gandhinagar_Vidhansabha1.jpg?width=1000", cap:"The Gujarat legislative assembly in Gandhinagar, the purpose-built capital." }],
     blurb:"A popular movement for a Gujarati-speaking state succeeded in 1960, tying language and politics together for good.",
     body:[
       "When India became independent in 1947, there was no state called Gujarat. The Gujarati-speaking districts were part of the large, multilingual Bombay State, which also included Marathi-speaking regions and the city of Bombay itself. As India reorganized its internal boundaries in the 1950s, a question grew urgent across the country: should states be drawn around shared languages?",
