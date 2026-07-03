@@ -226,7 +226,9 @@ progress; it fully resets only accounts with no local copy.
   script-methodology research doc. Each lesson is a 10-question ScriptLearn quiz
   over its glyph group; completion is tracked in `dhatu_scriptDone` and shown as a
   progress journey. Matra and conjunct lessons use inline CV/cluster items (e.g. કા, ન્ત) with a
-  teaching-note intro step. Concrete-noun intros show a picture via `WORD_IMG`.
+  teaching-note intro step. Concrete-noun intros show a picture via `WORD_IMG` (food, animals, transport,
+  places, weather). Body-part words instead render a highlighted line-figure
+  (`BodyDiagram`, mapped in `BODY_PARTS`).
 - **Review:** spaced repetition (SRS).
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
