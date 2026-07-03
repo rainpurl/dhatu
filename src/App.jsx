@@ -868,6 +868,25 @@ const CSS = `
 @keyframes screenIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .scr, .scr.plain, .onb, .done-wrap{animation:screenIn .22s var(--ease)}
 
+/* tasteful motion pass: entrances and micro-interactions */
+@keyframes riseIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+/* staggered entrance for answer options */
+.opts .opt, .grid2 .gopt{animation:riseIn .26s var(--ease) both}
+.opts .opt:nth-child(2), .grid2 .gopt:nth-child(2){animation-delay:.05s}
+.opts .opt:nth-child(3){animation-delay:.1s}
+.opts .opt:nth-child(4){animation-delay:.15s}
+/* cards and rows ease in */
+.card, .guide, .unit-h, .era-card, .cat-card, .wordcard, .factcard, .note{animation:riseIn .28s var(--ease) both}
+/* celebratory pops */
+.done-medal{animation:popIn .45s var(--ease) both}
+.badge2{animation:popIn .32s var(--ease) both}
+.badge2:nth-child(2){animation-delay:.05s} .badge2:nth-child(3){animation-delay:.1s} .badge2:nth-child(4){animation-delay:.15s}
+.startpill{animation:popIn .3s var(--ease) both}
+/* pressable feedback for anything tappable that lacks it */
+.chip, .listenbtn, .supportlink, .sw, .cat-card, .era-card, .guide{transition:transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease)}
+.acct-pic, .brandmark, .navbrand .nbm{transition:transform var(--t-fast) var(--ease)}
+
 /* wide screens: read like a website, not a phone trapped on a monitor */
 @media (min-width:820px){
   .dhatu{max-width:1080px;padding:0 32px}
