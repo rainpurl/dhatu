@@ -898,6 +898,9 @@ const CSS = `
 .wordcard .gu{font-family:var(--fgu);font-size:20px;font-weight:700}
 .wordcard .rm{font-size:12px;color:var(--muted);font-weight:600}
 .wordcard .en{font-size:14px;margin-top:1px}
+.wordcard .altw{font-size:12px;color:var(--muted);font-weight:600;margin-top:4px;cursor:pointer;display:flex;align-items:baseline;gap:5px}
+.wordcard .altw .gu{font-size:15px;font-weight:700;color:var(--ink)}
+.wordcard .altw .rm{font-size:11.5px}
 .wordcard .sp{margin-left:auto;width:40px;height:40px;border-radius:50%;border:none;background:var(--brand-soft);
   color:var(--brand);display:grid;place-items:center;cursor:pointer;flex:none}
 .wordcard .sp:active{transform:scale(.94)}
@@ -1728,7 +1731,7 @@ const TOPICS = [
   { id:"family", title:"Family", icon:"family", note:"Gujarati kinship is specific: it marks older vs younger siblings, and whether an aunt or uncle is on your mother's or father's side.", words:[
     { gu:"માતા", r:"maataa", en:"mother" },
     { gu:"મમ્મી", r:"mammi", en:"mom (casual)" },
-    { gu:"પિતા", r:"pitaa", en:"father" },
+    { gu:"પિતા", r:"pitaa", en:"father", alt:[{gu:"બાપા", r:"baapaa"}] },
     { gu:"પપ્પા", r:"pappaa", en:"dad (casual)" },
     { gu:"મોટા ભાઈ", r:"moṭaa bhaai", en:"older brother" },
     { gu:"નાના ભાઈ", r:"naanaa bhaai", en:"younger brother" },
@@ -3307,6 +3310,11 @@ function CourseApp({ user }) {
                   <div className="gu">{w.gu}</div>
                   <div className="rm">{w.r}</div>
                   <div className="en">{w.en}</div>
+                  {w.alt && w.alt.map((a, j) => (
+                    <div key={j} className="altw" onClick={() => speakGu(a.gu, _voiceForId(topic.id))}>
+                      also <span className="gu">{a.gu}</span> <span className="rm">{a.r}</span>
+                    </div>
+                  ))}
                 </div>
                 <button className="sp" onClick={() => speakGu(w.gu, _voiceForId(topic.id))}><Ic.play width={16} height={16} /></button>
               </div>
@@ -4803,7 +4811,7 @@ TOPICS.push(
   { id:"greetings", title:"Greetings and polite words", icon:"hand", words:[
     { gu:"નમસ્તે", r:"namaste", en:"hello" },
     { gu:"આવજો", r:"aavjo", en:"goodbye" },
-    { gu:"આભાર", r:"aabhaar", en:"thank you" },
+    { gu:"આભાર", r:"aabhaar", en:"thank you", alt:[{gu:"ધન્યવાદ", r:"dhanyavaad"}] },
     { gu:"માફ કરો", r:"maaf karo", en:"sorry / excuse me" },
     { gu:"મહેરબાની કરીને", r:"meherbaani karine", en:"please" },
     { gu:"કેમ છો?", r:"kem chho?", en:"how are you?" },
@@ -4888,7 +4896,6 @@ TOPICS.push(
     { gu:"રસ્તો", r:"rasto", en:"road" },
     { gu:"મંદિર", r:"mandir", en:"temple" },
     { gu:"દવાખાનું", r:"davaakhaanuṁ", en:"hospital" },
-    { gu:"શાળા", r:"shaaḷaa", en:"school" },
     { gu:"સ્ટેશન", r:"sṭeshan", en:"station" },
     { gu:"બજાર", r:"bajaar", en:"market" },
   ]},
@@ -4997,7 +5004,7 @@ TOPICS.push(
   { id:"diet", title:"Diet and vegetarianism", icon:"bowl", note:"'Pure veg' in Gujarat usually means no onion or garlic; Jain food also avoids root vegetables. Not all Gujaratis are vegetarian.", words:[
     { gu:"શાકાહારી", r:"shaakaahaari", en:"vegetarian" },
     { gu:"માંસાહારી", r:"maansaahaari", en:"non-vegetarian" },
-    { gu:"ડુંગળી", r:"ḍungaḷi", en:"onion" },
+    { gu:"ડુંગળી", r:"ḍungaḷi", en:"onion", alt:[{gu:"કાંદા", r:"kaandaa"}] },
     { gu:"લસણ", r:"lasaṇ", en:"garlic" },
     { gu:"કંદમૂળ", r:"kandmooḷ", en:"root vegetables" },
     { gu:"ઉપવાસ", r:"upvaas", en:"fasting" },
@@ -5032,7 +5039,7 @@ TOPICS.push(
     { gu:"દ્રાક્ષ", r:"draaksh", en:"grapes" },
     { gu:"જામફળ", r:"jaamphaḷ", en:"guava" },
     { gu:"દાડમ", r:"daaḍam", en:"pomegranate" },
-    { gu:"બટાકા", r:"baṭaakaa", en:"potato" },
+    { gu:"બટાકા", r:"baṭaakaa", en:"potato", alt:[{gu:"બટાટા", r:"baṭaaṭaa"}] },
     { gu:"ટમેટું", r:"ṭameṭuṁ", en:"tomato" },
     { gu:"રીંગણ", r:"reengaṇ", en:"eggplant" },
     { gu:"ભીંડો", r:"bheenḍo", en:"okra" },
@@ -5067,8 +5074,8 @@ TOPICS.push(
     { gu:"ખેતર", r:"khetar", en:"field" },
   ]},
   { id:"school", title:"At school", icon:"book", words:[
-    { gu:"નિશાળ", r:"nishaaḷ", en:"school" },
-    { gu:"ચોપડી", r:"chopḍi", en:"book" },
+    { gu:"નિશાળ", r:"nishaaḷ", en:"school", alt:[{gu:"શાળા", r:"shaaḷaa"}] },
+    { gu:"ચોપડી", r:"chopḍi", en:"book", alt:[{gu:"પુસ્તક", r:"pustak"}] },
     { gu:"પેન", r:"pen", en:"pen" },
     { gu:"પેન્સિલ", r:"pensil", en:"pencil" },
     { gu:"કાગળ", r:"kaagaḷ", en:"paper" },
