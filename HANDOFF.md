@@ -225,9 +225,12 @@ message. This is a platform limit, intentionally left as graceful fallback.
   around, checkpoint); Unit 3 (grammar: word order, postpositions, gender, present
   tense, action words/verbs); Unit 4 (past: went/came, -e marker, time and days,
   checkpoint); Unit 5 (polite you, everyday phrases, casual talk/slang, at the
-  market, checkpoint); Unit 6 (modern culture). The colors/animals/transport/slang/
-  numbers-6-10/verbs/time/market lessons were built from existing vocab topics, so
-  their words already have audio.
+  market, checkpoint); Unit 6 (modern culture: festivals/Garba, textiles/fashion,
+  food, cinema, checkpoint). Unit 1 also has a greetings/courtesy lesson. The
+  colors/animals/transport/slang/numbers-6-10/verbs/time/market/greetings lessons
+  were built from existing vocab topics, so their words already have audio. The
+  Unit 6 festivals lesson was extended with દિવાળી (Diwali); festivals and
+  textiles lessons gained extra listen/build practice.
 - **Grammar (8):** word order, postpositions, gender/my, present tense, past/-e
   marker, polite you, negation, questions.
 - **Conversations (5):** hello, tea stall, asking the way, market haggling,

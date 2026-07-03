@@ -3298,8 +3298,11 @@ Object.assign(LESSONS, {
       {gu:"નવરાત્રિ પર",roman:"navraatri par",en:"during Navratri"}] },
     { t:"intro", gu:"ઉત્તરાયણ", roman:"uttaraayan", en:"Uttarayan, the kite festival", sub:"Celebrated with kites across Gujarat in mid-January." },
     { t:"intro", gu:"મેળો", roman:"melo", en:"fair", sub:"Rann Utsav, Tarnetar, and Kavant are among Gujarat's best-known fairs." },
-    { t:"match", pairs:[{gu:"તહેવાર",en:"festival"},{gu:"નવરાત્રિ",en:"Navratri"},{gu:"ગરબા",en:"Garba dance"},{gu:"ઉત્તરાયણ",en:"kite festival"}] },
+    { t:"intro", gu:"દિવાળી", roman:"divaaḷi", en:"Diwali, the festival of lights", sub:"Marked with lamps and sweets; the Gujarati new year follows the next day." },
+    { t:"match", pairs:[{gu:"તહેવાર",en:"festival"},{gu:"નવરાત્રિ",en:"Navratri"},{gu:"ગરબા",en:"Garba dance"},{gu:"દિવાળી",en:"Diwali"}] },
     { t:"listen", say:"ગરબા", roman:"garbaa", options:["Garba, the circular dance","a kite festival","a type of food"], answer:"Garba, the circular dance" },
+    { t:"listen", say:"દિવાળી", roman:"divaaḷi", options:["Diwali","the kite festival","a fair"], answer:"Diwali" },
+    { t:"build", en:"Today is a festival.", answer:["આજે","તહેવાર","છે"], extra:["મેળો","દિવાળી"], roman:"aaje tehvaar chhe" },
     { t:"speak", gu:"હું ગરબા રમું છું", roman:"huṁ garbaa ramuṁ chuṁ", en:"I dance garba." },
   ]},
 
@@ -3318,6 +3321,9 @@ Object.assign(LESSONS, {
     { t:"intro", gu:"કેડિયું", roman:"keḍiyuṁ", en:"kediyu, a short embroidered top worn by men for Garba" },
     { t:"intro", gu:"ઓઢણી", roman:"oḍhṇi", en:"a woman's stole or shawl" },
     { t:"match", pairs:[{gu:"પટોળું",en:"Patola silk"},{gu:"બાંધણી",en:"tie-dye cloth"},{gu:"ચણિયાચોળી",en:"Garba skirt and top"},{gu:"કેડિયું",en:"men's Garba top"}] },
+    { t:"listen", say:"બાંધણી", roman:"baandhaṇi", options:["tie-dye cloth","Patola silk","a woman's stole"], answer:"tie-dye cloth" },
+    { t:"listen", say:"પટોળું", roman:"paṭoḷuṁ", options:["Patola silk","tie-dye cloth","a skirt and top"], answer:"Patola silk" },
+    { t:"build", en:"This is a Patola.", answer:["આ","પટોળું","છે"], extra:["બાંધણી","ઓઢણી"], roman:"aa paṭoḷuṁ chhe" },
     { t:"speak", gu:"આ ચણિયાચોળી સુંદર છે", roman:"aa chaṇiyaachoḷi sundar chhe", en:"This chaniya choli is beautiful." },
   ]},
 
