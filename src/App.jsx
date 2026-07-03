@@ -3225,6 +3225,7 @@ ERAS.push(
 
   { id:"adivasi_dalit", category:"modern", yr:"1900s - present", title:"Adivasi and Dalit assertion", emo:"🪧",
     img: FP + "Pithora%20wall%20painting.JPG?width=1000",
+    figures:[{ src: FP + "Sardar%20Sarovar%20Dam%202.jpg?width=1000", cap:"The Sardar Sarovar Dam on the Narmada, long contested over displacement." }],
     blurb:"The communities often left out of the mainstream story have their own long history of organizing for land, dignity, and recognition.",
     body:[
       "Gujarat's history is often told through its merchants, its rulers, and its industrialists. But the region is also home to large Adivasi (tribal) populations, concentrated in the eastern hill districts, and to Dalit communities historically excluded by caste, and both have their own long histories of assertion and organizing that any honest account has to include.",
@@ -3236,6 +3237,7 @@ ERAS.push(
 
   { id:"modern", category:"modern", yr:"1960 - present", title:"Growth and its costs", emo:"🏗️",
     img: FP + "Statue%20of%20Unity.jpg?width=1000",
+    figures:[{ src: FP + "Sabarmati%20Riverfront%20Ahmedabad.jpg?width=1000", cap:"The Sabarmati Riverfront in Ahmedabad, a marquee urban project." }],
     blurb:"Rapid industrial growth and a global diaspora, alongside hard and still-debated questions about who has benefited and who has paid.",
     body:[
       "Since 1960, Gujarat has built a national reputation for trade, manufacturing, and entrepreneurship. Its economy spans petrochemicals, pharmaceuticals, textiles, and the diamond-cutting industry of Surat, which processes a large share of the world's diamonds. One of its most celebrated successes is the Amul dairy cooperative model, based in Anand, which organized millions of small milk producers into a collective that reshaped rural incomes and became a template studied worldwide.",
