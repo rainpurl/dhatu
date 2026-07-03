@@ -1426,8 +1426,8 @@ const LESSON_ICON = {
   u4l1:"steps", u4l2:"write", u4l3:"clock",
   u5l1:"hand", u5l2:"chats", u5l3:"spark", u5l4:"tag",
   u6l1:"diya", u6l4:"film",
-  u7l1:"palette", u7l2:"link", u7l3:"shirt", u7l4:"book",
-  u8l1:"bowl", u8l2:"cup", u8l3:"bowl", u8l4:"book",
+  u7l1:"palette", u7l2:"link", u7l3:"shirt", u7l4:"book", u7l5:"palette", u7l6:"palette",
+  u8l1:"bowl", u8l2:"cup", u8l3:"bowl", u8l4:"book", u8l5:"cup", u8l6:"bowl", u8l7:"temple",
   u9l1:"star", u9l2:"profile", u9l3:"bulb", u9l4:"temple",
   u10l1:"numbers", u10l2:"numbers", u10l3:"numbers", u10l4:"tag",
   u11l1:"clock", u11l2:"clock", u11l3:"steps",
@@ -3467,6 +3467,44 @@ Object.assign(LESSONS, {
     { t:"listen", say:"વેપાર", roman:"vepaar", options:["trade","cotton","weaving"], answer:"trade" },
     { t:"speak", gu:"આ મારી ઓઢણી છે", roman:"aa maari oḍhṇi chhe", en:"This is my stole." },
   ]},
+  u7l5: { title:"Bandhani, the art of tie-dye", sources: SOURCES_TEXTILE, ex: [
+    { t:"note", title:"Thousands of tiny knots", body:[
+      "Bandhani is made by tying, not printing. A design is planned as a field of tiny dots, and each dot is pinched up and bound tightly with thread before the cloth is dyed.",
+      "Where the thread grips the cloth the dye cannot reach, so when the knots are untied a pattern of small undyed dots appears against the colored ground. A single fine piece can carry many thousands of knots, most often tied by women and girls over days or weeks.",
+      "The craft is centered in Kutch and around Jamnagar. The words Bandhani and Bandhej are used for the same thing."], ex:[
+      {gu:"બાંધણી",roman:"baandhaṇi",en:"tie-dyed cloth"},
+      {gu:"ગાંઠ",roman:"gaanṭh",en:"a knot"}] },
+    { t:"intro", gu:"બાંધણી", roman:"baandhaṇi", en:"Bandhani, tie-dye cloth" },
+    { t:"intro", gu:"ગાંઠ", roman:"gaanṭh", en:"a knot" },
+    { t:"intro", gu:"રંગ", roman:"rang", en:"color / dye" },
+    { t:"note", title:"Cloth for weddings and festivals", body:[
+      "Bandhani is closely tied to marriage and celebration. The gharchola, a red-and-white checked bandhani cloth often woven with gold zari, is a classic bridal textile in many Gujarati Hindu and Jain communities.",
+      "Its motifs work like a visual language: rows of dots build peacocks, flowers, dancing figures, and the circular rasamandala.",
+      "After the 1956 Kutch earthquake many dyers moved to chemical dyes; a later revival brought natural dyes back for part of the craft."], ex:[
+      {gu:"ઘરચોળું",roman:"gharcholuṁ",en:"a bridal bandhani cloth"},
+      {gu:"ઓઢણી",roman:"oḍhṇi",en:"a stole"}] },
+    { t:"match", pairs:[{gu:"બાંધણી",en:"tie-dye cloth"},{gu:"ગાંઠ",en:"a knot"},{gu:"ઘરચોળું",en:"bridal cloth"},{gu:"ઓઢણી",en:"a stole"}] },
+    { t:"listen", say:"ગાંઠ", roman:"gaanṭh", options:["a knot","a stole","dye"], answer:"a knot" },
+    { t:"speak", gu:"આ બાંધણી છે", roman:"aa baandhaṇi chhe", en:"This is bandhani." },
+  ]},
+  u7l6: { title:"Ajrakh and block printing", sources: SOURCES_TEXTILE, ex: [
+    { t:"note", title:"Printed with carved blocks", body:[
+      "Ajrakh is a resist block print, not a tie-dye. Craftspeople stamp the cloth with hand-carved wooden blocks and layer on natural dyes, building dense, symmetrical, geometric patterns in deep indigo, madder red, and black.",
+      "It takes many rounds of printing, washing, and dyeing, and it leans heavily on clean water and on natural materials like indigo and harda.",
+      "Ajrakh in Gujarat is centered in Kutch, around Dhamadka and Ajrakhpur, and is closely tied to Sindhi Muslim craft traditions, a reminder that Gujarati textiles reach well beyond any single religious community."], ex:[
+      {gu:"અજરખ",roman:"ajrakh",en:"Ajrakh print"},
+      {gu:"છાપકામ",roman:"chhaapkaam",en:"block printing"}] },
+    { t:"intro", gu:"અજરખ", roman:"ajrakh", en:"Ajrakh, a block print" },
+    { t:"intro", gu:"છાપકામ", roman:"chhaapkaam", en:"block printing" },
+    { t:"intro", gu:"ગળી", roman:"gaḷi", en:"indigo (dye)" },
+    { t:"note", title:"Craft, water, and who gets paid", body:[
+      "Because Ajrakh needs so much clean water and so many dye baths, drought and water quality directly threaten it, and dyers have had to move as rivers changed.",
+      "As with much hand craft, the people who print, dye, and wash the cloth are often paid little, while most of the final price is taken by traders and boutiques.",
+      "A GI (geographical indication) tag now protects the name Kutch Ajrakh, but a tag protects a name, not always a wage."] },
+    { t:"match", pairs:[{gu:"અજરખ",en:"Ajrakh print"},{gu:"છાપકામ",en:"block printing"},{gu:"ગળી",en:"indigo"},{gu:"બાંધણી",en:"tie-dye cloth"}] },
+    { t:"listen", say:"અજરખ", roman:"ajrakh", options:["a block print","tie-dye cloth","a knot"], answer:"a block print" },
+    { t:"speak", gu:"આ અજરખ છે", roman:"aa ajrakh chhe", en:"This is Ajrakh." },
+  ]},
   u7c: { title:"Checkpoint", check:true, sources: SOURCES_TEXTILE, ex: [
     { t:"match", pairs:[{gu:"બાંધણી",en:"tie-dye cloth"},{gu:"પટોળું",en:"Patola silk"},{gu:"ચણિયાચોળી",en:"Garba dress"},{gu:"મશરૂ",en:"cotton-silk weave"}] },
     { t:"listen", say:"પટોળું", roman:"paṭoḷuṁ", options:["Patola silk","cotton","trade"], answer:"Patola silk" },
@@ -3476,8 +3514,8 @@ Object.assign(LESSONS, {
   ]},
 });
 UNITS.push({ id:"u7", ku:"Unit 7", title:"Textiles and fashion", sub:"Bandhani, Patola, weaves, dress, and the craft economy", color:"#6E4CA0",
-  lessons:[ {id:"u7l1",label:"Cloth and craft"}, {id:"u7l2",label:"Looms and weaves"}, {id:"u7l3",label:"What people wear"}, {id:"u7l4",label:"Craft, trade, and labor"}, {id:"u7c",label:"Checkpoint",kind:"check"} ] });
-LESSON_ORDER.push("u7l1", "u7l2", "u7l3", "u7l4", "u7c");
+  lessons:[ {id:"u7l1",label:"Cloth and craft"}, {id:"u7l2",label:"Looms and weaves"}, {id:"u7l3",label:"What people wear"}, {id:"u7l4",label:"Craft, trade, and labor"}, {id:"u7l5",label:"Bandhani"}, {id:"u7l6",label:"Ajrakh and block printing"}, {id:"u7c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u7l1", "u7l2", "u7l3", "u7l4", "u7l5", "u7l6", "u7c");
 
 /* ============================ MODULE: Food and cooking ============================ */
 Object.assign(LESSONS, {
@@ -3549,6 +3587,57 @@ Object.assign(LESSONS, {
     { t:"listen", say:"ફરાળી", roman:"pharaaḷi", options:["fasting-day food","a full plate meal","trade"], answer:"fasting-day food" },
     { t:"speak", gu:"મને ઊંધિયું ભાવે છે", roman:"mane uṅdhiyuṁ bhaave chhe", en:"I like undhiyu." },
   ]},
+  u8l5: { title:"Street food", sources: SOURCES_FOOD, ex: [
+    { t:"intro", gu:"ભજિયા", roman:"bhajiyaa", en:"bhajiya, fritters" },
+    { t:"intro", gu:"પાણીપૂરી", roman:"paṇipoori", en:"pani puri" },
+    { t:"intro", gu:"ભેળ", roman:"bhel", en:"bhel, a puffed-rice snack" },
+    { t:"intro", gu:"ફાફડા", roman:"phaaphḍaa", en:"fafda, crisp chickpea strips" },
+    { t:"intro", gu:"જલેબી", roman:"jalebi", en:"jalebi, a syrupy sweet" },
+    { t:"note", title:"The city street plate", body:[
+      "Gujarat's trading cities gave it a fast, inventive street-food culture, and Surat and Ahmedabad are especially famous for it.",
+      "Farsan snacks lead the way: fafda with jalebi is a classic Sunday and festival pairing, and hot bhajiya belong to the monsoon.",
+      "Chaat like pani puri and bhel, dabeli from Kutch, and Surat's own locho and khichu round out a street plate that shifts from city to city."], ex:[
+      {gu:"ફાફડા જલેબી",roman:"phaaphḍaa jalebi",en:"fafda and jalebi"},
+      {gu:"પાણીપૂરી",roman:"paṇipoori",en:"pani puri"}] },
+    { t:"match", pairs:[{gu:"ભજિયા",en:"fritters"},{gu:"પાણીપૂરી",en:"pani puri"},{gu:"ભેળ",en:"bhel"},{gu:"ફાફડા",en:"fafda"}] },
+    { t:"listen", say:"જલેબી", roman:"jalebi", options:["a syrupy sweet","fritters","pani puri"], answer:"a syrupy sweet" },
+    { t:"speak", gu:"મને પાણીપૂરી બહુ ભાવે છે", roman:"mane paṇipoori bahu bhaave chhe", en:"I really like pani puri." },
+  ]},
+  u8l6: { title:"Vegetarian, non-veg, and 'pure veg'", sources: SOURCES_FOOD, ex: [
+    { t:"intro", gu:"શાકાહારી", roman:"shaakaahaari", en:"vegetarian" },
+    { t:"intro", gu:"માંસાહારી", roman:"maansaahaari", en:"non-vegetarian" },
+    { t:"intro", gu:"ડુંગળી", roman:"ḍungaḷi", en:"onion" },
+    { t:"intro", gu:"લસણ", roman:"lasaṇ", en:"garlic" },
+    { t:"note", title:"What 'pure veg' really means", body:[
+      "શાકાહારી means vegetarian and માંસાહારી means non-vegetarian. But in Gujarat 'pure veg' usually means something stricter: no onion (ડુંગળી), no garlic (લસણ), and no eggs.",
+      "This 'no onion, no garlic' cooking is rooted in Jain and Swaminarayan practice, where onion and garlic are avoided as foods thought to heat the body and unsettle the mind. It is now a common restaurant label and, for many, a marker of purity and status.",
+      "Jain food goes further and also avoids કંદમૂળ, root vegetables like potato and carrot, because uprooting the whole plant is seen as taking more life. The rules tighten during the festival of Paryushan."], ex:[
+      {gu:"શાકાહારી",roman:"shaakaahaari",en:"vegetarian"},
+      {gu:"કંદમૂળ",roman:"kandmooḷ",en:"root vegetables"}] },
+    { t:"intro", gu:"ઉપવાસ", roman:"upvaas", en:"fasting" },
+    { t:"note", title:"Not one Gujarati diet", body:[
+      "On fasting days people eat ફરાળી food, such as samo grain, rajgira, potato, and rock salt, in place of everyday grains.",
+      "It is important not to flatten Gujarat into a single vegetarian image. Muslim, Bohra, Parsi, coastal, and many Adivasi communities have their own food, including meat and fish.",
+      "Vegetarianism is a real and deep tradition for many Hindu and Jain families, but as a description of the whole region the 'purely vegetarian Gujarat' image is partial, and often an upper-caste one."] },
+    { t:"match", pairs:[{gu:"શાકાહારી",en:"vegetarian"},{gu:"માંસાહારી",en:"non-vegetarian"},{gu:"ડુંગળી",en:"onion"},{gu:"લસણ",en:"garlic"}] },
+    { t:"listen", say:"ઉપવાસ", roman:"upvaas", options:["fasting","onion","garlic"], answer:"fasting" },
+    { t:"speak", gu:"હું શાકાહારી છું", roman:"huṁ shaakaahaari chuṁ", en:"I am vegetarian." },
+  ]},
+  u8l7: { title:"Regional kitchens", sources: SOURCES_FOOD, ex: [
+    { t:"intro", gu:"કાઠિયાવાડી", roman:"kaaṭhiyaavaaḍi", en:"Kathiawadi (from Saurashtra)" },
+    { t:"intro", gu:"સુરતી", roman:"surti", en:"Surti (from Surat)" },
+    { t:"intro", gu:"કચ્છી", roman:"kachchhi", en:"Kutchi (from Kutch)" },
+    { t:"intro", gu:"ભોજન", roman:"bhojan", en:"food / a meal" },
+    { t:"note", title:"Many kitchens, one state", body:[
+      "There is no single Gujarati kitchen. Kathiawad, or Saurashtra, is known for bold, garlicky, chili-forward village food like sev tameta and bajra rotla.",
+      "Surat, in the south, is a rich, indulgent food city famous for undhiyu, locho, and a real sweet tooth, shaped by its long history as a trading port.",
+      "Kutch, dry and pastoral, leans on millet like bajra rotla and on dairy, while central Gujarat around Ahmedabad is the home of the classic thali."], ex:[
+      {gu:"કાઠિયાવાડી ભોજન",roman:"kaaṭhiyaavaaḍi bhojan",en:"Kathiawadi food"},
+      {gu:"સુરતી ઊંધિયું",roman:"surti uṅdhiyuṁ",en:"Surti undhiyu"}] },
+    { t:"match", pairs:[{gu:"કાઠિયાવાડી",en:"Kathiawadi"},{gu:"સુરતી",en:"Surti"},{gu:"કચ્છી",en:"Kutchi"},{gu:"ભોજન",en:"food"}] },
+    { t:"listen", say:"સુરતી", roman:"surti", options:["from Surat","from Kutch","from Saurashtra"], answer:"from Surat" },
+    { t:"speak", gu:"મને કાઠિયાવાડી ભોજન ભાવે છે", roman:"mane kaaṭhiyaavaaḍi bhojan bhaave chhe", en:"I like Kathiawadi food." },
+  ]},
   u8c: { title:"Checkpoint", check:true, sources: SOURCES_FOOD, ex: [
     { t:"match", pairs:[{gu:"થાળી",en:"full plate meal"},{gu:"ખમણ",en:"steamed gram cake"},{gu:"ખીચડી",en:"rice and lentils"},{gu:"ઊંધિયું",en:"winter vegetables"}] },
     { t:"listen", say:"કઢી", roman:"kaḍhi", options:["a yogurt curry","a crisp flatbread","cotton"], answer:"a yogurt curry" },
@@ -3558,8 +3647,8 @@ Object.assign(LESSONS, {
   ]},
 });
 UNITS.push({ id:"u8", ku:"Unit 8", title:"Food and cooking", sub:"The thali, snacks, everyday meals, and food history", color:"#B5651D",
-  lessons:[ {id:"u8l1",label:"Reading a thali"}, {id:"u8l2",label:"Snacks and farsan"}, {id:"u8l3",label:"Everyday meals"}, {id:"u8l4",label:"Food, faith, and trade"}, {id:"u8c",label:"Checkpoint",kind:"check"} ] });
-LESSON_ORDER.push("u8l1", "u8l2", "u8l3", "u8l4", "u8c");
+  lessons:[ {id:"u8l1",label:"Reading a thali"}, {id:"u8l2",label:"Snacks and farsan"}, {id:"u8l3",label:"Everyday meals"}, {id:"u8l4",label:"Food, faith, and trade"}, {id:"u8l5",label:"Street food"}, {id:"u8l6",label:"Veg and non-veg"}, {id:"u8l7",label:"Regional kitchens"}, {id:"u8c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u8l1", "u8l2", "u8l3", "u8l4", "u8l5", "u8l6", "u8l7", "u8c");
 
 /* ============================ MODULE: Describing the world ============================ */
 Object.assign(LESSONS, {
@@ -4056,6 +4145,35 @@ TOPICS.push(
     { gu:"દૂર", r:"door", en:"far" },
     { gu:"ટિકિટ", r:"ṭikiṭ", en:"ticket" },
     { gu:"મુસાફરી", r:"musaafari", en:"journey / travel" },
+  ]}
+);
+
+/* ============================ VOCAB: food and textile detail (added) ============================ */
+TOPICS.push(
+  { id:"streetfood", title:"Street food", icon:"cup", note:"The fast, inventive snack culture of Gujarat's cities, especially Surat and Ahmedabad.", words:[
+    { gu:"ભજિયા", r:"bhajiyaa", en:"fritters" },
+    { gu:"પાણીપૂરી", r:"paṇipoori", en:"pani puri" },
+    { gu:"ભેળ", r:"bhel", en:"bhel" },
+    { gu:"ફાફડા", r:"phaaphḍaa", en:"fafda" },
+    { gu:"જલેબી", r:"jalebi", en:"jalebi" },
+    { gu:"દાબેલી", r:"daabeli", en:"dabeli" },
+    { gu:"ખમણ", r:"khaman", en:"khaman" },
+  ]},
+  { id:"diet", title:"Diet and vegetarianism", icon:"bowl", note:"'Pure veg' in Gujarat usually means no onion or garlic; Jain food also avoids root vegetables. Not all Gujaratis are vegetarian.", words:[
+    { gu:"શાકાહારી", r:"shaakaahaari", en:"vegetarian" },
+    { gu:"માંસાહારી", r:"maansaahaari", en:"non-vegetarian" },
+    { gu:"ડુંગળી", r:"ḍungaḷi", en:"onion" },
+    { gu:"લસણ", r:"lasaṇ", en:"garlic" },
+    { gu:"કંદમૂળ", r:"kandmooḷ", en:"root vegetables" },
+    { gu:"ઉપવાસ", r:"upvaas", en:"fasting" },
+  ]},
+  { id:"textilecraft", title:"Textile craft", icon:"palette", note:"The making of Gujarati cloth: tie-dye, block printing, and the terms of the craft.", words:[
+    { gu:"બાંધણી", r:"baandhaṇi", en:"tie-dye cloth" },
+    { gu:"અજરખ", r:"ajrakh", en:"Ajrakh block print" },
+    { gu:"ગાંઠ", r:"gaanṭh", en:"a knot" },
+    { gu:"છાપકામ", r:"chhaapkaam", en:"block printing" },
+    { gu:"ગળી", r:"gaḷi", en:"indigo" },
+    { gu:"ઘરચોળું", r:"gharcholuṁ", en:"a bridal cloth" },
   ]}
 );
 
