@@ -225,12 +225,15 @@ message. This is a platform limit, intentionally left as graceful fallback.
   around, checkpoint); Unit 3 (grammar: word order, postpositions, gender, present
   tense, action words/verbs); Unit 4 (past: went/came, -e marker, time and days,
   checkpoint); Unit 5 (polite you, everyday phrases, casual talk/slang, at the
-  market, checkpoint); Unit 6 (modern culture: festivals/Garba, textiles/fashion,
-  food, cinema, checkpoint). Unit 1 also has a greetings/courtesy lesson. The
-  colors/animals/transport/slang/numbers-6-10/verbs/time/market/greetings lessons
-  were built from existing vocab topics, so their words already have audio. The
-  Unit 6 festivals lesson was extended with દિવાળી (Diwali); festivals and
-  textiles lessons gained extra listen/build practice.
+  market, checkpoint); Unit 6 (modern culture: festivals/Garba, cinema, checkpoint);
+  Unit 7 (Textiles and fashion: cloth/craft, looms, dress, trade/labor, checkpoint);
+  Unit 8 (Food and cooking: thali, snacks, everyday meals, food history, checkpoint).
+  Unit 1 also has a greetings/courtesy lesson. Most vocab lessons were built from
+  existing vocab topics, so those words already have audio. Textiles and food used
+  to be nested lessons inside Unit 6 (u6l2/u6l3); they were split out into the
+  dedicated Units 7 and 8 (fuller modules with analytical notes on GI, labor,
+  fermentation, ports, and regional/religious diversity). The Unit 6 festivals
+  lesson was extended with દિવાળી (Diwali).
 - **Grammar (8):** word order, postpositions, gender/my, present tense, past/-e
   marker, polite you, negation, questions.
 - **Conversations (5):** hello, tea stall, asking the way, market haggling,
@@ -246,12 +249,16 @@ message. This is a platform limit, intentionally left as graceful fallback.
 1. **Owner: finish Firebase setup** (section 4 / AUTH.md): rules, admin UID,
    pokes index, authorized domain. Social + staff features need this.
 2. **Owner: rotate the Google TTS API key.**
-2b. **Owner: run `npm run audio`** to voice a handful of new strings added with the
-   vocab lessons. Every individual vocab word already has a clip; only these short
-   ones are new: standalone `ક્યાં` and `ઘરે`, plus the speak/build sentences
-   `આઠ, નવ, દસ`, `આ લાલ છે`, `આ બિલાડી છે`, `ટ્રેન ક્યાં છે?`, `આ મારી ગાડી છે`,
-   `મને જવું છે`, `આજે સવાર છે`, `હું ગઈકાલે ઘરે ગયો`. (`આ કેટલું છે?` already has
-   audio, reused from the grammar guide.)
+2b. **Owner: run `npm run audio`** to voice the new strings added with the vocab
+   lessons and the new Textiles/Food modules. Most words already have clips; the
+   new ones are a modest set. From the earlier vocab lessons: `ક્યાં`, `ઘરે`, and
+   the sentences `આઠ, નવ, દસ`, `આ લાલ છે`, `આ બિલાડી છે`, `ટ્રેન ક્યાં છે?`,
+   `આ મારી ગાડી છે`, `મને જવું છે`, `આજે સવાર છે`, `હું ગઈકાલે ઘરે ગયો`. From
+   Units 7 and 8 (about 31 strings): dish/cloth nouns such as `કઠોળ`, `છાશ`,
+   `ખમણ`, `ઢોકળા`, `ખાખરા`, `ખીચડી`, `કઢી`, `હાંડવો`, `સામો`, `ફરાળી`, `કપાસ`,
+   `રંગ`, `વણાટ`, `મશરૂ`, `સાડી`, `વેપાર`, `ઘરચોળું`, `બંદર`, plus their speak/note
+   phrases. Until then those specific words fall back to (silent-on-desktop) browser
+   TTS; the lessons still work. `npm run audio` is idempotent and self-syncing.
 3. **Verify the vowel sounds live** (ઇ ઐ ઔ ઍ). They are IPA-specified so they are
    the target sounds, but confirm by ear; IPA can be tuned per glyph, or a native
    recording can be dropped in (playback already resolves a clip per glyph).
