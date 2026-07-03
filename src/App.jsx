@@ -1733,6 +1733,31 @@ const CONS_FREQ = CONS_FREQ_ORDER.map((g) => _consByGu[g]).filter(Boolean);
 const SCRIPT_LEARN_POOL = ["અ","આ","ક","ન","ર","ત","ઇ","મ","સ","વ","લ","પ","એ","દ","ઉ","હ","ય","જ","ગ","ઓ","ધ","બ","થ","શ","ચ","ખ","ળ","ણ","ડ","ટ"]
   .map((g) => _vowByGu[g] || _consByGu[g]).filter(Boolean);
 
+/* Every teachable glyph, keyed by its Gujarati character, for the letter lessons. */
+const _allChars = {};
+[...VOWELS, ...CONS_ROWS.flatMap((r) => r.chars), ...NUMERALS, ...SIGNS].forEach((c) => { _allChars[c.gu] = c; });
+
+/* "Learn the letters" curriculum: an ordered set of short lessons that together
+   cover the whole script, sequenced along the lines of the script-methodology
+   report (core vowels, then core consonants, then the harder classes by place of
+   articulation, then numerals and signs). Each lesson is a 10-question quiz. */
+const SCRIPT_LESSONS = [
+  { id:"sl_v1", title:"Vowels: a, aa, i, ii", glyphs:["અ","આ","ઇ","ઈ"] },
+  { id:"sl_v2", title:"Vowels: u, uu, e, o", glyphs:["ઉ","ઊ","એ","ઓ"] },
+  { id:"sl_v3", title:"More vowels: ai, au, ru, and candras", glyphs:["ઐ","ઔ","ઋ","ઍ","ઑ"] },
+  { id:"sl_c1", title:"Consonants: m, n, p, b, t", glyphs:["મ","ન","પ","બ","ત"] },
+  { id:"sl_c2", title:"Consonants: d, k, g, r, l", glyphs:["દ","ક","ગ","ર","લ"] },
+  { id:"sl_c3", title:"Consonants: v, s, h, y", glyphs:["વ","સ","હ","ય"] },
+  { id:"sl_c4", title:"Aspirates: kh, gh, th, dh, ph, bh", glyphs:["ખ","ઘ","થ","ધ","ફ","ભ"] },
+  { id:"sl_c5", title:"Palatals: ch, chh, j, jh", glyphs:["ચ","છ","જ","ઝ"] },
+  { id:"sl_c6", title:"Retroflex: ta, tha, da, dha, na", glyphs:["ટ","ઠ","ડ","ઢ","ણ"] },
+  { id:"sl_c7", title:"Sibilants and rare nasals", glyphs:["શ","ષ","ળ","ઙ","ઞ"] },
+  { id:"sl_n1", title:"Numerals: 0 to 9", glyphs:["૦","૧","૨","૩","૪","૫","૬","૭","૮","૯"] },
+  { id:"sl_s1", title:"Signs and marks", glyphs:["ં","ઁ","ઃ","્","ૐ"] },
+];
+const SCRIPT_LESSONS_RESOLVED = SCRIPT_LESSONS.map((l) => ({ ...l, chars: l.glyphs.map((g) => _allChars[g]).filter(Boolean) }));
+const SCRIPT_LESSON_ORDER = SCRIPT_LESSONS.map((l) => l.id);
+
 /* ============================ HISTORY ============================ */
 const FP = "https://commons.wikimedia.org/wiki/Special:FilePath/";
 const CATEGORIES = [
@@ -1790,13 +1815,13 @@ function Confetti() {
   );
 }
 
-function ScriptLearn({ pool, speak, onDone, onQuit }) {
-  const N = Math.min(10, pool.length);
-  // Build questions common-first: walk the pool in order
+function ScriptLearn({ pool, title, speak, onDone, onQuit }) {
+  const N = 10; // always a 10-question lesson; cycle the glyph set if it is smaller
+  // Build questions: cycle through this lesson's glyphs, alternating direction.
   const questions = React.useMemo(() => {
     const qs = [];
     for (let i = 0; i < N; i++) {
-      const answer = pool[i];
+      const answer = pool[i % pool.length];
       const askGlyph = Math.random() < 0.5; // true: show sound, pick glyph. false: show glyph, pick sound.
       const others = pool.filter((p) => p.gu !== answer.gu);
       // shuffle distractors
@@ -1849,6 +1874,7 @@ function ScriptLearn({ pool, speak, onDone, onQuit }) {
           <button className="iconbtn" onClick={onQuit}><Ic.x /></button>
           <div className="bar"><i style={{ width: `${(idx / questions.length) * 100}%` }} /></div>
         </div>
+        {title && <div style={{ textAlign: "center", fontWeight: 800, color: "var(--muted)", fontSize: 13, letterSpacing: ".2px", marginBottom: 6 }}>{title}</div>}
         <div className="q-title">{q.askGlyph ? "Which letter makes this sound?" : "What sound does this letter make?"}</div>
         <div className="playrow">
           {q.askGlyph
@@ -2023,6 +2049,8 @@ function CourseApp({ user }) {
   const [lastActive, setLastActive] = useLocalState("dhatu_lastActive", "");
   const [dayLog, setDayLog] = useLocalState("dhatu_dayLog", { date: "", count: 0 });
   const [unitOpen, setUnitOpen] = useLocalState("dhatu_unitOpen", {});
+  const [scriptDone, setScriptDone] = useLocalState("dhatu_scriptDone", []);
+  const [selScriptLesson, setSelScriptLesson] = useState(null);
   const DAILY_GOAL = 3;
 
   const [activeLesson, setActiveLesson] = useState(null);
@@ -2622,13 +2650,58 @@ function CourseApp({ user }) {
   }
 
   /* ---------------- SCRIPT ---------------- */
+  /* Menu of the letter-learning lessons, as a vertical journey with progress. */
+  if (screen === "scriptLessons") {
+    const nextId = SCRIPT_LESSON_ORDER.find((id) => !scriptDone.includes(id)) || SCRIPT_LESSON_ORDER[SCRIPT_LESSON_ORDER.length - 1];
+    const total = SCRIPT_LESSONS_RESOLVED.length;
+    const doneN = SCRIPT_LESSONS_RESOLVED.filter((l) => scriptDone.includes(l.id)).length;
+    return (
+      <div className="dhatu">
+        <style>{CSS}</style>
+        <div className="scr plain">
+          <div className="lhead">
+            <button className="iconbtn" onClick={() => setScreen("script")}><Ic.back /></button>
+            <div>
+              <h1 style={{ fontSize: 19, fontWeight: 800, margin: 0 }}>Learn the letters</h1>
+              <div style={{ fontSize: 12.5, color: "var(--muted)", fontWeight: 600 }}>{doneN} of {total} lessons</div>
+            </div>
+          </div>
+          <div className="lpath">
+            {SCRIPT_LESSONS_RESOLVED.map((l) => {
+              const done = scriptDone.includes(l.id);
+              const isRec = l.id === nextId;
+              const status = done ? "done" : isRec ? "cur" : "todo";
+              return (
+                <button key={l.id} className={"lrow " + status} onClick={() => { setSelScriptLesson(l.id); setScreen("scriptLearn"); }}>
+                  <span className="lbadge">{done ? <Ic.check /> : <Ic.script />}</span>
+                  <span className="ltext">
+                    <span className="ltitle">{l.title}</span>
+                    <span className="lstatus">{done ? "Completed" : isRec ? "Continue" : "Start"}</span>
+                  </span>
+                  <span className="lchev">{done ? <Ic.check /> : <Ic.play />}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div style={{ height: 20 }} />
+        </div>
+      </div>
+    );
+  }
+
   if (screen === "scriptLearn") {
+    const lesson = SCRIPT_LESSONS_RESOLVED.find((l) => l.id === selScriptLesson) || SCRIPT_LESSONS_RESOLVED[0];
     return (
       <ScriptLearn
-        pool={SCRIPT_LEARN_POOL}
+        pool={lesson.chars}
+        title={lesson.title}
         speak={(t) => speakGu(t)}
-        onDone={(earned) => { if (earned > 0) setKaudi((k) => k + earned); setScreen("script"); }}
-        onQuit={() => { stopSpeak(); setScreen("script"); }}
+        onDone={(earned) => {
+          if (earned > 0) setKaudi((k) => k + earned);
+          setScriptDone((d) => (d.includes(lesson.id) ? d : [...d, lesson.id]));
+          setScreen("scriptLessons");
+        }}
+        onQuit={() => { stopSpeak(); setScreen("scriptLessons"); }}
       />
     );
   }
@@ -2687,7 +2760,7 @@ function CourseApp({ user }) {
           <div style={{ height: 10 }} />
         </div>
         <div className="scriptfoot">
-          <button className="btn primary" onClick={() => setScreen("scriptLearn")}>
+          <button className="btn primary" onClick={() => setScreen("scriptLessons")}>
             <Ic.spark width={18} height={18} /> Learn the letters
           </button>
         </div>
