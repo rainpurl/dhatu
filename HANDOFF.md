@@ -185,6 +185,10 @@ Until rules/index are applied, social features fail quietly (app still works).
   hvpt = High-Variability Phonetic Training, letter, match, listen, build, fill,
   note, speak). Tapping any Gujarati word in an exercise plays its audio.
   "Snooze speaking/listening for 5 min" buttons on those exercise types.
+  Top of the tab: a **resume card** (jumps to the next recommended lesson, shows
+  overall course-completion bar), a **daily-goal strip** (3 lessons/day, tracked
+  in `dhatu_dayLog`; turns green when met), and **per-unit progress bars** in each
+  unit header (X/Y lessons, "Done" pill when complete).
 - **Script:** one scrollable page of letters (common-first); tap a letter to hear
   it and see a sound hint in a caption; "Learn the letters" quiz (ScriptLearn).
 - **Review:** spaced repetition (SRS).
