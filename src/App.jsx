@@ -1646,6 +1646,14 @@ const CONVERSATIONS = [
     { who:"them", gu:"તમે ક્યાંથી છો?", roman:"tame kyaanthi chho?", en:"Where are you from?" },
     { who:"you", gu:"હું અમેરિકાથી. હું ગુજરાતી શીખું છું.", roman:"huṁ amerikaathi. huṁ gujaraati shikhuṁ chuṁ.", en:"I am from America. I am learning Gujarati." },
   ]},
+  { id:"c16", title:"Catching up with a friend", icon:"chats", turns:[
+    { who:"them", gu:"અરે ભાઈ, શું ચાલે?", roman:"are bhaai, shu chaale?", en:"Hey bro, what's up?" },
+    { who:"you", gu:"બસ, મજામાં. તું બોલ.", roman:"bas, majaamaan. tu bol.", en:"Just chilling. You tell me.", choices:["બસ, મજામાં","આભાર","ક્યાં?"] },
+    { who:"them", gu:"કાલે ફિલ્મ જોવા જઈએ?", roman:"kaale film jovaa jaie?", en:"Shall we go watch a movie tomorrow?" },
+    { who:"you", gu:"જોરદાર! કઈ ફિલ્મ?", roman:"jordaar! kai film?", en:"Awesome! Which movie?" },
+    { who:"them", gu:"એક નવી ગુજરાતી ફિલ્મ.", roman:"ek navi gujaraati film.", en:"A new Gujarati movie." },
+    { who:"you", gu:"મસ્ત, પ્લાન પાક્કો!", roman:"mast, plaan paakko!", en:"Cool, the plan is set!" },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
@@ -4968,6 +4976,34 @@ TOPICS.push(
     { gu:"હંમેશા", r:"hammeshaa", en:"always" },
     { gu:"ક્યારેય", r:"kyaarey", en:"never" },
     { gu:"કદાચ", r:"kadaach", en:"maybe" },
+  ]}
+);
+
+/* ============================ VOCAB: technology and more verbs (added) ============================ */
+TOPICS.push(
+  { id:"tech", title:"Phones and tech", icon:"gear", words:[
+    { gu:"ફોન", r:"phon", en:"phone" },
+    { gu:"મોબાઇલ", r:"mobaail", en:"mobile phone" },
+    { gu:"કમ્પ્યુટર", r:"kampyuṭar", en:"computer" },
+    { gu:"ઇન્ટરનેટ", r:"inṭarneṭ", en:"internet" },
+    { gu:"સંદેશો", r:"sandesho", en:"message" },
+    { gu:"ફોટો", r:"phoṭo", en:"photo" },
+    { gu:"ટીવી", r:"ṭeevee", en:"television" },
+    { gu:"વીજળી", r:"veejaḷi", en:"electricity" },
+    { gu:"બેટરી", r:"beṭri", en:"battery" },
+    { gu:"ચાર્જર", r:"chaarjar", en:"charger" },
+  ]},
+  { id:"verbs2", title:"More verbs", icon:"steps", words:[
+    { gu:"આપવું", r:"aapvuṁ", en:"to give" },
+    { gu:"લેવું", r:"levuṁ", en:"to take" },
+    { gu:"બેસવું", r:"besvuṁ", en:"to sit" },
+    { gu:"ખોલવું", r:"kholvuṁ", en:"to open" },
+    { gu:"બંધ કરવું", r:"band karvuṁ", en:"to close" },
+    { gu:"રહેવું", r:"rahevuṁ", en:"to stay / live" },
+    { gu:"મળવું", r:"maḷvuṁ", en:"to meet" },
+    { gu:"પૂછવું", r:"poochhvuṁ", en:"to ask" },
+    { gu:"વેચવું", r:"vechvuṁ", en:"to sell" },
+    { gu:"કહેવું", r:"kahevuṁ", en:"to say" },
   ]}
 );
 
