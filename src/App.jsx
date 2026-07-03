@@ -1392,7 +1392,9 @@ const LESSON_ICON = {
   u3l1:"blocks", u3l2:"link", u3l3:"tag", u3l4:"clock", u3l5:"steps",
   u4l1:"steps", u4l2:"write", u4l3:"clock",
   u5l1:"hand", u5l2:"chats", u5l3:"spark", u5l4:"tag",
-  u6l1:"diya", u6l2:"shirt", u6l3:"bowl", u6l4:"film",
+  u6l1:"diya", u6l4:"film",
+  u7l1:"palette", u7l2:"link", u7l3:"shirt", u7l4:"book",
+  u8l1:"bowl", u8l2:"cup", u8l3:"bowl", u8l4:"book",
 };
 const lessonIcon = (l) => {
   if (l.kind === "check") return Ic.trophy;
@@ -3275,14 +3277,16 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
 }
 
 /* ============================ UNIT 6: MODERN CULTURE (added lesson) ============================ */
-UNITS.push({ id:"u6", ku:"Unit 6", title:"Modern Gujarati culture", sub:"Festivals, textiles, food, and popular culture", color:"#B23A6B",
-  lessons:[ {id:"u6l1",label:"Festivals and Garba"}, {id:"u6l2",label:"Textiles and fashion"}, {id:"u6l3",label:"Food beyond the thali"}, {id:"u6l4",label:"Cinema, music, comedy"}, {id:"u6c",label:"Checkpoint",kind:"check"} ] });
-LESSON_ORDER.push("u6l1", "u6l2", "u6l3", "u6l4", "u6c");
+UNITS.push({ id:"u6", ku:"Unit 6", title:"Modern Gujarati culture", sub:"Festivals, cinema, music, and popular culture", color:"#B23A6B",
+  lessons:[ {id:"u6l1",label:"Festivals and Garba"}, {id:"u6l4",label:"Cinema, music, comedy"}, {id:"u6c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u6l1", "u6l4", "u6c");
 
 const CULTURE_SOURCES_FEST = ["Gujarat Tourism, Fairs and Festivals of Gujarat", "Gujarat Tourism, Handicrafts of Gujarat"];
 const CULTURE_SOURCES_TEXT = ["Gujarat Tourism, Handicrafts of Gujarat", "Asia InCH Encyclopedia of Intangible Cultural Heritage, Tangaliya Weaving of Gujarat"];
 const CULTURE_SOURCES_FOOD = ["Gujarat Tourism, Gujarati Cuisines"];
 const CULTURE_SOURCES_FILM = ["Times of India, on the Gujarati cinema revival and the 71st National Film Awards", "Wikipedia, Hellaro"];
+const SOURCES_TEXTILE = ["The Metropolitan Museum of Art, essays on Indian block-printed and dyed cottons", "Khamir, craft documentation on Bandhani, Ajrakh, and Kala Cotton", "Patan Patola Heritage", "Geographical Indications Registry, Government of India"];
+const SOURCES_FOOD = ["UNESCO World Heritage, Lothal", "Gujarat Tourism, Gujarati Cuisines and regional zones", "Springer, traditional fermented foods of western India", "NCERT and NIOS, history of crop transfers"];
 
 Object.assign(LESSONS, {
   u6l1: { title:"Festivals and Garba", sources: CULTURE_SOURCES_FEST, ex: [
@@ -3306,45 +3310,6 @@ Object.assign(LESSONS, {
     { t:"speak", gu:"હું ગરબા રમું છું", roman:"huṁ garbaa ramuṁ chuṁ", en:"I dance garba." },
   ]},
 
-  u6l2: { title:"Textiles and fashion", sources: CULTURE_SOURCES_TEXT, ex: [
-    { t:"intro", gu:"પટોળું", roman:"paṭoḷuṁ", en:"Patola, a silk weave from Patan", sub:"A double-ikat silk textile, prized and extremely time-consuming to weave by hand." },
-    { t:"intro", gu:"બાંધણી", roman:"baandhaṇi", en:"Bandhani, tie-dye cloth", sub:"Tiny dye-resist dots, especially associated with Kutch and Jamnagar." },
-    { t:"note", title:"Craft is labor, not just heritage", body:[
-      "Textiles like Patola and Bandhani are often shown as timeless heritage, but each piece depends on skilled, often underpaid hand labor.",
-      "Ajrakh block printing, closely tied to Kutch and to Sindhi Muslim craft traditions, shows that Gujarati textile history reaches well beyond any single religious community.",
-      "Tangaliya, a dotted weaving technique from Surendranagar, is made by the Dangasia community, a Scheduled Caste group. Only a small number of traditional weavers remain today.",
-      "Much of this work, especially embroidery and mirror work from Kutch, is done by women, whose labor is often praised as tradition while the profit is captured by traders or boutiques.",
-      "Worth asking: when a craft appears in a fashion show or an online shop, who actually gets paid for it?"], ex:[
-      {gu:"પટોળું વણવું",roman:"paṭoḷuṁ vaṇvuṁ",en:"to weave a Patola"},
-      {gu:"બાંધણી ઓઢણી",roman:"baandhaṇi oḍhṇi",en:"a Bandhani stole"}] },
-    { t:"intro", gu:"ચણિયાચોળી", roman:"chaṇiyaachoḷi", en:"chaniya choli, the mirrored skirt and top worn for Garba" },
-    { t:"intro", gu:"કેડિયું", roman:"keḍiyuṁ", en:"kediyu, a short embroidered top worn by men for Garba" },
-    { t:"intro", gu:"ઓઢણી", roman:"oḍhṇi", en:"a woman's stole or shawl" },
-    { t:"match", pairs:[{gu:"પટોળું",en:"Patola silk"},{gu:"બાંધણી",en:"tie-dye cloth"},{gu:"ચણિયાચોળી",en:"Garba skirt and top"},{gu:"કેડિયું",en:"men's Garba top"}] },
-    { t:"listen", say:"બાંધણી", roman:"baandhaṇi", options:["tie-dye cloth","Patola silk","a woman's stole"], answer:"tie-dye cloth" },
-    { t:"listen", say:"પટોળું", roman:"paṭoḷuṁ", options:["Patola silk","tie-dye cloth","a skirt and top"], answer:"Patola silk" },
-    { t:"build", en:"This is a Patola.", answer:["આ","પટોળું","છે"], extra:["બાંધણી","ઓઢણી"], roman:"aa paṭoḷuṁ chhe" },
-    { t:"speak", gu:"આ ચણિયાચોળી સુંદર છે", roman:"aa chaṇiyaachoḷi sundar chhe", en:"This chaniya choli is beautiful." },
-  ]},
-
-  u6l3: { title:"Food beyond the thali", sources: CULTURE_SOURCES_FOOD, ex: [
-    { t:"intro", gu:"થાળી", roman:"thaaḷi", en:"thali, a full plate meal" },
-    { t:"intro", gu:"ફરસાણ", roman:"pharsaaṇ", en:"farsan, savory snacks" },
-    { t:"intro", gu:"ઊંધિયું", roman:"uṅdhiyuṁ", en:"undhiyu, a winter mixed-vegetable dish", sub:"Traditionally eaten in winter, especially around Uttarayan." },
-    { t:"intro", gu:"થેપલા", roman:"theplaa", en:"thepla, spiced flatbread", sub:"A common travel food, since it keeps well for days." },
-    { t:"intro", gu:"દાબેલી", roman:"daabeli", en:"dabeli, a spiced potato street-food bun" },
-    { t:"note", title:"One thali does not fit all", body:[
-      "Gujarati food is often stereotyped as only vegetarian and sweet. That describes many Hindu and Jain households, but not the whole picture.",
-      "Muslim, Bohra, Khoja, tribal, and coastal communities in Gujarat have their own non-vegetarian cooking traditions.",
-      "Food also varies sharply by region: Surti, Kathiawadi, Kutchi, and Amdavadi kitchens each have their own staples and style.",
-      "Behind all of it is mostly unpaid domestic labor, largely done by women, that rarely gets the same credit as a restaurant thali."], ex:[
-      {gu:"ઊંધિયું અને પુરી",roman:"uṅdhiyuṁ ane puri",en:"undhiyu and puri"},
-      {gu:"ફરસાણ ભાવે છે",roman:"pharsaaṇ bhaave chhe",en:"(I) like farsan"}] },
-    { t:"match", pairs:[{gu:"થાળી",en:"full plate meal"},{gu:"થેપલા",en:"travel flatbread"},{gu:"દાબેલી",en:"street-food bun"},{gu:"ઊંધિયું",en:"winter vegetable dish"}] },
-    { t:"build", en:"I eat dabeli.", answer:["હું","દાબેલી","ખાઉં","છું"], extra:["ભાત","પીઉં"], roman:"huṁ daabeli khaauṁ chuṁ" },
-    { t:"speak", gu:"મને થેપલા બહુ ભાવે છે", roman:"mane theplaa bahu bhaave chhe", en:"I like thepla a lot." },
-  ]},
-
   u6l4: { title:"Cinema, music, and comedy", sources: CULTURE_SOURCES_FILM, ex: [
     { t:"intro", gu:"ફિલ્મ", roman:"philm", en:"film" },
     { t:"intro", gu:"ગીત", roman:"geet", en:"song" },
@@ -3362,14 +3327,174 @@ Object.assign(LESSONS, {
     { t:"speak", gu:"મને ગુજરાતી ફિલ્મો ગમે છે", roman:"mane gujaraati philmo gamechhe", en:"I like Gujarati films." },
   ]},
 
-  u6c: { title:"Checkpoint", check:true, sources: [...CULTURE_SOURCES_FEST, ...CULTURE_SOURCES_FOOD, ...CULTURE_SOURCES_FILM], ex: [
-    { t:"match", pairs:[{gu:"ગરબા",en:"Garba dance"},{gu:"પટોળું",en:"Patola silk"},{gu:"થાળી",en:"full plate meal"},{gu:"ફિલ્મ",en:"film"}] },
-    { t:"listen", say:"ઉત્તરાયણ", roman:"uttaraayan", options:["kite festival","tie-dye cloth","a song"], answer:"kite festival" },
-    { t:"build", en:"I eat dabeli.", answer:["હું","દાબેલી","ખાઉં","છું"], extra:["પટોળું","પીઉં"], roman:"huṁ daabeli khaauṁ chuṁ" },
-    { t:"listen", say:"બાંધણી", roman:"baandhaṇi", options:["tie-dye cloth","a festival","a snack"], answer:"tie-dye cloth" },
-    { t:"speak", gu:"હું ગરબા રમું છું અને થેપલા ખાઉં છું", roman:"huṁ garbaa ramuṁ chuṁ ane theplaa khaauṁ chuṁ", en:"I dance garba and eat thepla." },
+  u6c: { title:"Checkpoint", check:true, sources: [...CULTURE_SOURCES_FEST, ...CULTURE_SOURCES_FILM], ex: [
+    { t:"match", pairs:[{gu:"ગરબા",en:"Garba dance"},{gu:"તહેવાર",en:"festival"},{gu:"ફિલ્મ",en:"film"},{gu:"ગીત",en:"song"}] },
+    { t:"listen", say:"ઉત્તરાયણ", roman:"uttaraayan", options:["kite festival","a film","a song"], answer:"kite festival" },
+    { t:"listen", say:"દિવાળી", roman:"divaaḷi", options:["Diwali","a fair","a song"], answer:"Diwali" },
+    { t:"listen", say:"ગુજરાતી ફિલ્મ", roman:"gujaraati philm", options:["a Gujarati film","a Gujarati song","a festival"], answer:"a Gujarati film" },
+    { t:"speak", gu:"હું ગરબા રમું છું", roman:"huṁ garbaa ramuṁ chuṁ", en:"I dance garba." },
   ]},
 });
+
+/* ============================ MODULE: Textiles and fashion ============================ */
+Object.assign(LESSONS, {
+  u7l1: { title:"Cloth and craft", sources: SOURCES_TEXTILE, ex: [
+    { t:"intro", gu:"બાંધણી", roman:"baandhaṇi", en:"Bandhani, tie-dye cloth", sub:"Tiny dots are tied off with thread before dyeing; strongly linked to Kutch and Jamnagar." },
+    { t:"intro", gu:"પટોળું", roman:"paṭoḷuṁ", en:"Patola, double-ikat silk from Patan", sub:"The yarn is dyed to a plan before weaving; a single sari can take months." },
+    { t:"intro", gu:"કપાસ", roman:"kapaas", en:"cotton" },
+    { t:"intro", gu:"રંગ", roman:"rang", en:"color / dye" },
+    { t:"note", title:"Three families of cloth", body:[
+      "Gujarati textiles are easy to confuse by eye but are made in very different ways.",
+      "Resist-dyeing: Bandhani ties off tiny dots before dyeing, while Ajrakh stamps repeating patterns with carved wooden blocks and natural indigo, red, and black.",
+      "Woven patterning: Patola dyes the threads first, then weaves so the design appears from the yarn itself.",
+      "So a Bandhani dot, an Ajrakh repeat, and a Patola motif can look similar but come from tying, printing, and weaving traditions with different histories."], ex:[
+      {gu:"બાંધણી",roman:"baandhaṇi",en:"tie-dyed cloth"},
+      {gu:"પટોળું",roman:"paṭoḷuṁ",en:"woven ikat silk"}] },
+    { t:"match", pairs:[{gu:"બાંધણી",en:"tie-dye cloth"},{gu:"પટોળું",en:"Patola silk"},{gu:"કપાસ",en:"cotton"},{gu:"રંગ",en:"color"}] },
+    { t:"listen", say:"બાંધણી", roman:"baandhaṇi", options:["tie-dye cloth","Patola silk","cotton"], answer:"tie-dye cloth" },
+    { t:"speak", gu:"આ પટોળું છે", roman:"aa paṭoḷuṁ chhe", en:"This is a Patola." },
+  ]},
+  u7l2: { title:"Looms and weaves", sources: SOURCES_TEXTILE, ex: [
+    { t:"note", title:"Made on the loom", body:[
+      "Patola is double ikat: both the lengthwise and crosswise yarns are tie-dyed to a plan before weaving, so the pattern comes from the threads. One sari can take months.",
+      "Mashru is a cotton-and-silk weave, historically made so the silk showed on the outside while soft cotton touched the skin.",
+      "Tangaliya, from Surendranagar, builds raised dots into the weave itself and is made by the Dangasia community.",
+      "Kala Cotton is a hardy, rain-fed cotton revived in Kutch as a more sustainable, locally grown cloth."], ex:[
+      {gu:"પટોળું વણવું",roman:"paṭoḷuṁ vaṇvuṁ",en:"to weave a Patola"},
+      {gu:"વણાટ",roman:"vaṇaaṭ",en:"weaving"}] },
+    { t:"intro", gu:"વણાટ", roman:"vaṇaaṭ", en:"weaving" },
+    { t:"intro", gu:"મશરૂ", roman:"mashru", en:"Mashru, a cotton-and-silk weave" },
+    { t:"match", pairs:[{gu:"પટોળું",en:"Patola silk"},{gu:"મશરૂ",en:"cotton-silk weave"},{gu:"વણાટ",en:"weaving"},{gu:"બાંધણી",en:"tie-dye cloth"}] },
+    { t:"listen", say:"મશરૂ", roman:"mashru", options:["a cotton-silk weave","tie-dye cloth","cotton"], answer:"a cotton-silk weave" },
+    { t:"speak", gu:"આ મશરૂ છે", roman:"aa mashru chhe", en:"This is Mashru." },
+  ]},
+  u7l3: { title:"What people wear", sources: SOURCES_TEXTILE, ex: [
+    { t:"intro", gu:"ચણિયાચોળી", roman:"chaṇiyaachoḷi", en:"chaniya choli, the mirrored skirt and top worn for Garba" },
+    { t:"intro", gu:"કેડિયું", roman:"keḍiyuṁ", en:"kediyu, a short embroidered top worn by men for Garba" },
+    { t:"intro", gu:"ઓઢણી", roman:"oḍhṇi", en:"a woman's stole or shawl" },
+    { t:"intro", gu:"સાડી", roman:"saaḍi", en:"sari" },
+    { t:"note", title:"Dress, festival, and marriage", body:[
+      "Garba nights fill with chaniya choli and kediyu, often in Bandhani or mirror work.",
+      "Everyday and formal dress ranges from the sari to the odhani (a stole).",
+      "A gharchola, a checked silk cloth, is a classic wedding textile given to Gujarati brides.",
+      "Clothing here marks festival, marriage, region, and community, not only fashion."], ex:[
+      {gu:"ચણિયાચોળી",roman:"chaṇiyaachoḷi",en:"Garba skirt and top"},
+      {gu:"સાડી",roman:"saaḍi",en:"sari"}] },
+    { t:"match", pairs:[{gu:"ચણિયાચોળી",en:"Garba skirt and top"},{gu:"કેડિયું",en:"men's Garba top"},{gu:"ઓઢણી",en:"a stole"},{gu:"સાડી",en:"sari"}] },
+    { t:"listen", say:"ચણિયાચોળી", roman:"chaṇiyaachoḷi", options:["Garba skirt and top","a sari","a stole"], answer:"Garba skirt and top" },
+    { t:"speak", gu:"આ સાડી સુંદર છે", roman:"aa saaḍi sundar chhe", en:"This sari is beautiful." },
+  ]},
+  u7l4: { title:"Craft, trade, and labor", sources: SOURCES_TEXTILE, ex: [
+    { t:"note", title:"Cloth that crossed oceans", body:[
+      "Long before modern globalization, Gujarati printed and dyed cottons were traded across the Indian Ocean.",
+      "Fragments of cloth made in Gujarat have been found at Fustat, in old Cairo, showing how far this trade reached.",
+      "Gujarat was both a place of making and a hub of circulation, a crossroads of the western Indian Ocean."], ex:[
+      {gu:"કપાસ",roman:"kapaas",en:"cotton"},
+      {gu:"વેપાર",roman:"vepaar",en:"trade"}] },
+    { t:"intro", gu:"વેપાર", roman:"vepaar", en:"trade / business" },
+    { t:"intro", gu:"ઘરચોળું", roman:"gharcholuṁ", en:"gharcholu, a bridal cloth" },
+    { t:"note", title:"Who makes it, who gets paid", body:[
+      "Ajrakh printing, tied to Kutch and to Sindhi Muslim craft traditions, shows Gujarati textiles reach beyond any single community.",
+      "Much of the dyeing, printing, and embroidery is hand work, often done by women for low pay, while traders and boutiques capture most of the final price.",
+      "A GI, or geographical indication, tag now protects names like Patan Patola and Kutch Bandhani, but a tag protects a name, not always a wage.",
+      "Worth asking: when a craft appears in a fashion show or an online shop, who actually gets paid for it?"] },
+    { t:"match", pairs:[{gu:"વેપાર",en:"trade"},{gu:"ઘરચોળું",en:"a bridal cloth"},{gu:"બાંધણી",en:"tie-dye cloth"},{gu:"કપાસ",en:"cotton"}] },
+    { t:"listen", say:"વેપાર", roman:"vepaar", options:["trade","cotton","weaving"], answer:"trade" },
+    { t:"speak", gu:"આ મારી ઓઢણી છે", roman:"aa maari oḍhṇi chhe", en:"This is my stole." },
+  ]},
+  u7c: { title:"Checkpoint", check:true, sources: SOURCES_TEXTILE, ex: [
+    { t:"match", pairs:[{gu:"બાંધણી",en:"tie-dye cloth"},{gu:"પટોળું",en:"Patola silk"},{gu:"ચણિયાચોળી",en:"Garba dress"},{gu:"મશરૂ",en:"cotton-silk weave"}] },
+    { t:"listen", say:"પટોળું", roman:"paṭoḷuṁ", options:["Patola silk","cotton","trade"], answer:"Patola silk" },
+    { t:"listen", say:"ચણિયાચોળી", roman:"chaṇiyaachoḷi", options:["Garba skirt and top","a sari","a stole"], answer:"Garba skirt and top" },
+    { t:"build", en:"This is a Patola.", answer:["આ","પટોળું","છે"], extra:["બાંધણી","સાડી"], roman:"aa paṭoḷuṁ chhe" },
+    { t:"speak", gu:"મને બાંધણી ગમે છે", roman:"mane baandhaṇi game chhe", en:"I like Bandhani." },
+  ]},
+});
+UNITS.push({ id:"u7", ku:"Unit 7", title:"Textiles and fashion", sub:"Bandhani, Patola, weaves, dress, and the craft economy", color:"#6E4CA0",
+  lessons:[ {id:"u7l1",label:"Cloth and craft"}, {id:"u7l2",label:"Looms and weaves"}, {id:"u7l3",label:"What people wear"}, {id:"u7l4",label:"Craft, trade, and labor"}, {id:"u7c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u7l1", "u7l2", "u7l3", "u7l4", "u7c");
+
+/* ============================ MODULE: Food and cooking ============================ */
+Object.assign(LESSONS, {
+  u8l1: { title:"Reading a thali", sources: SOURCES_FOOD, ex: [
+    { t:"intro", gu:"થાળી", roman:"thaaḷi", en:"thali, a full plate meal" },
+    { t:"intro", gu:"શાક", roman:"shaak", en:"shaak, a vegetable dish" },
+    { t:"intro", gu:"કઠોળ", roman:"kaṭhoḷ", en:"kathol, pulses and legumes" },
+    { t:"intro", gu:"છાશ", roman:"chhaash", en:"chaas, buttermilk" },
+    { t:"note", title:"A thali is a system", body:[
+      "A Gujarati thali is not one dish but a balanced set on one plate.",
+      "It usually brings together shaak (vegetables), kathol or dal (pulses), rotli or rotlo (bread), rice or khichdi, chaas (buttermilk), farsan (a snack), pickle, chutney, and something sweet.",
+      "The point is balance of taste and texture. The old line that Gujarati food is just sweet misses how salty, sour, spicy, and fresh all share the same plate."], ex:[
+      {gu:"શાક અને રોટલી",roman:"shaak ane roṭli",en:"vegetables and bread"},
+      {gu:"દાળ ભાત",roman:"daaḷ bhaat",en:"dal and rice"}] },
+    { t:"match", pairs:[{gu:"થાળી",en:"full plate meal"},{gu:"શાક",en:"vegetable dish"},{gu:"કઠોળ",en:"pulses"},{gu:"છાશ",en:"buttermilk"}] },
+    { t:"listen", say:"છાશ", roman:"chhaash", options:["buttermilk","pulses","bread"], answer:"buttermilk" },
+    { t:"speak", gu:"મને શાક ભાવે છે", roman:"mane shaak bhaave chhe", en:"I like the vegetable dish." },
+  ]},
+  u8l2: { title:"Snacks and farsan", sources: SOURCES_FOOD, ex: [
+    { t:"intro", gu:"ફરસાણ", roman:"pharsaaṇ", en:"farsan, savory snacks" },
+    { t:"intro", gu:"ખમણ", roman:"khaman", en:"khaman, a soft steamed gram-flour cake" },
+    { t:"intro", gu:"ઢોકળા", roman:"ḍhokḷaa", en:"dhokla, a steamed savory cake" },
+    { t:"intro", gu:"ખાખરા", roman:"khaakhraa", en:"khakhra, a thin crisp flatbread" },
+    { t:"intro", gu:"દાબેલી", roman:"daabeli", en:"dabeli, a spiced potato street-food bun" },
+    { t:"note", title:"Khaman, dhokla, and street food", body:[
+      "Farsan is the wide world of Gujarati snacks.",
+      "Khaman is the soft, yellow, spongy cake made from gram flour, or besan; many people call it dhokla, though dhokla traditionally uses a fermented rice-and-dal batter.",
+      "Khakhra is a thin, crisp roasted flatbread that keeps well, so it travels easily.",
+      "Dabeli, from Kutch, tucks a spiced potato filling into a bun, and snack culture like this is closely tied to Gujarat's fast-moving trading cities."], ex:[
+      {gu:"ખમણ",roman:"khaman",en:"steamed gram-flour cake"},
+      {gu:"ફરસાણ ભાવે છે",roman:"pharsaaṇ bhaave chhe",en:"(I) like farsan"}] },
+    { t:"match", pairs:[{gu:"ફરસાણ",en:"savory snacks"},{gu:"ખમણ",en:"steamed gram cake"},{gu:"ખાખરા",en:"crisp flatbread"},{gu:"દાબેલી",en:"potato bun"}] },
+    { t:"listen", say:"ખમણ", roman:"khaman", options:["a steamed gram-flour cake","a crisp flatbread","buttermilk"], answer:"a steamed gram-flour cake" },
+    { t:"build", en:"I eat dabeli.", answer:["હું","દાબેલી","ખાઉં","છું"], extra:["ખમણ","પીઉં"], roman:"huṁ daabeli khaauṁ chuṁ" },
+    { t:"speak", gu:"મને ખમણ બહુ ભાવે છે", roman:"mane khaman bahu bhaave chhe", en:"I like khaman a lot." },
+  ]},
+  u8l3: { title:"Everyday meals", sources: SOURCES_FOOD, ex: [
+    { t:"intro", gu:"ખીચડી", roman:"khichḍi", en:"khichdi, rice and lentils cooked together" },
+    { t:"intro", gu:"કઢી", roman:"kaḍhi", en:"kadhi, a yogurt and gram-flour curry" },
+    { t:"intro", gu:"હાંડવો", roman:"haanḍvo", en:"handvo, a baked savory lentil cake" },
+    { t:"intro", gu:"થેપલા", roman:"theplaa", en:"thepla, a spiced flatbread that keeps well for travel" },
+    { t:"intro", gu:"ઊંધિયું", roman:"uṅdhiyuṁ", en:"undhiyu, a winter mixed-vegetable dish" },
+    { t:"note", title:"Home cooking and fermentation", body:[
+      "Everyday Gujarati food leans on simple, nourishing pairings. Khichdi with kadhi is a classic comfort meal.",
+      "Many dishes rely on fermentation: handvo and dhokla batters are left to rise overnight, which makes them lighter and gently sour.",
+      "Undhiyu is a rich winter dish of mixed vegetables and muthiya, slow-cooked and eaten especially around Uttarayan.",
+      "Dal dhokli, wheat squares simmered in dal, is a whole meal in a single pot."], ex:[
+      {gu:"ખીચડી અને કઢી",roman:"khichḍi ane kaḍhi",en:"khichdi and kadhi"},
+      {gu:"દાળ ઢોકળી",roman:"daaḷ ḍhokḷi",en:"dal dhokli"}] },
+    { t:"match", pairs:[{gu:"ખીચડી",en:"rice and lentils"},{gu:"કઢી",en:"yogurt curry"},{gu:"હાંડવો",en:"baked lentil cake"},{gu:"ઊંધિયું",en:"winter vegetables"}] },
+    { t:"listen", say:"કઢી", roman:"kaḍhi", options:["a yogurt and gram-flour curry","rice and lentils","a crisp flatbread"], answer:"a yogurt and gram-flour curry" },
+    { t:"speak", gu:"મને ખીચડી ભાવે છે", roman:"mane khichḍi bhaave chhe", en:"I like khichdi." },
+  ]},
+  u8l4: { title:"Food, faith, and trade", sources: SOURCES_FOOD, ex: [
+    { t:"note", title:"Food from the ports", body:[
+      "Gujarat's food carries its trade history. Lothal, on the coast, was a Harappan port with a dockyard thousands of years ago.",
+      "Later, Khambhat and Surat became busy ports on the Arabian Sea.",
+      "Chili, tomato, and potato, now everywhere in Gujarati cooking, only arrived a few centuries ago through this sea trade, so even classic dishes are historically layered."], ex:[
+      {gu:"વેપાર",roman:"vepaar",en:"trade"},
+      {gu:"બંદર",roman:"bandar",en:"port"}] },
+    { t:"intro", gu:"સામો", roman:"saamo", en:"samo, a grain eaten on fasting days" },
+    { t:"intro", gu:"ફરાળી", roman:"pharaaḷi", en:"farali, food eaten on fasting days" },
+    { t:"note", title:"Not one Gujarati diet", body:[
+      "Gujarati food is often shown as only vegetarian, which fits many Hindu and Jain homes, but Muslim, Bohra, and coastal communities have their own traditions, including non-vegetarian ones.",
+      "On fasting days people eat farali food, such as samo grain, rajgira, potato, and rock salt, instead of everyday grains.",
+      "Jain cooking avoids onion, garlic, and root vegetables; Swaminarayan cooking avoids onion and garlic too.",
+      "So Gujarati food is really many food cultures, not a single menu."] },
+    { t:"match", pairs:[{gu:"સામો",en:"a fasting grain"},{gu:"ફરાળી",en:"fasting food"},{gu:"થાળી",en:"full plate meal"},{gu:"વેપાર",en:"trade"}] },
+    { t:"listen", say:"ફરાળી", roman:"pharaaḷi", options:["fasting-day food","a full plate meal","trade"], answer:"fasting-day food" },
+    { t:"speak", gu:"મને ઊંધિયું ભાવે છે", roman:"mane uṅdhiyuṁ bhaave chhe", en:"I like undhiyu." },
+  ]},
+  u8c: { title:"Checkpoint", check:true, sources: SOURCES_FOOD, ex: [
+    { t:"match", pairs:[{gu:"થાળી",en:"full plate meal"},{gu:"ખમણ",en:"steamed gram cake"},{gu:"ખીચડી",en:"rice and lentils"},{gu:"ઊંધિયું",en:"winter vegetables"}] },
+    { t:"listen", say:"કઢી", roman:"kaḍhi", options:["a yogurt curry","a crisp flatbread","cotton"], answer:"a yogurt curry" },
+    { t:"listen", say:"દાબેલી", roman:"daabeli", options:["a potato street-food bun","buttermilk","pulses"], answer:"a potato street-food bun" },
+    { t:"build", en:"I eat dabeli.", answer:["હું","દાબેલી","ખાઉં","છું"], extra:["શાક","પીઉં"], roman:"huṁ daabeli khaauṁ chuṁ" },
+    { t:"speak", gu:"મને થેપલા બહુ ભાવે છે", roman:"mane theplaa bahu bhaave chhe", en:"I like thepla a lot." },
+  ]},
+});
+UNITS.push({ id:"u8", ku:"Unit 8", title:"Food and cooking", sub:"The thali, snacks, everyday meals, and food history", color:"#B5651D",
+  lessons:[ {id:"u8l1",label:"Reading a thali"}, {id:"u8l2",label:"Snacks and farsan"}, {id:"u8l3",label:"Everyday meals"}, {id:"u8l4",label:"Food, faith, and trade"}, {id:"u8c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u8l1", "u8l2", "u8l3", "u8l4", "u8c");
 
 /* ============================ VOCAB: festivals + textiles (added) ============================ */
 TOPICS.push(
