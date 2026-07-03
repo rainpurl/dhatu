@@ -1106,6 +1106,14 @@ const CSS = `
     box-shadow:inset 1px 0 0 var(--line), -3px 0 16px rgba(70,45,40,.05)}
 }
 
+/* loading splash: a full page of bandhani pattern with a centered wordmark */
+.splash{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;overflow:hidden}
+.splash-bg{position:absolute;inset:0;width:100%;height:100%}
+.splash-panel{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:12px;
+  padding:40px 52px;border-radius:26px;background:var(--card);box-shadow:var(--bevel-raise), 0 18px 48px rgba(70,45,40,.18)}
+.splash-mark{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;color:#fff;background:var(--brand);box-shadow:var(--sink-brand)}
+.splash-word{font-size:42px;font-weight:800;letter-spacing:-1.2px;color:var(--brand);line-height:1}
+.splash-load{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.3px}
 .spacer-lg{height:8px}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
@@ -4999,13 +5007,43 @@ function GoogleG(props) {
   );
 }
 
+/* A tie-dye (bandhani) style field of dotted rosettes, tiled across the page. */
+function BandhaniField() {
+  return (
+    <svg className="splash-bg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <g id="dhatu-ros">
+          <circle cx="0" cy="0" r="2.6" fill="rgba(224,166,60,.30)" />
+          <circle cx="0" cy="-8" r="1.8" fill="rgba(138,28,59,.20)" />
+          <circle cx="0" cy="8" r="1.8" fill="rgba(138,28,59,.20)" />
+          <circle cx="-8" cy="0" r="1.8" fill="rgba(138,28,59,.20)" />
+          <circle cx="8" cy="0" r="1.8" fill="rgba(138,28,59,.20)" />
+          <circle cx="5.7" cy="5.7" r="1.1" fill="rgba(138,28,59,.16)" />
+          <circle cx="-5.7" cy="5.7" r="1.1" fill="rgba(138,28,59,.16)" />
+          <circle cx="5.7" cy="-5.7" r="1.1" fill="rgba(138,28,59,.16)" />
+          <circle cx="-5.7" cy="-5.7" r="1.1" fill="rgba(138,28,59,.16)" />
+        </g>
+        <pattern id="dhatu-bandhani" width="64" height="64" patternUnits="userSpaceOnUse">
+          <use href="#dhatu-ros" x="16" y="16" />
+          <use href="#dhatu-ros" x="48" y="48" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#dhatu-bandhani)" />
+    </svg>
+  );
+}
+
 function Splash() {
   return (
     <div className="dhatu">
       <style>{CSS}</style>
-      <div className="gate">
-        <div className="big-mark"><Ic.logo width={56} height={56} /></div>
-        <p className="tagline">Loading...</p>
+      <div className="splash">
+        <BandhaniField />
+        <div className="splash-panel">
+          <span className="splash-mark"><Ic.logo width={38} height={38} /></span>
+          <div className="splash-word">Dhātu</div>
+          <div className="splash-load">Loading...</div>
+        </div>
       </div>
     </div>
   );
