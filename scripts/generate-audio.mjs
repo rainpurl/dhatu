@@ -2,9 +2,15 @@
 /*
   generate-audio.mjs
   ------------------
-  One-time (and re-runnable) generator that turns every Gujarati phrase in the
-  app into a pre-recorded mp3, using a cloud text-to-speech service. It writes:
+  One-time (and re-runnable) generator that turns the app's spoken text into
+  pre-recorded mp3s using a cloud text-to-speech service. It covers:
 
+    - every Gujarati word, phrase, and letter (browser TTS is silent for
+      Gujarati on most desktops, so these need real audio)
+    - the English narration of each History/Culture chapter (browser TTS reads
+      these but sounds robotic; recorded audio is clear and consistent)
+
+  It writes:
     public/audio/<hash>.mp3     one file per unique phrase
     public/audio/manifest.json  a map the app reads to find each file
 
@@ -31,14 +37,19 @@
     GOOGLE_TTS_KEY Google Cloud API key           (Google only)
     AZURE_TTS_KEY  Azure Speech key               (Azure only)
     AZURE_TTS_REGION  e.g. eastus                  (Azure only)
-    GU_VOICE       voice name to use               (see defaults below)
-    GU_RATE        speaking rate                   (Google: number like 0.9,
-                                                     Azure: percent like -8%)
+    GU_VOICE       Gujarati voice name            (see defaults below)
+    EN_VOICE       English voice name             (see defaults below)
+    GU_RATE        Gujarati speaking rate         (Google: number like 0.9,
+                                                    Azure: percent like -8%)
+    EN_RATE        English speaking rate          (Google: number like 1.0,
+                                                    Azure: percent like 0%)
 
   FLAGS (command line)
+    --gu-only      only generate Gujarati audio
+    --en-only      only generate English narration
     --force        re-generate even if the mp3 already exists
-    --dry          list phrases and cost estimate, make no API calls, write nothing
-    --limit N      only process the first N phrases (handy for a quick test)
+    --dry          list what would be generated, make no API calls, write nothing
+    --limit N      only process the first N items (handy for a quick test)
 */
 
 import fs from "node:fs";
@@ -54,6 +65,8 @@ const MANIFEST = path.join(OUT_DIR, "manifest.json");
 const argv = process.argv.slice(2);
 const FORCE = argv.includes("--force");
 const DRY = argv.includes("--dry");
+const GU_ONLY = argv.includes("--gu-only");
+const EN_ONLY = argv.includes("--en-only");
 const LIMIT = (() => {
   const i = argv.indexOf("--limit");
   return i >= 0 && argv[i + 1] ? parseInt(argv[i + 1], 10) : 0;
@@ -61,19 +74,24 @@ const LIMIT = (() => {
 
 const PROVIDER = (process.env.TTS_PROVIDER || "google").toLowerCase();
 
-/* ---------------- extract Gujarati phrases from the source ---------------- */
-/* The app speaks Gujarati text that is stored as pure-Gujarati string literals
-   (word/phrase fields like gu and say, the script letters, and the per-era
-   Gujarati history summaries). We collect every double-quoted string that is
-   pure Gujarati, reading straight from the source so this list can never drift
-   from the app. Mixed English explanations (which contain Latin letters and are
-   never spoken as a whole) are skipped automatically. */
-function extractPhrases(source) {
+const DEFAULT_VOICE = {
+  google: { gu: "gu-IN-Standard-A", en: "en-US-Wavenet-F" },
+  azure: { gu: "gu-IN-DhwaniNeural", en: "en-US-AriaNeural" },
+};
+
+/* ---------------- extract spoken text from the source ---------------- */
+/* Gujarati: the app speaks pure-Gujarati string literals (word/phrase fields
+   like gu and say, the script letters, and the per-era Gujarati summaries). We
+   collect every double-quoted string that is pure Gujarati, reading straight
+   from the source so this list can never drift from the app. Mixed
+   English-and-Gujarati explanations (which contain Latin letters and are never
+   spoken as a whole) are skipped automatically. */
+function extractGujarati(source) {
   const re = /"((?:[^"\\]|\\.)*)"/g;
   const set = new Set();
   let m;
   while ((m = re.exec(source))) {
-    const text = m[1].replace(/\\"/g, '"').replace(/\\\\/g, "\\").trim();
+    const text = unescapeStr(m[1]).trim();
     if (isSpokenGujarati(text)) set.add(text);
   }
   return [...set];
@@ -89,6 +107,62 @@ function isSpokenGujarati(text) {
   return /[અ-હ૦-૯ૐ]/.test(text);
 }
 
+/* English: the History/Culture screen speaks each chapter's body joined by a
+   space (era.body.join(" ")). We read the era body arrays out of the ERAS.push
+   section so the text matches exactly what the app plays. */
+function extractEnglishNarration(source) {
+  const start = source.indexOf("ERAS.push");
+  if (start < 0) return [];
+  const region = source.slice(start);
+  const out = [];
+  const re = /\bbody:\s*\[/g;
+  let m;
+  while ((m = re.exec(region))) {
+    const arr = readArrayLiteral(region, re.lastIndex); // starts just after '['
+    if (!arr) continue;
+    const parts = [];
+    const sre = /"((?:[^"\\]|\\.)*)"/g;
+    let sm;
+    while ((sm = sre.exec(arr))) parts.push(unescapeStr(sm[1]));
+    if (parts.length) out.push(parts.join(" "));
+  }
+  return out;
+}
+
+/* Read a bracketed array literal starting just after its opening '[', returning
+   the raw inner text. String-aware so brackets inside strings do not confuse
+   the depth count. */
+function readArrayLiteral(s, from) {
+  let i = from;
+  let depth = 1;
+  let buf = "";
+  while (i < s.length && depth > 0) {
+    const ch = s[i];
+    if (ch === '"') {
+      let str = '"';
+      i++;
+      while (i < s.length) {
+        const c = s[i];
+        str += c;
+        i++;
+        if (c === "\\") { str += s[i]; i++; continue; }
+        if (c === '"') break;
+      }
+      buf += str;
+      continue;
+    }
+    if (ch === "[") depth++;
+    else if (ch === "]") { depth--; if (depth === 0) break; }
+    buf += ch;
+    i++;
+  }
+  return depth === 0 ? buf : null;
+}
+
+function unescapeStr(s) {
+  return s.replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+}
+
 /* ---------------- filename + manifest key ---------------- */
 function fileFor(text, lang) {
   const h = crypto.createHash("sha1").update(lang + "|" + text).digest("hex").slice(0, 10);
@@ -99,16 +173,24 @@ function keyFor(text, lang) {
 }
 
 /* ---------------- providers ---------------- */
-async function synth(text) {
-  if (PROVIDER === "azure") return synthAzure(text);
-  return synthGoogle(text);
+function voiceFor(lang) {
+  const env = lang === "en" ? process.env.EN_VOICE : process.env.GU_VOICE;
+  const provider = PROVIDER === "azure" ? "azure" : "google";
+  return env || DEFAULT_VOICE[provider][lang];
+}
+function langCode(lang) {
+  return lang === "en" ? "en-US" : "gu-IN";
 }
 
-async function synthGoogle(text) {
+async function synth(text, lang) {
+  if (PROVIDER === "azure") return synthAzure(text, lang);
+  return synthGoogle(text, lang);
+}
+
+async function synthGoogle(text, lang) {
   const key = process.env.GOOGLE_TTS_KEY;
   if (!key) throw new Error("Missing GOOGLE_TTS_KEY. See AUDIO.md to get a Google Cloud Text-to-Speech key.");
-  const voice = process.env.GU_VOICE || "gu-IN-Standard-A";
-  const rate = Number(process.env.GU_RATE || "0.9");
+  const rate = Number((lang === "en" ? process.env.EN_RATE : process.env.GU_RATE) || (lang === "en" ? "1.0" : "0.9"));
   const res = await fetch(
     "https://texttospeech.googleapis.com/v1/text:synthesize?key=" + encodeURIComponent(key),
     {
@@ -116,7 +198,7 @@ async function synthGoogle(text) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         input: { text },
-        voice: { languageCode: "gu-IN", name: voice },
+        voice: { languageCode: langCode(lang), name: voiceFor(lang) },
         audioConfig: { audioEncoding: "MP3", speakingRate: rate },
       }),
     }
@@ -133,14 +215,13 @@ async function synthGoogle(text) {
 function escapeXml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
-async function synthAzure(text) {
+async function synthAzure(text, lang) {
   const key = process.env.AZURE_TTS_KEY;
   const region = process.env.AZURE_TTS_REGION;
   if (!key || !region) throw new Error("Missing AZURE_TTS_KEY and/or AZURE_TTS_REGION. See AUDIO.md.");
-  const voice = process.env.GU_VOICE || "gu-IN-DhwaniNeural";
-  const rate = process.env.GU_RATE || "-8%";
+  const rate = (lang === "en" ? process.env.EN_RATE : process.env.GU_RATE) || (lang === "en" ? "0%" : "-8%");
   const ssml =
-    `<speak version="1.0" xml:lang="gu-IN"><voice name="${voice}">` +
+    `<speak version="1.0" xml:lang="${langCode(lang)}"><voice name="${voiceFor(lang)}">` +
     `<prosody rate="${rate}">${escapeXml(text)}</prosody></voice></speak>`;
   const res = await fetch(`https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
     method: "POST",
@@ -160,13 +241,13 @@ async function synthAzure(text) {
 }
 
 /* retry once on rate-limit / transient error */
-async function synthWithRetry(text) {
+async function synthWithRetry(text, lang) {
   try {
-    return await synth(text);
+    return await synth(text, lang);
   } catch (e) {
     if (/\b(429|500|502|503)\b/.test(String(e.message))) {
       await sleep(2000);
-      return await synth(text);
+      return await synth(text, lang);
     }
     throw e;
   }
@@ -181,17 +262,29 @@ async function main() {
     process.exit(1);
   }
   const source = fs.readFileSync(SRC, "utf8");
-  let phrases = extractPhrases(source);
-  const lang = "gu";
-  if (LIMIT > 0) phrases = phrases.slice(0, LIMIT);
 
-  const totalChars = phrases.reduce((n, p) => n + p.length, 0);
-  console.log(`Found ${phrases.length} unique Gujarati phrases (${totalChars} characters).`);
-  console.log(`Provider: ${PROVIDER}${DRY ? "  [dry run]" : ""}`);
+  const work = [];
+  if (!EN_ONLY) extractGujarati(source).forEach((t) => work.push({ text: t, lang: "gu" }));
+  if (!GU_ONLY) extractEnglishNarration(source).forEach((t) => work.push({ text: t, lang: "en" }));
+
+  // de-duplicate by (lang, text)
+  const seen = new Set();
+  let list = [];
+  for (const it of work) {
+    const k = keyFor(it.text, it.lang);
+    if (!seen.has(k)) { seen.add(k); list.push(it); }
+  }
+  if (LIMIT > 0) list = list.slice(0, LIMIT);
+
+  const guN = list.filter((i) => i.lang === "gu").length;
+  const enN = list.filter((i) => i.lang === "en").length;
+  const chars = list.reduce((n, i) => n + i.text.length, 0);
+  console.log(`Found ${list.length} items: ${guN} Gujarati, ${enN} English narration (${chars} characters).`);
+  console.log(`Provider: ${PROVIDER}  voices: gu=${voiceFor("gu")} en=${voiceFor("en")}${DRY ? "  [dry run]" : ""}`);
 
   if (DRY) {
-    phrases.slice(0, 40).forEach((p) => console.log("  " + p));
-    if (phrases.length > 40) console.log(`  ... and ${phrases.length - 40} more`);
+    list.slice(0, 40).forEach((i) => console.log(`  [${i.lang}] ${i.text.slice(0, 80)}${i.text.length > 80 ? "..." : ""}`));
+    if (list.length > 40) console.log(`  ... and ${list.length - 40} more`);
     console.log("\nDry run only. No files written, no API calls made.");
     return;
   }
@@ -203,35 +296,34 @@ async function main() {
   let skipped = 0;
   let failed = 0;
 
-  for (let i = 0; i < phrases.length; i++) {
-    const text = phrases[i];
-    const file = fileFor(text, lang);
+  for (const it of list) {
+    const file = fileFor(it.text, it.lang);
     const dest = path.join(OUT_DIR, file);
-    items[keyFor(text, lang)] = file;
+    items[keyFor(it.text, it.lang)] = file;
 
     if (!FORCE && fs.existsSync(dest)) {
       skipped++;
       continue;
     }
     try {
-      const buf = await synthWithRetry(text);
+      const buf = await synthWithRetry(it.text, it.lang);
       fs.writeFileSync(dest, buf);
       made++;
       process.stdout.write(`\r  generated ${made}  (skipped ${skipped}, failed ${failed})   `);
       await sleep(120); // be gentle on rate limits
     } catch (e) {
       failed++;
-      // Do not record a manifest entry for a phrase we failed to generate, so
+      // Do not record a manifest entry for something we failed to generate, so
       // the app falls back to browser TTS for it instead of a broken file.
-      delete items[keyFor(text, lang)];
-      console.error(`\n  FAILED: "${text}"  ->  ${e.message}`);
+      delete items[keyFor(it.text, it.lang)];
+      console.error(`\n  FAILED [${it.lang}]: "${it.text.slice(0, 60)}..."  ->  ${e.message}`);
     }
   }
 
   const manifest = {
     version: 1,
     provider: PROVIDER,
-    voice: process.env.GU_VOICE || (PROVIDER === "azure" ? "gu-IN-DhwaniNeural" : "gu-IN-Standard-A"),
+    voices: { gu: voiceFor("gu"), en: voiceFor("en") },
     generatedAt: new Date().toISOString(),
     count: Object.keys(items).length,
     items,
@@ -239,9 +331,9 @@ async function main() {
   fs.writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2));
 
   console.log(`\n\nDone. generated ${made}, reused ${skipped}, failed ${failed}.`);
-  console.log(`Manifest: ${path.relative(ROOT, MANIFEST)} (${manifest.count} phrases)`);
+  console.log(`Manifest: ${path.relative(ROOT, MANIFEST)} (${manifest.count} clips)`);
   console.log(`Audio:    ${path.relative(ROOT, OUT_DIR)}/`);
-  if (failed) console.log("Some phrases failed; the app will use browser speech for those.");
+  if (failed) console.log("Some items failed; the app will use browser speech for those.");
   console.log("\nNext: commit public/audio/ and push. Cloudflare will serve the files.");
 }
 

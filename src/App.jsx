@@ -2919,7 +2919,6 @@ const ERA_GU_SUMMARY = {
   adivasi_dalit: "ગુજરાતમાં આદિવાસી અને દલિત સમાજ પણ છે. તેમણે પોતાના હક અને જમીન માટે લડત આપી છે. તેમની કળા અને સંસ્કૃતિ ગુજરાતનો મહત્વનો ભાગ છે.",
   modern: "આજનું ગુજરાત ઉદ્યોગ અને વેપાર માટે જાણીતું છે. ઘણા ગુજરાતીઓ દુનિયાભરમાં વસ્યા છે. પણ વિકાસ સાથે જમીન અને ન્યાયના પ્રશ્નો પણ છે.",
 };
-ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });
 
 /* ---- Category: Ancient Foundations ---- */
 ERAS.push(
@@ -3080,3 +3079,6 @@ ERAS.push(
     site:{ name:"Statue of Unity, Kevadia", note:"At 182 meters, currently the tallest statue in the world, honoring Sardar Vallabhbhai Patel near the Narmada dam." },
     sources:["Nikita Sud, Liberalization, Hindu Nationalism and the State: A Biography of Gujarat","Sanjeevini Badigar Lokhande, Communal Violence, Forced Migration and the State: Gujarat since 2002","Wikipedia, Economy of Gujarat, Amul, and Statue of Unity"] }
 );
+
+/* attach each era's Gujarati summary (must run after all eras are pushed) */
+ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });

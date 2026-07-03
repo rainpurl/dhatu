@@ -1,15 +1,19 @@
 # Generating audio for Dhātu
 
-The app can speak every Gujarati word and phrase. By default it uses the
-browser's built-in text-to-speech, which on most desktops has **no Gujarati
-voice installed**, so Gujarati often comes out silent.
+The app speaks Gujarati words and phrases, and reads each History/Culture
+chapter aloud in English. By default it uses the browser's built-in
+text-to-speech, which on most desktops has **no Gujarati voice installed** (so
+Gujarati is often silent) and reads English in a **robotic** system voice.
 
-The fix is to generate real audio files once and ship them with the site. This
-guide walks through it. You do not need to know how the app works, just follow
-the steps.
+The fix is to generate real audio files once and ship them with the site: clear
+Gujarati, and natural English narration. This guide walks through it. You do not
+need to know how the app works, just follow the steps.
 
 Nothing here is destructive: generated audio is purely additive. Until you run
 this, the app keeps using browser speech exactly as before.
+
+By default the generator produces both Gujarati and English audio. To do just
+one, add `--gu-only` or `--en-only` to the command.
 
 ---
 
@@ -111,6 +115,13 @@ lower is slower):
 
 ```
 GOOGLE_TTS_KEY=YOUR_KEY GU_RATE=0.85 npm run audio -- --force
+```
+
+The English narration voice is set the same way with `EN_VOICE` (default
+`en-US-Wavenet-F`) and `EN_RATE` (default `1.0`). For example:
+
+```
+GOOGLE_TTS_KEY=YOUR_KEY EN_VOICE=en-US-Neural2-C npm run audio -- --force
 ```
 
 ---
