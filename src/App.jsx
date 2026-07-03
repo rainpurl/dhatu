@@ -1232,6 +1232,22 @@ const CONVERSATIONS = [
     { who:"them", gu:"બહુ દૂર નથી.", roman:"bahu door nathi.", en:"It is not very far." },
     { who:"you", gu:"આભાર!", roman:"aabhaar!", en:"Thank you!" },
   ]},
+  { id:"c4", title:"At the market", icon:"tag", turns:[
+    { who:"them", gu:"આવો! શું જોઈએ?", roman:"aavo! shuṁ joie?", en:"Welcome! What would you like?" },
+    { who:"you", gu:"કેરી કેટલાની છે?", roman:"keri keṭlaani chhe?", en:"How much are the mangoes?", choices:["કેરી કેટલાની છે?","આ શું છે?","આભાર"] },
+    { who:"them", gu:"સો રૂપિયે કિલો.", roman:"so rupiye kilo.", en:"A hundred rupees a kilo." },
+    { who:"you", gu:"થોડું સસ્તું કરો.", roman:"thoḍuṁ sastuṁ karo.", en:"Make it a little cheaper." },
+    { who:"them", gu:"એંસી આપો.", roman:"eṁsi aapo.", en:"Give eighty." },
+    { who:"you", gu:"ઠીક છે, બે કિલો આપો.", roman:"ṭhik chhe, be kilo aapo.", en:"Okay, give two kilos." },
+  ]},
+  { id:"c5", title:"Meeting the family", icon:"family", turns:[
+    { who:"them", gu:"આ મારી માતા છે.", roman:"aa maari maataa chhe.", en:"This is my mother." },
+    { who:"you", gu:"નમસ્તે! તમને મળીને આનંદ થયો.", roman:"namaste! tamne maḷine aanand thayo.", en:"Hello! Nice to meet you.", choices:["તમને મળીને આનંદ થયો","આભાર","કેમ છો?"] },
+    { who:"them", gu:"તમે ક્યાંથી છો?", roman:"tame kyaanthi chho?", en:"Where are you from?" },
+    { who:"you", gu:"હું અમેરિકાથી છું.", roman:"huṁ amerikaathi chuṁ.", en:"I am from America." },
+    { who:"them", gu:"તમે ગુજરાતી સરસ બોલો છો!", roman:"tame gujaraati saras bolo chho!", en:"You speak Gujarati well!" },
+    { who:"you", gu:"આભાર! હું શીખું છું.", roman:"aabhaar! huṁ shikhuṁ chuṁ.", en:"Thank you! I am learning." },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
