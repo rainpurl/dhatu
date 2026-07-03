@@ -753,10 +753,15 @@ const CSS = `
 .navb.on{color:var(--brand);background:var(--brand-soft);box-shadow:var(--bevel-inset)}
 
 /* script grid */
-.charinfo{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;margin:0 0 14px;box-shadow:var(--bevel-inset)}
+.charinfo{position:sticky;top:8px;z-index:6;display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:0 0 14px;box-shadow:var(--bevel-inset), 0 6px 14px rgba(70,45,40,.10)}
 .charinfo .gu{font-family:var(--fgu);font-size:34px;font-weight:700;color:var(--brand);line-height:1;flex:none}
-.charinfo .ci-rom{font-weight:800;font-size:15px;flex:none}
-.charinfo .ci-hint{font-size:13px;color:var(--muted);font-weight:600;flex:1;line-height:1.3}
+.charinfo .ci-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.charinfo .ci-rom{font-weight:800;font-size:15px}
+.charinfo .ci-hint{font-size:12.5px;color:var(--muted);font-weight:600;line-height:1.3}
+.charinfo .ci-ex{flex:none;font-size:13px;color:var(--ink);font-weight:600;background:var(--bg);border-radius:10px;padding:7px 11px;box-shadow:var(--bevel-inset)}
+.charinfo .ci-ex b{color:var(--brand)}
+.charinfo .ci-ex b.gu{font-family:var(--fgu);font-weight:700}
+.charinfo .ci-ex i{color:var(--muted);font-style:normal;font-size:12px}
 .playbtn.sm{width:34px;height:34px}
 .chargrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .chartile{border:1px solid transparent;background:var(--card);border-radius:14px;padding:12px 6px;cursor:pointer;
@@ -1601,28 +1606,42 @@ const TOPICS = [
 
 /* ============================ SCRIPT ============================ */
 const VOWELS = [
-  { gu:"અ", roman:"a", hint:"a short 'uh', like the a in 'about'" },
-  { gu:"આ", roman:"aa", hint:"a long 'aa', like the a in 'father'" },
-  { gu:"ઇ", roman:"i", hint:"a short 'i', like in 'sit'" },
-  { gu:"ઈ", roman:"ii", hint:"a long 'ee', like in 'see'" },
-  { gu:"ઉ", roman:"u", hint:"a short 'u', like in 'put'" },
-  { gu:"ઊ", roman:"uu", hint:"a long 'oo', like in 'boot'" },
-  { gu:"ઋ", roman:"ru", hint:"a vocalic r, found in Sanskrit loanwords like ઋતુ (season)" },
-  { gu:"એ", roman:"e", hint:"like the e in 'they'" },
-  { gu:"ઐ", roman:"ai", hint:"like the e in 'bed' (an 'eh' sound, not 'eye')" },
-  { gu:"ઓ", roman:"o", hint:"like the o in 'go'" },
-  { gu:"ઔ", roman:"au", hint:"like the 'aw' in 'bought'" },
-  { gu:"ઍ", roman:"ê", hint:"like the a in 'apple'" },
-  { gu:"ઑ", roman:"ô", hint:"like the o in 'hot'" },
+  { gu:"અ", roman:"a", hint:"a short 'uh' sound", ex:{en:"but"} },
+  { gu:"આ", roman:"aa", hint:"a long 'aa'; not really in English", ex:{gu:"કાકા", roman:"kaakaa"} },
+  { gu:"ઇ", roman:"i", hint:"a short 'i'", ex:{en:"sit"} },
+  { gu:"ઈ", roman:"ii", hint:"a long 'ee'", ex:{en:"see"} },
+  { gu:"ઉ", roman:"u", hint:"a short 'u'", ex:{en:"put"} },
+  { gu:"ઊ", roman:"uu", hint:"a long 'oo'", ex:{en:"boot"} },
+  { gu:"ઋ", roman:"ru", hint:"a vocalic r, in Sanskrit loanwords", ex:{gu:"ઋતુ", roman:"ritu"} },
+  { gu:"એ", roman:"e", hint:"a long 'e' sound", ex:{en:"they"} },
+  { gu:"ઐ", roman:"ai", hint:"an 'eh' sound, not 'eye'", ex:{en:"bed"} },
+  { gu:"ઓ", roman:"o", hint:"a long 'o' sound", ex:{en:"go"} },
+  { gu:"ઔ", roman:"au", hint:"an 'aw' sound", ex:{en:"bought"} },
+  { gu:"ઍ", roman:"ê", hint:"a flat 'a' sound", ex:{en:"apple"} },
+  { gu:"ઑ", roman:"ô", hint:"a rounded 'o' sound", ex:{en:"hot"} },
 ];
 const CONS_ROWS = [
-  { label:"Velar", chars:[{gu:"ક",roman:"ka"},{gu:"ખ",roman:"kha"},{gu:"ગ",roman:"ga"},{gu:"ઘ",roman:"gha"},{gu:"ઙ",roman:"ṅa"}] },
-  { label:"Palatal", chars:[{gu:"ચ",roman:"cha"},{gu:"છ",roman:"chha"},{gu:"જ",roman:"ja"},{gu:"ઝ",roman:"jha"},{gu:"ઞ",roman:"ña"}] },
-  { label:"Retroflex", chars:[{gu:"ટ",roman:"ṭa"},{gu:"ઠ",roman:"ṭha"},{gu:"ડ",roman:"ḍa"},{gu:"ઢ",roman:"ḍha"},{gu:"ણ",roman:"ṇa"}] },
-  { label:"Dental", chars:[{gu:"ત",roman:"ta"},{gu:"થ",roman:"tha"},{gu:"દ",roman:"da"},{gu:"ધ",roman:"dha"},{gu:"ન",roman:"na"}] },
-  { label:"Labial", chars:[{gu:"પ",roman:"pa"},{gu:"ફ",roman:"pha"},{gu:"બ",roman:"ba"},{gu:"ભ",roman:"bha"},{gu:"મ",roman:"ma"}] },
-  { label:"Semivowels", chars:[{gu:"ય",roman:"ya"},{gu:"ર",roman:"ra"},{gu:"લ",roman:"la"},{gu:"વ",roman:"va"},{gu:"ળ",roman:"ḷa"}] },
-  { label:"Sibilants and H", chars:[{gu:"શ",roman:"sha"},{gu:"ષ",roman:"ṣa",hint:"a retroflex 'sha', mostly in Sanskrit loanwords"},{gu:"સ",roman:"sa"},{gu:"હ",roman:"ha"}] },
+  { label:"Velar", chars:[
+    {gu:"ક",roman:"ka",ex:{en:"skip"}},{gu:"ખ",roman:"kha",hint:"aspirated, with a puff of air",ex:{gu:"ખાવું",roman:"khaavuṁ"}},
+    {gu:"ગ",roman:"ga",ex:{en:"go"}},{gu:"ઘ",roman:"gha",hint:"aspirated g",ex:{gu:"ઘર",roman:"ghar"}},{gu:"ઙ",roman:"ṅa",hint:"the 'ng' nasal",ex:{en:"sing"}}] },
+  { label:"Palatal", chars:[
+    {gu:"ચ",roman:"cha",ex:{en:"chair"}},{gu:"છ",roman:"chha",hint:"aspirated ch",ex:{gu:"છોકરો",roman:"chhokro"}},
+    {gu:"જ",roman:"ja",ex:{en:"jump"}},{gu:"ઝ",roman:"jha",hint:"aspirated j",ex:{gu:"ઝાડ",roman:"jhaaḍ"}},{gu:"ઞ",roman:"ña",hint:"a palatal nasal, rare"}] },
+  { label:"Retroflex", chars:[
+    {gu:"ટ",roman:"ṭa",hint:"tongue curls back",ex:{gu:"ટોપી",roman:"ṭopi"}},{gu:"ઠ",roman:"ṭha",hint:"aspirated retroflex",ex:{gu:"ઠંડી",roman:"ṭhanḍi"}},
+    {gu:"ડ",roman:"ḍa",hint:"tongue curls back",ex:{gu:"ડબ્બો",roman:"ḍabbo"}},{gu:"ઢ",roman:"ḍha",hint:"aspirated retroflex",ex:{gu:"ઢોલ",roman:"ḍhol"}},{gu:"ણ",roman:"ṇa",hint:"a retroflex n",ex:{gu:"પાણી",roman:"paṇi"}}] },
+  { label:"Dental", chars:[
+    {gu:"ત",roman:"ta",hint:"soft, tongue on teeth",ex:{gu:"તારો",roman:"taaro"}},{gu:"થ",roman:"tha",hint:"aspirated dental",ex:{gu:"થાળી",roman:"thaaḷi"}},
+    {gu:"દ",roman:"da",hint:"soft, tongue on teeth",ex:{gu:"દૂધ",roman:"doodh"}},{gu:"ધ",roman:"dha",hint:"aspirated dental",ex:{gu:"ધન",roman:"dhan"}},{gu:"ન",roman:"na",ex:{gu:"નાક",roman:"naak"}}] },
+  { label:"Labial", chars:[
+    {gu:"પ",roman:"pa",ex:{en:"spin"}},{gu:"ફ",roman:"pha",hint:"aspirated p",ex:{gu:"ફૂલ",roman:"phool"}},
+    {gu:"બ",roman:"ba",ex:{en:"bat"}},{gu:"ભ",roman:"bha",hint:"aspirated b",ex:{gu:"ભાઈ",roman:"bhaai"}},{gu:"મ",roman:"ma",ex:{en:"map"}}] },
+  { label:"Semivowels", chars:[
+    {gu:"ય",roman:"ya",ex:{en:"yes"}},{gu:"ર",roman:"ra",hint:"lightly rolled",ex:{en:"run"}},{gu:"લ",roman:"la",ex:{en:"leaf"}},
+    {gu:"વ",roman:"va",hint:"between v and w",ex:{en:"van"}},{gu:"ળ",roman:"ḷa",hint:"a retroflex l",ex:{gu:"કાળો",roman:"kaaḷo"}}] },
+  { label:"Sibilants and H", chars:[
+    {gu:"શ",roman:"sha",ex:{en:"shoe"}},{gu:"ષ",roman:"ṣa",hint:"a retroflex 'sha', mostly in Sanskrit loanwords",ex:{gu:"ભાષા",roman:"bhaaṣaa"}},
+    {gu:"સ",roman:"sa",ex:{en:"sun"}},{gu:"હ",roman:"ha",ex:{en:"hat"}}] },
 ];
 const CONJUNCTS = [
   { gu:"ક્ષ", roman:"kṣa", hint:"a blend of ક + ષ, as in પક્ષી (bird)" },
@@ -2567,9 +2586,17 @@ function CourseApp({ user }) {
           {charInfo && (
             <div className="charinfo">
               <span className="gu">{charInfo.gu}</span>
-              <span className="ci-rom">{charInfo.roman}</span>
-              {charInfo.hint && <span className="ci-hint">{charInfo.hint}</span>}
-              <button className="playbtn sm" onClick={() => speakGu(charInfo.gu)}><Ic.play width={15} height={15} /></button>
+              <span className="ci-body">
+                <span className="ci-rom">{charInfo.roman}</span>
+                {charInfo.hint && <span className="ci-hint">{charInfo.hint}</span>}
+              </span>
+              {charInfo.ex && (
+                <span className="ci-ex">
+                  {charInfo.ex.en
+                    ? <>like <b>{charInfo.ex.en}</b></>
+                    : <>as in <b className="gu">{charInfo.ex.gu}</b> <i>{charInfo.ex.roman}</i></>}
+                </span>
+              )}
             </div>
           )}
 
