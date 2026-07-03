@@ -1608,6 +1608,14 @@ const CONVERSATIONS = [
     { who:"you", gu:"થોડું ઓછું કરો.", roman:"thoḍuṁ ochhuṁ karo.", en:"Make it a little less." },
     { who:"them", gu:"ઠીક છે, ચારસો આપો.", roman:"ṭhik chhe, chaarso aapo.", en:"Okay, give four hundred." },
   ]},
+  { id:"c13", title:"At a restaurant", icon:"bowl", turns:[
+    { who:"them", gu:"આવો, બે જણ?", roman:"aavo, be jaṇ?", en:"Welcome, two people?" },
+    { who:"you", gu:"હા, બે. મેનુ આપો.", roman:"haa, be. menu aapo.", en:"Yes, two. Give the menu.", choices:["મેનુ આપો","કેમ છો?","આભાર"] },
+    { who:"them", gu:"શું લેશો?", roman:"shuṁ lesho?", en:"What will you have?" },
+    { who:"you", gu:"એક થાળી અને એક છાશ.", roman:"ek thaaḷi ane ek chhaash.", en:"One thali and one buttermilk." },
+    { who:"them", gu:"બીજું કંઈ?", roman:"beejuṁ kaṁi?", en:"Anything else?" },
+    { who:"you", gu:"ના, બસ આટલું.", roman:"naa, bas aaṭluṁ.", en:"No, just this much." },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
@@ -1759,6 +1767,10 @@ const CONJUNCTS = [
   { gu:"ક્ષ", roman:"kṣa", hint:"a blend of ક + ષ, as in પક્ષી (bird)" },
   { gu:"જ્ઞ", roman:"gya", hint:"a blend of જ + ઞ, as in જ્ઞાન (knowledge)" },
   { gu:"શ્રી", roman:"shri", hint:"an honorific meaning 'holy' or 'Mr.', very common in names" },
+  { gu:"ત્ર", roman:"tra", hint:"a blend of ત + ર, as in ત્રણ (three)" },
+  { gu:"પ્ર", roman:"pra", hint:"a blend of પ + ર, as in પ્રેમ (love)" },
+  { gu:"સ્ત", roman:"sta", hint:"a blend of સ + ત, as in નમસ્તે (hello)" },
+  { gu:"ન્ન", roman:"nna", hint:"a doubled ન, as in અન્ન (grain)" },
 ];
 const NUMERALS = [
   { gu:"૦", roman:"0" }, { gu:"૧", roman:"1" }, { gu:"૨", roman:"2" }, { gu:"૩", roman:"3" }, { gu:"૪", roman:"4" },
@@ -1978,9 +1990,11 @@ function ScriptLearn({ pool, title, note, speak, onDone, onNext, nextTitle, onQu
   const [chosen, setChosen] = useState(null);
   const [correct, setCorrect] = useState(0);
   const [done, setDone] = useState(false);
+  const advanceRef = useRef(null);
   const q = questions[idx];
 
   useEffect(() => { if (q && started) speak(q.answer.gu); }, [idx, started]);
+  useEffect(() => () => { if (advanceRef.current) clearTimeout(advanceRef.current); }, []);
 
   if (!started) {
     return (
@@ -2028,14 +2042,18 @@ function ScriptLearn({ pool, title, note, speak, onDone, onNext, nextTitle, onQu
     );
   }
 
-  const pick = (o) => {
-    if (chosen) return;
-    setChosen(o);
-    if (o.gu === q.answer.gu) setCorrect((c) => c + 1);
-  };
   const next = () => {
     if (idx + 1 >= questions.length) { setDone(true); return; }
     setIdx((i) => i + 1); setChosen(null);
+  };
+  const pick = (o) => {
+    if (chosen) return;
+    setChosen(o);
+    if (o.gu === q.answer.gu) {
+      setCorrect((c) => c + 1);
+      // Right answer: show the green highlight briefly, then move on automatically.
+      advanceRef.current = setTimeout(next, 650);
+    }
   };
   const isRight = chosen && chosen.gu === q.answer.gu;
 
@@ -2075,9 +2093,9 @@ function ScriptLearn({ pool, title, note, speak, onDone, onNext, nextTitle, onQu
           })}
         </div>
       </div>
-      {chosen && (
-        <div className={"sheet " + (isRight ? "good" : "bad")}>
-          <div className="sh"><span className="badge">{isRight ? <Ic.check /> : <Ic.x />}</span>{isRight ? "Correct!" : "Not quite"}</div>
+      {chosen && !isRight && (
+        <div className="sheet bad">
+          <div className="sh"><span className="badge"><Ic.x /></span>Not quite</div>
           <div className="ans">{q.answer.gu} is <b>{q.answer.roman}</b></div>
           <button className="btn primary" onClick={next}>{idx + 1 >= questions.length ? "Finish" : "Continue"}</button>
         </div>
