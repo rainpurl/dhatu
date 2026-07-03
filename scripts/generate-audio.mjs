@@ -197,6 +197,22 @@ function fileFor(text, lang) {
 function keyFor(text, lang) {
   return lang + "|" + text;
 }
+/* Alternate-voice clip: filename keyed by the voice too so it never collides. */
+function fileForVoice(text, lang, voiceName) {
+  const h = crypto.createHash("sha1").update(voiceName + "|" + lang + "|" + text).digest("hex").slice(0, 10);
+  return `${lang}-${h}.mp3`;
+}
+
+/* Extra non-robotic Gujarati voices used for the script style toggle and to vary
+   the voice across lessons and between conversation speakers. Voice 1 is the
+   default narrator (already generated above); these are voices 2 and 3. Only
+   SHORT items (letters, words, short phrases) get variants; long culture
+   summaries and English narration stay single-voice to keep size and cost down. */
+const VOICE_VARIANTS = [
+  { tag: "v2", gu: "gu-IN-Chirp3-HD-Charon" },
+  { tag: "v3", gu: "gu-IN-Chirp3-HD-Kore" },
+];
+const VARIANT_MAX_LEN = 70;
 
 /* ---------------- providers ---------------- */
 function voiceFor(lang) {
@@ -387,10 +403,40 @@ async function main() {
     }
   }
 
+  // Second pass: alternate-voice variants for short Gujarati items.
+  if (PROVIDER === "google" && !EN_ONLY) {
+    for (const it of list) {
+      if (it.lang !== "gu") continue;
+      if (it.text.length > VARIANT_MAX_LEN) continue;
+      if (PRONUNCIATION_OVERRIDES[it.text]) continue; // special IPA/Arabic clips stay single-voice
+      for (const v of VOICE_VARIANTS) {
+        const key = keyFor(it.text, it.lang) + "|" + v.tag;
+        const file = fileForVoice(it.text, it.lang, v.gu);
+        const dest = path.join(OUT_DIR, file);
+        items[key] = file;
+        if (!FORCE && fs.existsSync(dest)) { skipped++; continue; }
+        try {
+          let buf = await synthGoogle(it.text, "gu", v.gu);
+          if (buf.length < 1800) {
+            try { const fb = await synthGoogle(it.text, "gu", "gu-IN-Wavenet-A"); if (fb.length > buf.length) buf = fb; } catch (e) {}
+          }
+          fs.writeFileSync(dest, buf);
+          made++;
+          process.stdout.write(`\r  generated ${made}  (skipped ${skipped}, failed ${failed})   `);
+          await sleep(120);
+        } catch (e) {
+          failed++;
+          delete items[key];
+          console.error(`\n  FAILED [gu ${v.tag}]: "${it.text.slice(0, 40)}..."  ->  ${e.message}`);
+        }
+      }
+    }
+  }
+
   const manifest = {
     version: 1,
     provider: PROVIDER,
-    voices: { gu: voiceFor("gu"), en: voiceFor("en") },
+    voices: { gu: voiceFor("gu"), en: voiceFor("en"), variants: VOICE_VARIANTS.map((v) => v.gu) },
     generatedAt: new Date().toISOString(),
     count: Object.keys(items).length,
     items,

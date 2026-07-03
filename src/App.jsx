@@ -61,10 +61,13 @@ function _loadAudioManifest() {
   } catch (e) {}
 }
 if (typeof window !== "undefined") _loadAudioManifest();
-function _audioFileFor(text, lang) {
+function _audioFileFor(text, lang, voice) {
   if (!_audioManifest) return null;
-  const key = lang.slice(0, 2).toLowerCase() + "|" + text;
-  return _audioManifest[key] || null;
+  const base = lang.slice(0, 2).toLowerCase() + "|" + text;
+  // voice is a tag like "v2"/"v3" for alternate speakers; fall back to the
+  // default clip when a variant was not generated for this text.
+  if (voice) return _audioManifest[base + "|" + voice] || _audioManifest[base] || null;
+  return _audioManifest[base] || null;
 }
 function _speakTTS(text, lang) {
   try {
@@ -80,10 +83,10 @@ function _speakTTS(text, lang) {
     window.speechSynthesis.speak(u);
   } catch (e) {}
 }
-function speak(text, lang = "gu-IN") {
+function speak(text, lang = "gu-IN", voice = null) {
   try {
     stopSpeak();
-    const file = _audioFileFor(text, lang);
+    const file = _audioFileFor(text, lang, voice);
     if (file) {
       const a = new Audio(AUDIO_BASE + file);
       _curAudio = a;
@@ -101,8 +104,18 @@ function speak(text, lang = "gu-IN") {
 function speakEn(text) {
   speak(text, "en-US");
 }
-function speakGu(text) {
-  speak(text, "gu-IN");
+// voice: 1 = default narrator, 2/3 = alternate non-robotic speakers (for the
+// script style toggle and for varying the voice across lessons/conversations).
+function speakGu(text, voice) {
+  speak(text, "gu-IN", voice >= 2 ? "v" + voice : null);
+}
+// A stable alternate voice (1..3) derived from an id, so a given lesson keeps
+// one voice throughout while different lessons vary.
+function _voiceForId(id) {
+  id = String(id || "");
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return 1 + (h % 3);
 }
 function stopSpeak() {
   try {
@@ -1525,6 +1538,9 @@ const GRAMMAR = [
   { id:"g11", color:"#6E4CA0", title:"Want, like, and need", summary:"For wanting and liking, the person takes મને, not હું.",
     points:["જોઈએ means 'is wanted or needed': મને ચા જોઈએ (I want tea).","ગમે છે means 'is pleasing', so it is how you say you like something.","The thing is the subject; the person takes the -ને ending: મને, તમને, તેને."],
     examples:[{gu:"મને પાણી જોઈએ",roman:"mane paṇi joie",en:"I need water."},{gu:"મને કેરી ગમે છે",roman:"mane keri game chhe",en:"I like mangoes."},{gu:"તમને શું જોઈએ?",roman:"tamne shuṁ joie?",en:"What would you like?"}] },
+  { id:"g12", color:"#1E6E7E", title:"This, that, here, there", summary:"A small set of pointing words covers near and far.",
+    points:["આ is 'this' (near); તે is 'that' and also 'he/she/it'.","અહીં is 'here'; ત્યાં is 'there'.","આવું means 'like this' and એવું means 'like that'."],
+    examples:[{gu:"આ મારું ઘર છે",roman:"aa maaruṁ ghar chhe",en:"This is my house."},{gu:"તે શું છે?",roman:"te shuṁ chhe?",en:"What is that?"},{gu:"દુકાન ત્યાં છે",roman:"dukaan tyaan chhe",en:"The shop is there."}] },
 ];
 
 /* ============================ CONVERSATIONS ============================ */
@@ -1653,6 +1669,14 @@ const CONVERSATIONS = [
     { who:"you", gu:"જોરદાર! કઈ ફિલ્મ?", roman:"jordaar! kai film?", en:"Awesome! Which movie?" },
     { who:"them", gu:"એક નવી ગુજરાતી ફિલ્મ.", roman:"ek navi gujaraati film.", en:"A new Gujarati movie." },
     { who:"you", gu:"મસ્ત, પ્લાન પાક્કો!", roman:"mast, plaan paakko!", en:"Cool, the plan is set!" },
+  ]},
+  { id:"c17", title:"At the temple", icon:"temple", turns:[
+    { who:"them", gu:"આરતીનો સમય થયો છે.", roman:"aartino samay thayo chhe.", en:"It is time for the aarti." },
+    { who:"you", gu:"આપણે અંદર જઈએ?", roman:"aapaṇe andar jaie?", en:"Shall we go inside?", choices:["આપણે અંદર જઈએ?","કેમ છો?","આભાર"] },
+    { who:"them", gu:"હા, ચંપલ બહાર કાઢો.", roman:"haa, champal bahaar kaaḍho.", en:"Yes, take your sandals off outside." },
+    { who:"you", gu:"પ્રસાદ મળશે?", roman:"prasaad maḷshe?", en:"Will there be prasad?" },
+    { who:"them", gu:"હા, પૂજા પછી.", roman:"haa, poojaa pachhi.", en:"Yes, after the puja." },
+    { who:"you", gu:"ધન્યવાદ.", roman:"dhanyavaad.", en:"Thank you." },
   ]},
 ];
 
@@ -1839,7 +1863,7 @@ const RARE_CONS = [
   { gu:"ફ઼", roman:"fa", hint:"the 'f' sound, in borrowed words", ex:{en:"far"} },
   { gu:"જ઼", roman:"za", hint:"the 'z' sound, in borrowed words", ex:{en:"zebra"} },
   { gu:"ૹ", roman:"zha", hint:"like the 's' in 'vision'", ex:{gu:"વિૹન", roman:"vizhan"} },
-  { gu:"ખ઼", roman:"kha", hint:"a raspy kh from Perso-Arabic (خ)", ex:{gu:"ખ઼રાબ", roman:"kharaab"} },
+  { gu:"ખ઼", roman:"qha", hint:"a raspy 'qh' from Perso-Arabic (خ)", ex:{gu:"ખ઼રાબ", roman:"qharaab"} },
   { gu:"ગ઼", roman:"gha", hint:"a throaty gh from Perso-Arabic (غ)", ex:{gu:"ગ઼ઝલ", roman:"ghazal"} },
   { gu:"ક઼", roman:"qa", hint:"a deep 'q' from Perso-Arabic (ق)", ex:{gu:"ક઼લમ", roman:"qalam"} },
   { gu:"ચ઼", roman:"tsa", hint:"a hard 'ts' sound, in borrowed words", ex:{gu:"ચ઼લાત", roman:"tsalaat"} },
@@ -2900,7 +2924,7 @@ function CourseApp({ user }) {
               <div className="romanline" style={{ textAlign: "left" }}>{turn.roman}</div>
               <div style={{ fontSize: 14, color: "#4b3942", marginTop: 8 }}>{turn.en}</div>
               <div style={{ display: "flex", justifyContent: "flex-start", marginTop: 10 }}>
-                <button className="playbtn" onClick={() => speak(turn.gu)}><Ic.play /></button>
+                <button className="playbtn" onClick={() => speakGu(turn.gu, turn.who === "you" ? 3 : 2)}><Ic.play /></button>
               </div>
               <div className="turn-divider">Now you say it</div>
               <SpeakCheck key={convo.id + "-" + convoStep} target={turn.gu} />
@@ -3077,7 +3101,7 @@ function CourseApp({ user }) {
         title={lesson.title}
         note={lesson.note}
         nextTitle={nextLesson ? nextLesson.title : null}
-        speak={(t) => speakGu(t)}
+        speak={(t) => speakGu(t, _voiceForId(lesson.id))}
         onDone={(earned) => { finish(earned); setScreen("scriptLessons"); }}
         onNext={nextLesson ? (earned) => { finish(earned); stopSpeak(); setSelScriptLesson(nextId); setScreen("scriptLearn"); } : null}
         onQuit={() => { stopSpeak(); setScreen("scriptLessons"); }}
@@ -3087,7 +3111,7 @@ function CourseApp({ user }) {
 
   if (screen === "script") {
     const tapChar = (c) => {
-      speakGu(c.say || c.gu);
+      speakGu(c.say || c.gu, scriptFont);
       setPlayChar(c.gu);
       setCharInfo(c);
       setTimeout(() => setPlayChar((p) => (p === c.gu ? null : p)), 650);
@@ -3626,6 +3650,13 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
   const [buildAns, setBuildAns] = useState([]);
   const [buildBank] = useState(() => (ex.t === "build" ? shuffle([...ex.answer, ...(ex.extra || [])]) : []));
   const [spoke, setSpoke] = useState(false);
+
+  // Give each lesson one of the non-robotic voices, derived from its id so it
+  // stays consistent across this lesson's exercises (the component remounts per
+  // exercise) while varying from lesson to lesson. Shadowing speak routes every
+  // in-lesson utterance through that voice.
+  const lessonVoice = React.useMemo(() => _voiceForId(lesson && lesson.id), [lesson && lesson.id]);
+  const speak = (t) => speakGu(t, lessonVoice);
 
   // Auto-play the audio for listening questions as soon as they appear (this
   // component remounts per exercise via its key, so this runs once per question).
@@ -5004,6 +5035,22 @@ TOPICS.push(
     { gu:"પૂછવું", r:"poochhvuṁ", en:"to ask" },
     { gu:"વેચવું", r:"vechvuṁ", en:"to sell" },
     { gu:"કહેવું", r:"kahevuṁ", en:"to say" },
+  ]}
+);
+
+/* ============================ VOCAB: money and banking (added) ============================ */
+TOPICS.push(
+  { id:"money", title:"Money and banking", icon:"kaudi", words:[
+    { gu:"બેંક", r:"benk", en:"bank" },
+    { gu:"ખાતું", r:"khaatuṁ", en:"account" },
+    { gu:"રૂપિયા", r:"roopiyaa", en:"rupees" },
+    { gu:"નોટ", r:"noṭ", en:"banknote" },
+    { gu:"સિક્કો", r:"sikko", en:"coin" },
+    { gu:"પરચૂરણ", r:"parchooraṇ", en:"loose change" },
+    { gu:"કિંમત", r:"kimmat", en:"cost / value" },
+    { gu:"ચૂકવવું", r:"chookavvuṁ", en:"to pay" },
+    { gu:"બચત", r:"bachat", en:"savings" },
+    { gu:"ઉધાર", r:"udhaar", en:"credit / loan" },
   ]}
 );
 
