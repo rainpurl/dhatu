@@ -1515,6 +1515,22 @@ const CONVERSATIONS = [
     { who:"them", gu:"એંસી આપો.", roman:"eṁsi aapo.", en:"Give eighty." },
     { who:"you", gu:"ઠીક છે, બે કિલો આપો.", roman:"ṭhik chhe, be kilo aapo.", en:"Okay, give two kilos." },
   ]},
+  { id:"c6", title:"At the doctor", icon:"profile", turns:[
+    { who:"them", gu:"શું થયું છે?", roman:"shuṁ thayuṁ chhe?", en:"What's the matter?" },
+    { who:"you", gu:"મને તાવ છે.", roman:"mane taav chhe.", en:"I have a fever.", choices:["મને તાવ છે","હું મજામાં છું","આભાર"] },
+    { who:"them", gu:"ક્યારથી?", roman:"kyaarthi?", en:"Since when?" },
+    { who:"you", gu:"ગઈકાલથી.", roman:"gaikaalthi.", en:"Since yesterday." },
+    { who:"them", gu:"આ દવા લો અને આરામ કરો.", roman:"aa davaa lo ane aaraam karo.", en:"Take this medicine and rest." },
+    { who:"you", gu:"આભાર, ડૉક્ટર.", roman:"aabhaar, ḍokṭar.", en:"Thank you, doctor." },
+  ]},
+  { id:"c7", title:"At the station", icon:"car", turns:[
+    { who:"you", gu:"માફ કરો, સ્ટેશન ક્યાં છે?", roman:"maaf karo, sṭeshan kyaan chhe?", en:"Excuse me, where is the station?", choices:["સ્ટેશન ક્યાં છે?","કેમ છો?","આભાર"] },
+    { who:"them", gu:"સીધા જાઓ, બહુ દૂર નથી.", roman:"seedhaa jaao, bahu door nathi.", en:"Go straight, it is not far." },
+    { who:"you", gu:"ટ્રેન ક્યારે આવે છે?", roman:"ṭren kyaare aave chhe?", en:"When does the train come?" },
+    { who:"them", gu:"દસ મિનિટમાં.", roman:"das miniṭmaan.", en:"In ten minutes." },
+    { who:"you", gu:"એક ટિકિટ આપો.", roman:"ek ṭikiṭ aapo.", en:"Give one ticket." },
+    { who:"them", gu:"લો, તમારી ટિકિટ.", roman:"lo, tamaari ṭikiṭ.", en:"Here, your ticket." },
+  ]},
   { id:"c5", title:"Meeting the family", icon:"family", turns:[
     { who:"them", gu:"આ મારી માતા છે.", roman:"aa maari maataa chhe.", en:"This is my mother." },
     { who:"you", gu:"નમસ્તે! તમને મળીને આનંદ થયો.", roman:"namaste! tamne maḷine aanand thayo.", en:"Hello! Nice to meet you.", choices:["તમને મળીને આનંદ થયો","આભાર","કેમ છો?"] },
@@ -4132,6 +4148,9 @@ TOPICS.push(
     { gu:"મહેરબાની કરીને", r:"meherbaani karine", en:"please" },
     { gu:"કેમ છો?", r:"kem chho?", en:"how are you?" },
     { gu:"મજામાં", r:"majaamaan", en:"doing well" },
+    { gu:"સ્વાગત", r:"svaagat", en:"welcome" },
+    { gu:"શુભ સવાર", r:"shubh savaar", en:"good morning" },
+    { gu:"શુભ રાત્રિ", r:"shubh raatri", en:"good night" },
   ]},
   { id:"market", title:"At the market", icon:"tag", words:[
     { gu:"દુકાન", r:"dukaan", en:"shop" },
@@ -4141,6 +4160,8 @@ TOPICS.push(
     { gu:"સસ્તું", r:"sastuṁ", en:"cheap" },
     { gu:"મોંઘું", r:"monghuṁ", en:"expensive" },
     { gu:"ખરીદવું", r:"kharidvuṁ", en:"to buy" },
+    { gu:"કિલો", r:"kilo", en:"kilo" },
+    { gu:"તાજું", r:"taajuṁ", en:"fresh" },
   ]},
   { id:"festivals", title:"Festivals and fairs", icon:"diya", words:[
     { gu:"તહેવાર", r:"tehvaar", en:"festival" },
