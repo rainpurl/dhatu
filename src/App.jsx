@@ -973,6 +973,12 @@ const CSS = `
   display:grid;place-items:center;flex:none}
 .supportlink b{font-size:15px;display:block}
 .supportlink small{color:#6b5a2e;font-size:12px;font-weight:600;display:block;margin-top:1px}
+.contactlink{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);
+  background:var(--card);border:none;border-radius:16px;padding:14px;margin-top:10px;box-shadow:var(--bevel-inset)}
+.contactlink:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.contactlink .ic{width:42px;height:42px;border-radius:12px;background:var(--bg);color:var(--muted);
+  display:grid;place-items:center;flex:none;box-shadow:var(--bevel-inset)}
+.contactlink b{font-size:15px}
 
 /* account card in Profile */
 .acct{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;margin-bottom:14px;box-shadow:var(--bevel-inset)}
@@ -3126,14 +3132,11 @@ function CourseApp({ user }) {
               <small>Buy the developer a coffee on Ko-fi</small>
             </span>
           </a>
-          <a href="mailto:dhatulearning@katr.es" className="supportlink" style={{ marginTop: 10 }}>
+          <a href="mailto:dhatulearning@katr.es" className="contactlink">
             <span className="ic">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>
             </span>
-            <span>
-              <b>Contact support</b>
-              <small>dhatulearning@katr.es</small>
-            </span>
+            <b>Contact support</b>
           </a>
           <button className="btn ghost" style={{ marginTop: 14 }} onClick={async () => { await signOutUser(); clearLocalProgress(); }}>
             Sign out
@@ -3159,6 +3162,12 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
   const [buildAns, setBuildAns] = useState([]);
   const [buildBank] = useState(() => (ex.t === "build" ? shuffle([...ex.answer, ...(ex.extra || [])]) : []));
   const [spoke, setSpoke] = useState(false);
+
+  // Auto-play the audio for listening questions as soon as they appear (this
+  // component remounts per exercise via its key, so this runs once per question).
+  useEffect(() => {
+    if (ex && (ex.t === "listen" || ex.t === "hvpt") && ex.say) speak(ex.say);
+  }, []);
 
   const Header = () => (
     <div className="lhead">
