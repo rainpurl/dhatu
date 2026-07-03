@@ -108,7 +108,7 @@ Until rules/index are applied, social features fail quietly (app still works).
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **544 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **571 clips**). The app's
   `speak()` plays a clip when the manifest has one, else falls back to browser
   TTS. A missing manifest just means TTS-as-before.
 - **Voices:** Google **Chirp3-HD** (`gu-IN-Chirp3-HD-Aoede`,
@@ -225,15 +225,16 @@ message. This is a platform limit, intentionally left as graceful fallback.
 - **Vocab topics:** slang, family (expanded kinship: older/younger sibling,
   maternal/paternal, kaka/mota bapa/mama/foi/masi), numbers, food, verbs,
   transport, colors, animals, time, greetings, market, festivals, culture,
-  adjectives, body, weather, places, feelings, numbers2 (11-100), days, routine, professions, health, directions.
+  adjectives, body, weather, places, feelings, numbers2 (11-100), days, routine, professions, health, directions, streetfood, diet, textilecraft.
 - **Learn units/lessons:** Unit 1 (first words, numbers 1-5, yes/no/sorry,
   numbers 6-10, checkpoint); Unit 2 (family, food, home, colors, animals, getting
   around, checkpoint); Unit 3 (grammar: word order, postpositions, gender, present
   tense, action words/verbs, checkpoint); Unit 4 (past: went/came, -e marker, time and days,
   checkpoint); Unit 5 (polite you, everyday phrases, casual talk/slang, at the
   market, checkpoint); Unit 6 (modern culture: festivals/Garba, cinema, checkpoint);
-  Unit 7 (Textiles and fashion: cloth/craft, looms, dress, trade/labor, checkpoint);
-  Unit 8 (Food and cooking: thali, snacks, everyday meals, food history, checkpoint);
+  Unit 7 (Textiles and fashion: cloth/craft, looms, dress, trade/labor, Bandhani,
+  Ajrakh, checkpoint); Unit 8 (Food and cooking: thali, snacks, everyday meals,
+  food history, street food, veg/non-veg/pure-veg nuance, regional kitchens, checkpoint);
   Unit 9 (Describing the world: opposites/adjectives, the body, weather/seasons,
   places around town, checkpoint); Unit 10 (Numbers and shopping: 11-15, 16-20,
   tens, prices, checkpoint); Unit 11 (Time and routine: days, telling time, daily
