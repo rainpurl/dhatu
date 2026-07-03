@@ -82,7 +82,7 @@ const PRONUNCIATION_OVERRIDES = {
   "ઔ": "ɔː",  // "aw", as in "bought"
   "ઍ": "æ",   // "a", as in "apple"
   "કૅ": "kæ", // candra-e matra on ka; Chirp3 mangles the candra-e like the vowel above
-  "ક્": "kʰə", // halant demo: a "kh" consonant sound (a bare "k" IPA won't render on the voice, it falls back to reading the letter)
+  "ક્": "kʔ",  // halant demo: a bare k-burst with NO vowel. A lone "k" IPA falls back to reading the letter; adding a glottal stop (ʔ) forces the voice to render a clipped k release with no vowel after it.
   // Rare/borrowed consonants (nukta letters): TTS is silent on the bare glyphs,
   // so we synthesize the target sound by IPA, exactly like the vowels above.
   "ૹ": "ʒə",      // zha, like the 's' in "vision"
