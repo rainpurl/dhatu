@@ -1630,6 +1630,14 @@ const CONVERSATIONS = [
     { who:"them", gu:"બીજું કંઈ?", roman:"beejuṁ kaṁi?", en:"Anything else?" },
     { who:"you", gu:"ના, બસ આટલું.", roman:"naa, bas aaṭluṁ.", en:"No, just this much." },
   ]},
+  { id:"c14", title:"Wishing on Diwali", icon:"diya", turns:[
+    { who:"them", gu:"દિવાળીની શુભકામના!", roman:"divaaḷini shubhkaamnaa!", en:"Happy Diwali!" },
+    { who:"you", gu:"તમને પણ ખૂબ શુભકામના!", roman:"tamne paṇ khoob shubhkaamnaa!", en:"Many good wishes to you too!", choices:["તમને પણ શુભકામના","કેમ છો?","આભાર"] },
+    { who:"them", gu:"મીઠાઈ લો.", roman:"meeṭhaai lo.", en:"Have a sweet." },
+    { who:"you", gu:"આભાર! બહુ સરસ છે.", roman:"aabhaar! bahu saras chhe.", en:"Thank you! It is very nice." },
+    { who:"them", gu:"આજે ફટાકડા ફોડશું.", roman:"aaje phaṭaakḍaa phoḍshuṁ.", en:"Today we will light firecrackers." },
+    { who:"you", gu:"મજા આવશે!", roman:"majaa aavshe!", en:"It will be fun!" },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
@@ -4840,6 +4848,34 @@ TOPICS.push(
     { gu:"ટોપી", r:"ṭopi", en:"cap" },
     { gu:"ચંપલ", r:"champal", en:"sandals" },
     { gu:"જૂતાં", r:"jootaan", en:"shoes" },
+  ]}
+);
+
+/* ============================ VOCAB: nature and school (added) ============================ */
+TOPICS.push(
+  { id:"nature", title:"Nature and land", icon:"star", words:[
+    { gu:"નદી", r:"nadi", en:"river" },
+    { gu:"પર્વત", r:"parvat", en:"mountain" },
+    { gu:"દરિયો", r:"dariyo", en:"sea" },
+    { gu:"ઝાડ", r:"jhaaḍ", en:"tree" },
+    { gu:"સૂરજ", r:"sooraj", en:"sun" },
+    { gu:"ચંદ્ર", r:"chandra", en:"moon" },
+    { gu:"તારો", r:"taaro", en:"star" },
+    { gu:"આકાશ", r:"aakaash", en:"sky" },
+    { gu:"જંગલ", r:"jangal", en:"forest" },
+    { gu:"ખેતર", r:"khetar", en:"field" },
+  ]},
+  { id:"school", title:"At school", icon:"book", words:[
+    { gu:"નિશાળ", r:"nishaaḷ", en:"school" },
+    { gu:"ચોપડી", r:"chopḍi", en:"book" },
+    { gu:"પેન", r:"pen", en:"pen" },
+    { gu:"પેન્સિલ", r:"pensil", en:"pencil" },
+    { gu:"કાગળ", r:"kaagaḷ", en:"paper" },
+    { gu:"દફ્તર", r:"daftar", en:"schoolbag" },
+    { gu:"પરીક્ષા", r:"pariksha", en:"exam" },
+    { gu:"પ્રશ્ન", r:"prashna", en:"question" },
+    { gu:"જવાબ", r:"javaab", en:"answer" },
+    { gu:"શીખવું", r:"shikhvuṁ", en:"to learn" },
   ]}
 );
 
