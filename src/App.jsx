@@ -134,6 +134,24 @@ const S = (p) => ({
   ...p,
 });
 const Ic = {
+  // Bandhani rosette: the dot-cluster motif of Gujarati tie-dye, used as the app mark
+  logo: (p) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+      <circle cx="12" cy="12" r="2.6" />
+      <circle cx="18.2" cy="12" r="1.5" />
+      <circle cx="16.38" cy="16.38" r="1.5" />
+      <circle cx="12" cy="18.2" r="1.5" />
+      <circle cx="7.62" cy="16.38" r="1.5" />
+      <circle cx="5.8" cy="12" r="1.5" />
+      <circle cx="7.62" cy="7.62" r="1.5" />
+      <circle cx="12" cy="5.8" r="1.5" />
+      <circle cx="16.38" cy="7.62" r="1.5" />
+      <circle cx="18.9" cy="18.9" r="1" opacity=".85" />
+      <circle cx="5.1" cy="18.9" r="1" opacity=".85" />
+      <circle cx="5.1" cy="5.1" r="1" opacity=".85" />
+      <circle cx="18.9" cy="5.1" r="1" opacity=".85" />
+    </svg>
+  ),
   learn: (p) => (
     <svg {...S(p)}>
       <path d="M6 21V4" />
@@ -1628,7 +1646,7 @@ function CourseApp({ user }) {
         <div className="onb">
           {onbStep === 0 && (
             <div className="center">
-              <div className="big-mark gu">ધા</div>
+              <div className="big-mark"><Ic.logo width={56} height={56} /></div>
               <h1>Dhātu</h1>
               <p className="tagline">A Gujarati course built for English speakers, grounded in language-learning research.</p>
               <div style={{ height: 18 }} />
@@ -1677,7 +1695,7 @@ function CourseApp({ user }) {
   /* ---------------- shared top bar + nav ---------------- */
   const TopBar = ({ title, sub }) => (
     <div className="top">
-      <div className="brandmark gu">ધા</div>
+      <div className="brandmark"><Ic.logo width={24} height={24} /></div>
       <div>
         <h1>{title}</h1>
         {sub && <div className="sub">{sub}</div>}
@@ -2504,7 +2522,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
             <div className="grid2">
               {ex.options.map((o, i) => (
                 <button key={i} className={"gopt" + (picked === o.roman ? " sel" : "") + (feedback && o.roman === ex.answer ? " good" : "") + (feedback === "bad" && picked === o.roman ? " bad" : "")}
-                  onClick={() => !feedback && setPicked(o.roman)}>
+                  onClick={() => { speak(o.gu); if (!feedback) setPicked(o.roman); }}>
                   <div className="gu">{o.gu}</div>
                   <small>{o.roman}</small>
                 </button>
@@ -2516,7 +2534,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
         {ex.t === "letter" && (
           <>
             <div className="q-title">What sound does this letter make?</div>
-            <div className="bigword gu" style={{ fontSize: 70 }}>{ex.glyph}</div>
+            <div className="bigword gu" style={{ fontSize: 70, cursor: "pointer" }} onClick={() => speak(ex.glyph)}>{ex.glyph}</div>
             <div className="opts">
               {ex.options.map((o, i) => (
                 <button key={i} className={"opt" + (picked === o ? " sel" : "") + (feedback && o === ex.answer ? " good" : "") + (feedback === "bad" && picked === o ? " bad" : "")}
@@ -2535,7 +2553,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
               <div className="mcol">
                 {leftOrder.map((p, i) => (
                   <button key={i} className={"mtile gu" + (matchLeft && matchLeft.en === p.en ? " sel" : "") + (matchDone.includes(p.en) ? " done" : "")}
-                    disabled={matchDone.includes(p.en)} onClick={() => pickMatch("left", p)}>
+                    disabled={matchDone.includes(p.en)} onClick={() => { speak(p.gu); pickMatch("left", p); }}>
                     {p.gu}
                   </button>
                 ))}
@@ -2574,12 +2592,12 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
             <div className="q-sub">Tap the words in order</div>
             <div className="answerbox">
               {buildAns.map((a, i) => (
-                <div key={i} className="tok gu inans" onClick={() => !feedback && tapAnswer(i)}>{a.tok}</div>
+                <div key={i} className="tok gu inans" onClick={() => { speak(a.tok); if (!feedback) tapAnswer(i); }}>{a.tok}</div>
               ))}
             </div>
             <div className="bank">
               {buildBank.map((tok, i) => (
-                <div key={i} className={"tok gu" + (usedIdx.has(i) ? " used" : "")} onClick={() => !feedback && !usedIdx.has(i) && tapBank(tok, i)}>{tok}</div>
+                <div key={i} className={"tok gu" + (usedIdx.has(i) ? " used" : "")} onClick={() => { if (!usedIdx.has(i)) { speak(tok); if (!feedback) tapBank(tok, i); } }}>{tok}</div>
               ))}
             </div>
           </>
@@ -2591,7 +2609,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
             <div className="opts">
               {ex.options.map((o, i) => (
                 <button key={i} className={"opt gu" + (picked === o ? " sel" : "") + (feedback && o === ex.answer ? " good" : "") + (feedback === "bad" && picked === o ? " bad" : "")}
-                  onClick={() => !feedback && setPicked(o)}>
+                  onClick={() => { speak(o); if (!feedback) setPicked(o); }}>
                   {o}
                 </button>
               ))}
@@ -3191,7 +3209,7 @@ function Splash() {
     <div className="dhatu">
       <style>{CSS}</style>
       <div className="gate">
-        <div className="big-mark gu">ધા</div>
+        <div className="big-mark"><Ic.logo width={56} height={56} /></div>
         <p className="tagline">Loading...</p>
       </div>
     </div>
@@ -3205,7 +3223,7 @@ function SignIn() {
     <div className="dhatu">
       <style>{CSS}</style>
       <div className="gate">
-        <div className="big-mark gu">ધા</div>
+        <div className="big-mark"><Ic.logo width={56} height={56} /></div>
         <h1>Dhātu</h1>
         <p className="tagline">Learn Gujarati, from the roots up. Sign in to save your progress and keep it across devices.</p>
         <button
