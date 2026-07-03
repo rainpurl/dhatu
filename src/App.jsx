@@ -1433,6 +1433,8 @@ const LESSON_ICON = {
   u11l1:"clock", u11l2:"clock", u11l3:"steps",
   u12l1:"spark", u12l2:"talk",
   u13l1:"profile", u13l2:"chats",
+  u14l1:"profile", u14l2:"bulb",
+  u15l1:"steps", u15l2:"car",
 };
 const lessonIcon = (l) => {
   if (l.kind === "check") return Ic.trophy;
@@ -3810,6 +3812,77 @@ UNITS.push({ id:"u13", ku:"Unit 13", title:"People and work", sub:"Jobs and talk
   lessons:[ {id:"u13l1",label:"Jobs"}, {id:"u13l2",label:"What do you do?"}, {id:"u13c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u13l1", "u13l2", "u13c");
 
+/* ============================ MODULE: Health and the body ============================ */
+Object.assign(LESSONS, {
+  u14l1: { title:"Feeling unwell", ex: [
+    { t:"intro", gu:"બીમાર", roman:"beemaar", en:"sick / ill" },
+    { t:"intro", gu:"તાવ", roman:"taav", en:"fever" },
+    { t:"intro", gu:"દુખાવો", roman:"dukhaavo", en:"pain / ache" },
+    { t:"intro", gu:"ઉધરસ", roman:"udhras", en:"cough" },
+    { t:"intro", gu:"શરદી", roman:"shardi", en:"a cold" },
+    { t:"match", pairs:[{gu:"બીમાર",en:"sick"},{gu:"તાવ",en:"fever"},{gu:"દુખાવો",en:"pain"},{gu:"ઉધરસ",en:"cough"}] },
+    { t:"listen", say:"શરદી", roman:"shardi", options:["a cold","a fever","a cough"], answer:"a cold" },
+    { t:"speak", gu:"મને તાવ છે", roman:"mane taav chhe", en:"I have a fever." },
+  ]},
+  u14l2: { title:"At the doctor", ex: [
+    { t:"intro", gu:"ડૉક્ટર", roman:"ḍokṭar", en:"doctor" },
+    { t:"intro", gu:"દવા", roman:"davaa", en:"medicine" },
+    { t:"intro", gu:"આરામ", roman:"aaraam", en:"rest" },
+    { t:"note", title:"Saying what hurts", body:[
+      "For symptoms, Gujarati often uses મને ... છે, literally 'to me there is ...': મને તાવ છે (I have a fever).",
+      "To say a body part hurts, use દુખે છે: માથું દુખે છે (my head hurts)."], ex:[
+      {gu:"મને તાવ છે",roman:"mane taav chhe",en:"I have a fever"},
+      {gu:"માથું દુખે છે",roman:"maathuṁ dukhe chhe",en:"my head hurts"}] },
+    { t:"match", pairs:[{gu:"ડૉક્ટર",en:"doctor"},{gu:"દવા",en:"medicine"},{gu:"આરામ",en:"rest"},{gu:"દવાખાનું",en:"hospital"}] },
+    { t:"build", en:"I have a fever.", answer:["મને","તાવ","છે"], extra:["દવા","દુખાવો"], roman:"mane taav chhe" },
+    { t:"speak", gu:"દવાખાનું ક્યાં છે?", roman:"davaakhaanuṁ kyaan chhe?", en:"Where is the hospital?" },
+  ]},
+  u14c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"તાવ",en:"fever"},{gu:"દવા",en:"medicine"},{gu:"ડૉક્ટર",en:"doctor"},{gu:"આરામ",en:"rest"}] },
+    { t:"listen", say:"દુખાવો", roman:"dukhaavo", options:["pain","cough","rest"], answer:"pain" },
+    { t:"build", en:"I have a fever.", answer:["મને","તાવ","છે"], extra:["બીમાર","દવા"], roman:"mane taav chhe" },
+    { t:"speak", gu:"મને શરદી છે", roman:"mane shardi chhe", en:"I have a cold." },
+  ]},
+});
+UNITS.push({ id:"u14", ku:"Unit 14", title:"Health and the body", sub:"Symptoms, seeing a doctor, and asking for help", color:"#C0554A",
+  lessons:[ {id:"u14l1",label:"Feeling unwell"}, {id:"u14l2",label:"At the doctor"}, {id:"u14c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u14l1", "u14l2", "u14c");
+
+/* ============================ MODULE: Travel and directions ============================ */
+Object.assign(LESSONS, {
+  u15l1: { title:"Left and right", ex: [
+    { t:"intro", gu:"ડાબે", roman:"ḍaabe", en:"left" },
+    { t:"intro", gu:"જમણે", roman:"jamṇe", en:"right" },
+    { t:"intro", gu:"સીધું", roman:"seedhuṁ", en:"straight" },
+    { t:"intro", gu:"પાસે", roman:"paase", en:"near" },
+    { t:"intro", gu:"દૂર", roman:"door", en:"far" },
+    { t:"match", pairs:[{gu:"ડાબે",en:"left"},{gu:"જમણે",en:"right"},{gu:"સીધું",en:"straight"},{gu:"પાસે",en:"near"}] },
+    { t:"listen", say:"દૂર", roman:"door", options:["far","near","left"], answer:"far" },
+    { t:"speak", gu:"સીધું જાઓ", roman:"seedhuṁ jaao", en:"Go straight." },
+  ]},
+  u15l2: { title:"Getting there", ex: [
+    { t:"intro", gu:"ટિકિટ", roman:"ṭikiṭ", en:"ticket" },
+    { t:"intro", gu:"મુસાફરી", roman:"musaafari", en:"journey / travel" },
+    { t:"note", title:"Asking the way", body:[
+      "To ask where something is, use ... ક્યાં છે?: સ્ટેશન ક્યાં છે? (where is the station?).",
+      "Answers combine the direction words: ડાબે (left), જમણે (right), સીધું (straight), પાસે (near), દૂર (far)."], ex:[
+      {gu:"સ્ટેશન ક્યાં છે?",roman:"sṭeshan kyaan chhe?",en:"where is the station?"},
+      {gu:"તે પાસે છે",roman:"te paase chhe",en:"it is near"}] },
+    { t:"match", pairs:[{gu:"ટિકિટ",en:"ticket"},{gu:"મુસાફરી",en:"journey"},{gu:"રસ્તો",en:"road"},{gu:"દૂર",en:"far"}] },
+    { t:"build", en:"Where is the station?", answer:["સ્ટેશન","ક્યાં","છે"], extra:["રસ્તો","પાસે"], roman:"sṭeshan kyaan chhe?" },
+    { t:"speak", gu:"સ્ટેશન ક્યાં છે?", roman:"sṭeshan kyaan chhe?", en:"Where is the station?" },
+  ]},
+  u15c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"ડાબે",en:"left"},{gu:"જમણે",en:"right"},{gu:"ટિકિટ",en:"ticket"},{gu:"દૂર",en:"far"}] },
+    { t:"listen", say:"પાસે", roman:"paase", options:["near","far","straight"], answer:"near" },
+    { t:"build", en:"Where is the station?", answer:["સ્ટેશન","ક્યાં","છે"], extra:["ટિકિટ","સીધું"], roman:"sṭeshan kyaan chhe?" },
+    { t:"speak", gu:"સીધું જાઓ", roman:"seedhuṁ jaao", en:"Go straight." },
+  ]},
+});
+UNITS.push({ id:"u15", ku:"Unit 15", title:"Travel and directions", sub:"Left and right, asking the way, and getting around", color:"#3F7E7E",
+  lessons:[ {id:"u15l1",label:"Left and right"}, {id:"u15l2",label:"Getting there"}, {id:"u15c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u15l1", "u15l2", "u15c");
+
 /* ============================ VOCAB: festivals + textiles (added) ============================ */
 TOPICS.push(
   { id:"time", title:"Time and days", icon:"clock", words:[
@@ -3960,6 +4033,29 @@ TOPICS.push(
     { gu:"વેપારી", r:"vepaari", en:"trader / merchant" },
     { gu:"ડ્રાઇવર", r:"ḍraaivar", en:"driver" },
     { gu:"રસોઇયો", r:"rasoiyo", en:"cook" },
+  ]}
+);
+
+/* ============================ VOCAB: health and directions (added) ============================ */
+TOPICS.push(
+  { id:"health", title:"Health and illness", icon:"profile", words:[
+    { gu:"બીમાર", r:"beemaar", en:"sick / ill" },
+    { gu:"તાવ", r:"taav", en:"fever" },
+    { gu:"દુખાવો", r:"dukhaavo", en:"pain / ache" },
+    { gu:"ઉધરસ", r:"udhras", en:"cough" },
+    { gu:"શરદી", r:"shardi", en:"a cold" },
+    { gu:"દવા", r:"davaa", en:"medicine" },
+    { gu:"આરામ", r:"aaraam", en:"rest" },
+    { gu:"ડૉક્ટર", r:"ḍokṭar", en:"doctor" },
+  ]},
+  { id:"directions", title:"Directions and travel", icon:"car", words:[
+    { gu:"ડાબે", r:"ḍaabe", en:"left" },
+    { gu:"જમણે", r:"jamṇe", en:"right" },
+    { gu:"સીધું", r:"seedhuṁ", en:"straight" },
+    { gu:"પાસે", r:"paase", en:"near" },
+    { gu:"દૂર", r:"door", en:"far" },
+    { gu:"ટિકિટ", r:"ṭikiṭ", en:"ticket" },
+    { gu:"મુસાફરી", r:"musaafari", en:"journey / travel" },
   ]}
 );
 
@@ -4157,6 +4253,9 @@ const ERA_GU_SUMMARY = {
   state: "૧૯૪૭માં દેશ આઝાદ થયો ત્યારે ગુજરાત નામનું કોઈ રાજ્ય નહોતું. ગુજરાતી બોલતા વિસ્તારો મોટા બૃહદ મુંબઈ રાજ્યનો ભાગ હતા. ગુજરાતી ભાષા માટે અલગ રાજ્યની માગણી સાથે મહાગુજરાત આંદોલન થયું. ૧લી મે, ૧૯૬૦ના રોજ મુંબઈ રાજ્યમાંથી મહારાષ્ટ્ર અને ગુજરાત એમ બે રાજ્ય બન્યાં. નવા રાજ્ય માટે સાબરમતીના કિનારે ગાંધીનગર નામનું નવું પાટનગર વસાવવામાં આવ્યું. આમ ભાષા અને રાજકારણ એકબીજા સાથે જોડાઈ ગયાં.",
   nav_nirman: "૧૯૭૪માં ગુજરાતના વિદ્યાર્થીઓએ મોંઘવારી અને ભ્રષ્ટાચાર સામે મોટું આંદોલન કર્યું. તેને નવનિર્માણ આંદોલન કહે છે. કૉલેજની ફી અને ખાવાના ભાવ વધવાથી શરૂ થયેલું આ આંદોલન આખા રાજ્યમાં ફેલાયું. તેની અસર એટલી મોટી હતી કે રાજ્ય સરકારને પદ છોડવું પડ્યું. આ આંદોલને દેશના બીજા મોટા આંદોલનોને પણ પ્રેરણા આપી.",
   adivasi_dalit: "ગુજરાતમાં આદિવાસી અને દલિત સમાજની પોતાની લાંબી કહાણી છે. પૂર્વના ડુંગરાળ જિલ્લાઓમાં મોટી આદિવાસી વસ્તી છે. તેમણે જમીન, જંગલ અને હકો માટે લાંબી લડત આપી છે. નર્મદા બંધને લીધે ઘણા આદિવાસી પરિવારોને પોતાનાં ઘર છોડવાં પડ્યાં. રાઠવા અને ભીલ સમાજ પિથોરા નામનું સુંદર ભીંતચિત્ર બનાવે છે. આ કળા અને સંસ્કૃતિ ગુજરાતનો મહત્વનો ભાગ છે.",
+  modhera: "મોઢેરાનું સૂર્યમંદિર અગિયારમી સદીમાં સોલંકી રાજા ભીમદેવના સમયમાં બંધાયું. તે સૂર્યદેવને સમર્પિત છે અને મારુ-ગુર્જર શૈલીનો સુંદર નમૂનો છે. મંદિરના ત્રણ ભાગ છે: સૂર્યકુંડ નામનું પગથિયાંવાળું તળાવ, સભામંડપ અને ગૂઢમંડપ, જે પૂર્વ-પશ્ચિમ દિશામાં ગોઠવેલા છે જેથી સૂર્યનો પ્રકાશ ગર્ભગૃહ સુધી પહોંચે. અહીં હવે પૂજા થતી નથી, પણ દર વર્ષે નૃત્ય મહોત્સવ યોજાય છે. તેની બારીક કોતરણી સોલંકી કળાની ઝલક આપે છે.",
+  parsi: "પારસી લોકો મૂળ ઈરાનના જરથોસ્તી છે, જેઓ હજારેક વર્ષ પહેલાં ગુજરાતના દરિયાકિનારે આવ્યા. પરંપરા પ્રમાણે તેઓ સંજાણ બંદરે ઊતર્યા અને અહીં વસ્યા. તેમના ધર્મમાં પવિત્ર અગ્નિનું ખાસ મહત્વ છે; ઉદવાડાનું ઈરાનશાહ આતશ બહેરામ સૌથી પવિત્ર અગિયારી ગણાય છે. પારસીઓ સુરત જેવાં બંદરોના વેપાર અને વહાણવટામાં આગળ હતા અને ઉદ્યોગમાં પણ મોટું યોગદાન આપ્યું. તેઓ ગુજરાતી બોલે છે અને નવરોઝ જેવા તહેવારો ઊજવે છે.",
+  gir: "સૌરાષ્ટ્રનું ગીર જંગલ દુનિયામાં એકમાત્ર જગ્યા છે જ્યાં એશિયાઈ સિંહ જંગલમાં જીવે છે. એક સમયે શિકારને લીધે આ સિંહો લુપ્ત થવાના આરે આવી ગયા હતા, પણ જૂનાગઢના નવાબે તેમને બચાવવાની શરૂઆત કરી. કાળજીપૂર્વકના રક્ષણથી હવે તેમની સંખ્યા સેંકડોમાં પહોંચી છે. ગીરમાં માલધારી સમાજ પોતાનાં ઢોર સાથે જંગલમાં રહે છે, એટલે સિંહનું રક્ષણ લોકો સાથે સંતુલન રાખીને કરવું પડે છે. એશિયાઈ સિંહ આજે ગુજરાતનું ગૌરવ અને વન્યજીવ સંરક્ષણનું પ્રતીક બની ગયો છે.",
   many_rulers: "અંગ્રેજ કાળમાં 'ગુજરાત' એક જ પ્રાંત નહોતું. અમદાવાદ, ખેડા અને સુરત જેવા વિસ્તારો સીધા મુંબઈ ઇલાકાના ભાગ હતા, જ્યારે વડોદરા, કચ્છ અને કાઠિયાવાડનાં અનેક નાનાં-મોટાં દેશી રજવાડાં અંગ્રેજોની છત્રછાયા નીચે આડકતરી રીતે ચાલતાં. વડોદરાના ગાયકવાડ રાજ્યમાં મહારાજા સયાજીરાવે શિક્ષણ અને સુધારાને પ્રોત્સાહન આપ્યું, અને લક્ષ્મી વિલાસ મહેલ તેની સમૃદ્ધિનું પ્રતીક છે. ભાષા અને સાહિત્યની દૃષ્ટિએ 'ગુજરાત' ત્યારે પણ ઘડાઈ રહ્યું હતું, પણ ગુજરાત નામનું રાજ્ય તો છેક ૧૯૬૦માં બન્યું. આ વિભાજિત ભૂગોળને લીધે વિરોધ પણ અલગ અલગ રૂપે થયો.",
   peasant: "મુંબઈ ઇલાકાનાં ગામડાં જન-આંદોલનની તાલીમભૂમિ બન્યાં. ૧૯૧૮માં ખેડા સત્યાગ્રહમાં પાક નિષ્ફળ જવા છતાં સરકારે મહેસૂલ માફ ન કરતાં ખેડૂતોએ સંગઠિત થઈને કર ભરવાનો ઇનકાર કર્યો. ૧૯૨૨-૨૩માં બોરસદ સત્યાગ્રહમાં એક અન્યાયી કર સામે લડત થઈ. ૧૯૨૮ના બારડોલી સત્યાગ્રહમાં વધારેલા મહેસૂલ સામે ખેડૂતોએ, જેમાં સ્ત્રીઓ પણ સામેલ હતી, સફળ લડત આપી અને વલ્લભભાઈ પટેલ 'સરદાર' કહેવાયા. ઇતિહાસકારો કહે છે કે આ ખરેખર ખેડૂતોનાં આંદોલન હતાં, માત્ર નેતાઓનાં નહીં.",
   rajkot: "વિરોધ માત્ર અંગ્રેજ-શાસિત જિલ્લાઓમાં જ નહોતો. દેશી રજવાડાંમાં પ્રજાએ જવાબદાર રાજ્યતંત્ર માટે 'પ્રજામંડળ' આંદોલનો શરૂ કર્યાં, અને કાઠિયાવાડ તેનું કેન્દ્ર બન્યું. ૧૯૩૮-૩૯માં રાજકોટમાં પ્રજાએ સુધારા માટે લડત આપી, અને ગાંધીજી તથા કસ્તૂરબા તેમાં જોડાયાં. રાજકોટનું વૉટ્સન મ્યુઝિયમ, જે એક અંગ્રેજ પોલિટિકલ એજન્ટના નામે છે, આડકતરા શાસનની યાદ અપાવે છે. ૧૯૪૭ પછી આ જ સંગઠિત પ્રજાએ રજવાડાંના જોડાણ અને એકીકરણમાં ભાગ ભજવ્યો.",
@@ -4230,6 +4329,17 @@ ERAS.push(
       "Historians such as Samira Sheikh and Aparna Kapadia describe the Solanki period less as a single unified 'Gujarat' and more as an overlapping web of courts, trade routes, temple networks, and pilgrimage circuits, out of which a shared regional identity gradually emerged. That slower, layered process of region-building is a useful corrective to any idea that Gujarat has always existed as a fixed, timeless place."],
     site:{ name:"Rani ki Vav, Patan", note:"An 11th-century stepwell and UNESCO World Heritage Site, with more than 1,500 sculpted panels across seven underground levels." },
     sources:["UNESCO World Heritage Centre, Rani-ki-Vav at Patan","Samira Sheikh, Forging a Region: Sultans, Traders, and Pilgrims in Gujarat, 1200-1500","Aparna Kapadia, In Praise of Kings: Rajputs, Sultans and Poets in Fifteenth-Century Gujarat"] },
+
+  { id:"modhera", category:"kingdoms", yr:"c. 1026 CE", title:"The Sun Temple at Modhera",
+    img: FP + "Sun%20Temple%2C%20Modhera%2003.jpg?width=1000",
+    blurb:"Built for the sun, this Solanki-era temple was laid out so that light reached its shrine, fronted by one of the most beautiful stepped tanks in the region.",
+    body:[
+      "The Sun Temple at Modhera was built in the early 11th century, around 1026, under the Solanki (Chaulukya) king Bhima I, and dedicated to the sun deity Surya. It is one of the finest surviving examples of the Maru-Gurjara style of temple architecture. Worship no longer takes place here; the temple stands as a protected monument rather than a living shrine.",
+      "The complex is laid out in three aligned parts on an east-west axis. First comes the Surya Kund, a large rectangular stepped tank ringed with small shrines and precise geometric steps. Beyond it stands the Sabha Mandap, an open pillared assembly hall, and then the Guda Mandap, the main shrine hall. The alignment was designed so that around the equinox the rising sun would light the inner sanctum.",
+      "The carving is extraordinarily detailed, with pillars, arched toranas, and panels covered in deities, musicians, dancers, and scenes of everyday life. The stepped tank, studded with more than a hundred small shrines, is as admired as the temple building itself and is one of the most photographed sights in Gujarat.",
+      "Today Modhera hosts an annual classical dance festival set against the temple, and it has been developed as a solar-powered heritage site. It remains one of the clearest windows into Solanki-era art and into the way astronomy was woven directly into temple design."],
+    site:{ name:"Sun Temple, Modhera, Mehsana", note:"An 11th-century Surya temple with a stepped tank, aligned to the sunrise and no longer used for worship." },
+    sources:["Archaeological Survey of India, Sun Temple Modhera","Encyclopaedia Britannica, Maru-Gurjara (Solanki) architecture","Wikipedia, Modhera Sun Temple"] },
 
   { id:"sultanate", category:"kingdoms", yr:"1407 - 1573", title:"The Gujarat Sultanate",
     img: FP + "Siddi%20Saiyyed%20Mosque%2C%20Ahmedabad.jpg?width=1000",
@@ -4305,6 +4415,17 @@ ERAS.push(
       "In the 20th century this older trading diaspora fed into a much larger wave of migration. Political pressures in East Africa after independence, especially the expulsion of Asians from Uganda in 1972, pushed many Gujarati families to migrate again, this time to Britain, Canada, and the United States, where existing East African Gujarati business and community networks helped ease the transition. Today, sizable Gujarati communities in Leicester and London, in Toronto, and across the United States trace their family histories through exactly this longer arc: Gujarat to East Africa to the West, a diaspora built in stages over more than a century.",
       "This history complicates a simple story of Gujarat as a place people leave. It has long been a place bound outward by trade and belief as much as inward by territory, and its diaspora communities today often maintain active ties, through remittances, philanthropy, festival travel, and family visits, that keep the connection alive in both directions."],
     sources:["Edward A. Alpers and Chhaya Goswami (eds.), Transregional Trade and Traders: Situating Gujarat in the Indian Ocean from Early Times to 1900","Scholarship on Gujarati merchant communities in East Africa and the 1972 Uganda expulsion","Wikipedia, Gujarati diaspora and Siddi people"] },
+
+  { id:"parsi", category:"trade", yr:"8th century - present", title:"The Parsis of Gujarat",
+    img: FP + "Udwada%20atash%20behram.jpg?width=1000",
+    blurb:"Zoroastrian refugees from Iran landed on the Gujarat coast over a thousand years ago and became one of the subcontinent's most influential communities.",
+    body:[
+      "The Parsis are Zoroastrians whose ancestors migrated from Iran to the Gujarat coast more than a thousand years ago. By tradition they landed at Sanjan, in south Gujarat, somewhere between the 8th and 10th centuries. Their community origin story, told much later in the text known as the Qissa-i Sanjan, describes an agreement with a local ruler that allowed them to settle and to keep their faith.",
+      "At the heart of Parsi religious life is the sacred fire. The Iranshah Atash Behram, now housed at Udvada on the south Gujarat coast, is the most revered Zoroastrian fire temple in the subcontinent, and its consecrated fire is said to have been tended without interruption for many centuries. Udvada remains a place of pilgrimage.",
+      "Parsis became central to Gujarat's maritime economy, especially at the port of Surat, working as shipbuilders, brokers, and merchants, and they later played a role in trade, industry, and philanthropy far out of proportion to their small numbers. Much of that later story runs through Bombay, but its roots are on the Gujarat coast.",
+      "Parsi identity braids Iranian origins with a Gujarati home. The community largely speaks Gujarati, and its food, dress, and festivals, such as the new-year celebration of Navroz, blend both worlds. The Parsi population today is small and declining, which makes living centers like Udvada important links to a very long history."],
+    site:{ name:"Iranshah Atash Behram, Udvada", note:"The most sacred Zoroastrian fire temple in the subcontinent, a Parsi pilgrimage center on the south Gujarat coast." },
+    sources:["Encyclopaedia Britannica, Parsi","Scholarship on Zoroastrians and Parsi migration in South Asia","Wikipedia, Parsis, Qissa-i Sanjan, and Udvada"] },
 
   { id:"textiles", category:"trade", yr:"medieval - present", title:"Textiles and fashion, the cloth of Gujarat",
     img: FP + "Gujarat%20Bandhej%20Saree.jpg?width=1000",
@@ -4465,6 +4586,17 @@ ERAS.push(
       "The 2001 Bhuj earthquake devastated Kutch and killed many thousands, but the region rebuilt, and its crafts, sustained partly by cooperatives and design partnerships, remain a living economy rather than a museum piece, and a major part of how Gujarat presents its culture to the world."],
     site:{ name:"Rann of Kutch and Bhuj", note:"A seasonal white salt desert with the winter Rann Utsav; Bhuj is the craft hub of the district." },
     sources:["Gujarat Tourism, Kutch and Rann Utsav","Asia InCH Encyclopedia of Intangible Cultural Heritage, Kutch crafts","Wikipedia, Kutch district and Rann of Kutch"] },
+
+  { id:"gir", category:"modern", yr:"1900s - present", title:"Gir and the Asiatic lion",
+    img: FP + "Asiatic%20Lion%20Gir%20Forest%20India.jpg?width=1000",
+    blurb:"The last wild Asiatic lions on Earth survive in one Gujarat forest, brought back from the edge of extinction.",
+    body:[
+      "The Gir forest in Saurashtra is the only place in the world where the Asiatic lion still lives in the wild. The subspecies once ranged across much of South Asia and West Asia, but hunting drove it to the edge of extinction, and by the early 20th century only a tiny remnant survived in Gir, protected largely on the initiative of the Nawab of Junagadh.",
+      "From perhaps a couple of dozen animals, careful protection turned Gir into a rare conservation success. Recent censuses put the population in the several hundreds, and lions have begun to range beyond the sanctuary into the surrounding farmland and coast.",
+      "Gir is not a wilderness sealed off from people. The Maldhari pastoralists have long lived in and around the forest with their livestock, and protecting the lion has meant balancing the needs of these communities, of farmers, and of a growing tourism economy rather than simply fencing nature away.",
+      "The Asiatic lion has become a symbol of Gujarat and of wildlife conservation across the subcontinent. Its recovery is widely cited as a model, though keeping the entire subspecies in a single population leaves it vulnerable to disease and crowding, which is why establishing a second home for the lions has been debated for years."],
+    site:{ name:"Gir National Park, Saurashtra", note:"The last wild home of the Asiatic lion, protected since the early 20th century." },
+    sources:["Gujarat Forest Department, Gir and the Asiatic lion census","IUCN Red List, Panthera leo (Asiatic population)","Wikipedia, Gir National Park and Asiatic lion"] },
 
   { id:"food", category:"modern", yr:"living tradition", title:"Gujarati food, a layered system",
     img: FP + "Gujarati%20Thali.jpg?width=1000",
