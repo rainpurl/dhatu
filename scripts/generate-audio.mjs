@@ -74,6 +74,15 @@ const LIMIT = (() => {
 
 const PROVIDER = (process.env.TTS_PROVIDER || "google").toLowerCase();
 
+/* A few Gujarati vowels are mangled by TTS as isolated glyphs, so we synthesize
+   their exact target sound by IPA (via SSML on a WaveNet voice) instead. */
+const PRONUNCIATION_OVERRIDES = {
+  "ઇ": "ɪ",   // short i, as in "sit"
+  "ઐ": "ɛː",  // "eh", as in "bed"
+  "ઔ": "ɔː",  // "aw", as in "bought"
+  "ઍ": "æ",   // "a", as in "apple"
+};
+
 const DEFAULT_VOICE = {
   // Chirp3-HD are Google's most natural voices; using one persona (Aoede) across
   // both languages gives a consistent narrator.
@@ -193,15 +202,21 @@ async function synthGoogle(text, lang, voiceOverride) {
   const key = process.env.GOOGLE_TTS_KEY;
   if (!key) throw new Error("Missing GOOGLE_TTS_KEY. See AUDIO.md to get a Google Cloud Text-to-Speech key.");
   const rate = Number((lang === "en" ? process.env.EN_RATE : process.env.GU_RATE) || (lang === "en" ? "1.0" : "0.9"));
+  const ipa = lang === "gu" ? PRONUNCIATION_OVERRIDES[text] : null;
+  // Vowels with a pronunciation override are synthesized by IPA on a WaveNet
+  // voice (Chirp3-HD does not support SSML), giving the exact intended sound.
+  const input = ipa ? { ssml: `<speak><phoneme alphabet="ipa" ph="${ipa}">v</phoneme></speak>` } : { text };
+  const voiceName = ipa ? "en-US-Wavenet-F" : (voiceOverride || voiceFor(lang));
+  const langCd = ipa ? "en-US" : langCode(lang);
   const res = await fetch(
     "https://texttospeech.googleapis.com/v1/text:synthesize?key=" + encodeURIComponent(key),
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        input: { text },
-        voice: { languageCode: langCode(lang), name: voiceOverride || voiceFor(lang) },
-        audioConfig: { audioEncoding: "MP3", speakingRate: rate },
+        input,
+        voice: { languageCode: langCd, name: voiceName },
+        audioConfig: { audioEncoding: "MP3", speakingRate: ipa ? 0.85 : rate },
       }),
     }
   );
