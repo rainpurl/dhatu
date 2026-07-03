@@ -227,8 +227,9 @@ progress; it fully resets only accounts with no local copy.
   over its glyph group; completion is tracked in `dhatu_scriptDone` and shown as a
   progress journey. Matra and conjunct lessons use inline CV/cluster items (e.g. કા, ન્ત) with a
   teaching-note intro step. Concrete-noun intros show a picture via `WORD_IMG` (food, animals, transport,
-  places, weather). Body-part words instead render a highlighted line-figure
-  (`BodyDiagram`, mapped in `BODY_PARTS`).
+  places, weather). Body-part words render a highlighted line-figure (`BodyDiagram`/`BODY_PARTS`);
+  color words render a swatch (`COLOR_SWATCH`); family words render a highlighted
+  family tree (`FamilyTree`/`FAMILY_NODE`) with father's/mother's sides labeled.
 - **Review:** spaced repetition (SRS).
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
