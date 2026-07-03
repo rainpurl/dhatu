@@ -426,7 +426,7 @@ const Ic = {
 
 /* ---------- styles ---------- */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Anek+Gujarati:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Rasa:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anek+Gujarati:wght@400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Rasa:wght@400;500;600;700&family=Mogra&family=Inter:wght@400;500;600;700;800&display=swap');
 :root{
   --brand:#8A1C3B; --brand-dark:#6B1330; --brand-soft:#F8E7EC;
   --gold:#E0A63C; --gold-dark:#B98219; --diya:#F2892E;
@@ -773,12 +773,12 @@ const CSS = `
 .ftbtn .ftlabel{font-size:11px;font-weight:800;letter-spacing:.2px}
 .ftbtn.sf1 .ftsample{font-family:'Anek Gujarati','Inter',sans-serif}
 .ftbtn.sf2 .ftsample{font-family:'Rasa','Anek Gujarati',serif}
-.ftbtn.sf3 .ftsample{font-family:'Noto Sans Gujarati','Anek Gujarati',sans-serif}
+.ftbtn.sf3 .ftsample{font-family:'Mogra','Noto Sans Gujarati',sans-serif}
 .ftbtn.on{background:var(--card);color:var(--brand);box-shadow:var(--bevel-raise)}
 .ftbtn.on .ftsample{color:var(--brand)}
 /* Applied to the script screen root; retargets every letter glyph on the page */
 .sfont-2 .chargrid .gu,.sfont-2 .charinfo .gu,.sfont-2 .charinfo .ci-ex b.gu{font-family:'Rasa','Anek Gujarati',serif}
-.sfont-3 .chargrid .gu,.sfont-3 .charinfo .gu,.sfont-3 .charinfo .ci-ex b.gu{font-family:'Noto Sans Gujarati','Anek Gujarati',sans-serif}
+.sfont-3 .chargrid .gu,.sfont-3 .charinfo .gu,.sfont-3 .charinfo .ci-ex b.gu{font-family:'Mogra','Noto Sans Gujarati','Anek Gujarati',sans-serif}
 .playbtn.sm{width:34px;height:34px}
 .chargrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .chartile{border:1px solid transparent;background:var(--card);border-radius:14px;padding:12px 6px;cursor:pointer;
