@@ -559,6 +559,25 @@ const CSS = `
 .goaldots i{width:15px;height:15px;border-radius:50%;background:var(--line);box-shadow:var(--bevel-inset)}
 .goaldots i.on{background:var(--gold);box-shadow:0 2px 0 #B07E1C, 0 3px 5px rgba(0,0,0,.15)}
 .goalcard.met .goaldots i.on{background:var(--ok);box-shadow:0 2px 0 #1E4C2E, 0 3px 5px rgba(0,0,0,.15)}
+/* desktop right rail: a persistent progress panel on wide screens (hidden below 1200px) */
+.rail{display:none}
+.rail h3{margin:0 0 2px;font-size:12px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
+.rail .rstat{display:flex;align-items:center;gap:12px;border-radius:16px;padding:13px 15px;background:var(--card);box-shadow:var(--bevel-inset)}
+.rail .rstat .ri{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--card);box-shadow:var(--bevel-inset)}
+.rail .rstat .ri svg{width:22px;height:22px}
+.rail .rstat .rk{font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1}
+.rail .rstat .rl{font-size:12px;color:var(--muted);margin-top:3px}
+.rail .rcard{border-radius:16px;padding:13px 15px;background:var(--card);box-shadow:var(--bevel-inset)}
+.rail .rcard .rt{font-size:13px;font-weight:800;letter-spacing:-.1px}
+.rail .rcard .rsub{font-size:12px;color:var(--muted);margin-top:2px}
+.rail .rbar{display:block;margin-top:10px;height:8px;border-radius:999px;background:var(--line);box-shadow:var(--bevel-inset);overflow:hidden}
+.rail .rbar > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand),#B0325A);transition:width .5s var(--ease)}
+.rail .rgoal{display:flex;gap:7px;margin-top:10px}
+.rail .rgoal i{width:14px;height:14px;border-radius:50%;background:var(--line);box-shadow:var(--bevel-inset)}
+.rail .rgoal i.on{background:var(--gold);box-shadow:0 2px 0 #B07E1C}
+.rail .rbtn{margin-top:2px;border:none;cursor:pointer;border-radius:14px;padding:13px 16px;font-weight:800;font-size:15px;color:#fff;
+  background:linear-gradient(135deg,var(--brand),#6E1330);box-shadow:var(--sink-brand)}
+.rail .rbtn:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
 
 /* winding path */
 .path{position:relative;padding:10px 0 4px}
@@ -1067,6 +1086,13 @@ const CSS = `
 @media (min-width:1200px){
   .wide-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
   .dhatu:has(> .nav) .scr{max-width:960px}
+  /* reserve space on the right and pin the rail beside the sidebar-offset content */
+  .dhatu.withrail{padding-right:300px}
+  .dhatu.withrail .rail{
+    display:flex;flex-direction:column;gap:13px;
+    position:fixed;top:0;right:0;width:280px;height:100vh;overflow-y:auto;z-index:5;
+    padding:34px 20px 40px;background:var(--card);
+    box-shadow:inset 1px 0 0 var(--line), -3px 0 16px rgba(70,45,40,.05)}
 }
 
 .spacer-lg{height:8px}
@@ -2205,7 +2231,7 @@ function CourseApp({ user }) {
     const todayCount = dayLog.date === _dstr(new Date()) ? dayLog.count : 0;
     const goalMet = todayCount >= DAILY_GOAL;
     return (
-      <div className="dhatu">
+      <div className="dhatu withrail">
         <style>{CSS}</style>
         <div className="scr">
           <TopBar title="Dhātu" sub="Gujarati, one step at a time" />
@@ -2287,6 +2313,28 @@ function CourseApp({ user }) {
           })}
           <div style={{ height: 10 }} />
         </div>
+        <aside className="rail">
+          <h3>Your progress</h3>
+          <div className="rstat">
+            <span className="ri" style={{ color: "var(--diya)" }}><Ic.diya /></span>
+            <span><div className="rk">{streak}</div><div className="rl">day streak</div></span>
+          </div>
+          <div className="rstat">
+            <span className="ri" style={{ color: "var(--gold-dark)" }}><Ic.kaudi /></span>
+            <span><div className="rk">{kaudi}</div><div className="rl">Kaudi</div></span>
+          </div>
+          <div className="rcard">
+            <div className="rt">Course progress</div>
+            <div className="rsub">{totalDone} of {allLessons.length} lessons</div>
+            <span className="rbar"><i style={{ width: totalPct + "%" }} /></span>
+          </div>
+          <div className="rcard">
+            <div className="rt">{goalMet ? "Daily goal complete" : "Today's goal"}</div>
+            <div className="rsub">{goalMet ? "Nice work" : todayCount + " of " + DAILY_GOAL + " today"}</div>
+            <span className="rgoal">{Array.from({ length: DAILY_GOAL }).map((_, i) => <i key={i} className={i < todayCount ? "on" : ""} />)}</span>
+          </div>
+          {recLesson && <button className="rbtn" onClick={() => startLesson(recLesson.id)}>{started ? "Continue" : "Start"}</button>}
+        </aside>
         <NavBar />
       </div>
     );
