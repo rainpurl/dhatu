@@ -1650,13 +1650,25 @@ const CONVERSATIONS = [
 
 /* ============================ VOCAB TOPICS ============================ */
 const TOPICS = [
-  { id:"slang", title:"Modern slang", icon:"spark", tag:"New", note:"Casual words younger people actually use. Fun with friends, but skip them in formal settings.", words:[
+  { id:"slang", title:"Modern slang", icon:"spark", tag:"New", note:"Casual words younger people actually use, often mixed with Hindi and English. Fun with friends, but skip them in formal settings.", words:[
     { gu:"મસ્ત", r:"mast", en:"awesome / cool" },
+    { gu:"ફાડુ", r:"faaḍu", en:"awesome / top-tier" },
     { gu:"જબરું", r:"jabaruṁ", en:"amazing" },
+    { gu:"જોરદાર", r:"jordaar", en:"amazing / powerful" },
+    { gu:"જલસો", r:"jalso", en:"fun / a good time" },
     { gu:"ધમાલ", r:"dhamaal", en:"a blast / great fun" },
+    { gu:"બિંદાસ", r:"bindaas", en:"chill / carefree" },
+    { gu:"વાત છે", r:"vaat chhe", en:"now that's impressive" },
+    { gu:"ટાઇટ", r:"ṭaaiṭ", en:"excellent (from English 'tight')" },
     { gu:"શું ચાલે?", r:"shu chaale?", en:"what's up?" },
     { gu:"ટેન્શન નહીં", r:"ṭension nahi", en:"no worries" },
     { gu:"લોચો", r:"locho", en:"a mix-up / mess" },
+    { gu:"લફડો", r:"lafḍo", en:"a mess / drama / trouble" },
+    { gu:"ભાઈ", r:"bhaai", en:"bro / dude" },
+    { gu:"બકા", r:"baka", en:"buddy / dear (friendly)" },
+    { gu:"હેડો", r:"heḍo", en:"let's go (Ahmedabad)" },
+    { gu:"ના હોય!", r:"na hoy!", en:"no way!" },
+    { gu:"ટોપા", r:"ṭopaa", en:"fool (teasing, friends only)" },
   ]},
   { id:"family", title:"Family", icon:"family", note:"Gujarati kinship is specific: it marks older vs younger siblings, and whether an aunt or uncle is on your mother's or father's side.", words:[
     { gu:"માતા", r:"maataa", en:"mother" },
@@ -1677,6 +1689,20 @@ const TOPICS = [
     { gu:"મામા", r:"maamaa", en:"mother's brother" },
     { gu:"ફોઈ", r:"foi", en:"father's sister" },
     { gu:"માસી", r:"maasi", en:"mother's sister" },
+    { gu:"દીકરો", r:"deekro", en:"son" },
+    { gu:"દીકરી", r:"deekri", en:"daughter" },
+    { gu:"બાળક", r:"baaḷak", en:"child (any gender)" },
+    { gu:"સંતાન", r:"santaan", en:"offspring / child (any gender)" },
+    { gu:"દીદી", r:"deedi", en:"older sister (affectionate)" },
+    { gu:"પિતરાઈ", r:"pitraai", en:"cousin" },
+    { gu:"ભત્રીજો", r:"bhatreejo", en:"nephew (brother's son)" },
+    { gu:"ભત્રીજી", r:"bhatreeji", en:"niece (brother's daughter)" },
+    { gu:"ભાણેજ", r:"bhaaṇej", en:"sister's child (any gender)" },
+    { gu:"જીવનસાથી", r:"jeevansaathi", en:"spouse / partner (any gender)" },
+    { gu:"માતાપિતા", r:"maataapitaa", en:"parents" },
+    { gu:"ભાઈબહેન", r:"bhaaibahen", en:"siblings" },
+    { gu:"કુટુંબ", r:"kuṭumb", en:"family" },
+    { gu:"વડીલ", r:"vaḍil", en:"elder (any gender)" },
   ]},
   { id:"numbers", title:"Numbers 1-10", icon:"numbers", words:[
     { gu:"એક", r:"ek", en:"one" },
@@ -2654,9 +2680,11 @@ function CourseApp({ user }) {
           <Ic.script /> Script
         </button>
       )}
-      <button className={"navb" + (tab === "review" ? " on" : "")} onClick={() => { setTab("review"); setScreen("review"); }}>
-        <Ic.review /> Review
-      </button>
+      {srs.length > 0 && (
+        <button className={"navb" + (tab === "review" ? " on" : "")} onClick={() => { setTab("review"); setScreen("review"); }}>
+          <Ic.review /> Review
+        </button>
+      )}
       {vocabTab && (
         <button className={"navb" + (tab === "vocab" ? " on" : "")} onClick={() => { setTab("vocab"); setScreen("vocab"); }}>
           <Ic.vocab /> Vocab
