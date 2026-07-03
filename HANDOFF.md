@@ -120,6 +120,11 @@ Until rules/index are applied, social features fail quietly (app still works).
 - **Self-heal:** the generator retries any suspiciously small (<1800 byte) clip
   with a WaveNet voice, because Chirp3-HD occasionally returns near-silence for
   very short words.
+- **Pause-lists:** short Gujarati comma-lists (counts like `આઠ, નવ, દસ`, greetings,
+  directions; `text.length <= 40` and every comma part `<= 14` chars) are
+  synthesized on a Gujarati WaveNet voice with SSML `<break>`s so items do not run
+  together. Long prose (Culture summaries) stays on Chirp3-HD. If you change this
+  rule, delete the affected clips first so they regenerate.
 - **Regenerating after content changes** (needs a Google TTS API key + local
   Node):
   ```
@@ -185,6 +190,13 @@ Until rules/index are applied, social features fail quietly (app still works).
   hvpt = High-Variability Phonetic Training, letter, match, listen, build, fill,
   note, speak). Tapping any Gujarati word in an exercise plays its audio.
   "Snooze speaking/listening for 5 min" buttons on those exercise types.
+  Every lesson's `ex` array is post-processed once at load by `expandLesson()`
+  (just after the last lesson module, before the `TOPICS` pushes): it appends
+  auto-generated listen/match reinforcement built from the lesson's own taught
+  words, roughly doubling the questions. Lessons with fewer than 3 taught
+  words (grammar/note-heavy) are left unchanged. No new audio is needed since it
+  reuses taught words. The **lesson-taking view is full-width on desktop**
+  (`.dhatu.lesson-view`), not the centered column used elsewhere.
   Top of the tab: a **resume card** (jumps to the next recommended lesson, shows
   overall course-completion bar), a **daily-goal strip** (3 lessons/day, tracked
   in `dhatu_dayLog`; turns green when met), and **per-unit progress bars** in each
