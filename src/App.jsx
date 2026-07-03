@@ -1541,6 +1541,9 @@ const GRAMMAR = [
   { id:"g12", color:"#1E6E7E", title:"This, that, here, there", summary:"A small set of pointing words covers near and far.",
     points:["આ is 'this' (near); તે is 'that' and also 'he/she/it'.","અહીં is 'here'; ત્યાં is 'there'.","આવું means 'like this' and એવું means 'like that'."],
     examples:[{gu:"આ મારું ઘર છે",roman:"aa maaruṁ ghar chhe",en:"This is my house."},{gu:"તે શું છે?",roman:"te shuṁ chhe?",en:"What is that?"},{gu:"દુકાન ત્યાં છે",roman:"dukaan tyaan chhe",en:"The shop is there."}] },
+  { id:"g13", color:"#C77B1E", title:"Saying you have something", summary:"Gujarati has no single verb 'to have'; it uses પાસે or મને with છે.",
+    points:["For things you hold, use પાસે (with, near): મારી પાસે પૈસા છે.","For family, feelings, and ailments, use મને: મને તાવ છે.","છે does the work of 'have' in both frames."],
+    examples:[{gu:"મારી પાસે પૈસા છે",roman:"maari paase paisaa chhe",en:"I have money."},{gu:"મને બે ભાઈ છે",roman:"mane be bhaai chhe",en:"I have two brothers."},{gu:"તમારી પાસે સમય છે?",roman:"tamaari paase samay chhe?",en:"Do you have time?"}] },
 ];
 
 /* ============================ CONVERSATIONS ============================ */
@@ -1677,6 +1680,13 @@ const CONVERSATIONS = [
     { who:"you", gu:"પ્રસાદ મળશે?", roman:"prasaad maḷshe?", en:"Will there be prasad?" },
     { who:"them", gu:"હા, પૂજા પછી.", roman:"haa, poojaa pachhi.", en:"Yes, after the puja." },
     { who:"you", gu:"ધન્યવાદ.", roman:"dhanyavaad.", en:"Thank you." },
+  ]},
+  { id:"c18", title:"In an auto-rickshaw", icon:"car", turns:[
+    { who:"you", gu:"ભાઈ, સ્ટેશન જવું છે.", roman:"bhaai, sṭeshan javuṁ chhe.", en:"Bro, I need to go to the station.", choices:["સ્ટેશન જવું છે","કેમ છો?","આભાર"] },
+    { who:"them", gu:"બેસો, સો રૂપિયા.", roman:"beso, so roopiyaa.", en:"Get in, a hundred rupees." },
+    { who:"you", gu:"બહુ વધારે છે. સાઠ?", roman:"bahu vadhaare chhe. saaṭh?", en:"That is too much. Sixty?" },
+    { who:"them", gu:"ઠીક છે, એંસી.", roman:"ṭhik chhe, eṁsi.", en:"Okay, eighty." },
+    { who:"you", gu:"ચાલો, જઈએ.", roman:"chaalo, jaie.", en:"Alright, let's go." },
   ]},
 ];
 
@@ -1879,7 +1889,7 @@ const SIGNS = [
   { gu:"ં", say:"કં", roman:"anusvar", hint:"a dot that nasalizes: adds an m or n sound", ex:{gu:"કં", roman:"kaṁ"} },
   { gu:"ઃ", say:"કઃ", roman:"visarg", hint:"a soft h breath at the end of a syllable", ex:{gu:"કઃ", roman:"kaḥ"} },
   { gu:"ઁ", say:"કઁ", roman:"candrabindu", hint:"nasalizes the whole vowel, as in ચાંદ", ex:{gu:"કઁ", roman:"kã"} },
-  { gu:"્", say:"ક્ક", roman:"halant", hint:"removes the built-in 'a' from a consonant, so it joins the next one", ex:{gu:"ક્", roman:"k"} },
+  { gu:"્", say:"ક્", roman:"halant", hint:"removes the built-in 'a' from a consonant, leaving just the bare consonant sound", ex:{gu:"ક્", roman:"k"} },
   { gu:"ા", say:"કા", roman:"aa", hint:"the 'aa' sign, added after a consonant", ex:{gu:"કા", roman:"kaa"} },
   { gu:"િ", say:"કિ", roman:"i", hint:"the short 'i' sign, written before the consonant", ex:{gu:"કિ", roman:"ki"} },
   { gu:"ી", say:"કી", roman:"ii", hint:"the long 'ee' sign, added after", ex:{gu:"કી", roman:"kii"} },
