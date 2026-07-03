@@ -108,7 +108,7 @@ Until rules/index are applied, social features fail quietly (app still works).
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **356 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **393 clips**). The app's
   `speak()` plays a clip when the manifest has one, else falls back to browser
   TTS. A missing manifest just means TTS-as-before.
 - **Voices:** Google **Chirp3-HD** (`gu-IN-Chirp3-HD-Aoede`,
@@ -249,16 +249,12 @@ message. This is a platform limit, intentionally left as graceful fallback.
 1. **Owner: finish Firebase setup** (section 4 / AUTH.md): rules, admin UID,
    pokes index, authorized domain. Social + staff features need this.
 2. **Owner: rotate the Google TTS API key.**
-2b. **Owner: run `npm run audio`** to voice the new strings added with the vocab
-   lessons and the new Textiles/Food modules. Most words already have clips; the
-   new ones are a modest set. From the earlier vocab lessons: `ક્યાં`, `ઘરે`, and
-   the sentences `આઠ, નવ, દસ`, `આ લાલ છે`, `આ બિલાડી છે`, `ટ્રેન ક્યાં છે?`,
-   `આ મારી ગાડી છે`, `મને જવું છે`, `આજે સવાર છે`, `હું ગઈકાલે ઘરે ગયો`. From
-   Units 7 and 8 (about 31 strings): dish/cloth nouns such as `કઠોળ`, `છાશ`,
-   `ખમણ`, `ઢોકળા`, `ખાખરા`, `ખીચડી`, `કઢી`, `હાંડવો`, `સામો`, `ફરાળી`, `કપાસ`,
-   `રંગ`, `વણાટ`, `મશરૂ`, `સાડી`, `વેપાર`, `ઘરચોળું`, `બંદર`, plus their speak/note
-   phrases. Until then those specific words fall back to (silent-on-desktop) browser
-   TTS; the lessons still work. `npm run audio` is idempotent and self-syncing.
+2b. **Audio for all current lessons is generated and committed** (393 clips). The
+   new vocab lessons and Units 7-8 (khaman, dhokla, kadhi, khichdi, handvo, samo,
+   farali, kapaas, rang, vanaat, mashru, saadi, vepaar, gharcholu, bandar, etc.)
+   are voiced with the Chirp3-HD voices; 4 orphaned clips from the deleted Unit 6
+   lessons were removed. Only re-run `npm run audio` after adding new Gujarati
+   content (it is idempotent and self-syncing).
 3. **Verify the vowel sounds live** (ઇ ઐ ઔ ઍ). They are IPA-specified so they are
    the target sounds, but confirm by ear; IPA can be tuned per glyph, or a native
    recording can be dropped in (playback already resolves a clip per glyph).
