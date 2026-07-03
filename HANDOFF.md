@@ -162,6 +162,23 @@ all of these.
   Verify with: `grep -c $'\u2014' src/App.jsx` → must be `0`.
 - **No AI-artifact "eyebrow"/kicker labels** above headings.
 - **No Anthropic / AI branding** anywhere in the app.
+- **Decolonial language (important).** Refer to "India" only as the post-1947
+  country. For anything pre-partition (ancient, medieval, colonial-era
+  geography, travel, civilization, peoples), use "the subcontinent" or "South
+  Asia". Keep proper nouns as-is (Indian Ocean, Archaeological Survey of India,
+  Times of India, National Film Award, the 100-rupee note, book/source titles).
+  Never equate the political **state** of Gujarat (created 1960) with the older
+  **cultural/linguistic** Gujarat; frame the state as a modern political
+  construct. Apply this to all new Culture content.
+- **Nothing may cost money, ever (hard line).** No paid APIs/plans at runtime.
+  Audio is pre-generated once (free tier) and served static. Auth/DB is Firebase
+  Spark (free, no billing attached). This is why phone/SMS login was rejected
+  (SMS costs money) and sign-in is Google-only.
+- **Accounts:** sign-in is **required** (no guest access), **Google-only**. See
+  AUTH.md. Progress syncs per-user via Firestore.
+- **Web is a first-class experience**, not a scaled-down phone app. The native
+  iOS/Android apps will be a separate codebase. A proper desktop web layout
+  (sidebar nav, full width, right rail, Duolingo-web style) is a pending task.
 
 ---
 
