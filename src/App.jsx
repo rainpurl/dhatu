@@ -525,8 +525,15 @@ const CSS = `
 
 /* unit header */
 .unit-h{border-radius:18px;padding:16px 18px;color:#fff;margin:8px 0 4px;box-shadow:var(--sink-dark)}
+.unit-h .unit-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .unit-h h2{margin:0 0 2px;font-size:19px;font-weight:800;letter-spacing:-.3px}
 .unit-h p{margin:0;font-size:13px;opacity:.92;font-weight:500}
+.unit-h .unit-count{flex:none;font-size:12px;font-weight:800;letter-spacing:.2px;padding:5px 10px;border-radius:999px;
+  background:rgba(0,0,0,.22);box-shadow:inset 0 1px 2px rgba(0,0,0,.35);white-space:nowrap}
+.unit-bar{margin-top:12px;height:9px;border-radius:999px;background:rgba(0,0,0,.24);box-shadow:inset 0 1px 3px rgba(0,0,0,.4);overflow:hidden}
+.unit-bar > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#fff,rgba(255,255,255,.82));
+  box-shadow:0 0 6px rgba(255,255,255,.5);transition:width .5s var(--ease)}
+.unit-h.unit-done .unit-count{background:rgba(255,255,255,.9);color:#1E4C2E;box-shadow:none}
 
 /* winding path */
 .path{position:relative;padding:10px 0 4px}
@@ -2053,11 +2060,24 @@ function CourseApp({ user }) {
             </button>
           </div>
 
-          {UNITS.map((u) => (
+          {UNITS.map((u) => {
+            const uDone = u.lessons.filter((l) => completed.includes(l.id)).length;
+            const uTotal = u.lessons.length;
+            const uPct = Math.round((uDone / uTotal) * 100);
+            const uComplete = uDone === uTotal;
+            return (
             <div key={u.id}>
-              <div className="unit-h" style={{ background: `linear-gradient(135deg, ${u.color}, ${u.color}CC)` }}>
-                <h2>{u.ku}: {u.title}</h2>
-                <p>{u.sub}</p>
+              <div className={"unit-h" + (uComplete ? " unit-done" : "")} style={{ background: `linear-gradient(135deg, ${u.color}, ${u.color}CC)` }}>
+                <div className="unit-top">
+                  <div>
+                    <h2>{u.ku}: {u.title}</h2>
+                    <p>{u.sub}</p>
+                  </div>
+                  <span className="unit-count">{uComplete ? "Done" : uDone + "/" + uTotal}</span>
+                </div>
+                <div className="unit-bar" role="progressbar" aria-valuenow={uPct} aria-valuemin={0} aria-valuemax={100}>
+                  <i style={{ width: uPct + "%" }} />
+                </div>
               </div>
               <div className="lpath">
                 {u.lessons.map((l) => {
@@ -2078,7 +2098,8 @@ function CourseApp({ user }) {
                 })}
               </div>
             </div>
-          ))}
+            );
+          })}
           <div style={{ height: 10 }} />
         </div>
         <NavBar />
