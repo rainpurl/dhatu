@@ -673,6 +673,11 @@ const CSS = `
 .navb.on{color:var(--brand);background:var(--brand-soft);box-shadow:var(--bevel-inset)}
 
 /* script grid */
+.charinfo{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;margin:0 0 14px;box-shadow:var(--bevel-inset)}
+.charinfo .gu{font-family:var(--fgu);font-size:34px;font-weight:700;color:var(--brand);line-height:1;flex:none}
+.charinfo .ci-rom{font-weight:800;font-size:15px;flex:none}
+.charinfo .ci-hint{font-size:13px;color:var(--muted);font-weight:600;flex:1;line-height:1.3}
+.playbtn.sm{width:34px;height:34px}
 .chargrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .chartile{border:1px solid transparent;background:var(--card);border-radius:14px;padding:12px 6px;cursor:pointer;
   text-align:center;box-shadow:var(--bevel-raise);transition:background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
@@ -1343,12 +1348,19 @@ const TOPICS = [
 
 /* ============================ SCRIPT ============================ */
 const VOWELS = [
-  { gu:"અ", roman:"a" }, { gu:"આ", roman:"aa" }, { gu:"ઇ", roman:"i" }, { gu:"ઈ", roman:"ii" },
-  { gu:"ઉ", roman:"u" }, { gu:"ઊ", roman:"uu" },
+  { gu:"અ", roman:"a", hint:"a short 'uh', like the a in 'about'" },
+  { gu:"આ", roman:"aa", hint:"a long 'aa', like the a in 'father'" },
+  { gu:"ઇ", roman:"i", hint:"a short 'i', like in 'sit'" },
+  { gu:"ઈ", roman:"ii", hint:"a long 'ee', like in 'see'" },
+  { gu:"ઉ", roman:"u", hint:"a short 'u', like in 'put'" },
+  { gu:"ઊ", roman:"uu", hint:"a long 'oo', like in 'boot'" },
   { gu:"ઋ", roman:"ru", hint:"a vocalic r, found in Sanskrit loanwords like ઋતુ (season)" },
-  { gu:"એ", roman:"e" }, { gu:"ઐ", roman:"ai" }, { gu:"ઓ", roman:"o" }, { gu:"ઔ", roman:"au" },
-  { gu:"ઍ", roman:"ê", hint:"the vowel in the English word 'cat'" },
-  { gu:"ઑ", roman:"ô", hint:"the vowel in the English word 'hot'" },
+  { gu:"એ", roman:"e", hint:"like the e in 'they'" },
+  { gu:"ઐ", roman:"ai", hint:"like the e in 'bed' (an 'eh' sound, not 'eye')" },
+  { gu:"ઓ", roman:"o", hint:"like the o in 'go'" },
+  { gu:"ઔ", roman:"au", hint:"like the 'aw' in 'bought'" },
+  { gu:"ઍ", roman:"ê", hint:"like the a in 'apple'" },
+  { gu:"ઑ", roman:"ô", hint:"like the o in 'hot'" },
 ];
 const CONS_ROWS = [
   { label:"Velar", chars:[{gu:"ક",roman:"ka"},{gu:"ખ",roman:"kha"},{gu:"ગ",roman:"ga"},{gu:"ઘ",roman:"gha"},{gu:"ઙ",roman:"ṅa"}] },
@@ -1686,6 +1698,7 @@ function CourseApp({ user }) {
 
   const [selChar, setSelChar] = useState(null);
   const [playChar, setPlayChar] = useState(null);
+  const [charInfo, setCharInfo] = useState(null);
   const [selTopic, setSelTopic] = useState(null);
   const [practiceIdx, setPracticeIdx] = useState(0);
   const [selEra, setSelEra] = useState(null);
@@ -2176,6 +2189,7 @@ function CourseApp({ user }) {
     const tapChar = (c) => {
       speakGu(c.gu);
       setPlayChar(c.gu);
+      setCharInfo(c);
       setTimeout(() => setPlayChar((p) => (p === c.gu ? null : p)), 650);
     };
     const Tile = (c, i) => (
@@ -2189,7 +2203,15 @@ function CourseApp({ user }) {
         <style>{CSS}</style>
         <div className="scr" style={{ paddingBottom: 150 }}>
           <TopBar title="Script" sub="The Gujarati abugida" />
-          <p className="hist-intro">Tap any letter to hear it. Letters are ordered roughly by how often you will meet them, most common first.</p>
+          <p className="hist-intro">Tap any letter to hear it and see how it sounds. Letters are ordered roughly by how often you will meet them, most common first.</p>
+          {charInfo && (
+            <div className="charinfo">
+              <span className="gu">{charInfo.gu}</span>
+              <span className="ci-rom">{charInfo.roman}</span>
+              {charInfo.hint && <span className="ci-hint">{charInfo.hint}</span>}
+              <button className="playbtn sm" onClick={() => speakGu(charInfo.gu)}><Ic.play width={15} height={15} /></button>
+            </div>
+          )}
 
           <div className="section-h">Vowels</div>
           <div className="chargrid">{VOWELS_FREQ.map(Tile)}</div>
