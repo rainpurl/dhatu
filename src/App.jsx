@@ -654,22 +654,26 @@ const CSS = `
 
 /* history: topic categories */
 .hist-intro{font-size:14px;color:#5b4a51;line-height:1.5;margin:0 4px 16px}
-.cat-card{border:none;cursor:pointer;text-align:left;border-radius:18px;padding:16px;color:#fff;width:100%;
-  display:flex;gap:14px;align-items:flex-start;margin-bottom:12px;
-  box-shadow:var(--sink-dark);
+.cat-card{border:none;cursor:pointer;text-align:left;border-radius:18px;overflow:hidden;padding:0;width:100%;
+  background:var(--card);margin-bottom:12px;box-shadow:var(--bevel-raise);
   transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
-.cat-card:hover{box-shadow:var(--sink-dark)}
-.cat-card:active{transform:translateY(1px);box-shadow:inset 0 2px 8px rgba(0,0,0,.3)}
-.cat-emo{font-size:32px;line-height:1;flex:none;margin-top:2px}
-.cat-body h3{margin:0 0 4px;font-size:17px;font-weight:800;letter-spacing:-.2px}
-.cat-body p{margin:0;font-size:13px;line-height:1.45;opacity:.94;font-weight:500}
-.cat-count{display:inline-block;margin-top:9px;font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
-  background:rgba(255,255,255,.22);padding:3px 9px;border-radius:999px}
-.cat-head{border-radius:18px;padding:18px;color:#fff;margin-bottom:14px;
-  box-shadow:var(--sink-dark)}
-.cat-head .emo{font-size:34px;line-height:1}
-.cat-head h2{margin:6px 0 3px;font-size:21px;font-weight:800;letter-spacing:-.3px}
-.cat-head p{margin:0;font-size:13.5px;line-height:1.5;opacity:.94;font-weight:500}
+.cat-card:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.cat-cover{position:relative;height:132px;display:flex;align-items:flex-end;padding:12px 14px;color:#fff}
+.cat-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cat-cover .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.62))}
+.cat-cover-txt{position:relative;z-index:2}
+.cat-cover-txt h3{margin:0 0 6px;font-size:18px;font-weight:800;letter-spacing:-.2px}
+.cat-body{padding:12px 14px}
+.cat-body p{margin:0;font-size:13.5px;line-height:1.45;color:#4b3942;font-weight:500}
+.cat-count{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+  background:rgba(255,255,255,.24);padding:3px 9px;border-radius:999px}
+.cat-head{position:relative;overflow:hidden;border-radius:20px;min-height:152px;display:flex;align-items:flex-end;
+  padding:16px;color:#fff;margin-bottom:14px;box-shadow:var(--bevel-raise)}
+.cat-head img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cat-head .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.64))}
+.cat-head-txt{position:relative;z-index:2}
+.cat-head-txt h2{margin:0 0 4px;font-size:22px;font-weight:800;letter-spacing:-.3px}
+.cat-head-txt p{margin:0;font-size:13.5px;line-height:1.5;opacity:.95;font-weight:500}
 
 /* history detail */
 .hd-hero{height:190px;border-radius:20px;overflow:hidden;position:relative;display:flex;align-items:flex-end;
@@ -1247,11 +1251,11 @@ const SCRIPT_LEARN_POOL = ["અ","આ","ક","ન","ર","ત","ઇ","મ","સ"
 /* ============================ HISTORY ============================ */
 const FP = "https://commons.wikimedia.org/wiki/Special:FilePath/";
 const CATEGORIES = [
-  { id:"ancient", title:"Ancient Foundations", blurb:"Before Gujarat had a name, this land already had planned cities, an emperor's edicts, and a university.", color:"#B0703C", emo:"🏺" },
-  { id:"kingdoms", title:"Kingdoms and Courts", blurb:"Regional dynasties built temples, water works, and the literary culture that fed into modern Gujarati.", color:"#8A1C3B", emo:"🛕" },
-  { id:"trade", title:"Trade and the Indian Ocean", blurb:"Ports, merchants, and migration linked Gujarat to Africa, Arabia, and beyond long before the word globalization existed.", color:"#1E6E7E", emo:"⛵" },
-  { id:"colonial", title:"Colonial Rule and Resistance", blurb:"British rule reorganized land and labor. Gujarat answered with a new reading public and a new form of protest.", color:"#4A5568", emo:"🧵" },
-  { id:"modern", title:"Modern Gujarat", blurb:"A linguistic state, fast growth, popular protest, and the hard questions that came with all three.", color:"#2F6E44", emo:"🏗️" },
+  { id:"ancient", title:"Ancient Foundations", blurb:"Before Gujarat had a name, this land already had planned cities, an emperor's edicts, and a university.", color:"#B0703C", img: FP + "Dholavira%20gujarat.jpg?width=1000" },
+  { id:"kingdoms", title:"Kingdoms and Courts", blurb:"Regional dynasties built temples, water works, and the literary culture that fed into modern Gujarati.", color:"#8A1C3B", img: FP + "Rani%20ki%20vav%2002.jpg?width=1000" },
+  { id:"trade", title:"Trade and the Indian Ocean", blurb:"Ports, merchants, and migration linked Gujarat to Africa, Arabia, and beyond long before the word globalization existed.", color:"#1E6E7E", img: FP + "View%20of%20Surat%20from%20across%20the%20River%20Tapti%3B%20by%20A.%20van%20der%20Heen%2C%201782.jpg?width=1000" },
+  { id:"colonial", title:"Colonial Rule and Resistance", blurb:"British rule reorganized land and labor. Gujarat answered with a new reading public and a new form of protest.", color:"#4A5568", img: FP + "Gandhi%20at%20Dandi%2C%205%20April%201930.jpg?width=1000" },
+  { id:"modern", title:"Modern Gujarat", blurb:"A linguistic state, fast growth, popular protest, and the hard questions that came with all three.", color:"#2F6E44", img: FP + "Statue%20of%20Unity.jpg?width=1000" },
 ];
 const ERAS = [];
 
@@ -2171,7 +2175,6 @@ function CourseApp({ user }) {
             <div className="hd-hero" style={{ background: era.color }}>
               <SafeImg src={era.img} alt={era.title} />
               <div className="shade" />
-              <div className="emo">{era.emo}</div>
               <div className="txt">
                 <h2>{era.title}</h2>
                 <div className="yr">{era.yr}</div>
@@ -2232,9 +2235,12 @@ function CourseApp({ user }) {
               <button className="iconbtn" onClick={() => setSelCat(null)}><Ic.back /></button>
             </div>
             <div className="cat-head" style={{ background: cat.color }}>
-              <div className="emo">{cat.emo}</div>
-              <h2>{cat.title}</h2>
-              <p>{cat.blurb}</p>
+              <SafeImg src={cat.img} alt={cat.title} />
+              <div className="shade" />
+              <div className="cat-head-txt">
+                <h2>{cat.title}</h2>
+                <p>{cat.blurb}</p>
+              </div>
             </div>
             <div className="wide-2col">
               {eras.map((e) => (
@@ -2242,7 +2248,6 @@ function CourseApp({ user }) {
                   <div className="era-band" style={{ background: e.color || cat.color }}>
                     <SafeImg src={e.img} alt={e.title} />
                     <div className="shade" />
-                    <div className="emo">{e.emo}</div>
                     <div className="txt">
                       <h3>{e.title}</h3>
                       <div className="yr">{e.yr}</div>
@@ -2269,13 +2274,16 @@ function CourseApp({ user }) {
             {CATEGORIES.map((c) => {
               const n = ERAS.filter((e) => e.category === c.id).length;
               return (
-                <button key={c.id} className="cat-card" style={{ background: `linear-gradient(135deg, ${c.color}, ${c.color}D0)` }} onClick={() => setSelCat(c.id)}>
-                  <div className="cat-emo">{c.emo}</div>
-                  <div className="cat-body">
-                    <h3>{c.title}</h3>
-                    <p>{c.blurb}</p>
-                    <span className="cat-count">{n} {n === 1 ? "chapter" : "chapters"}</span>
+                <button key={c.id} className="cat-card" onClick={() => setSelCat(c.id)}>
+                  <div className="cat-cover" style={{ background: c.color }}>
+                    <SafeImg src={c.img} alt={c.title} />
+                    <div className="shade" />
+                    <div className="cat-cover-txt">
+                      <h3>{c.title}</h3>
+                      <span className="cat-count">{n} {n === 1 ? "chapter" : "chapters"}</span>
+                    </div>
                   </div>
+                  <div className="cat-body"><p>{c.blurb}</p></div>
                 </button>
               );
             })}
@@ -3028,6 +3036,7 @@ ERAS.push(
     sources:["Archaeological Survey of India","Encyclopaedia Britannica, Ashoka and the Major Rock Edicts","Wikipedia, Junagadh rock inscription of Rudradaman"] },
 
   { id:"vallabhi", category:"ancient", yr:"c. 470 - 780 CE", title:"Vallabhi's university", emo:"📜",
+    img: FP + "Five%20Bronzes%20Valabhipur.jpg?width=1000",
     blurb:"A coastal kingdom in Saurashtra ran a university that travelers compared to the great Buddhist center of Nalanda.",
     body:[
       "After the Mauryas and the Western Kshatrapas, a Gupta-linked dynasty called the Maitrakas rose to power in Saurashtra and ruled from the city of Vallabhi for roughly three centuries. Vallabhi grew into a wealthy port and administrative center, and Maitraka land grants, recorded on copper plates, are one of the main sources historians use to reconstruct the period's administration, taxation, and religious patronage.",
