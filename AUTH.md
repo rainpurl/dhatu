@@ -71,13 +71,35 @@ To turn it on:
    rules_version = '2';
    service cloud.firestore {
      match /databases/{database}/documents {
+       // private progress: owner (and the admin) only
        match /users/{uid} {
          allow read, write: if request.auth != null && request.auth.uid == uid;
          allow read, write: if request.auth != null && request.auth.uid == "YOUR_ADMIN_UID";
        }
+       // public profiles: any signed-in user can read; only the owner can write
+       match /publicProfiles/{uid} {
+         allow read: if request.auth != null;
+         allow write: if request.auth != null && request.auth.uid == uid;
+       }
+       // username registry: readable by all; you can only claim/edit your own
+       match /usernames/{name} {
+         allow read: if request.auth != null;
+         allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+         allow update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+       }
+       // pokes: anyone signed in can send; only the recipient can read or clear
+       match /pokes/{id} {
+         allow create: if request.auth != null && request.resource.data.from == request.auth.uid;
+         allow read, delete: if request.auth != null && resource.data.to == request.auth.uid;
+       }
      }
    }
    ```
+
+   This is the complete ruleset (it replaces the simpler one from step 3). It also
+   needs a Firestore index for pokes: the first time the app queries them,
+   Firestore logs a console error with a one-click link to create the index (on
+   `to` ascending, `at` descending). Click it once.
 
 4. Push, then open `https://dhatu.pages.dev/staff`, enter the password (`rain`),
    and sign in with your admin Google account.

@@ -69,6 +69,8 @@ function localSnapshot() {
 export function onAuthChange(cb) {
   return onAuthStateChanged(auth, (u) => {
     currentUid = u ? u.uid : null;
+    currentUser = u;
+    if (!u) currentUsername = null;
     cb(u);
   });
 }
@@ -98,6 +100,7 @@ export async function loadProgressToLocal(user) {
       ).catch(() => {});
     }
     const snap = await getDoc(ref);
+    currentUsername = (snap.exists() && snap.data().username) || null;
     if (snap.exists() && snap.data().progress) {
       // Cloud is the source of truth on sign-in: clear local first so an admin
       // reset (empty cloud progress) actually takes effect on the device.
@@ -109,9 +112,18 @@ export async function loadProgressToLocal(user) {
     } else {
       await setDoc(ref, { progress: localSnapshot(), updatedAt: Date.now() }, { merge: true });
     }
+    updatePublicProfile();
   } catch (e) {
     // offline or rules not set yet: keep working locally, just do not sync
   }
+}
+
+/* Whether the signed-in user has picked a username yet. */
+export function hasUsername() {
+  return !!currentUsername;
+}
+export function getUsername() {
+  return currentUsername;
 }
 
 let _saveTimer = null;
@@ -128,6 +140,7 @@ export function scheduleSave() {
         { progress: localSnapshot(), updatedAt: Date.now() },
         { merge: true }
       );
+      updatePublicProfile();
     } catch (e) {}
   }, 1200);
 }
@@ -143,4 +156,104 @@ export function clearLocalProgress() {
     }
     keys.forEach((k) => window.localStorage.removeItem(k));
   } catch (e) {}
+}
+
+/* ---------------- usernames, following, pokes ---------------- */
+
+// 3 to 20 chars, letters/numbers/underscore.
+export function validUsername(name) {
+  return /^[a-zA-Z0-9_]{3,20}$/.test(String(name || "").trim());
+}
+
+export async function usernameAvailable(name) {
+  const lc = name.trim().toLowerCase();
+  try {
+    const snap = await getDoc(doc(db, "usernames", lc));
+    return !snap.exists() || snap.data().uid === currentUid;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Claim or change a username; enforces global uniqueness via a transaction.
+export async function setUsername(name) {
+  if (!currentUid) throw new Error("not signed in");
+  const clean = name.trim();
+  if (!validUsername(clean)) throw new Error("Use 3 to 20 letters, numbers, or underscores.");
+  const lc = clean.toLowerCase();
+  const prev = currentUsername;
+  await runTransaction(db, async (tx) => {
+    const uref = doc(db, "usernames", lc);
+    const snap = await tx.get(uref);
+    if (snap.exists() && snap.data().uid !== currentUid) throw new Error("That username is taken.");
+    tx.set(uref, { uid: currentUid });
+    tx.set(doc(db, "users", currentUid), { username: clean }, { merge: true });
+  });
+  currentUsername = clean;
+  if (prev && prev.toLowerCase() !== lc) {
+    deleteDoc(doc(db, "usernames", prev.toLowerCase())).catch(() => {});
+  }
+  updatePublicProfile();
+  return clean;
+}
+
+export async function getPublicProfile(uid) {
+  const snap = await getDoc(doc(db, "publicProfiles", uid));
+  return snap.exists() ? { uid, ...snap.data() } : null;
+}
+
+// Follow another user by their username. Returns their public profile.
+export async function followByUsername(name) {
+  if (!currentUid) throw new Error("not signed in");
+  const lc = name.trim().toLowerCase();
+  const snap = await getDoc(doc(db, "usernames", lc));
+  if (!snap.exists()) throw new Error("No user with that username.");
+  const uid = snap.data().uid;
+  if (uid === currentUid) throw new Error("You can't follow yourself.");
+  await updateDoc(doc(db, "users", currentUid), { following: arrayUnion(uid) });
+  return getPublicProfile(uid);
+}
+
+export async function unfollowUser(uid) {
+  if (!currentUid) return;
+  await updateDoc(doc(db, "users", currentUid), { following: arrayRemove(uid) });
+}
+
+// The list of people you follow, with their public streak/Kaudi.
+export async function getFollowing() {
+  if (!currentUid) return [];
+  try {
+    const me = await getDoc(doc(db, "users", currentUid));
+    const ids = (me.exists() && me.data().following) || [];
+    const profiles = await Promise.all(ids.map((id) => getPublicProfile(id).catch(() => null)));
+    return profiles.filter(Boolean);
+  } catch (e) {
+    return [];
+  }
+}
+
+export async function pokeUser(toUid) {
+  if (!currentUid) return;
+  await addDoc(collection(db, "pokes"), {
+    to: toUid,
+    from: currentUid,
+    fromName: currentUsername || "Someone",
+    at: Date.now(),
+  });
+}
+
+// Pokes you have received.
+export async function getPokes() {
+  if (!currentUid) return [];
+  try {
+    const q = query(collection(db, "pokes"), where("to", "==", currentUid), orderBy("at", "desc"), limit(20));
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  } catch (e) {
+    return [];
+  }
+}
+
+export async function dismissPoke(id) {
+  try { await deleteDoc(doc(db, "pokes", id)); } catch (e) {}
 }

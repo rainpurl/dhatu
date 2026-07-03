@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { onAuthChange, signInWithGoogle, signOutUser, loadProgressToLocal, clearLocalProgress, scheduleSave } from "./firebase";
+import { onAuthChange, signInWithGoogle, signOutUser, loadProgressToLocal, clearLocalProgress, scheduleSave, hasUsername, getUsername, setUsername, usernameAvailable, validUsername, followByUsername, unfollowUser, getFollowing, pokeUser, getPokes, dismissPoke } from "./firebase";
 
 /* ============================================================
    Dhatu (ધાતુ) - a research-based Gujarati course for English
@@ -929,6 +929,22 @@ const CSS = `
 .heal-tx small{color:#6b5a2e;font-size:12px;font-weight:600;display:block;margin-top:1px}
 .heal .btn{width:auto;flex:none}
 
+/* username + friends */
+.uinput{width:100%;padding:11px 14px;border-radius:12px;border:none;background:#fff;font-size:15px;font-family:var(--fen);box-shadow:var(--bevel-inset);color:var(--ink)}
+.uinput::placeholder{color:var(--muted)}
+.gate .uinput{max-width:320px;text-align:center}
+.unamerow,.friendadd{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.unamerow .btn,.friendadd .btn{width:auto;flex:none}
+.friendmsg{font-size:12.5px;color:var(--muted);font-weight:600;margin:0 2px 10px}
+.friendrow{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:10px 12px;margin-bottom:10px;box-shadow:var(--bevel-inset)}
+.fpic{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none;box-shadow:var(--bevel-inset)}
+.fpic.ph{background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;box-shadow:var(--sink-brand)}
+.finfo{flex:1;min-width:0}.finfo b{font-size:15px;display:block}.finfo small{color:var(--muted);font-size:12.5px;font-weight:600}
+.friendrow .btn{width:auto;flex:none}
+.iconbtn.sm{width:32px;height:32px;flex:none}
+.pokerow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 2px;font-size:14px}
+.pokerow .btn{width:auto;flex:none}
+
 /* sign-in gate */
 .gate{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   gap:16px;padding:26px 22px calc(26px + env(safe-area-inset-bottom));max-width:460px;margin:0 auto}
@@ -1745,6 +1761,11 @@ function CourseApp({ user }) {
   const [selChar, setSelChar] = useState(null);
   const [playChar, setPlayChar] = useState(null);
   const [charInfo, setCharInfo] = useState(null);
+  const [friendList, setFriendList] = useState([]);
+  const [pokeList, setPokeList] = useState([]);
+  const [friendInput, setFriendInput] = useState("");
+  const [friendMsg, setFriendMsg] = useState("");
+  const [editName, setEditName] = useState("");
   const [selTopic, setSelTopic] = useState(null);
   const [practiceIdx, setPracticeIdx] = useState(0);
   const [selEra, setSelEra] = useState(null);
@@ -1833,6 +1854,30 @@ function CourseApp({ user }) {
     y.setDate(now.getDate() - 1);
     return lastActive !== _dstr(now) && lastActive !== _dstr(y);
   }
+  // Social: load followed friends and received pokes when the Profile opens.
+  useEffect(() => {
+    if (screen !== "profile") return;
+    getFollowing().then(setFriendList).catch(() => {});
+    getPokes().then(setPokeList).catch(() => {});
+  }, [screen]);
+  async function doFollow() {
+    setFriendMsg("");
+    try {
+      await followByUsername(friendInput);
+      setFriendInput("");
+      setFriendList(await getFollowing());
+    } catch (e) { setFriendMsg(e.message || "Could not follow."); }
+  }
+  async function doUnfollow(uid) { await unfollowUser(uid); setFriendList(await getFollowing()); }
+  async function doPoke(uid) { setFriendMsg(""); try { await pokeUser(uid); setFriendMsg("Poke sent!"); } catch (e) {} }
+  async function doDismissPoke(id) { await dismissPoke(id); setPokeList((p) => p.filter((x) => x.id !== id)); }
+  async function doChangeName() {
+    const n = editName.trim();
+    setFriendMsg("");
+    try { await setUsername(n); setEditName(""); setFriendMsg("Username updated."); }
+    catch (e) { setFriendMsg(e.message || "Could not change username."); }
+  }
+
   function healStreak() {
     if (kaudi < STREAK_HEAL_COST || !streakBroken()) return;
     const y = new Date();
@@ -2600,10 +2645,16 @@ function CourseApp({ user }) {
                 : <div className="acct-pic ph">{(user.displayName || user.email || "?").slice(0, 1).toUpperCase()}</div>}
               <div className="acct-info">
                 <b>{user.displayName || "Signed in"}</b>
-                <small>{user.email || ""}</small>
+                <small>{getUsername() ? "@" + getUsername() : user.email || ""}</small>
               </div>
             </div>
           )}
+          <div className="unamerow">
+            <input className="uinput" value={editName} placeholder={getUsername() ? "Change username (@" + getUsername() + ")" : "Set a username"}
+              onChange={(e) => setEditName(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))}
+              onKeyDown={(e) => { if (e.key === "Enter") doChangeName(); }} />
+            <button className="btn ghost sm" disabled={!editName} onClick={doChangeName}>Save</button>
+          </div>
           <div className="stats">
             <div className="stat">
               <div className="n"><Ic.kaudi width={20} height={20} style={{ color: "var(--gold)" }} />{kaudi}</div>
@@ -2645,6 +2696,42 @@ function CourseApp({ user }) {
               ))}
             </div>
           </div>
+
+          <div className="section-h">Friends</div>
+          {pokeList.length > 0 && (
+            <div className="card" style={{ marginBottom: 12 }}>
+              {pokeList.map((p) => (
+                <div key={p.id} className="pokerow">
+                  <span><b>{p.fromName || "Someone"}</b> poked you</span>
+                  <button className="btn ghost sm" onClick={() => doDismissPoke(p.id)}>Dismiss</button>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="friendadd">
+            <input className="uinput" value={friendInput} placeholder="Add a friend by username"
+              onChange={(e) => setFriendInput(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))}
+              onKeyDown={(e) => { if (e.key === "Enter") doFollow(); }} />
+            <button className="btn ok sm" disabled={!friendInput} onClick={doFollow}>Follow</button>
+          </div>
+          {friendMsg && <div className="friendmsg">{friendMsg}</div>}
+          {friendList.length === 0 ? (
+            <div className="card" style={{ textAlign: "center", padding: 20 }}>
+              <div style={{ fontSize: 13.5, color: "var(--muted)" }}>Follow friends by username to see their streak and Kaudi, and poke them.</div>
+            </div>
+          ) : (
+            friendList.map((f) => (
+              <div key={f.uid} className="friendrow">
+                {f.photo ? <img className="fpic" src={f.photo} alt="" referrerPolicy="no-referrer" /> : <div className="fpic ph">{(f.username || "?").slice(0, 1).toUpperCase()}</div>}
+                <div className="finfo">
+                  <b>{f.username || f.name || "Learner"}</b>
+                  <small><Ic.diya width={12} height={12} style={{ color: "var(--diya)", verticalAlign: "-2px" }} /> {f.streak || 0}  ·  <Ic.kaudi width={12} height={12} style={{ color: "var(--gold)", verticalAlign: "-2px" }} /> {f.kaudi || 0}</small>
+                </div>
+                <button className="btn gold sm" onClick={() => doPoke(f.uid)}>Poke</button>
+                <button className="iconbtn sm" title="Unfollow" onClick={() => doUnfollow(f.uid)}><Ic.x width={16} height={16} /></button>
+              </div>
+            ))
+          )}
 
           <div className="section-h">Badges</div>
           <div className="badges">
@@ -3653,9 +3740,43 @@ function SignIn() {
   );
 }
 
+function UsernameSetup({ onDone }) {
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const submit = async () => {
+    setErr("");
+    if (!validUsername(name)) { setErr("Use 3 to 20 letters, numbers, or underscores."); return; }
+    setBusy(true);
+    try {
+      if (!(await usernameAvailable(name))) { setErr("That username is taken."); setBusy(false); return; }
+      await setUsername(name);
+      onDone();
+    } catch (e) {
+      setErr(e.message || "Could not set that username."); setBusy(false);
+    }
+  };
+  return (
+    <div className="dhatu">
+      <style>{CSS}</style>
+      <div className="gate">
+        <div className="big-mark gu"><Ic.logo width={56} height={56} /></div>
+        <h1>Pick a username</h1>
+        <p className="tagline">This is how friends find you. You can change it later in your profile.</p>
+        <input className="uinput" value={name} maxLength={20} placeholder="username" autoFocus
+          onChange={(e) => setName(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))}
+          onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+        <button className="gbtn" disabled={busy || !name} onClick={submit}>{busy ? "Checking..." : "Continue"}</button>
+        {err && <div className="err">{err}</div>}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [user, setUser] = useState(undefined); // undefined = still checking
   const [ready, setReady] = useState(false);
+  const [needsName, setNeedsName] = useState(false);
   useEffect(
     () =>
       onAuthChange(async (u) => {
@@ -3663,6 +3784,7 @@ export default function App() {
         setUser(u);
         if (u) {
           await loadProgressToLocal(u);
+          setNeedsName(!hasUsername());
           setReady(true);
         }
       }),
@@ -3671,5 +3793,6 @@ export default function App() {
   if (user === undefined) return <Splash />;
   if (!user) return <SignIn />;
   if (!ready) return <Splash />;
+  if (needsName) return <UsernameSetup onDone={() => setNeedsName(false)} />;
   return <CourseApp user={user} />;
 }
