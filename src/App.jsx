@@ -779,6 +779,7 @@ const CSS = `
 /* Applied to the script screen root; retargets every letter glyph on the page */
 .sfont-2 .chargrid .gu,.sfont-2 .charinfo .gu,.sfont-2 .charinfo .ci-ex b.gu{font-family:'Rasa','Anek Gujarati',serif}
 .sfont-3 .chargrid .gu,.sfont-3 .charinfo .gu,.sfont-3 .charinfo .ci-ex b.gu{font-family:'Mogra','Noto Sans Gujarati','Anek Gujarati',sans-serif}
+.gu-ext-grid .gu{font-family:'Noto Sans Gujarati','Anek Gujarati',sans-serif!important}
 .playbtn.sm{width:34px;height:34px}
 .chargrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .chartile{border:1px solid transparent;background:var(--card);border-radius:14px;padding:12px 6px;cursor:pointer;
@@ -1791,7 +1792,7 @@ const RARE_CONS = [
   { gu:"ગ઼", roman:"gha", hint:"a throaty gh from Perso-Arabic (غ)", ex:{gu:"ગ઼ઝલ", roman:"ghazal"} },
   { gu:"ક઼", roman:"qa", hint:"a deep 'q' from Perso-Arabic (ق)", ex:{gu:"ક઼લમ", roman:"qalam"} },
   { gu:"ચ઼", roman:"tsa", hint:"a hard 'ts' sound, in borrowed words", ex:{gu:"ચ઼લાત", roman:"tsalaat"} },
-  { gu:"ત૽", roman:"ta", hint:"the English hard 't', as in 'top'", ex:{en:"top"} },
+  { gu:"ત૽", roman:"tta", hint:"the English hard 't', as in 'top'", ex:{en:"top"} },
 ];
 const NUMERALS = [
   { gu:"૦", roman:"0" }, { gu:"૧", roman:"1" }, { gu:"૨", roman:"2" }, { gu:"૩", roman:"3" }, { gu:"૪", roman:"4" },
@@ -1802,7 +1803,17 @@ const SIGNS = [
   { gu:"ઃ", roman:"visarg", hint:"a soft h breath at the end of a syllable" },
   { gu:"ઁ", roman:"candrabindu", hint:"nasalizes the whole vowel, as in ચાંદ" },
   { gu:"્", roman:"halant", hint:"removes the built-in 'a' from a consonant" },
-  { gu:"ૃ", say:"કૃ", roman:"ru", hint:"the vocalic r vowel sign: a hook added under a consonant", ex:{gu:"કૃપા", roman:"krupaa"} },
+  // Vowel signs (matras): the dependent form of a vowel, attached to a consonant.
+  { gu:"ા", say:"કા", roman:"aa", hint:"the 'aa' sign, added after a consonant" },
+  { gu:"િ", say:"કિ", roman:"i", hint:"the short 'i' sign, written before the consonant" },
+  { gu:"ી", say:"કી", roman:"ii", hint:"the long 'ee' sign, added after" },
+  { gu:"ુ", say:"કુ", roman:"u", hint:"the short 'u' sign, hooked below" },
+  { gu:"ૂ", say:"કૂ", roman:"uu", hint:"the long 'oo' sign, below" },
+  { gu:"ૃ", say:"કૃ", roman:"ru", hint:"the vocalic r sign: a hook added under a consonant", ex:{gu:"કૃપા", roman:"krupaa"} },
+  { gu:"ે", say:"કે", roman:"e", hint:"the 'e' sign, added above" },
+  { gu:"ૈ", say:"કૈ", roman:"ai", hint:"the 'ai' sign, added above" },
+  { gu:"ો", say:"કો", roman:"o", hint:"the 'o' sign, after and above" },
+  { gu:"ૌ", say:"કૌ", roman:"au", hint:"the 'au' sign, after and above" },
   { gu:"ૐ", roman:"om", hint:"the sacred syllable Om" },
   { gu:"।", roman:"danda", hint:"a vertical bar used as a full stop, like a period" },
   { gu:"॥", roman:"double danda", hint:"marks the end of a verse or a section" },
@@ -3071,15 +3082,15 @@ function CourseApp({ user }) {
           <div className="section-h">Numerals</div>
           <div className="chargrid numgrid">{NUMERALS.map(Tile)}</div>
 
-          <div className="section-h">Common signs</div>
-          <div className="chargrid">{SIGNS.map(Tile)}</div>
+          <div className="section-h">Modifiers</div>
+          <div className="chargrid gu-ext-grid">{SIGNS.map(Tile)}</div>
 
           <div className="section-h">Conjunct letters</div>
           <div className="chargrid">{CONJUNCTS.map(Tile)}</div>
 
           <div className="section-h">Rare and borrowed consonants</div>
           <p className="hist-intro" style={{ margin: "0 4px 10px" }}>Extra letters, usually a base consonant plus a dot (nukta), for sounds from Perso-Arabic and English loanwords.</p>
-          <div className="chargrid">{RARE_CONS.map(Tile)}</div>
+          <div className="chargrid gu-ext-grid">{RARE_CONS.map(Tile)}</div>
 
           <div style={{ height: 10 }} />
         </div>
