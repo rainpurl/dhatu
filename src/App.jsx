@@ -534,6 +534,20 @@ const CSS = `
 .unit-bar > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#fff,rgba(255,255,255,.82));
   box-shadow:0 0 6px rgba(255,255,255,.5);transition:width .5s var(--ease)}
 .unit-h.unit-done .unit-count{background:rgba(255,255,255,.9);color:#1E4C2E;box-shadow:none}
+/* resume card: jump back into the next lesson */
+.resume{width:100%;text-align:left;border:none;cursor:pointer;display:flex;align-items:center;gap:16px;
+  border-radius:20px;padding:18px 20px;margin:2px 0 14px;color:#fff;
+  background:linear-gradient(135deg,var(--brand),#6E1330);box-shadow:var(--sink-brand)}
+.resume:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.resume .rico{width:56px;height:56px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:var(--gold);color:#3b2a06;--edge:#B07E1C;box-shadow:0 4px 0 var(--edge),0 7px 12px rgba(0,0,0,.22)}
+.resume .rico svg{width:28px;height:28px}
+.resume .rbody{flex:1;min-width:0}
+.resume .rkick{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.82;margin:0 0 2px}
+.resume .rtitle{font-size:18px;font-weight:800;letter-spacing:-.3px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.resume .rsub{font-size:13px;opacity:.88;margin:2px 0 0;font-weight:500}
+.resume .rprog{display:block;margin-top:9px;height:7px;border-radius:999px;background:rgba(0,0,0,.26);box-shadow:inset 0 1px 2px rgba(0,0,0,.4);overflow:hidden}
+.resume .rprog > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),#F2C368);transition:width .5s var(--ease)}
 
 /* winding path */
 .path{position:relative;padding:10px 0 4px}
@@ -2042,11 +2056,27 @@ function CourseApp({ user }) {
   /* ---------------- LEARN ---------------- */
   if (screen === "learn") {
     const recId = nextRecommended();
+    const allLessons = UNITS.flatMap((u) => u.lessons.map((l) => ({ ...l, unit: u })));
+    const totalDone = allLessons.filter((l) => completed.includes(l.id)).length;
+    const totalPct = Math.round((totalDone / allLessons.length) * 100);
+    const recLesson = allLessons.find((l) => l.id === recId);
+    const started = totalDone > 0;
     return (
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
           <TopBar title="Dhātu" sub="Gujarati, one step at a time" />
+          {recLesson && (
+            <button className="resume" onClick={() => startLesson(recLesson.id)}>
+              <span className="rico"><Ic.play /></span>
+              <span className="rbody">
+                <p className="rkick">{started ? "Continue learning" : "Start here"}</p>
+                <p className="rtitle">{recLesson.label}</p>
+                <p className="rsub">{recLesson.unit.ku}: {recLesson.unit.title}</p>
+                <span className="rprog"><i style={{ width: totalPct + "%" }} /></span>
+              </span>
+            </button>
+          )}
           <div className="guides">
             <button className="guide" style={{ background: "linear-gradient(135deg,#1E6E7E,#164F5A)" }} onClick={() => setScreen("grammar")}>
               <Ic.book className="gi" />
