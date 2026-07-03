@@ -220,6 +220,13 @@ message. This is a platform limit, intentionally left as graceful fallback.
 - **Vocab topics:** slang, family (expanded kinship: older/younger sibling,
   maternal/paternal, kaka/mota bapa/mama/foi/masi), numbers, food, verbs,
   transport, colors, animals, time, greetings, market, festivals, culture.
+- **Learn units/lessons:** Unit 1 (first words, numbers 1-5, yes/no/sorry,
+  numbers 6-10, checkpoint); Unit 2 (family, food, home, colors, animals, getting
+  around, checkpoint); Unit 3 (grammar: word order, postpositions, gender, present
+  tense); Unit 4 (past: went/came, -e marker, checkpoint); Unit 5 (polite you,
+  everyday phrases, casual talk/slang, checkpoint); Unit 6 (modern culture). The
+  colors/animals/transport/slang/numbers-6-10 lessons were built from existing
+  vocab topics, so their words already have audio.
 - **Grammar (8):** word order, postpositions, gender/my, present tense, past/-e
   marker, polite you, negation, questions.
 - **Conversations (5):** hello, tea stall, asking the way, market haggling,
@@ -235,6 +242,10 @@ message. This is a platform limit, intentionally left as graceful fallback.
 1. **Owner: finish Firebase setup** (section 4 / AUTH.md): rules, admin UID,
    pokes index, authorized domain. Social + staff features need this.
 2. **Owner: rotate the Google TTS API key.**
+2b. **Owner: run `npm run audio`** to voice the 6 new strings added with the vocab
+   lessons (standalone `ક્યાં` plus 5 short speak sentences: `આઠ, નવ, દસ`,
+   `આ લાલ છે`, `આ બિલાડી છે`, `ટ્રેન ક્યાં છે?`, `આ મારી ગાડી છે`). Every
+   individual vocab word in those lessons already has a clip; only these need it.
 3. **Verify the vowel sounds live** (ઇ ઐ ઔ ઍ). They are IPA-specified so they are
    the target sounds, but confirm by ear; IPA can be tuned per glyph, or a native
    recording can be dropped in (playback already resolves a clip per glyph).
