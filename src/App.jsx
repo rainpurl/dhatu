@@ -2460,6 +2460,8 @@ function CourseApp({ user }) {
   const [completed, setCompleted] = useLocalState("dhatu_completed", []);
   const [srs, setSrs] = useLocalState("dhatu_srs", []);
   const [weekHit, setWeekHit] = useLocalState("dhatu_weekHit", [false, false, false, false, false, false, false]);
+  const [oil, setOil] = useLocalState("dhatu_oil", 0);
+  const [oilRun, setOilRun] = useLocalState("dhatu_oilRun", 0);
   const [lastActive, setLastActive] = useLocalState("dhatu_lastActive", "");
   const [dayLog, setDayLog] = useLocalState("dhatu_dayLog", { date: "", count: 0 });
   const [unitOpen, setUnitOpen] = useLocalState("dhatu_unitOpen", {});
@@ -2561,10 +2563,35 @@ function CourseApp({ user }) {
       return base;
     });
     setLastActive(today);
+    setOilRun(0); // an active day breaks any run of frozen days
   }
 
   // Streak repair: spend Kaudi to rescue a streak after a missed day.
   const STREAK_HEAL_COST = 30;
+  // Extra oil: a streak freeze. Bought ahead for OIL_COST Kaudi; auto-consumed to
+  // keep the diya lit on a missed day. One charge covers one day, and freezes
+  // cannot cover more than OIL_MAX_RUN days in a row (then the streak resets).
+  const OIL_COST = 50;
+  const OIL_MAX_RUN = 4;
+  function buyOil() {
+    if (kaudi < OIL_COST) return;
+    setKaudi((k) => k - OIL_COST);
+    setOil((o) => o + 1);
+  }
+  // On load, auto-apply extra oil to bridge any missed days (up to the run cap).
+  useEffect(() => {
+    if (!lastActive || streak < 1) return;
+    const today = _dstr(new Date());
+    if (lastActive === today) return;
+    const daysSince = Math.round((new Date(today + "T00:00:00") - new Date(lastActive + "T00:00:00")) / 86400000);
+    const missed = daysSince - 1; // days with no activity, not counting today
+    if (missed >= 1 && oil >= missed && oilRun + missed <= OIL_MAX_RUN) {
+      setOil((o) => o - missed);
+      setOilRun((r) => r + missed);
+      const y = new Date(); y.setDate(y.getDate() - 1);
+      setLastActive(_dstr(y)); // bridge the gap so the streak survives
+    }
+  }, []);
   function streakBroken() {
     if (!lastActive || streak < 1) return false;
     const now = new Date();
@@ -3512,6 +3539,8 @@ function CourseApp({ user }) {
       { id: "b6", label: "Saaro mitra", sub: "Follow two friends", icon: "chats", on: friendList.length >= 2 },
       { id: "b7", label: "Satat jyot", sub: "Keep a 7-day streak", icon: "diya", on: streak >= 7 },
       { id: "b8", label: "Amar jyot", sub: "Keep a 30-day streak", icon: "diya", on: streak >= 30 },
+      { id: "b12", label: "Akhand jyot", sub: "Keep a 100-day streak", icon: "diya", on: streak >= 100 },
+      { id: "b13", label: "Suvarṇa jyot", sub: "Keep a 365-day streak", icon: "diya", on: streak >= 365 },
       { id: "b9", label: "Dhanvaan", sub: "1000 Kaudi earned", icon: "kaudi", on: kaudi >= 1000 },
       { id: "b10", label: "Conversationalist", sub: "5000 Kaudi earned", icon: "talk", on: kaudi >= 5000 },
       { id: "b11", label: "Mastery", sub: "Complete every lesson", icon: "trophy", on: masteryDone },
@@ -3567,6 +3596,15 @@ function CourseApp({ user }) {
               <button className="btn gold sm" disabled={kaudi < STREAK_HEAL_COST} onClick={healStreak}>Repair</button>
             </div>
           )}
+
+          <div className="heal">
+            <div className="heal-ic"><Ic.diya width={22} height={22} /></div>
+            <div className="heal-tx">
+              <b>Extra oil{oil > 0 ? ` × ${oil}` : ""}</b>
+              <small>Keeps your diya lit if you miss a day. Lasts one day, and covers up to {OIL_MAX_RUN} days in a row.</small>
+            </div>
+            <button className="btn gold sm" disabled={kaudi < OIL_COST} onClick={buyOil}>Buy {OIL_COST}</button>
+          </div>
 
           <div className="section-h">This week</div>
           <div className="card">
