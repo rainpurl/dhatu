@@ -1429,6 +1429,10 @@ const LESSON_ICON = {
   u7l1:"palette", u7l2:"link", u7l3:"shirt", u7l4:"book",
   u8l1:"bowl", u8l2:"cup", u8l3:"bowl", u8l4:"book",
   u9l1:"star", u9l2:"profile", u9l3:"bulb", u9l4:"temple",
+  u10l1:"numbers", u10l2:"numbers", u10l3:"numbers", u10l4:"tag",
+  u11l1:"clock", u11l2:"clock", u11l3:"steps",
+  u12l1:"spark", u12l2:"talk",
+  u13l1:"profile", u13l2:"chats",
 };
 const lessonIcon = (l) => {
   if (l.kind === "check") return Ic.trophy;
@@ -1461,6 +1465,9 @@ const GRAMMAR = [
   { id:"g8", color:"#C77B1E", title:"Asking questions", summary:"Question words usually sit just before the verb.",
     points:["શું what, ક્યાં where, કોણ who, ક્યારે when, કેમ why or how.","કેટલું means 'how much' or 'how many'.","A yes/no question can be just a statement said with a rising tone."],
     examples:[{gu:"આ શું છે?",roman:"aa shuṁ chhe?",en:"What is this?"},{gu:"તમે ક્યાં રહો છો?",roman:"tame kyaan raho chho?",en:"Where do you live?"},{gu:"આ કેટલું છે?",roman:"aa keṭluṁ chhe?",en:"How much is this?"}] },
+  { id:"g9", color:"#2F8F6B", title:"The future tense", summary:"An ending on the verb says the action will happen.",
+    points:["Add a future ending to the verb stem: જવું becomes જઈશ, જશે, જઈશું.","હું જઈશ (I will go), તું જશે or તમે જશો (you will go), તે જશે (he/she will go), અમે જઈશું (we will go).","The same shape gives આવીશ (I will come) and કરીશ (I will do)."],
+    examples:[{gu:"હું કાલે આવીશ",roman:"huṁ kaale aaveesh",en:"I will come tomorrow."},{gu:"આપણે મળીશું",roman:"aapaṇe maḷeeshuṁ",en:"we will meet"},{gu:"તમે શું કરશો?",roman:"tame shuṁ karsho?",en:"what will you do?"}] },
 ];
 
 /* ============================ CONVERSATIONS ============================ */
@@ -2263,7 +2270,7 @@ function CourseApp({ user }) {
             <button className="guide" style={{ background: "linear-gradient(135deg,#1E6E7E,#164F5A)" }} onClick={() => setScreen("grammar")}>
               <Ic.book className="gi" />
               <b>Grammar guide</b>
-              <span>Six core patterns, explained</span>
+              <span>Core patterns, explained</span>
             </button>
             <button className="guide" style={{ background: "linear-gradient(135deg,#C77B1E,#96590F)" }} onClick={() => setScreen("talk")}>
               <Ic.talk className="gi" />
@@ -3622,6 +3629,187 @@ UNITS.push({ id:"u9", ku:"Unit 9", title:"Describing the world", sub:"Opposites,
   lessons:[ {id:"u9l1",label:"Opposites"}, {id:"u9l2",label:"The body"}, {id:"u9l3",label:"Weather and seasons"}, {id:"u9l4",label:"Around town"}, {id:"u9c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u9l1", "u9l2", "u9l3", "u9l4", "u9c");
 
+/* ============================ MODULE: Numbers and shopping ============================ */
+Object.assign(LESSONS, {
+  u10l1: { title:"Numbers 11 to 15", ex: [
+    { t:"intro", gu:"અગિયાર", roman:"agiyaar", en:"11" },
+    { t:"intro", gu:"બાર", roman:"baar", en:"12" },
+    { t:"intro", gu:"તેર", roman:"ter", en:"13" },
+    { t:"intro", gu:"ચૌદ", roman:"chaud", en:"14" },
+    { t:"intro", gu:"પંદર", roman:"pandar", en:"15" },
+    { t:"match", pairs:[{gu:"અગિયાર",en:"11"},{gu:"બાર",en:"12"},{gu:"તેર",en:"13"},{gu:"ચૌદ",en:"14"}] },
+    { t:"listen", say:"પંદર", roman:"pandar", options:["15","13","11"], answer:"15" },
+    { t:"speak", gu:"અગિયાર, બાર, તેર", roman:"agiyaar, baar, ter", en:"11, 12, 13" },
+  ]},
+  u10l2: { title:"Numbers 16 to 20", ex: [
+    { t:"intro", gu:"સોળ", roman:"soḷ", en:"16" },
+    { t:"intro", gu:"સત્તર", roman:"sattar", en:"17" },
+    { t:"intro", gu:"અઢાર", roman:"aḍhaar", en:"18" },
+    { t:"intro", gu:"ઓગણીસ", roman:"ogaṇees", en:"19" },
+    { t:"intro", gu:"વીસ", roman:"vees", en:"20" },
+    { t:"match", pairs:[{gu:"સોળ",en:"16"},{gu:"સત્તર",en:"17"},{gu:"અઢાર",en:"18"},{gu:"વીસ",en:"20"}] },
+    { t:"listen", say:"ઓગણીસ", roman:"ogaṇees", options:["19","17","16"], answer:"19" },
+    { t:"speak", gu:"અઢાર, ઓગણીસ, વીસ", roman:"aḍhaar, ogaṇees, vees", en:"18, 19, 20" },
+  ]},
+  u10l3: { title:"Counting by tens", ex: [
+    { t:"note", title:"Tens up to a hundred", body:[
+      "After twenty, the round tens are વીસ (20), ત્રીસ (30), ચાળીસ (40), પચાસ (50), and so on.",
+      "A hundred is સો. Gujarati number words are quite irregular, so they are best learned by ear."], ex:[
+      {gu:"પચાસ",roman:"pachaas",en:"50"},
+      {gu:"સો",roman:"so",en:"100"}] },
+    { t:"intro", gu:"ત્રીસ", roman:"trees", en:"30" },
+    { t:"intro", gu:"ચાળીસ", roman:"chaaḷees", en:"40" },
+    { t:"intro", gu:"પચાસ", roman:"pachaas", en:"50" },
+    { t:"intro", gu:"સો", roman:"so", en:"100" },
+    { t:"match", pairs:[{gu:"વીસ",en:"20"},{gu:"ત્રીસ",en:"30"},{gu:"ચાળીસ",en:"40"},{gu:"પચાસ",en:"50"}] },
+    { t:"listen", say:"સો", roman:"so", options:["100","50","40"], answer:"100" },
+    { t:"speak", gu:"ત્રીસ, ચાળીસ, પચાસ", roman:"trees, chaaḷees, pachaas", en:"30, 40, 50" },
+  ]},
+  u10l4: { title:"Shopping and prices", ex: [
+    { t:"intro", gu:"રૂપિયા", roman:"roopiyaa", en:"rupees" },
+    { t:"note", title:"Asking the price", body:[
+      "To ask a price, say આ કેટલું છે? which means 'how much is this?'.",
+      "Prices are given in રૂપિયા (rupees). If something feels dear, you can ask whether it can be સસ્તું (cheaper)."], ex:[
+      {gu:"આ કેટલું છે?",roman:"aa keṭluṁ chhe?",en:"how much is this?"},
+      {gu:"વીસ રૂપિયા",roman:"vees roopiyaa",en:"twenty rupees"}] },
+    { t:"match", pairs:[{gu:"રૂપિયા",en:"rupees"},{gu:"પૈસા",en:"money"},{gu:"ભાવ",en:"price"},{gu:"સસ્તું",en:"cheap"}] },
+    { t:"build", en:"This is twenty rupees.", answer:["આ","વીસ","રૂપિયા","છે"], extra:["પૈસા","સો"], roman:"aa vees roopiyaa chhe" },
+    { t:"speak", gu:"આ કેટલું છે?", roman:"aa keṭluṁ chhe?", en:"How much is this?" },
+  ]},
+  u10c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"પંદર",en:"15"},{gu:"વીસ",en:"20"},{gu:"પચાસ",en:"50"},{gu:"રૂપિયા",en:"rupees"}] },
+    { t:"listen", say:"અગિયાર", roman:"agiyaar", options:["11","12","20"], answer:"11" },
+    { t:"listen", say:"સો", roman:"so", options:["100","50","15"], answer:"100" },
+    { t:"build", en:"This is twenty rupees.", answer:["આ","વીસ","રૂપિયા","છે"], extra:["તેર","ભાવ"], roman:"aa vees roopiyaa chhe" },
+    { t:"speak", gu:"આ કેટલું છે?", roman:"aa keṭluṁ chhe?", en:"How much is this?" },
+  ]},
+});
+UNITS.push({ id:"u10", ku:"Unit 10", title:"Numbers and shopping", sub:"Numbers 11 to 100, prices, and the market", color:"#B7791F",
+  lessons:[ {id:"u10l1",label:"Numbers 11-15"}, {id:"u10l2",label:"Numbers 16-20"}, {id:"u10l3",label:"Counting by tens"}, {id:"u10l4",label:"Shopping and prices"}, {id:"u10c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u10l1", "u10l2", "u10l3", "u10l4", "u10c");
+
+/* ============================ MODULE: Time and routine ============================ */
+Object.assign(LESSONS, {
+  u11l1: { title:"Days of the week", ex: [
+    { t:"intro", gu:"સોમવાર", roman:"somvaar", en:"Monday" },
+    { t:"intro", gu:"મંગળવાર", roman:"mangaḷvaar", en:"Tuesday" },
+    { t:"intro", gu:"બુધવાર", roman:"budhvaar", en:"Wednesday" },
+    { t:"intro", gu:"ગુરુવાર", roman:"guruvaar", en:"Thursday" },
+    { t:"intro", gu:"શુક્રવાર", roman:"shukravaar", en:"Friday" },
+    { t:"intro", gu:"શનિવાર", roman:"shanivaar", en:"Saturday" },
+    { t:"intro", gu:"રવિવાર", roman:"ravivaar", en:"Sunday" },
+    { t:"match", pairs:[{gu:"સોમવાર",en:"Monday"},{gu:"મંગળવાર",en:"Tuesday"},{gu:"બુધવાર",en:"Wednesday"},{gu:"ગુરુવાર",en:"Thursday"}] },
+    { t:"listen", say:"રવિવાર", roman:"ravivaar", options:["Sunday","Saturday","Friday"], answer:"Sunday" },
+    { t:"speak", gu:"આજે સોમવાર છે", roman:"aaje somvaar chhe", en:"Today is Monday." },
+  ]},
+  u11l2: { title:"Telling time", ex: [
+    { t:"intro", gu:"સમય", roman:"samay", en:"time" },
+    { t:"intro", gu:"કલાક", roman:"kalaak", en:"hour" },
+    { t:"intro", gu:"મિનિટ", roman:"miniṭ", en:"minute" },
+    { t:"intro", gu:"અત્યારે", roman:"atyaare", en:"now" },
+    { t:"note", title:"What time is it?", body:[
+      "વાગ્યા means 'o'clock'. To ask the time, say કેટલા વાગ્યા? which means 'what time is it?'.",
+      "One hour is એક કલાક, and a minute is a મિનિટ."], ex:[
+      {gu:"કેટલા વાગ્યા?",roman:"keṭlaa vaagyaa?",en:"what time is it?"},
+      {gu:"એક કલાક",roman:"ek kalaak",en:"one hour"}] },
+    { t:"match", pairs:[{gu:"સમય",en:"time"},{gu:"કલાક",en:"hour"},{gu:"મિનિટ",en:"minute"},{gu:"અત્યારે",en:"now"}] },
+    { t:"listen", say:"કલાક", roman:"kalaak", options:["hour","minute","time"], answer:"hour" },
+    { t:"speak", gu:"કેટલા વાગ્યા?", roman:"keṭlaa vaagyaa?", en:"What time is it?" },
+  ]},
+  u11l3: { title:"Daily routine", ex: [
+    { t:"intro", gu:"ઊઠવું", roman:"ooṭhvuṁ", en:"to wake up" },
+    { t:"intro", gu:"સૂવું", roman:"soovuṁ", en:"to sleep" },
+    { t:"intro", gu:"જમવું", roman:"jamvuṁ", en:"to eat a meal" },
+    { t:"intro", gu:"નહાવું", roman:"nahaavuṁ", en:"to bathe" },
+    { t:"intro", gu:"કામ", roman:"kaam", en:"work" },
+    { t:"match", pairs:[{gu:"ઊઠવું",en:"to wake up"},{gu:"સૂવું",en:"to sleep"},{gu:"જમવું",en:"to eat a meal"},{gu:"નહાવું",en:"to bathe"}] },
+    { t:"listen", say:"કામ", roman:"kaam", options:["work","sleep","time"], answer:"work" },
+    { t:"speak", gu:"હું સવારે ઊઠું છું", roman:"huṁ savaare ooṭhuṁ chuṁ", en:"I wake up in the morning." },
+  ]},
+  u11c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"સોમવાર",en:"Monday"},{gu:"રવિવાર",en:"Sunday"},{gu:"સમય",en:"time"},{gu:"કામ",en:"work"}] },
+    { t:"listen", say:"મંગળવાર", roman:"mangaḷvaar", options:["Tuesday","Thursday","Sunday"], answer:"Tuesday" },
+    { t:"listen", say:"કલાક", roman:"kalaak", options:["hour","minute","work"], answer:"hour" },
+    { t:"speak", gu:"આજે રવિવાર છે", roman:"aaje ravivaar chhe", en:"Today is Sunday." },
+  ]},
+});
+UNITS.push({ id:"u11", ku:"Unit 11", title:"Time and routine", sub:"Days of the week, telling time, and the daily routine", color:"#5A6FB0",
+  lessons:[ {id:"u11l1",label:"Days of the week"}, {id:"u11l2",label:"Telling time"}, {id:"u11l3",label:"Daily routine"}, {id:"u11c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u11l1", "u11l2", "u11l3", "u11c");
+
+/* ============================ MODULE: Making plans (future) ============================ */
+Object.assign(LESSONS, {
+  u12l1: { title:"The future tense", ex: [
+    { t:"note", title:"Saying what will happen", body:[
+      "For the future, an ending is added to the verb. For જવું (to go): હું જઈશ (I will go), તું જશે and તમે જશો (you will go), તે જશે (he/she will go), અમે જઈશું (we will go).",
+      "The same pattern gives આવીશ (I will come) and કરીશ (I will do)."], ex:[
+      {gu:"હું જઈશ",roman:"huṁ jaeesh",en:"I will go"},
+      {gu:"અમે જઈશું",roman:"ame jaeeshuṁ",en:"we will go"}] },
+    { t:"intro", gu:"જઈશ", roman:"jaeesh", en:"(I) will go" },
+    { t:"intro", gu:"આવીશ", roman:"aaveesh", en:"(I) will come" },
+    { t:"intro", gu:"કરીશ", roman:"kareesh", en:"(I) will do" },
+    { t:"fill", pre:"આવતીકાલે હું ઘરે", post:"", options:["જઈશ","જાઉં","ગયો"], answer:"જઈશ", gu:"આવતીકાલે હું ઘરે જઈશ", en:"Tomorrow I will go home.", why:"The future 'I will go' is જઈશ." },
+    { t:"match", pairs:[{gu:"જઈશ",en:"will go"},{gu:"આવીશ",en:"will come"},{gu:"કરીશ",en:"will do"},{gu:"જઈશું",en:"we will go"}] },
+    { t:"speak", gu:"હું કાલે આવીશ", roman:"huṁ kaale aaveesh", en:"I will come tomorrow." },
+  ]},
+  u12l2: { title:"Making plans", ex: [
+    { t:"intro", gu:"મળવું", roman:"maḷvuṁ", en:"to meet" },
+    { t:"intro", gu:"પછી", roman:"pachhi", en:"later / afterwards" },
+    { t:"note", title:"Let's meet", body:[
+      "આપણે મળીશું means 'we will meet'. Add a time word to make a plan, like આવતીકાલે (tomorrow).",
+      "પછી મળીશું is a friendly way to say 'see you later'."], ex:[
+      {gu:"આપણે મળીશું",roman:"aapaṇe maḷeeshuṁ",en:"we will meet"},
+      {gu:"પછી મળીશું",roman:"pachhi maḷeeshuṁ",en:"see you later"}] },
+    { t:"match", pairs:[{gu:"મળવું",en:"to meet"},{gu:"પછી",en:"later"},{gu:"આવતીકાલે",en:"tomorrow"},{gu:"જઈશ",en:"will go"}] },
+    { t:"listen", say:"પછી", roman:"pachhi", options:["later","tomorrow","now"], answer:"later" },
+    { t:"speak", gu:"આપણે આવતીકાલે મળીશું", roman:"aapaṇe aavtikaale maḷeeshuṁ", en:"We will meet tomorrow." },
+  ]},
+  u12c: { title:"Checkpoint", check:true, ex: [
+    { t:"fill", pre:"આવતીકાલે હું ઘરે", post:"", options:["જઈશ","જાઉં","ગયો"], answer:"જઈશ", gu:"આવતીકાલે હું ઘરે જઈશ", en:"Tomorrow I will go home.", why:"The future 'I will go' is જઈશ." },
+    { t:"match", pairs:[{gu:"જઈશ",en:"will go"},{gu:"આવીશ",en:"will come"},{gu:"મળવું",en:"to meet"},{gu:"પછી",en:"later"}] },
+    { t:"listen", say:"આવીશ", roman:"aaveesh", options:["(I) will come","(I) will go","to meet"], answer:"(I) will come" },
+    { t:"speak", gu:"આપણે પછી મળીશું", roman:"aapaṇe pachhi maḷeeshuṁ", en:"We will meet later." },
+  ]},
+});
+UNITS.push({ id:"u12", ku:"Unit 12", title:"Making plans", sub:"The future tense and arranging to meet", color:"#2F8F6B",
+  lessons:[ {id:"u12l1",label:"The future tense"}, {id:"u12l2",label:"Making plans"}, {id:"u12c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u12l1", "u12l2", "u12c");
+
+/* ============================ MODULE: People and work ============================ */
+Object.assign(LESSONS, {
+  u13l1: { title:"Jobs", ex: [
+    { t:"intro", gu:"શિક્ષક", roman:"shikshak", en:"teacher" },
+    { t:"intro", gu:"ડૉક્ટર", roman:"ḍokṭar", en:"doctor" },
+    { t:"intro", gu:"ખેડૂત", roman:"kheḍoot", en:"farmer" },
+    { t:"intro", gu:"વિદ્યાર્થી", roman:"vidyaarthi", en:"student" },
+    { t:"intro", gu:"દુકાનદાર", roman:"dukaandaar", en:"shopkeeper" },
+    { t:"match", pairs:[{gu:"શિક્ષક",en:"teacher"},{gu:"ડૉક્ટર",en:"doctor"},{gu:"ખેડૂત",en:"farmer"},{gu:"વિદ્યાર્થી",en:"student"}] },
+    { t:"listen", say:"દુકાનદાર", roman:"dukaandaar", options:["shopkeeper","farmer","doctor"], answer:"shopkeeper" },
+    { t:"speak", gu:"તે શિક્ષક છે", roman:"te shikshak chhe", en:"He is a teacher." },
+  ]},
+  u13l2: { title:"What do you do?", ex: [
+    { t:"intro", gu:"વેપારી", roman:"vepaari", en:"trader / merchant" },
+    { t:"intro", gu:"ડ્રાઇવર", roman:"ḍraaivar", en:"driver" },
+    { t:"note", title:"Talking about work", body:[
+      "To ask what someone does, say તમે શું કામ કરો છો?, meaning 'what work do you do?'.",
+      "To answer, use હું ... છું, 'I am a ...', as in હું ડૉક્ટર છું (I am a doctor)."], ex:[
+      {gu:"તમે શું કામ કરો છો?",roman:"tame shuṁ kaam karo chho?",en:"what do you do?"},
+      {gu:"હું ડૉક્ટર છું",roman:"huṁ ḍokṭar chuṁ",en:"I am a doctor"}] },
+    { t:"match", pairs:[{gu:"વેપારી",en:"trader"},{gu:"ડ્રાઇવર",en:"driver"},{gu:"શિક્ષક",en:"teacher"},{gu:"ડૉક્ટર",en:"doctor"}] },
+    { t:"build", en:"I am a teacher.", answer:["હું","શિક્ષક","છું"], extra:["તે","ડૉક્ટર"], roman:"huṁ shikshak chuṁ" },
+    { t:"speak", gu:"તમે શું કામ કરો છો?", roman:"tame shuṁ kaam karo chho?", en:"What do you do?" },
+  ]},
+  u13c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"શિક્ષક",en:"teacher"},{gu:"ડૉક્ટર",en:"doctor"},{gu:"ખેડૂત",en:"farmer"},{gu:"વેપારી",en:"trader"}] },
+    { t:"listen", say:"વિદ્યાર્થી", roman:"vidyaarthi", options:["student","driver","farmer"], answer:"student" },
+    { t:"build", en:"I am a teacher.", answer:["હું","શિક્ષક","છું"], extra:["વેપારી","છે"], roman:"huṁ shikshak chuṁ" },
+    { t:"speak", gu:"તે ડૉક્ટર છે", roman:"te ḍokṭar chhe", en:"She is a doctor." },
+  ]},
+});
+UNITS.push({ id:"u13", ku:"Unit 13", title:"People and work", sub:"Jobs and talking about what people do", color:"#A14D6B",
+  lessons:[ {id:"u13l1",label:"Jobs"}, {id:"u13l2",label:"What do you do?"}, {id:"u13c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u13l1", "u13l2", "u13c");
+
 /* ============================ VOCAB: festivals + textiles (added) ============================ */
 TOPICS.push(
   { id:"time", title:"Time and days", icon:"clock", words:[
@@ -3724,6 +3912,54 @@ TOPICS.push(
     { gu:"થાકેલું", r:"thaakeluṁ", en:"tired" },
     { gu:"ભૂખ", r:"bhookh", en:"hunger" },
     { gu:"ડર", r:"ḍar", en:"fear" },
+  ]}
+);
+
+/* ============================ VOCAB: numbers, time, work (added) ============================ */
+TOPICS.push(
+  { id:"numbers2", title:"Numbers 11 to 100", icon:"numbers", note:"Gujarati number words are irregular, so they are best learned by ear.", words:[
+    { gu:"અગિયાર", r:"agiyaar", en:"11" },
+    { gu:"બાર", r:"baar", en:"12" },
+    { gu:"તેર", r:"ter", en:"13" },
+    { gu:"ચૌદ", r:"chaud", en:"14" },
+    { gu:"પંદર", r:"pandar", en:"15" },
+    { gu:"સોળ", r:"soḷ", en:"16" },
+    { gu:"સત્તર", r:"sattar", en:"17" },
+    { gu:"અઢાર", r:"aḍhaar", en:"18" },
+    { gu:"ઓગણીસ", r:"ogaṇees", en:"19" },
+    { gu:"વીસ", r:"vees", en:"20" },
+    { gu:"ત્રીસ", r:"trees", en:"30" },
+    { gu:"ચાળીસ", r:"chaaḷees", en:"40" },
+    { gu:"પચાસ", r:"pachaas", en:"50" },
+    { gu:"સો", r:"so", en:"100" },
+  ]},
+  { id:"days", title:"Days of the week", icon:"clock", words:[
+    { gu:"સોમવાર", r:"somvaar", en:"Monday" },
+    { gu:"મંગળવાર", r:"mangaḷvaar", en:"Tuesday" },
+    { gu:"બુધવાર", r:"budhvaar", en:"Wednesday" },
+    { gu:"ગુરુવાર", r:"guruvaar", en:"Thursday" },
+    { gu:"શુક્રવાર", r:"shukravaar", en:"Friday" },
+    { gu:"શનિવાર", r:"shanivaar", en:"Saturday" },
+    { gu:"રવિવાર", r:"ravivaar", en:"Sunday" },
+  ]},
+  { id:"routine", title:"Daily routine", icon:"steps", words:[
+    { gu:"ઊઠવું", r:"ooṭhvuṁ", en:"to wake up" },
+    { gu:"સૂવું", r:"soovuṁ", en:"to sleep" },
+    { gu:"જમવું", r:"jamvuṁ", en:"to eat a meal" },
+    { gu:"નહાવું", r:"nahaavuṁ", en:"to bathe" },
+    { gu:"કામ", r:"kaam", en:"work" },
+    { gu:"સમય", r:"samay", en:"time" },
+    { gu:"કલાક", r:"kalaak", en:"hour" },
+  ]},
+  { id:"professions", title:"Jobs and work", icon:"profile", words:[
+    { gu:"શિક્ષક", r:"shikshak", en:"teacher" },
+    { gu:"ડૉક્ટર", r:"ḍokṭar", en:"doctor" },
+    { gu:"ખેડૂત", r:"kheḍoot", en:"farmer" },
+    { gu:"વિદ્યાર્થી", r:"vidyaarthi", en:"student" },
+    { gu:"દુકાનદાર", r:"dukaandaar", en:"shopkeeper" },
+    { gu:"વેપારી", r:"vepaari", en:"trader / merchant" },
+    { gu:"ડ્રાઇવર", r:"ḍraaivar", en:"driver" },
+    { gu:"રસોઇયો", r:"rasoiyo", en:"cook" },
   ]}
 );
 
