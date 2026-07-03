@@ -533,16 +533,21 @@ const CSS = `
   width:76px;height:72px;border-radius:50%;border:none;cursor:pointer;position:relative;
   display:grid;place-items:center;color:#fff;font-weight:800;
 }
-.node .disc{width:72px;height:68px;border-radius:50%;display:grid;place-items:center;position:relative}
+/* lesson nodes are the one raised, tappable 3D element (Duolingo-style), a
+   deliberate exception to the recessed theme used everywhere else */
+.node .disc{width:72px;height:68px;border-radius:50%;display:grid;place-items:center;position:relative;
+  --edge:#E0D3CB;
+  box-shadow:0 6px 0 var(--edge), 0 9px 13px rgba(70,45,40,.18), inset 0 2px 3px rgba(255,255,255,.55);
+  transition:transform .12s var(--ease), box-shadow .12s var(--ease)}
 .node svg{width:30px;height:30px}
-.node.done .disc{background:var(--ok);box-shadow:var(--sink-ok)}
-.node.cur .disc{background:var(--gold);color:#3b2a06;box-shadow:var(--sink-gold)}
+.node.todo .disc{background:var(--card);color:var(--brand);--edge:#E0D3CB}
+.node.done .disc{background:var(--ok);color:#fff;--edge:#1E4C2E}
+.node.cur .disc{background:var(--gold);color:#3b2a06;--edge:#B07E1C}
+.node.check .disc{background:var(--brand);color:#fff;--edge:#5E1128}
 /* attention ring pulsing out from the current lesson */
 .node.cur .disc::after{content:"";position:absolute;inset:0;border-radius:50%;animation:ringpulse 1.9s ease-out infinite;pointer-events:none}
-@keyframes ringpulse{0%{box-shadow:0 0 0 2px rgba(224,166,60,.5)}100%{box-shadow:0 0 0 12px rgba(224,166,60,0)}}
-.node.todo .disc{background:var(--card);color:var(--brand);box-shadow:var(--bevel-inset)}
-.node.check .disc{background:var(--brand);box-shadow:var(--sink-brand)}
-.node:active .disc{transform:translateY(1px);filter:brightness(.97)}
+@keyframes ringpulse{0%{box-shadow:0 0 0 2px rgba(224,166,60,.55)}100%{box-shadow:0 0 0 13px rgba(224,166,60,0)}}
+.node:active .disc{transform:translateY(4px);box-shadow:0 2px 0 var(--edge), 0 3px 6px rgba(70,45,40,.16), inset 0 2px 3px rgba(255,255,255,.55)}
 .node-label{font-size:12.5px;font-weight:700;color:var(--ink);text-align:center;max-width:130px;line-height:1.15}
 .node.cur ~ .node-label, .node-wrap:has(.node.cur) .node-label{color:var(--brand);font-weight:800}
 .node-label .kk{display:block;font-size:10.5px;color:var(--muted);font-weight:600}
