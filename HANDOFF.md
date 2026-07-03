@@ -46,13 +46,16 @@ script, grammar, vocabulary, conversation practice, and a **Culture** section
 ## 3. Tech stack and architecture
 
 - **Single-file React app:** essentially everything lives in `src/App.jsx`
-  (~3,800 lines): all screens, content, CSS (one big template string injected via
+  (~5,700 lines): all screens, content, CSS (one big template string injected via
   `<style>{CSS}</style>`), and SVG icons (the `Ic` object). Edits must be careful;
   prefer targeted string replacements and watch brace balance.
 - **Build:** Vite 8 (`vite build` to `dist/`). React 18. No router (screen state
   machine via a `screen` string). No UI library. State is plain hooks.
 - **Auth/DB:** Firebase (Google sign-in + Firestore). See section 4.
-- **Fonts:** Anek Gujarati (class `gu`) + Inter, from Google Fonts in the CSS.
+- **Fonts:** Anek Gujarati (default `gu`) + Inter, plus **Noto Sans Gujarati**
+  (broad glyph coverage, in the fallback stack for rare nukta/matra glyphs),
+  **Rasa** (serif) and **Mogra** (display) for the Script tab's 3-style toggle.
+  All from Google Fonts in the CSS `@import`.
 - **Images:** Culture covers/inline photos are hotlinked from Wikimedia Commons
   via `FP + "<url-encoded filename>?width=1000"` (FP = Special:FilePath base).
 - **Audio:** pre-generated mp3s in `public/audio/` served as static assets.
@@ -119,15 +122,32 @@ progress; it fully resets only accounts with no local copy.
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **670 clips**). The app's
-  `speak()` plays a clip when the manifest has one, else falls back to browser
-  TTS. A missing manifest just means TTS-as-before.
-- **Voices:** Google **Chirp3-HD** (`gu-IN-Chirp3-HD-Aoede`,
-  `en-US-Chirp3-HD-Aoede`), the most natural tier. These replaced robotic WaveNet.
-- **Vowel IPA overrides:** four vowels (ઇ ɪ, ઐ ɛː, ઔ ɔː, ઍ æ) are synthesized by
-  IPA via SSML on a WaveNet voice, because TTS mispronounces isolated glyphs.
-  This is baked into the generator (`PRONUNCIATION_OVERRIDES`) so re-runs keep the
-  correct sounds. ઑ was left as-is (owner said it is correct).
+  `public/audio/` with `manifest.json` (currently **2,560 clips**). The app's
+  `speak(text, lang, voice)` plays a clip when the manifest has one, else falls
+  back to browser TTS. A missing manifest just means TTS-as-before.
+- **Voices (multi-voice):** the default narrator is Google **Chirp3-HD**
+  (`gu-IN-Chirp3-HD-Aoede`, `en-US-Chirp3-HD-Aoede`). Two more non-robotic
+  Gujarati voices are generated as **variants** (`VOICE_VARIANTS` in the
+  generator: Charon = v2, Kore = v3) for every SHORT item (`text.length <=
+  VARIANT_MAX_LEN` 70; long Culture summaries and English narration stay
+  single-voice to keep size/cost down). Variant clips are stored under manifest
+  keys `gu|<text>|v2` / `gu|<text>|v3`; `_audioFileFor(text, lang, voice)`
+  resolves the variant and falls back to the default. `speakGu(text, voice)`
+  takes a voice number 1/2/3. Uses of the alternate voices:
+  - **Script tab:** the Style toggle (1/2/3) plays each letter in voice 1/2/3.
+  - **Lessons** (LessonRunner + ScriptLearn) and **Vocab/Practice**: a *stable*
+    voice per lesson/topic via `_voiceForId(id)` (hash of id -> 1..3), so it is
+    consistent within one lesson/topic and varies across them.
+  - **Conversations:** the two speakers use different voices (them=2, you=3).
+  - **Review:** each word plays in a per-word voice (`_voiceForId(item.gu)`).
+- **IPA / special-voice overrides** (`PRONUNCIATION_OVERRIDES`, baked in so
+  re-runs keep the sounds): four vowels (ઇ ɪ, ઐ ɛː, ઔ ɔː, ઍ æ) and the candra-e
+  matra કૅ (kæ) are synthesized by IPA on an English WaveNet voice; the halant
+  demo ક્ is a bare "k" (no vowel); the rare/borrowed nukta letters get IPA
+  (ફ઼ fə, જ઼ zə, ૹ ʒə, ચ઼ tsə, ત૽ tə) and the Perso-Arabic ones are spoken on an
+  **Arabic voice** (ખ઼ خا, ગ઼ غا, ક઼ قا via `{text, voice:"ar-XA-Wavenet-A",
+  lang:"ar-XA"}`), because an English voice cannot make ɣ/q/x. Override items are
+  single-voice (skipped by the variant pass). ઑ was left as-is.
 - **Self-heal:** the generator retries any suspiciously small (<1800 byte) clip
   with a WaveNet voice, because Chirp3-HD occasionally returns near-silence for
   very short words.
@@ -216,10 +236,18 @@ progress; it fully resets only accounts with no local copy.
   streak, Kaudi, course progress, daily goal, and a Continue button; it is hidden
   below 1200px. A **completed unit auto-collapses** (header only) with a caret;
   tapping the header toggles its lesson list (override stored in `dhatu_unitOpen`).
-- **Script:** one scrollable page of letters (common-first); tap a letter card to
-  hear it (no separate sound button). A **sticky** letter-info bar shows the roman,
-  a short hint, and an **example** (an English word when the sound exists in
-  English, else a Gujarati word; `ex:{en}` or `ex:{gu,roman}` on each letter).
+- **Script:** one scrollable page of letters; tap a letter card to hear it (no
+  separate sound button). A **sticky** letter-info bar (works because the Script
+  root is an app-shell, `.script-shell{height:100dvh}`, making `.scr` the real
+  scroller) shows the roman, a short hint, and an **example**. A **Style toggle**
+  (1/2/3) at the top switches the letter font (Anek / Rasa / Mogra) *and* the
+  voice; choice persists in `dhatu_scriptFont`. Sections: Vowels, Consonants,
+  Numerals, **Modifiers** (the signs plus the vowel-sign matras ા િ ી ુ ૂ ૃ ે ૈ ો ૌ
+  and the two candra matras ૅ ૉ, each shown on ક and playing a ક+sign syllable
+  via a `say` field), Conjunct letters (only non-obvious ligatures), and
+  **Rare and borrowed consonants** (nukta letters fa/za/zha/qha/gha/qa/tsa and
+  the English-t ત૽). Correct answers in ScriptLearn **auto-advance**; the done
+  screen has a **Continue to next lesson** button.
   **"Learn the letters"** opens a menu (`scriptLessons` screen) of a sequenced
   curriculum (`SCRIPT_LESSONS`, 16 lessons: core vowels, core consonants, aspirates/palatals/
   retroflexes/sibilants, matra/vowel-sign ladders, numerals, signs, and conjuncts) following the
@@ -230,17 +258,19 @@ progress; it fully resets only accounts with no local copy.
   places, weather). Body-part words render a highlighted line-figure (`BodyDiagram`/`BODY_PARTS`);
   color words render a swatch (`COLOR_SWATCH`); family words render a highlighted
   family tree (`FamilyTree`/`FAMILY_NODE`) with father's/mother's sides labeled.
-- **Review:** spaced repetition (SRS).
+- **Review:** spaced repetition (SRS). The **Review nav tab is hidden until the
+  user has review items** (`srs.length > 0`), so a new learner never sees an empty
+  tab.
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
   the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat, Textiles and
   Fashion, Food and Cooking), each with
-  photo cover cards; **33 chapters** with photo covers + inline photos, dual
+  photo cover cards; **34 chapters** with photo covers + inline photos, dual
   "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
   summary per chapter), sources. A "Did you know?" fun-fact card rotates every
   10 hours (one fact notes the kaudi shell as early Gujarati currency).
-- **Grammar guide:** 8 topics. **Conversations (Talk):** 7 dialogues with speaking
-  practice.
+- **Grammar guide:** 13 topics. **Conversations (Talk):** 18 dialogues with
+  speaking practice.
 - **Profile:** account card (name, @username, change username), stats, streak
   repair, this-week activity, **Friends** (follow by username, see streak/Kaudi,
   poke, pokes received), badges, settings (read/write, Culture tab, Vocab tab),
@@ -255,22 +285,34 @@ message. This is a platform limit, intentionally left as graceful fallback.
 ## 8. Content inventory
 
 **Scale (current):** 15 Learn units / 75 lessons; 16 "Learn the letters" script
-lessons; ~29 vocab topics; 9 grammar patterns; 7 conversations; 7 Culture
-categories / 33 chapters; 670 audio clips; ~34 noun images + body/family diagrams
-+ color swatches.
+lessons; ~40 vocab topics; 13 grammar patterns; 18 conversations; 7 Culture
+categories / 34 chapters; **2,560 audio clips across 3 voices** (~40 MB); ~34
+noun images + body/family diagrams + color swatches.
 
-- **Culture: 7 categories, 33 chapters.** Ancient: indus, maurya, vallabhi,
+**Consistency gate:** a checker script (kept in the session scratchpad,
+`check.mjs`) extracts every gu+romanization pair and verifies: every spoken word
+has a clip, no gu field has stray Latin, no romanization conflicts (same gu, two
+spellings), no in-topic or cross-topic vocab duplicates. Run it after any content
+change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ ṇ ḷ
+ṣ ṁ) and "oo" for long-u (doodh, phool, roopiyaa).
+
+- **Culture: 7 categories, 34 chapters.** Ancient: indus, maurya, vallabhi,
   dwarka. Kingdoms: solanki, modhera, sultanate, palitana, narsinh, somnath.
   Trade: surat_trade, diaspora, parsi. Colonial Rule and Resistance (expanded from
   a deep-research report): colonial, many_rulers, peasant, gandhi, rajkot,
   partition, junagadh. Modern: state, nav_nirman, adivasi_dalit, modern, kutch,
-  gir. Textiles and Fashion: textiles, t_bandhani, t_patola. Food and Cooking:
-  food, f_street, f_faith, f_ports. (Textiles/Food are Culture *modules* built
-  from the two md files; the Learn Units 7/8 are separate.)
-- **Vocab topics:** slang, family (expanded kinship: older/younger sibling,
-  maternal/paternal, kaka/mota bapa/mama/foi/masi), numbers, food, verbs,
-  transport, colors, animals, time, greetings, market, festivals, culture,
-  adjectives, body, weather, places, feelings, numbers2 (11-100), days, routine, professions, health, directions, streetfood, diet, textilecraft.
+  gir, **language** (the Gujarati language and its writers). Textiles and Fashion:
+  textiles, t_bandhani, t_patola. Food and Cooking: food, f_street, f_faith,
+  f_ports. (Textiles/Food are Culture *modules* built from the two md files; the
+  Learn Units 7/8 are separate.)
+- **Vocab topics (~40):** slang split into slang + slang2 (from a modern-slang
+  research md; slang2 carries the New tag), family (expanded: son/daughter, child/
+  offspring, didi, cousin, nephew/niece, and gender-neutral spouse/parents/
+  siblings/family/elder), numbers, food, verbs, verbs2, transport, colors, animals,
+  time, greetings, market, festivals, culture, adjectives, body, weather, places,
+  feelings, numbers2 (11-100), days, routine, professions, health, directions,
+  streetfood, diet, textilecraft, household, produce, clothing, nature, school,
+  questions, kitchen, sports, connectors (joining words), tech (phones), money.
 - **Learn units/lessons:** Unit 1 (first words, numbers 1-5, yes/no/sorry,
   numbers 6-10, checkpoint); Unit 2 (family, food, home, colors, animals, getting
   around, checkpoint); Unit 3 (grammar: word order, postpositions, gender, present
@@ -294,10 +336,13 @@ categories / 33 chapters; 670 audio clips; ~34 noun images + body/family diagram
   dedicated Units 7 and 8 (fuller modules with analytical notes on GI, labor,
   fermentation, ports, and regional/religious diversity). The Unit 6 festivals
   lesson was extended with દિવાળી (Diwali).
-- **Grammar (9):** word order, postpositions, gender/my, present tense, past/-e
-  marker, polite you, negation, questions, future tense.
-- **Conversations (7):** hello, tea stall, asking the way, market haggling,
-  meeting family, at the doctor, at the station.
+- **Grammar (13):** word order, postpositions, gender/my, present tense, past/-e
+  marker, polite you, negation, questions, future tense, commands/requests,
+  want-like-need (joie/game), this-that-here-there, have (paase/mane + chhe).
+- **Conversations (18):** hello, tea stall, asking the way, market haggling,
+  meeting family, at the doctor, at the station, making plans, work, telling time,
+  on the phone, buying clothes, restaurant, Diwali, please-repeat, catching up
+  (slang + code-mix), at the temple, auto-rickshaw haggling.
 - **Only `nav_nirman` lacks a cover image** (no free-licensed one found; clean
   colored hero). Do not fabricate image URLs; verify each with
   `curl -sI -L "<FilePath URL>"` (expect 200; 429 means retry).
@@ -314,18 +359,24 @@ categories / 33 chapters; 670 audio clips; ~34 noun images + body/family diagram
    **App name** to "Dhatu Learning" so the sign-in popup reads nicely (AUTH.md).
 2. **Owner: rotate the Google TTS API key** (it appeared in chat repeatedly and
    was used again this session). Audio is fully static, so nothing needs a live key.
-3. **All current content is voiced** (**670 clips**). Re-run `npm run audio` only
-   after adding new Gujarati content; it is idempotent and self-syncing. (If you
-   change the pause-list rule in the generator, delete the affected clips first.)
-4. **Verify the vowel sounds live** (ઇ ઐ ઔ ઍ) and **social features** (follow/poke,
-   after rules + index) by ear / multi-user; neither could be tested from here.
+3. **All current content is voiced** (**2,560 clips, 3 voices**). Re-run
+   `npm run audio` only after adding new Gujarati content; it is idempotent and
+   self-syncing (default clip + v2/v3 variants for short items). If you change an
+   override or the pause-list rule, delete the affected clips first so they
+   regenerate. Generation of all variants takes ~15 min; run in the background.
+4. **Verify by ear, live:** the vowel/candra IPA overrides (ઇ ઐ ઔ ઍ, કૅ), the
+   Perso-Arabic Arabic-voice letters (ખ઼ ગ઼ ક઼), the bare-k halant, and that each
+   Script Style / lesson / conversation speaker uses a distinct voice. Also
+   **social features** (follow/poke, after rules + index). None testable from here.
 5. Open ideas not yet done: matras/conjuncts have letter-recognition lessons but
-   no handwriting/CV-*building* exercises; more noun images (abstract weather,
-   feelings, verbs stay text-only by nature); native-recorded vowels; more Culture
-   chapters. (Done this session: sequenced "Learn the letters" curriculum incl.
-   matra/conjunct lessons, noun visuals (photos + body/family diagrams + color
-   swatches), full-width desktop, collapsible completed units, sticky script bar,
-   auto-play on listening questions, and a data-loss fix in the sync layer.)
+   no handwriting/CV-*building* exercises; a true Gujarati **handwriting font**
+   for Script Style 3 (none is freely/OFL-licensed; Mogra is the display stand-in);
+   native-recorded voices; more noun images; a Unit 16. (Done recently: multi-voice
+   audio across script/lessons/conversations/vocab/review; Script 3-style font+voice
+   toggle; Modifiers section with matras + candra signs; Rare/borrowed consonants
+   with Arabic-voice audio; Review-tab hiding; ~13 new vocab topics; 11 new
+   conversations; 4 new grammar entries; the Gujarati-language Culture chapter; a
+   consistency-gate checker.)
 
 ---
 
