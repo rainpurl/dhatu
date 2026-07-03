@@ -57,9 +57,19 @@ export function signOutUser() {
 /* Pull the signed-in user's saved progress into localStorage. Call this and
    await it before mounting the app so useLocalState initializers read cloud
    values. On a brand-new account we seed the doc from whatever is local. */
-export async function loadProgressToLocal(uid) {
+export async function loadProgressToLocal(user) {
+  const uid = typeof user === "string" ? user : user && user.uid;
+  if (!uid) return;
   try {
     const ref = doc(db, "users", uid);
+    // Keep a small profile on the doc so the staff view can show who each user is.
+    if (user && typeof user !== "string") {
+      setDoc(
+        ref,
+        { profile: { name: user.displayName || "", email: user.email || "", photo: user.photoURL || "" }, updatedAt: Date.now() },
+        { merge: true }
+      ).catch(() => {});
+    }
     const snap = await getDoc(ref);
     if (snap.exists() && snap.data().progress) {
       const data = snap.data().progress;

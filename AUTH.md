@@ -49,6 +49,46 @@ That is all. Push the code, and sign-in will work on the live site.
 
 ---
 
+## Staff portal (dhatu.pages.dev/staff)
+
+A separate web-only page shows all users and their progress (streak, Kaudi,
+lessons, review words). It is protected two ways: a password gate, and, more
+importantly, Google sign-in restricted to your own account through the database
+rules. The password alone is not the real security; the rule is.
+
+To turn it on:
+
+1. **Find your admin UID.** Sign in to the app once with the Google account you
+   want as admin, then in the Firebase console go to Authentication -> Users and
+   copy that account's **User UID**.
+2. **Add it to the staff page.** In `public/staff/index.html`, set
+   `ADMIN_UIDS` to your UID, for example:
+   `const ADMIN_UIDS = ["abc123yourUidHere"];`
+3. **Update the Firestore rules** to let that UID read every user record. Use
+   this version of the rules (replace `YOUR_ADMIN_UID` with your UID):
+
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /users/{uid} {
+         allow read, write: if request.auth != null && request.auth.uid == uid;
+         allow read: if request.auth != null && request.auth.uid == "YOUR_ADMIN_UID";
+       }
+     }
+   }
+   ```
+
+4. Push, then open `https://dhatu.pages.dev/staff`, enter the password (`rain`),
+   and sign in with your admin Google account.
+
+The default staff password is `rain` (change `STAFF_PASSWORD` in the same file to
+something else). Because access to the data is enforced by the rule above, only
+your admin account can actually load user records even if someone learns the
+password.
+
+---
+
 ## How it works (for future reference)
 
 - `src/firebase.js` handles Google sign-in and syncs progress.

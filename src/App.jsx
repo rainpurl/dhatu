@@ -3371,7 +3371,7 @@ export default function App() {
         setReady(false);
         setUser(u);
         if (u) {
-          await loadProgressToLocal(u.uid);
+          await loadProgressToLocal(u);
           setReady(true);
         }
       }),
