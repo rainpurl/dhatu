@@ -1316,13 +1316,25 @@ const TOPICS = [
     { gu:"ટેન્શન નહીં", r:"ṭension nahi", en:"no worries" },
     { gu:"લોચો", r:"locho", en:"a mix-up / mess" },
   ]},
-  { id:"family", title:"Family", icon:"family", words:[
+  { id:"family", title:"Family", icon:"family", note:"Gujarati kinship is specific: it marks older vs younger siblings, and whether an aunt or uncle is on your mother's or father's side.", words:[
     { gu:"માતા", r:"maataa", en:"mother" },
+    { gu:"મમ્મી", r:"mammi", en:"mom (casual)" },
     { gu:"પિતા", r:"pitaa", en:"father" },
-    { gu:"ભાઈ", r:"bhaai", en:"brother" },
-    { gu:"બહેન", r:"bahen", en:"sister" },
-    { gu:"દાદા", r:"daadaa", en:"grandfather" },
-    { gu:"દાદી", r:"daadi", en:"grandmother" },
+    { gu:"પપ્પા", r:"pappaa", en:"dad (casual)" },
+    { gu:"મોટા ભાઈ", r:"moṭaa bhaai", en:"older brother" },
+    { gu:"નાના ભાઈ", r:"naanaa bhaai", en:"younger brother" },
+    { gu:"મોટી બહેન", r:"moṭi bahen", en:"older sister" },
+    { gu:"નાની બહેન", r:"naani bahen", en:"younger sister" },
+    { gu:"દાદા", r:"daadaa", en:"grandfather (father's side)" },
+    { gu:"દાદી", r:"daadi", en:"grandmother (father's side)" },
+    { gu:"નાના", r:"naanaa", en:"grandfather (mother's side)" },
+    { gu:"નાની", r:"naani", en:"grandmother (mother's side)" },
+    { gu:"બા", r:"baa", en:"grandmother (affectionate)" },
+    { gu:"કાકા", r:"kaakaa", en:"father's younger brother" },
+    { gu:"મોટા બાપા", r:"moṭaa baapaa", en:"father's older brother" },
+    { gu:"મામા", r:"maamaa", en:"mother's brother" },
+    { gu:"ફોઈ", r:"foi", en:"father's sister" },
+    { gu:"માસી", r:"maasi", en:"mother's sister" },
   ]},
   { id:"numbers", title:"Numbers 1-10", icon:"numbers", words:[
     { gu:"એક", r:"ek", en:"one" },
@@ -1813,7 +1825,7 @@ function CourseApp({ user }) {
   }
 
   // Streak repair: spend Kaudi to rescue a streak after a missed day.
-  const STREAK_HEAL_COST = 50;
+  const STREAK_HEAL_COST = 30;
   function streakBroken() {
     if (!lastActive || streak < 1) return false;
     const now = new Date();
@@ -2542,7 +2554,6 @@ function CourseApp({ user }) {
             <div className="factlabel"><Ic.bulb width={15} height={15} /> Did you know?</div>
             <p>{CULTURE_FACTS[Math.floor(Date.now() / (10 * 3600 * 1000)) % CULTURE_FACTS.length]}</p>
           </div>
-          <p className="hist-intro">Explore Gujarat's history and culture by theme rather than a single timeline. Each thread runs from ancient times to today.</p>
           <div className="wide-2col">
             {CATEGORIES.map((c) => {
               const n = ERAS.filter((e) => e.category === c.id).length;
@@ -3301,6 +3312,7 @@ const ERA_GU_SUMMARY = {
   sultanate: "ઈસવીસન ૧૪૦૭માં ગુજરાતમાં એક સ્વતંત્ર સલ્તનત સ્થપાઈ. સુલતાન અહમદ શાહે ૧૪૧૧માં સાબરમતી નદીના કિનારે અમદાવાદ શહેર વસાવ્યું. આ સમયમાં હિન્દુ, જૈન અને ઇસ્લામિક કારીગરીના મિશ્રણથી એક ખાસ સ્થાપત્ય-શૈલી બની. અમદાવાદની જામા મસ્જિદ અને ચાંપાનેર શહેર તેનાં સુંદર ઉદાહરણ છે. ખંભાત જેવાં બંદરોથી ગુજરાતનો વેપાર આફ્રિકાથી દક્ષિણ-પૂર્વ એશિયા સુધી ફેલાયેલો હતો. સીદી સૈયદની મસ્જિદની પથ્થરમાં કોતરેલી જાળી આજે અમદાવાદનું પ્રતીક ગણાય છે. ૧૫૭૩માં મુઘલ બાદશાહ અકબરે ગુજરાત જીતી લીધું.",
   dwarka: "દ્વારકા સૌરાષ્ટ્રના પશ્ચિમ છેડે આવેલું પવિત્ર શહેર છે. પરંપરા પ્રમાણે કૃષ્ણે અહીં પોતાનું નગર વસાવ્યું હતું. તે હિન્દુ ધર્મના ચાર ધામમાંનું એક છે અને ઘણા યાત્રીઓ અહીં આવે છે. ગોમતી નદીના કિનારે આવેલું દ્વારકાધીશ મંદિર કૃષ્ણને સમર્પિત છે. એવી માન્યતા છે કે જૂનું નગર દરિયામાં ડૂબી ગયું હતું, અને દરિયામાં તેની શોધ પણ થઈ છે.",
   somnath: "સોમનાથ મંદિર સૌરાષ્ટ્રના દરિયાકિનારે પ્રભાસ પાટણમાં આવેલું છે. તે શિવના બાર જ્યોતિર્લિંગમાંનું એક છે. સદીઓ દરમિયાન આ મંદિર ઘણી વાર તૂટ્યું અને ફરી બંધાયું. ઈસવીસન ૧૦૨૬માં મહમૂદ ગઝનીએ તેને લૂંટ્યું હતું. આઝાદી પછી ૧૯૫૧માં સરદાર પટેલની પ્રેરણાથી હાલનું મંદિર બન્યું. તે શ્રદ્ધા અને ટકી રહેવાની ભાવનાનું પ્રતીક છે.",
+  textiles: "ગુજરાત કાપડ અને હસ્તકળા માટે દુનિયાભરમાં જાણીતું છે. જૂના જમાનામાં ગુજરાતનું છાપેલું સૂતરાઉ કાપડ દરિયાપાર ઇજિપ્ત સુધી વેચાતું. બાંધણી એટલે દોરાથી બાંધીને રંગેલું કાપડ, અને અજરખ એટલે બ્લોકથી છાપેલું ભાત. પાટણનું પટોળું બંને બાજુ સરખું વણાય છે અને તેને બનાવવામાં મહિનાઓ લાગે છે. તાંગલિયા, મશરૂ અને કાળા કપાસ પણ ગુજરાતની ખાસ વણાટ છે. લગ્ન અને નવરાત્રિમાં આ કાપડનો ખાસ ઉપયોગ થાય છે. આજે પણ કારીગરો આ કળા જીવંત રાખે છે.",
   food: "ગુજરાતી ભોજન માત્ર શાકાહારી કે ગળ્યું નથી; તે એક આખી થાળી-પદ્ધતિ છે. થાળીમાં શાક, કઠોળ, દાળ કે કઢી, ભાત, રોટલી, ફરસાણ, અથાણું અને મીઠાઈ સાથે આવે છે, અને ગળ્યો, ખાટો, તીખો તથા ખારો સ્વાદ સંતુલિત રહે છે. લોથલ, ખંભાત અને સુરત જેવાં બંદરોના વેપારે ગુજરાતના રસોડાને ઘડ્યું; મરચું, બટાટા અને ટમેટા પણ પાછળથી આવ્યાં. કચ્છ, સૌરાષ્ટ્ર અને દક્ષિણ ગુજરાતનું ભોજન એકબીજાથી અલગ છે. જૈન, સ્વામિનારાયણ અને બોહરા સમાજની પોતાની ખાણી-પીણી છે. ઢોકળા, થેપલા, ઊંધિયું અને દાળ-ઢોકળી જેવી વાનગીઓ ગુજરાતની ઓળખ છે.",
   kutch: "કચ્છ ગુજરાતનો પશ્ચિમનો મોટો અને સૂકો પ્રદેશ છે. અહીં કચ્છનું રણ આવેલું છે, જે એક વિશાળ સફેદ મીઠાનું રણ છે. શિયાળામાં અહીં રણોત્સવ ઊજવાય છે. કચ્છ હસ્તકલા માટે ખૂબ પ્રખ્યાત છે, જેમ કે બાંધણી, ભરતકામ અને અજરખ છાપકામ. અહીંનાં જુદાં જુદાં સમાજ પોતાની આગવી કળા સાચવે છે. આ કળા ગુજરાતની સંસ્કૃતિનો મહત્વનો ભાગ છે.",
   narsinh: "નરસિંહ મહેતા ગુજરાતી ભાષાના પહેલા મોટા કવિ ગણાય છે. તેઓ પંદરમી સદીમાં જૂનાગઢમાં રહેતા હતા. તેઓ કૃષ્ણના ભક્ત હતા અને ભક્તિનાં ઘણાં પદ લખ્યાં. તેમનું સૌથી પ્રખ્યાત ભજન 'વૈષ્ણવ જન તો' છે, જે સાચા અને દયાળુ માણસનું વર્ણન કરે છે. ગાંધીજીને આ ભજન ખૂબ પ્રિય હતું. નરસિંહ મહેતાની કવિતાએ ગુજરાતી સાહિત્યનો પાયો નાખ્યો.",
@@ -3454,7 +3466,23 @@ ERAS.push(
       "The Indian Ocean crossing also brought people to Gujarat, not only away from it. The Siddi community, descended from East Africans who arrived over centuries as sailors, soldiers, merchants, and sometimes enslaved people, settled along the Gujarat and Konkan coasts and, as in the case of Sidi Saiyyed, sometimes rose to positions of considerable power and patronage within Gujarati courts.",
       "In the 20th century this older trading diaspora fed into a much larger wave of migration. Political pressures in East Africa after independence, especially the expulsion of Asians from Uganda in 1972, pushed many Gujarati families to migrate again, this time to Britain, Canada, and the United States, where existing East African Gujarati business and community networks helped ease the transition. Today, sizable Gujarati communities in Leicester and London, in Toronto, and across the United States trace their family histories through exactly this longer arc: Gujarat to East Africa to the West, a diaspora built in stages over more than a century.",
       "This history complicates a simple story of Gujarat as a place people leave. It has long been a place bound outward by trade and belief as much as inward by territory, and its diaspora communities today often maintain active ties, through remittances, philanthropy, festival travel, and family visits, that keep the connection alive in both directions."],
-    sources:["Edward A. Alpers and Chhaya Goswami (eds.), Transregional Trade and Traders: Situating Gujarat in the Indian Ocean from Early Times to 1900","Scholarship on Gujarati merchant communities in East Africa and the 1972 Uganda expulsion","Wikipedia, Gujarati diaspora and Siddi people"] }
+    sources:["Edward A. Alpers and Chhaya Goswami (eds.), Transregional Trade and Traders: Situating Gujarat in the Indian Ocean from Early Times to 1900","Scholarship on Gujarati merchant communities in East Africa and the 1972 Uganda expulsion","Wikipedia, Gujarati diaspora and Siddi people"] },
+
+  { id:"textiles", category:"trade", yr:"medieval - present", title:"Textiles and fashion, the cloth of Gujarat",
+    img: FP + "Gujarat%20Bandhej%20Saree.jpg?width=1000",
+    figures:[
+      { src: FP + "Gujarat%20patola.jpg?width=1000", cap:"A Patan patola, woven in double ikat so the pattern reads on both faces." },
+      { src: FP + "Loom%20to%20weave%20patola.jpg?width=1000", cap:"A patola loom; a single sari can take months to dye and weave.", after:3 },
+    ],
+    blurb:"Gujarat is one of the world's great textile regions, where cloth is at once local dress, global trade good, ritual object, and a living craft economy.",
+    body:[
+      "Few places are woven into world history through cloth as tightly as Gujarat. Block-printed cottons made here circulated across the Indian Ocean centuries before modern globalization, and fragments produced in Gujarat have been found as far away as Fustat in old Cairo, evidence of a medieval export trade in everyday cotton. Understanding Gujarati textiles means seeing cloth as trade good, dress, ritual object, and craft economy all at once.",
+      "Two of its signature traditions are resist-dyed. Bandhani is tie-dye: the cloth is pinched and tied into thousands of tiny points before dyeing, leaving fields of dots that form peacocks, flowers, and grids, and it is central to wedding cloths like the gharchola and panetar. Ajrakh, from Kutch, is resist block printing built up through many rounds of carved wooden blocks and natural dyes, producing dense, symmetrical geometry in indigo, madder red, and black.",
+      "Others are made on the loom. Patan's patola is a double ikat, in which both the warp and the weft threads are tie-dyed to the final design before a single row is woven, so the pattern appears, astonishingly, identical on both sides; a single sari can take months. Tangaliya weaves raised dots into the cloth as extra weft, Mashru blends a silk face with a cotton back, and Kachchh's rain-fed Kala Cotton has become a symbol of sustainable, local craft.",
+      "These cloths are never only decorative. Specific weaves and colors belong to marriage, to Navratri, and to particular communities: a bride's gharchola, the chaniya choli and kediyu worn for garba, the bandhani odhani given at weddings. Reading a Gujarati textile means reading an occasion and a community, not just a pattern.",
+      "This is still a living economy, not a museum. After the 2001 Kutch earthquake, organizations like Khamir helped artisan clusters rebuild and reach new markets, and Geographical Indication tags now protect names such as Patan Patola, Kutch Bandhani, Gharchola, and Kutch Ajrakh. The healthiest way to see these crafts is not as frozen heritage but as traditions that survive by adapting, through design, sustainability, and fair trade."],
+    site:{ name:"Patan, Kutch, and Jamnagar", note:"Patan for patola, Kutch (Bhuj, Ajrakhpur) for Ajrakh and bandhani, Jamnagar for bandhani; craft campuses like Khamir welcome visitors." },
+    sources:["The Metropolitan Museum of Art, essays and objects on Indian block-printed and traded cottons","Khamir, craft documentation on Bandhani, Ajrakh, and Kala Cotton","Patan Patola Heritage; India GI registry (Patan Patola, Kutch Bandhani, Gharchola, Kutch Ajrakh)"] }
 );
 
 /* ---- Category: Colonial Rule and Resistance ---- */
