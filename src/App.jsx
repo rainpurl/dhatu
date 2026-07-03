@@ -1206,6 +1206,12 @@ const GRAMMAR = [
   { id:"g6", color:"#6B1330", title:"Polite 'you'", summary:"Choose the right 'you' for the person.",
     points:["તું is informal, for close friends and children.","તમે is polite, respectful, and also plural.","Match the verb ending: તું ...છે, but તમે ...છો."],
     examples:[{gu:"તું ક્યાં જાય છે?",roman:"tuṁ kyaan jaay chhe?",en:"Where are you going? (informal)"},{gu:"તમે ક્યાં જાઓ છો?",roman:"tame kyaan jaao chho?",en:"Where are you going? (polite)"},{gu:"મહેરબાની કરીને",roman:"meherbaani karine",en:"please"}] },
+  { id:"g7", color:"#1E6E7E", title:"Saying no and not", summary:"Different words negate different things.",
+    points:["નથી means 'is not / am not / are not': હું ઘરે નથી.","For 'no' as an answer, use ના.","નહીં negates other verbs, including the future: તે નહીં આવે."],
+    examples:[{gu:"હું ઘરે નથી",roman:"huṁ ghare nathi",en:"I am not at home."},{gu:"મને ખબર નથી",roman:"mane khabar nathi",en:"I do not know."},{gu:"તે નહીં આવે",roman:"te nahi aave",en:"He will not come."}] },
+  { id:"g8", color:"#C77B1E", title:"Asking questions", summary:"Question words usually sit just before the verb.",
+    points:["શું what, ક્યાં where, કોણ who, ક્યારે when, કેમ why or how.","કેટલું means 'how much' or 'how many'.","A yes/no question can be just a statement said with a rising tone."],
+    examples:[{gu:"આ શું છે?",roman:"aa shuṁ chhe?",en:"What is this?"},{gu:"તમે ક્યાં રહો છો?",roman:"tame kyaan raho chho?",en:"Where do you live?"},{gu:"આ કેટલું છે?",roman:"aa keṭluṁ chhe?",en:"How much is this?"}] },
 ];
 
 /* ============================ CONVERSATIONS ============================ */
