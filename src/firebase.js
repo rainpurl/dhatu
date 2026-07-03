@@ -16,7 +16,10 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getFirestore, doc, getDoc, setDoc, getDocs, collection, query, where,
+  updateDoc, arrayUnion, arrayRemove, runTransaction, addDoc, deleteDoc, orderBy, limit,
+} from "firebase/firestore";
 import { firebaseConfig } from "./firebaseConfig";
 
 const app = initializeApp(firebaseConfig);
@@ -25,8 +28,32 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 let currentUid = null;
+let currentUser = null;
+let currentUsername = null;
 
 const PREFIX = "dhatu_";
+
+const _n = (k) => { try { return JSON.parse(window.localStorage.getItem(PREFIX + k)); } catch (e) { return null; } };
+
+/* Public profile: the only fields other users can see (streak, Kaudi, name).
+   Kept in a separate collection so private progress is never exposed. */
+async function updatePublicProfile() {
+  if (!currentUid) return;
+  try {
+    await setDoc(
+      doc(db, "publicProfiles", currentUid),
+      {
+        username: currentUsername || "",
+        name: (currentUser && currentUser.displayName) || "",
+        photo: (currentUser && currentUser.photoURL) || "",
+        streak: _n("streak") || 0,
+        kaudi: _n("kaudi") || 0,
+        updatedAt: Date.now(),
+      },
+      { merge: true }
+    );
+  } catch (e) {}
+}
 
 function localSnapshot() {
   const out = {};
