@@ -1638,6 +1638,14 @@ const CONVERSATIONS = [
     { who:"them", gu:"આજે ફટાકડા ફોડશું.", roman:"aaje phaṭaakḍaa phoḍshuṁ.", en:"Today we will light firecrackers." },
     { who:"you", gu:"મજા આવશે!", roman:"majaa aavshe!", en:"It will be fun!" },
   ]},
+  { id:"c15", title:"Please say it again", icon:"chat", turns:[
+    { who:"them", gu:"તમે ક્યાંથી છો?", roman:"tame kyaanthi chho?", en:"Where are you from?" },
+    { who:"you", gu:"માફ કરો, ફરી કહો.", roman:"maaf karo, phari kaho.", en:"Sorry, please say it again.", choices:["માફ કરો, ફરી કહો","આભાર","હા"] },
+    { who:"them", gu:"ધીમે બોલું?", roman:"dheeme boluṁ?", en:"Shall I speak slowly?" },
+    { who:"you", gu:"હા, મહેરબાની કરીને.", roman:"haa, meherbaani karine.", en:"Yes, please." },
+    { who:"them", gu:"તમે ક્યાંથી છો?", roman:"tame kyaanthi chho?", en:"Where are you from?" },
+    { who:"you", gu:"હું અમેરિકાથી. હું ગુજરાતી શીખું છું.", roman:"huṁ amerikaathi. huṁ gujaraati shikhuṁ chuṁ.", en:"I am from America. I am learning Gujarati." },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
@@ -4876,6 +4884,32 @@ TOPICS.push(
     { gu:"પ્રશ્ન", r:"prashna", en:"question" },
     { gu:"જવાબ", r:"javaab", en:"answer" },
     { gu:"શીખવું", r:"shikhvuṁ", en:"to learn" },
+  ]}
+);
+
+/* ============================ VOCAB: question words and the kitchen (added) ============================ */
+TOPICS.push(
+  { id:"questions", title:"Question words", icon:"bulb", note:"These usually sit just before the verb. A yes/no question can be a plain statement said with a rising tone.", words:[
+    { gu:"શું", r:"shuṁ", en:"what" },
+    { gu:"ક્યાં", r:"kyaan", en:"where" },
+    { gu:"કોણ", r:"koṇ", en:"who" },
+    { gu:"ક્યારે", r:"kyaare", en:"when" },
+    { gu:"કેમ", r:"kem", en:"why / how" },
+    { gu:"કેટલું", r:"keṭluṁ", en:"how much" },
+    { gu:"કયું", r:"kayuṁ", en:"which" },
+    { gu:"કેવું", r:"kevuṁ", en:"what kind" },
+  ]},
+  { id:"kitchen", title:"In the kitchen", icon:"bowl", words:[
+    { gu:"રસોઈ", r:"rasoi", en:"cooking" },
+    { gu:"વાસણ", r:"vaasaṇ", en:"utensils" },
+    { gu:"તપેલી", r:"tapeli", en:"pot" },
+    { gu:"તવો", r:"tavo", en:"griddle (tava)" },
+    { gu:"ચમચી", r:"chamchi", en:"spoon" },
+    { gu:"છરી", r:"chhari", en:"knife" },
+    { gu:"ચૂલો", r:"choolo", en:"stove" },
+    { gu:"લોટ", r:"loṭ", en:"flour / dough" },
+    { gu:"મસાલો", r:"masaalo", en:"spice mix" },
+    { gu:"ઉકાળવું", r:"ukaaḷvuṁ", en:"to boil" },
   ]}
 );
 
