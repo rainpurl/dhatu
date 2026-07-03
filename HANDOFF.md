@@ -119,7 +119,7 @@ progress; it fully resets only accounts with no local copy.
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **646 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **670 clips**). The app's
   `speak()` plays a clip when the manifest has one, else falls back to browser
   TTS. A missing manifest just means TTS-as-before.
 - **Voices:** Google **Chirp3-HD** (`gu-IN-Chirp3-HD-Aoede`,
@@ -221,12 +221,12 @@ progress; it fully resets only accounts with no local copy.
   a short hint, and an **example** (an English word when the sound exists in
   English, else a Gujarati word; `ex:{en}` or `ex:{gu,roman}` on each letter).
   **"Learn the letters"** opens a menu (`scriptLessons` screen) of a sequenced
-  curriculum (`SCRIPT_LESSONS`, ~12 lessons: core vowels, core consonants, then
-  aspirates/palatals/retroflexes/sibilants, numerals, signs) following the
+  curriculum (`SCRIPT_LESSONS`, 16 lessons: core vowels, core consonants, aspirates/palatals/
+  retroflexes/sibilants, matra/vowel-sign ladders, numerals, signs, and conjuncts) following the
   script-methodology research doc. Each lesson is a 10-question ScriptLearn quiz
   over its glyph group; completion is tracked in `dhatu_scriptDone` and shown as a
-  progress journey. (Matras and conjuncts from the doc are not yet lessons; they
-  need a CV-building exercise format, a good next step.)
+  progress journey. Matra and conjunct lessons use inline CV/cluster items (e.g. કા, ન્ત) with a
+  teaching-note intro step. Concrete-noun intros show a picture via `WORD_IMG`.
 - **Review:** spaced repetition (SRS).
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
