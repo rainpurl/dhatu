@@ -525,20 +525,26 @@ const CSS = `
 
 /* winding path */
 .path{position:relative;padding:10px 0 4px}
+/* a carved trail down the middle that the lesson nodes weave along */
+.path::before{content:"";position:absolute;top:16px;bottom:16px;left:50%;width:5px;transform:translateX(-50%);border-radius:999px;background:var(--line);box-shadow:var(--bevel-inset);z-index:0}
 .node-row{display:flex;justify-content:center;position:relative;height:92px;align-items:center}
 .node-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:2}
 .node{
-  width:70px;height:66px;border-radius:50%;border:none;cursor:pointer;position:relative;
+  width:76px;height:72px;border-radius:50%;border:none;cursor:pointer;position:relative;
   display:grid;place-items:center;color:#fff;font-weight:800;
 }
-.node .disc{width:66px;height:62px;border-radius:50%;display:grid;place-items:center}
-.node svg{width:28px;height:28px}
+.node .disc{width:72px;height:68px;border-radius:50%;display:grid;place-items:center;position:relative}
+.node svg{width:30px;height:30px}
 .node.done .disc{background:var(--ok);box-shadow:var(--sink-ok)}
 .node.cur .disc{background:var(--gold);color:#3b2a06;box-shadow:var(--sink-gold)}
+/* attention ring pulsing out from the current lesson */
+.node.cur .disc::after{content:"";position:absolute;inset:0;border-radius:50%;animation:ringpulse 1.9s ease-out infinite;pointer-events:none}
+@keyframes ringpulse{0%{box-shadow:0 0 0 2px rgba(224,166,60,.5)}100%{box-shadow:0 0 0 12px rgba(224,166,60,0)}}
 .node.todo .disc{background:var(--card);color:var(--brand);box-shadow:var(--bevel-inset)}
 .node.check .disc{background:var(--brand);box-shadow:var(--sink-brand)}
 .node:active .disc{transform:translateY(1px);filter:brightness(.97)}
-.node-label{font-size:12px;font-weight:700;color:var(--ink);text-align:center;max-width:120px;line-height:1.15}
+.node-label{font-size:12.5px;font-weight:700;color:var(--ink);text-align:center;max-width:130px;line-height:1.15}
+.node.cur ~ .node-label, .node-wrap:has(.node.cur) .node-label{color:var(--brand);font-weight:800}
 .node-label .kk{display:block;font-size:10.5px;color:var(--muted);font-weight:600}
 .startpill{position:absolute;top:-26px;left:50%;transform:translateX(-50%);
   background:var(--ink);color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;
@@ -856,6 +862,7 @@ const CSS = `
 .speakcheck-msg.good{background:var(--ok-soft);color:var(--ok-dark)}
 .speakcheck-msg.close{background:#FBEFD6;color:var(--gold-dark)}
 .speakcheck-msg.bad{background:var(--no-soft);color:var(--no-dark)}
+.speakcheck-msg.info{background:var(--hover);color:var(--muted);font-weight:600}
 .speakcheck-msg .heard{display:block;margin-top:5px;font-weight:600}
 .speakcheck-msg .heard .gu{font-family:var(--fgu)}
 .speakcheck-unsupported{font-size:12.5px;color:var(--muted);text-align:center;max-width:280px}
@@ -1941,11 +1948,10 @@ function CourseApp({ user }) {
                 {u.lessons.map((l, i) => {
                   const done = completed.includes(l.id);
                   const isRec = l.id === recId;
-                  const align = i % 3 === 0 ? "center" : i % 3 === 1 ? "flex-end" : "flex-start";
-                  const shift = i % 3 === 1 ? 40 : i % 3 === 2 ? -40 : 0;
+                  const off = i % 3 === 1 ? 62 : i % 3 === 2 ? -62 : 0;
                   return (
-                    <div key={l.id} className="node-row" style={{ justifyContent: align === "center" ? "center" : align === "flex-end" ? "flex-end" : "flex-start", paddingRight: align === "flex-end" ? 30 : 0, paddingLeft: align === "flex-start" ? 30 : 0 }}>
-                      <div className="node-wrap">
+                    <div key={l.id} className="node-row">
+                      <div className="node-wrap" style={{ transform: `translateX(${off}px)` }}>
                         {isRec && <div className="startpill">START</div>}
                         <button className={"node " + (done ? "done" : isRec ? "cur" : l.kind === "check" ? "check" : "todo")} onClick={() => startLesson(l.id)}>
                           <div className="disc">
@@ -3096,21 +3102,20 @@ function _gradeSpeech(heard, target) {
   return { heard, score, verdict };
 }
 
+// Errors that mean automatic checking simply is not available here (as opposed
+// to something the learner can retry). Gujarati recognition is unsupported in
+// most desktop browsers, so we present these calmly, not as a failure.
+const _MIC_UNAVAILABLE = new Set(["language-not-supported", "network", "audio-capture", "error"]);
 function _micErrorMessage(err) {
   switch (err) {
     case "no-speech":
     case "aborted":
-      return "Didn't catch that. Try again.";
+      return "Didn't catch that. Try again, or continue below.";
     case "not-allowed":
     case "service-not-allowed":
-      return "Microphone access is blocked. Allow it in your browser settings.";
-    case "audio-capture":
-      return "No microphone was found on this device.";
-    case "language-not-supported":
-    case "network":
-      return "This browser can't check Gujarati speech here. Tap below to continue, or try Chrome on a phone.";
+      return "Microphone access is blocked. Allow it in your browser settings, or continue below.";
     default:
-      return "The mic ran into a problem. Try again, or tap below to continue.";
+      return "Automatic speech check isn't available in this browser. Say it out loud, then continue.";
   }
 }
 
@@ -3200,9 +3205,9 @@ function SpeakCheck({ target, onResult }) {
         <Ic.mic />
       </button>
       <div className="speakcheck-label">{vc.listening ? "Listening..." : "Tap and say it"}</div>
-      {vc.err && <div className="speakcheck-msg bad">{_micErrorMessage(vc.err)}</div>}
+      {vc.err && <div className={"speakcheck-msg " + (_MIC_UNAVAILABLE.has(vc.err) ? "info" : "bad")}>{_micErrorMessage(vc.err)}</div>}
       {vc.err && vc.err !== "no-speech" && vc.err !== "aborted" && (
-        <button className="btn ghost sm" onClick={() => onResult && onResult({ verdict: "skip", score: 0, heard: "" })}>
+        <button className="btn sm" onClick={() => onResult && onResult({ verdict: "skip", score: 0, heard: "" })}>
           I said it out loud
         </button>
       )}
