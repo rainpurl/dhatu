@@ -85,12 +85,14 @@ const PRONUNCIATION_OVERRIDES = {
   // so we synthesize the target sound by IPA, exactly like the vowels above.
   "ૹ": "ʒə",      // zha, like the 's' in "vision"
   "ફ઼": "fə",     // fa, the 'f' sound
-  "ખ઼": "xə",     // kha (Perso-Arabic)
-  "ગ઼": "ɣə", // gha (Perso-Arabic)
   "જ઼": "zə",     // za, the 'z' sound
-  "ક઼": "qə",     // qa (Perso-Arabic)
   "ચ઼": "tsə",    // a 'ts' sound in loanwords
   "ત૽": "tə",     // the English 't' in "top"
+  // Perso-Arabic sounds an English voice cannot make: synthesize the real Arabic
+  // letter (+ alif for a clear vowel) on an Arabic voice, which speaks them natively.
+  "ખ઼": { text: "خا", voice: "ar-XA-Wavenet-A", lang: "ar-XA" }, // kha, Arabic خ
+  "ગ઼": { text: "غا", voice: "ar-XA-Wavenet-A", lang: "ar-XA" }, // gha, Arabic غ
+  "ક઼": { text: "قا", voice: "ar-XA-Wavenet-A", lang: "ar-XA" }, // qa, Arabic ق
 };
 
 const DEFAULT_VOICE = {
@@ -214,21 +216,29 @@ async function synthGoogle(text, lang, voiceOverride) {
   const key = process.env.GOOGLE_TTS_KEY;
   if (!key) throw new Error("Missing GOOGLE_TTS_KEY. See AUDIO.md to get a Google Cloud Text-to-Speech key.");
   const rate = Number((lang === "en" ? process.env.EN_RATE : process.env.GU_RATE) || (lang === "en" ? "1.0" : "0.9"));
-  const ipa = lang === "gu" ? PRONUNCIATION_OVERRIDES[text] : null;
+  // A pronunciation override can be either an IPA string (rendered on an English
+  // WaveNet voice) or an object {ipa|text, voice, lang} that names its own voice.
+  // The latter lets Perso-Arabic sounds (ɣ, q, x) be spoken by an Arabic voice,
+  // which produces them natively; an English voice cannot and mangles them.
+  const ov = lang === "gu" ? PRONUNCIATION_OVERRIDES[text] : null;
+  const ovIpa = ov ? (typeof ov === "string" ? ov : ov.ipa || null) : null;
+  const ovText = ov && typeof ov === "object" ? ov.text || null : null;
+  const ovVoice = ov && typeof ov === "object" && ov.voice ? ov.voice : "en-US-Wavenet-F";
+  const ovLang = ov && typeof ov === "object" && ov.lang ? ov.lang : "en-US";
   // A Gujarati comma-list (e.g. a count "આઠ, નવ, દસ") should pause between items.
   // Chirp3-HD runs them together and does not support SSML, so we synthesize these
   // on a Gujarati WaveNet voice with explicit breaks between the comma-separated parts.
   // Only short word-lists (counts, greetings, directions), not long prose that
   // merely contains commas: every comma-separated part must be short.
-  const pauseList = lang === "gu" && !ipa && text.includes(",") && text.length <= 40 &&
+  const pauseList = lang === "gu" && !ov && text.includes(",") && text.length <= 40 &&
     text.split(",").every((p) => p.trim().length <= 14);
-  // Vowels with a pronunciation override are synthesized by IPA on a WaveNet
-  // voice (Chirp3-HD does not support SSML), giving the exact intended sound.
+  // Letters with a pronunciation override are synthesized on a WaveNet voice
+  // (Chirp3-HD does not support SSML), giving the exact intended sound.
   let input, voiceName, langCd;
-  if (ipa) {
-    input = { ssml: `<speak><phoneme alphabet="ipa" ph="${ipa}">v</phoneme></speak>` };
-    voiceName = "en-US-Wavenet-F";
-    langCd = "en-US";
+  if (ov) {
+    input = ovIpa ? { ssml: `<speak><phoneme alphabet="ipa" ph="${ovIpa}">v</phoneme></speak>` } : { text: ovText };
+    voiceName = ovVoice;
+    langCd = ovLang;
   } else if (pauseList) {
     const parts = text.split(",").map((s) => s.trim()).filter(Boolean);
     input = { ssml: `<speak>${parts.join('<break time="450ms"/>')}</speak>` };
@@ -247,7 +257,7 @@ async function synthGoogle(text, lang, voiceOverride) {
       body: JSON.stringify({
         input,
         voice: { languageCode: langCd, name: voiceName },
-        audioConfig: { audioEncoding: "MP3", speakingRate: ipa ? 0.85 : rate },
+        audioConfig: { audioEncoding: "MP3", speakingRate: ov ? 0.85 : rate },
       }),
     }
   );
