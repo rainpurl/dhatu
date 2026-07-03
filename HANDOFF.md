@@ -108,7 +108,7 @@ Until rules/index are applied, social features fail quietly (app still works).
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **571 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **619 clips**). The app's
   `speak()` plays a clip when the manifest has one, else falls back to browser
   TTS. A missing manifest just means TTS-as-before.
 - **Voices:** Google **Chirp3-HD** (`gu-IN-Chirp3-HD-Aoede`,
@@ -191,9 +191,13 @@ Until rules/index are applied, social features fail quietly (app still works).
   unit header (X/Y lessons, "Done" pill when complete). On wide desktop (>=1200px)
   a fixed **right rail** (`.rail`, on the `.dhatu.withrail` Learn root) shows
   streak, Kaudi, course progress, daily goal, and a Continue button; it is hidden
-  below 1200px.
-- **Script:** one scrollable page of letters (common-first); tap a letter to hear
-  it and see a sound hint in a caption; "Learn the letters" quiz (ScriptLearn).
+  below 1200px. A **completed unit auto-collapses** (header only) with a caret;
+  tapping the header toggles its lesson list (override stored in `dhatu_unitOpen`).
+- **Script:** one scrollable page of letters (common-first); tap a letter card to
+  hear it (no separate sound button). A **sticky** letter-info bar shows the roman,
+  a short hint, and an **example** (an English word when the sound exists in
+  English, else a Gujarati word; `ex:{en}` or `ex:{gu,roman}` on each letter).
+  "Learn the letters" quiz (ScriptLearn).
 - **Review:** spaced repetition (SRS).
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
 - **Culture:** 5 categories (Ancient Foundations, Kingdoms and Courts, Trade and
@@ -236,8 +240,9 @@ message. This is a platform limit, intentionally left as graceful fallback.
   Ajrakh, checkpoint); Unit 8 (Food and cooking: thali, snacks, everyday meals,
   food history, street food, veg/non-veg/pure-veg nuance, regional kitchens, checkpoint);
   Unit 9 (Describing the world: opposites/adjectives, the body, weather/seasons,
-  places around town, checkpoint); Unit 10 (Numbers and shopping: 11-15, 16-20,
-  tens, prices, checkpoint); Unit 11 (Time and routine: days, telling time, daily
+  places around town, checkpoint); Unit 10 (Numbers and counting: 11-15, 16-20,
+  tens, 21-99, hundreds/thousands, lakh/crore/big numbers, shopping, checkpoint;
+  teaches counting to any number); Unit 11 (Time and routine: days, telling time, daily
   routine, checkpoint); Unit 12 (Making plans: future tense, arranging to meet,
   checkpoint); Unit 13 (People and work: jobs, "what do you do?", checkpoint); Unit
   14 (Health and the body: symptoms, at the doctor, checkpoint); Unit 15 (Travel
