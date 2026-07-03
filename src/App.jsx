@@ -856,6 +856,9 @@ const CSS = `
 .gbtn:disabled{opacity:.6;cursor:default}
 .gbtn .g{width:20px;height:20px;flex:none}
 
+/* sidebar brand header (desktop only) */
+.navbrand{display:none}
+
 /* entrance animation for screens */
 @keyframes screenIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .scr, .scr.plain, .onb, .done-wrap{animation:screenIn .22s var(--ease)}
@@ -879,8 +882,31 @@ const CSS = `
   .wide-2col{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;align-items:start}
   .onb, .done-wrap{max-width:520px}
 }
+/* desktop: left sidebar nav and a centered content column (web-first, not a phone on a monitor) */
+@media (min-width:900px){
+  .nav{
+    top:0;bottom:0;left:0;right:auto;width:240px;height:100vh;max-width:none;
+    flex-direction:column;justify-content:flex-start;align-items:stretch;gap:5px;
+    padding:22px 16px;border-radius:0;transform:none;overflow-y:auto;
+    background:var(--card);box-shadow:inset -1px 0 0 var(--line), 3px 0 16px rgba(70,45,40,.05)}
+  .navbrand{display:flex;align-items:center;gap:10px;padding:4px 12px 18px;font-weight:800;font-size:20px;letter-spacing:-.3px;color:var(--brand)}
+  .navbrand .nbm{width:34px;height:34px;border-radius:11px;background:var(--brand);color:#fff;display:grid;place-items:center;flex:none;box-shadow:var(--sink-brand)}
+  .navb{flex:none;flex-direction:row;justify-content:flex-start;gap:13px;padding:12px 14px;font-size:15px;border-radius:14px;text-align:left;color:var(--ink)}
+  .navb svg{width:25px;height:25px}
+  .navb:hover{background:var(--hover)}
+  .navb.on{color:var(--brand);background:var(--brand-soft);box-shadow:var(--bevel-inset)}
+  /* offset the content only on screens that actually have the sidebar */
+  .dhatu:has(> .nav){padding-left:240px;max-width:none}
+  .dhatu:has(> .nav) .scr{max-width:880px;margin:0 auto;padding:34px 44px 72px;width:100%}
+  .dhatu:has(> .nav) .scr.plain{padding-bottom:72px}
+  .dhatu:has(> .nav) .top .brandmark{display:none}
+  .dhatu:has(> .nav) .scriptfoot{left:240px;right:0;max-width:760px;margin:0 auto;transform:none}
+  .guides{grid-template-columns:repeat(2,1fr)}
+  .chargrid{grid-template-columns:repeat(6,1fr)}
+}
 @media (min-width:1200px){
   .wide-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+  .dhatu:has(> .nav) .scr{max-width:960px}
 }
 
 .spacer-lg{height:8px}
@@ -1708,6 +1734,7 @@ function CourseApp({ user }) {
 
   const NavBar = () => (
     <div className="nav">
+      <div className="navbrand"><span className="nbm"><Ic.logo width={22} height={22} /></span><span className="nbt">Dhātu</span></div>
       <button className={"navb" + (tab === "learn" ? " on" : "")} onClick={() => { setTab("learn"); setScreen("learn"); }}>
         <Ic.learn /> Learn
       </button>
