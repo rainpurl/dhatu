@@ -223,7 +223,7 @@ message. This is a platform limit, intentionally left as graceful fallback.
 - **Learn units/lessons:** Unit 1 (first words, numbers 1-5, yes/no/sorry,
   numbers 6-10, checkpoint); Unit 2 (family, food, home, colors, animals, getting
   around, checkpoint); Unit 3 (grammar: word order, postpositions, gender, present
-  tense, action words/verbs); Unit 4 (past: went/came, -e marker, time and days,
+  tense, action words/verbs, checkpoint); Unit 4 (past: went/came, -e marker, time and days,
   checkpoint); Unit 5 (polite you, everyday phrases, casual talk/slang, at the
   market, checkpoint); Unit 6 (modern culture: festivals/Garba, cinema, checkpoint);
   Unit 7 (Textiles and fashion: cloth/craft, looms, dress, trade/labor, checkpoint);
