@@ -524,8 +524,11 @@ const CSS = `
 .guide span{font-size:11.5px;opacity:.92;font-weight:500;margin-top:-4px}
 
 /* unit header */
-.unit-h{border-radius:18px;padding:16px 18px;color:#fff;margin:8px 0 4px;box-shadow:var(--sink-dark)}
+.unit-h{display:block;width:100%;text-align:left;border:none;font:inherit;cursor:pointer;border-radius:18px;padding:16px 18px;color:#fff;margin:8px 0 4px;box-shadow:var(--sink-dark)}
 .unit-h .unit-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.unit-h .unit-hr{display:flex;align-items:center;gap:10px;flex:none}
+.unit-h .unit-caret{width:18px;height:18px;opacity:.85;transition:transform .2s var(--ease)}
+.unit-h.collapsed .unit-caret{transform:rotate(-90deg)}
 .unit-h h2{margin:0 0 2px;font-size:19px;font-weight:800;letter-spacing:-.3px}
 .unit-h p{margin:0;font-size:13px;opacity:.92;font-weight:500}
 .unit-h .unit-count{flex:none;font-size:12px;font-weight:800;letter-spacing:.2px;padding:5px 10px;border-radius:999px;
@@ -1961,6 +1964,7 @@ function CourseApp({ user }) {
   const [weekHit, setWeekHit] = useLocalState("dhatu_weekHit", [false, false, false, false, false, false, false]);
   const [lastActive, setLastActive] = useLocalState("dhatu_lastActive", "");
   const [dayLog, setDayLog] = useLocalState("dhatu_dayLog", { date: "", count: 0 });
+  const [unitOpen, setUnitOpen] = useLocalState("dhatu_unitOpen", {});
   const DAILY_GOAL = 3;
 
   const [activeLesson, setActiveLesson] = useState(null);
@@ -2305,20 +2309,26 @@ function CourseApp({ user }) {
             const uTotal = u.lessons.length;
             const uPct = Math.round((uDone / uTotal) * 100);
             const uComplete = uDone === uTotal;
+            const open = u.id in unitOpen ? unitOpen[u.id] : !uComplete;
             return (
             <div key={u.id}>
-              <div className={"unit-h" + (uComplete ? " unit-done" : "")} style={{ background: `linear-gradient(135deg, ${u.color}, ${u.color}CC)` }}>
+              <button className={"unit-h" + (uComplete ? " unit-done" : "") + (open ? " open" : " collapsed")} style={{ background: `linear-gradient(135deg, ${u.color}, ${u.color}CC)` }}
+                onClick={() => setUnitOpen((o) => ({ ...o, [u.id]: !open }))} aria-expanded={open}>
                 <div className="unit-top">
                   <div>
                     <h2>{u.ku}: {u.title}</h2>
                     <p>{u.sub}</p>
                   </div>
-                  <span className="unit-count">{uComplete ? "Done" : uDone + "/" + uTotal}</span>
+                  <span className="unit-hr">
+                    <span className="unit-count">{uComplete ? "Done" : uDone + "/" + uTotal}</span>
+                    <svg className="unit-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+                  </span>
                 </div>
                 <div className="unit-bar" role="progressbar" aria-valuenow={uPct} aria-valuemin={0} aria-valuemax={100}>
                   <i style={{ width: uPct + "%" }} />
                 </div>
-              </div>
+              </button>
+              {open && (
               <div className="lpath">
                 {u.lessons.map((l) => {
                   const done = completed.includes(l.id);
@@ -2337,6 +2347,7 @@ function CourseApp({ user }) {
                   );
                 })}
               </div>
+              )}
             </div>
             );
           })}
