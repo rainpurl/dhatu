@@ -1273,6 +1273,13 @@ const LESSONS = {
     { t:"listen", say:"કરવું", roman:"karvuṁ", options:["to do","to come","to drink"], answer:"to do" },
     { t:"speak", gu:"મને જવું છે", roman:"mane javuṁ chhe", en:"I want to go." },
   ]},
+  u3c: { title: "Checkpoint", check:true, ex: [
+    { t:"build", en:"He eats rice.", answer:["તે","ભાત","ખાય","છે"], extra:["પીઉં","હું"], roman:"te bhaat khaay chhe" },
+    { t:"fill", pre:"આ ભેટ તારા", post:"છે", options:["માટે","પર","સાથે"], answer:"માટે", gu:"આ ભેટ તારા માટે છે", en:"This gift is for you.", why:"માટે means 'for', placed after તારા (you)." },
+    { t:"fill", pre:"આ", post:"ઘર છે", options:["મારું","મારો","મારી"], answer:"મારું", gu:"આ મારું ઘર છે", en:"This is my house.", why:"ઘર is neuter, so મારું." },
+    { t:"match", pairs:[{gu:"ખાવું",en:"to eat"},{gu:"પીવું",en:"to drink"},{gu:"જવું",en:"to go"},{gu:"આવવું",en:"to come"}] },
+    { t:"speak", gu:"તમે ક્યાં જાઓ છો?", roman:"tame kyaan jaao chho?", en:"Where are you going?" },
+  ]},
 
   u4l1: { title: "Went and came", ex: [
     { t:"intro", gu:"ગયો", roman:"gayo", en:"went (m.)", sub:"ગઈ for a female subject." },
@@ -1377,7 +1384,7 @@ const UNITS = [
   { id:"u2", ku:"Unit 2", title:"Everyday words", sub:"Family, food, home, colors, animals, and travel", color:"#1E6E7E",
     lessons:[ {id:"u2l1",label:"Family"}, {id:"u2l2",label:"Food and drink"}, {id:"u2l3",label:"Around the house"}, {id:"u2l4",label:"Colors"}, {id:"u2l5",label:"Animals"}, {id:"u2l6",label:"Getting around"}, {id:"u2c",label:"Checkpoint",kind:"check"} ] },
   { id:"u3", ku:"Unit 3", title:"Grammar and sentences", sub:"Word order, postpositions, gender, present tense", color:"#C77B1E",
-    lessons:[ {id:"u3l1",label:"Word order"}, {id:"u3l2",label:"Postpositions"}, {id:"u3l3",label:"My, your, gender"}, {id:"u3l4",label:"Present tense"}, {id:"u3l5",label:"Action words"} ] },
+    lessons:[ {id:"u3l1",label:"Word order"}, {id:"u3l2",label:"Postpositions"}, {id:"u3l3",label:"My, your, gender"}, {id:"u3l4",label:"Present tense"}, {id:"u3l5",label:"Action words"}, {id:"u3c",label:"Checkpoint",kind:"check"} ] },
   { id:"u4", ku:"Unit 4", title:"Talking about the past", sub:"Went and came, the -e marker, and telling time", color:"#A23E52",
     lessons:[ {id:"u4l1",label:"Went and came"}, {id:"u4l2",label:"The -e marker"}, {id:"u4l3",label:"Time and days"}, {id:"u4c",label:"Checkpoint",kind:"check"} ] },
   { id:"u5", ku:"Unit 5", title:"Conversation and politeness", sub:"Polite 'you', everyday phrases, and the market", color:"#2F6E44",
