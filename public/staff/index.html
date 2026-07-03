@@ -18,6 +18,7 @@
     input{width:100%;padding:12px 14px;border-radius:12px;border:none;background:#fff;font-size:16px;box-shadow:inset 0 2px 5px rgba(80,45,40,.16);margin-top:6px}
     button{cursor:pointer;font-weight:700;font-size:15px;border:none;border-radius:12px;padding:12px 18px;background:var(--brand);color:#fff;box-shadow:inset 0 2px 5px rgba(50,10,22,.4), inset 0 -1px 0 rgba(255,255,255,.14)}
     button.ghost{background:var(--card);color:var(--ink);box-shadow:inset 0 1.5px 4px rgba(80,45,40,.16)}
+    .resetbtn{padding:6px 12px;font-size:12px}
     .err{color:#C22233;font-size:13px;font-weight:600}
     table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:inset 0 1.5px 4px rgba(80,45,40,.12)}
     th,td{text-align:left;padding:11px 12px;font-size:13.5px;border-bottom:1px solid var(--line)}
@@ -36,7 +37,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDP2aEnKbwoZGG8doE648TO2GUZHN-JMNw",
@@ -102,6 +103,7 @@
       const rows = docs.map((u) => {
         const p = u.progress || {};
         return {
+          id: u.id,
           name: (u.profile && u.profile.name) || "",
           email: (u.profile && u.profile.email) || "",
           photo: (u.profile && u.profile.photo) || "",
@@ -115,18 +117,30 @@
       const totalKaudi = rows.reduce((n, r) => n + r.kaudi, 0);
       const active7 = rows.filter((r) => r.updated && Date.now() - r.updated < 7 * 864e5).length;
       const fmt = (t) => t ? new Date(t).toLocaleDateString() : "";
+      const esc = (s) => String(s).replace(/"/g, "&quot;");
       el.querySelector("#status").outerHTML = `
         <div class="bar">
           <div class="stat"><b>${rows.length}</b><span>Users</span></div>
           <div class="stat"><b>${active7}</b><span>Active (7d)</span></div>
           <div class="stat"><b>${totalKaudi}</b><span>Total Kaudi</span></div>
         </div>
-        <table><thead><tr><th>User</th><th>Streak</th><th>Kaudi</th><th>Lessons</th><th>Review</th><th>Last active</th></tr></thead><tbody>
+        <table><thead><tr><th>User</th><th>Streak</th><th>Kaudi</th><th>Lessons</th><th>Review</th><th>Last active</th><th></th></tr></thead><tbody>
         ${rows.map((r) => `<tr>
           <td>${r.photo ? `<img class="pic" src="${r.photo}" referrerpolicy="no-referrer"/>` : ""}${r.name || "<span class='muted'>(no name)</span>"}<div class="muted">${r.email}</div></td>
           <td class="num">${r.streak}</td><td class="num">${r.kaudi}</td><td class="num">${r.done}</td><td class="num">${r.review}</td><td class="muted">${fmt(r.updated)}</td>
+          <td><button class="resetbtn ghost" data-uid="${esc(r.id)}" data-name="${esc(r.name || r.email || r.id)}">Reset</button></td>
         </tr>`).join("")}
         </tbody></table>`;
+      el.querySelectorAll(".resetbtn").forEach((b) => {
+        b.onclick = async () => {
+          if (!confirm("Reset all progress for " + b.dataset.name + "? This clears their streak, Kaudi, and lessons.")) return;
+          b.disabled = true; b.textContent = "...";
+          try {
+            await setDoc(doc(db, "users", b.dataset.uid), { progress: {}, updatedAt: Date.now() }, { merge: true });
+            dashboard(user);
+          } catch (e) { b.disabled = false; b.textContent = "Reset"; alert("Reset failed: " + (e.code || e.message)); }
+        };
+      });
     }
 
     function route() {

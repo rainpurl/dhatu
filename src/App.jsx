@@ -1704,11 +1704,11 @@ function CourseApp({ user }) {
   const [lastActive, setLastActive] = useLocalState("dhatu_lastActive", "");
 
   const [activeLesson, setActiveLesson] = useState(null);
-  const [confirmReset, setConfirmReset] = useState(false);
   const [exIdx, setExIdx] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [sessionCorrect, setSessionCorrect] = useState(0);
   const [sessionKaudi, setSessionKaudi] = useState(0);
+  const [sessionWrong, setSessionWrong] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const [selChar, setSelChar] = useState(null);
@@ -1749,24 +1749,6 @@ function CourseApp({ user }) {
     setTab("learn");
   }
 
-  function resetAllProgress() {
-    try {
-      ["dhatu_onboarded", "dhatu_readWrite", "dhatu_showHistory", "dhatu_vocabTab", "dhatu_kaudi", "dhatu_streak", "dhatu_completed", "dhatu_srs", "dhatu_weekHit", "dhatu_lastActive"].forEach((k) => window.localStorage.removeItem(k));
-    } catch (e) {}
-    setKaudi(0);
-    setStreak(0);
-    setCompleted([]);
-    setSrs([]);
-    setWeekHit([false, false, false, false, false, false, false]);
-    setLastActive("");
-    setReadWrite(true);
-    setShowHistory(true);
-    setVocabTab(false);
-    setConfirmReset(false);
-    setScreen("learn");
-    setTab("learn");
-  }
-
   function nextRecommended() {
     for (const id of LESSON_ORDER) {
       if (!completed.includes(id)) return id;
@@ -1780,6 +1762,7 @@ function CourseApp({ user }) {
     setFeedback(null);
     setSessionCorrect(0);
     setSessionKaudi(0);
+    setSessionWrong(0);
     setScreen("lesson");
   }
 
@@ -1832,16 +1815,22 @@ function CourseApp({ user }) {
     if (activeLesson && !completed.includes(activeLesson)) {
       setCompleted((c) => [...c, activeLesson]);
     }
-    setKaudi((k) => k + sessionKaudi);
+    const reward = Math.max(2, 10 - sessionWrong * 2);
+    setSessionKaudi(reward);
+    setKaudi((k) => k + reward);
     recordActivity();
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 1800);
     setScreen("complete");
   }
 
-  function answerCorrect(pts = 10) {
+  // A lesson is worth up to 10 Kaudi, reduced by wrong answers. Per-exercise
+  // points are no longer accumulated; the reward is computed at completion.
+  function answerCorrect() {
     setSessionCorrect((c) => c + 1);
-    setSessionKaudi((k) => k + pts);
+  }
+  function answerWrong() {
+    setSessionWrong((w) => w + 1);
   }
 
   function goNextExercise() {
@@ -2153,6 +2142,7 @@ function CourseApp({ user }) {
       feedback={feedback}
       setFeedback={setFeedback}
       onCorrect={answerCorrect}
+      onWrong={answerWrong}
       onNext={goNextExercise}
       onExit={exitLesson}
       onSnooze={snoozeType}
@@ -2662,19 +2652,7 @@ function CourseApp({ user }) {
               <small>Buy the developer a coffee on Ko-fi</small>
             </span>
           </a>
-          {!confirmReset ? (
-            <button className="btn ghost" style={{ marginTop: 14 }} onClick={() => setConfirmReset(true)}>
-              Reset progress
-            </button>
-          ) : (
-            <div style={{ marginTop: 14 }}>
-              <button className="btn" style={{ background: "var(--no)", color: "#fff", boxShadow: "inset 0 1px 2px rgba(255,255,255,.2), inset 0 -3px 7px rgba(140,20,30,.5)" }} onClick={resetAllProgress}>
-                Tap again to confirm reset
-              </button>
-              <button className="btn ghost" style={{ marginTop: 8 }} onClick={() => setConfirmReset(false)}>Cancel</button>
-            </div>
-          )}
-          <button className="btn ghost" style={{ marginTop: 8 }} onClick={async () => { await signOutUser(); clearLocalProgress(); }}>
+          <button className="btn ghost" style={{ marginTop: 14 }} onClick={async () => { await signOutUser(); clearLocalProgress(); }}>
             Sign out
           </button>
           <div style={{ height: 10 }} />
@@ -2688,7 +2666,7 @@ function CourseApp({ user }) {
 }
 
 /* ============================ LESSON RUNNER ============================ */
-function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback, setFeedback, onCorrect, onNext, onExit, onSnooze }) {
+function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback, setFeedback, onCorrect, onWrong, onNext, onExit, onSnooze }) {
   const [picked, setPicked] = useState(null);
   const [matchLeft, setMatchLeft] = useState(null);
   const [matchDone, setMatchDone] = useState([]);
@@ -2709,7 +2687,8 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
 
   function checkSingle(correctVal) {
     const isRight = picked === correctVal;
-    if (isRight) onCorrect(10);
+    if (isRight) onCorrect();
+    else onWrong && onWrong();
     setFeedback(isRight ? "good" : "bad");
   }
 
@@ -2742,7 +2721,8 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
   function checkBuild() {
     const guess = buildAns.map((a) => a.tok);
     const isRight = guess.length === ex.answer.length && guess.every((g, i) => g === ex.answer[i]);
-    if (isRight) onCorrect(15);
+    if (isRight) onCorrect();
+    else onWrong && onWrong();
     setFeedback(isRight ? "good" : "bad");
   }
 

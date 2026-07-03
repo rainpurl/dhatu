@@ -72,7 +72,10 @@ export async function loadProgressToLocal(user) {
     }
     const snap = await getDoc(ref);
     if (snap.exists() && snap.data().progress) {
+      // Cloud is the source of truth on sign-in: clear local first so an admin
+      // reset (empty cloud progress) actually takes effect on the device.
       const data = snap.data().progress;
+      clearLocalProgress();
       Object.entries(data).forEach(([k, v]) => {
         if (k.startsWith(PREFIX) && typeof v === "string") window.localStorage.setItem(k, v);
       });

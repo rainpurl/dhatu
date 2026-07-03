@@ -73,7 +73,7 @@ To turn it on:
      match /databases/{database}/documents {
        match /users/{uid} {
          allow read, write: if request.auth != null && request.auth.uid == uid;
-         allow read: if request.auth != null && request.auth.uid == "YOUR_ADMIN_UID";
+         allow read, write: if request.auth != null && request.auth.uid == "YOUR_ADMIN_UID";
        }
      }
    }
