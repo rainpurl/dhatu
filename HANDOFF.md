@@ -108,7 +108,7 @@ Until rules/index are applied, social features fail quietly (app still works).
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **393 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **403 clips**). The app's
   `speak()` plays a clip when the manifest has one, else falls back to browser
   TTS. A missing manifest just means TTS-as-before.
 - **Voices:** Google **Chirp3-HD** (`gu-IN-Chirp3-HD-Aoede`,
@@ -198,7 +198,7 @@ Until rules/index are applied, social features fail quietly (app still works).
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
 - **Culture:** 5 categories (Ancient Foundations, Kingdoms and Courts, Trade and
   the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat), each with
-  photo cover cards; **20 chapters** with photo covers + inline photos, dual
+  photo cover cards; **25 chapters** with photo covers + inline photos, dual
   "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
   summary per chapter), sources. A "Did you know?" fun-fact card rotates every
   10 hours (one fact notes the kaudi shell as early Gujarati currency).
@@ -217,9 +217,11 @@ message. This is a platform limit, intentionally left as graceful fallback.
 
 ## 8. Content inventory
 
-- **Culture chapters (20):** indus, maurya, vallabhi, dwarka; solanki, sultanate,
-  palitana, narsinh, somnath; surat_trade, diaspora, textiles; colonial, gandhi;
-  state, nav_nirman, adivasi_dalit, modern, kutch, food.
+- **Culture chapters (25):** indus, maurya, vallabhi, dwarka; solanki, sultanate,
+  palitana, narsinh, somnath; surat_trade, diaspora, textiles; colonial,
+  many_rulers, peasant, gandhi, rajkot, partition, junagadh (the Colonial Rule and
+  Resistance category, expanded from the deep-research report); state, nav_nirman,
+  adivasi_dalit, modern, kutch, food.
 - **Vocab topics:** slang, family (expanded kinship: older/younger sibling,
   maternal/paternal, kaka/mota bapa/mama/foi/masi), numbers, food, verbs,
   transport, colors, animals, time, greetings, market, festivals, culture.
@@ -252,7 +254,7 @@ message. This is a platform limit, intentionally left as graceful fallback.
 1. **Owner: finish Firebase setup** (section 4 / AUTH.md): rules, admin UID,
    pokes index, authorized domain. Social + staff features need this.
 2. **Owner: rotate the Google TTS API key.**
-2b. **Audio for all current lessons is generated and committed** (393 clips). The
+2b. **Audio for all current lessons is generated and committed** (403 clips). The
    new vocab lessons and Units 7-8 (khaman, dhokla, kadhi, khichdi, handvo, samo,
    farali, kapaas, rang, vanaat, mashru, saadi, vepaar, gharcholu, bandar, etc.)
    are voiced with the Chirp3-HD voices; 4 orphaned clips from the deleted Unit 6
