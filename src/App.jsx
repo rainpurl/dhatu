@@ -4528,6 +4528,11 @@ const ERA_GU_SUMMARY = {
   state: "૧૯૪૭માં દેશ આઝાદ થયો ત્યારે ગુજરાત નામનું કોઈ રાજ્ય નહોતું. ગુજરાતી બોલતા વિસ્તારો મોટા બૃહદ મુંબઈ રાજ્યનો ભાગ હતા. ગુજરાતી ભાષા માટે અલગ રાજ્યની માગણી સાથે મહાગુજરાત આંદોલન થયું. ૧લી મે, ૧૯૬૦ના રોજ મુંબઈ રાજ્યમાંથી મહારાષ્ટ્ર અને ગુજરાત એમ બે રાજ્ય બન્યાં. નવા રાજ્ય માટે સાબરમતીના કિનારે ગાંધીનગર નામનું નવું પાટનગર વસાવવામાં આવ્યું. આમ ભાષા અને રાજકારણ એકબીજા સાથે જોડાઈ ગયાં.",
   nav_nirman: "૧૯૭૪માં ગુજરાતના વિદ્યાર્થીઓએ મોંઘવારી અને ભ્રષ્ટાચાર સામે મોટું આંદોલન કર્યું. તેને નવનિર્માણ આંદોલન કહે છે. કૉલેજની ફી અને ખાવાના ભાવ વધવાથી શરૂ થયેલું આ આંદોલન આખા રાજ્યમાં ફેલાયું. તેની અસર એટલી મોટી હતી કે રાજ્ય સરકારને પદ છોડવું પડ્યું. આ આંદોલને દેશના બીજા મોટા આંદોલનોને પણ પ્રેરણા આપી.",
   adivasi_dalit: "ગુજરાતમાં આદિવાસી અને દલિત સમાજની પોતાની લાંબી કહાણી છે. પૂર્વના ડુંગરાળ જિલ્લાઓમાં મોટી આદિવાસી વસ્તી છે. તેમણે જમીન, જંગલ અને હકો માટે લાંબી લડત આપી છે. નર્મદા બંધને લીધે ઘણા આદિવાસી પરિવારોને પોતાનાં ઘર છોડવાં પડ્યાં. રાઠવા અને ભીલ સમાજ પિથોરા નામનું સુંદર ભીંતચિત્ર બનાવે છે. આ કળા અને સંસ્કૃતિ ગુજરાતનો મહત્વનો ભાગ છે.",
+  t_bandhani: "બાંધણી એટલે દોરાથી બાંધીને રંગેલું કાપડ. કાપડ પર નાનાં નાનાં ટપકાં બાંધીને પછી રંગવામાં આવે છે, જેથી બાંધેલી જગ્યા સફેદ રહે. એક સરસ ટુકડામાં હજારો ગાંઠ હોય છે, જે મોટે ભાગે સ્ત્રીઓ બાંધે છે. કચ્છ અને જામનગર તેનાં મુખ્ય કેન્દ્રો છે. અજરખ એટલે લાકડાના બ્લોકથી છાપેલું કાપડ, જે કચ્છમાં અને સિંધી મુસ્લિમ કારીગરોમાં ખાસ જાણીતું છે. બંને કળા લગ્ન અને તહેવારોમાં ખાસ વપરાય છે.",
+  t_patola: "પટોળું પાટણનું પ્રખ્યાત રેશમી કાપડ છે. તેમાં તાણા અને વાણા બંને દોરા વણતાં પહેલાં રંગવામાં આવે છે, એટલે ભાત બંને બાજુ સરખી દેખાય છે. એક સાડી બનાવવામાં મહિનાઓ લાગે છે. ગુજરાતમાં મશરૂ, તાંગલિયા અને કાળા કપાસ જેવી બીજી ખાસ વણાટ પણ છે. આ કળા ખૂબ મહેનત માગે છે અને હવે થોડા જ કારીગરો બચ્યા છે. પટોળાને ખાસ ભૌગોલિક ઓળખનું રક્ષણ મળ્યું છે.",
+  f_street: "ગુજરાતનાં શહેરોમાં સ્ટ્રીટ ફૂડની મજેદાર સંસ્કૃતિ છે. ફાફડા અને જલેબી રવિવાર અને તહેવારનો પ્રિય નાસ્તો છે, ખાસ કરીને દશેરાએ. ખમણ, ઢોકળા, ખાખરા, ભેળ અને પાણીપૂરી પણ ખૂબ ખવાય છે. કચ્છની દાબેલી અને સુરતના લોચો તથા ખીચુ ખાસ પ્રખ્યાત છે. સુરત મીઠાઈ અને સ્વાદિષ્ટ ખાણી માટે જાણીતું છે. આ ફરસાણ સંસ્કૃતિ વેપારી શહેરોની ઝડપી જીવનશૈલી સાથે જોડાયેલી છે.",
+  f_faith: "ગુજરાતમાં ઘણા હિન્દુ અને જૈન પરિવારો શાકાહારી છે, પણ 'પ્યૉર વેજ' એટલે વધુ કડક: ડુંગળી અને લસણ વગરનું ભોજન. આ રીત જૈન અને સ્વામિનારાયણ પરંપરામાંથી આવે છે. જૈન ભોજનમાં તો કંદમૂળ પણ ટાળવામાં આવે છે, અને પર્યુષણમાં નિયમો વધુ કડક બને છે. ઉપવાસના દિવસે લોકો સામો અને રાજગરા જેવું ફરાળી ખાય છે. પણ આખું ગુજરાત શાકાહારી નથી; મુસ્લિમ, બોહરા, પારસી અને દરિયાકાંઠાના સમાજની પોતાની, માંસાહારી સહિતની, ખાણી-પીણી છે.",
+  f_ports: "ગુજરાતનું ભોજન દરિયા અને વેપાર સાથે જોડાયેલું છે. હજારો વર્ષ પહેલાં લોથલ એક બંદર હતું, અને પછી ખંભાત તથા સુરત મોટાં બંદરો બન્યાં. મરચું, બટાટા અને ટમેટા જેવી વસ્તુઓ થોડી સદીઓ પહેલાં જ દરિયાપારથી આવી. વેપારીઓ થેપલા અને ખાખરા જેવું ટકાઉ ભોજન સાથે લઈ જતા. બંદર-શહેરોમાં જુદા જુદા સમાજની રસોઈ ભળી. આમ ગુજરાતી ભોજન સતત નવી વસ્તુઓ અપનાવતું રહ્યું છે.",
   modhera: "મોઢેરાનું સૂર્યમંદિર અગિયારમી સદીમાં સોલંકી રાજા ભીમદેવના સમયમાં બંધાયું. તે સૂર્યદેવને સમર્પિત છે અને મારુ-ગુર્જર શૈલીનો સુંદર નમૂનો છે. મંદિરના ત્રણ ભાગ છે: સૂર્યકુંડ નામનું પગથિયાંવાળું તળાવ, સભામંડપ અને ગૂઢમંડપ, જે પૂર્વ-પશ્ચિમ દિશામાં ગોઠવેલા છે જેથી સૂર્યનો પ્રકાશ ગર્ભગૃહ સુધી પહોંચે. અહીં હવે પૂજા થતી નથી, પણ દર વર્ષે નૃત્ય મહોત્સવ યોજાય છે. તેની બારીક કોતરણી સોલંકી કળાની ઝલક આપે છે.",
   parsi: "પારસી લોકો મૂળ ઈરાનના જરથોસ્તી છે, જેઓ હજારેક વર્ષ પહેલાં ગુજરાતના દરિયાકિનારે આવ્યા. પરંપરા પ્રમાણે તેઓ સંજાણ બંદરે ઊતર્યા અને અહીં વસ્યા. તેમના ધર્મમાં પવિત્ર અગ્નિનું ખાસ મહત્વ છે; ઉદવાડાનું ઈરાનશાહ આતશ બહેરામ સૌથી પવિત્ર અગિયારી ગણાય છે. પારસીઓ સુરત જેવાં બંદરોના વેપાર અને વહાણવટામાં આગળ હતા અને ઉદ્યોગમાં પણ મોટું યોગદાન આપ્યું. તેઓ ગુજરાતી બોલે છે અને નવરોઝ જેવા તહેવારો ઊજવે છે.",
   gir: "સૌરાષ્ટ્રનું ગીર જંગલ દુનિયામાં એકમાત્ર જગ્યા છે જ્યાં એશિયાઈ સિંહ જંગલમાં જીવે છે. એક સમયે શિકારને લીધે આ સિંહો લુપ્ત થવાના આરે આવી ગયા હતા, પણ જૂનાગઢના નવાબે તેમને બચાવવાની શરૂઆત કરી. કાળજીપૂર્વકના રક્ષણથી હવે તેમની સંખ્યા સેંકડોમાં પહોંચી છે. ગીરમાં માલધારી સમાજ પોતાનાં ઢોર સાથે જંગલમાં રહે છે, એટલે સિંહનું રક્ષણ લોકો સાથે સંતુલન રાખીને કરવું પડે છે. એશિયાઈ સિંહ આજે ગુજરાતનું ગૌરવ અને વન્યજીવ સંરક્ષણનું પ્રતીક બની ગયો છે.",
@@ -4888,6 +4893,67 @@ ERAS.push(
       "Finally, it is shaped by community and belief, and not in one direction. Many Jains avoid root vegetables; Swaminarayan practice avoids onion and garlic; fasting days bring a whole farali cuisine of samo, rajgira, potato, and peanuts; and Dawoodi Bohra communities share a course-structured thaal that includes meat. So Gujarati food is not a single Hindu-vegetarian category but a set of overlapping traditions, tied together by dishes like dhokla and khaman, the travel breads thepla and khakhra that followed Gujaratis around the world, dal dhokli, handvo, and the winter feast of undhiyu."],
     site:{ name:"A Gujarati thali", note:"The best introduction is a full thali, where the balance of sweet, sour, salty, and spicy across many small dishes is the whole point." },
     sources:["Gujarat Tourism, Gujarati cuisine and thali pages","UNESCO World Heritage Centre, Lothal (Harappan port)","Springer, traditional fermented foods of western India","NCERT and NIOS materials on early-modern crop transfers"] }
+);
+
+/* ---- Module: Textiles and Fashion ---- */
+ERAS.push(
+  { id:"t_bandhani", category:"textile", yr:"living craft", title:"Bandhani, Ajrakh, and resist craft",
+    img: FP + "Bandhej.JPG?width=1000",
+    blurb:"Two of Gujarat's signature textiles, one tied and one printed, both made by keeping the dye out.",
+    body:[
+      "Bandhani is tie-dye. A design is planned as a field of tiny dots, and each dot is pinched up and bound tightly with thread before the cloth is dyed, so the tied spots stay undyed and appear as pale dots against a colored ground. A fine piece can carry many thousands of knots, tied mostly by women and girls, and the craft is centered in Kutch and around Jamnagar. The words Bandhani and Bandhej are used for the same thing.",
+      "Bandhani is woven into life's big moments. The red-and-white checked gharchola is a classic bridal cloth in many Gujarati Hindu and Jain communities, and its motifs read like a visual language, with rows of dots building peacocks, flowers, dancers, and the circular rasamandala. After the 1956 Kutch earthquake many dyers moved to chemical dyes, and a later revival brought natural dyes back for part of the craft.",
+      "Ajrakh is the printed cousin. Instead of tying, craftspeople stamp the cloth with hand-carved wooden blocks and layers of natural dye, building dense, symmetrical, geometric patterns in indigo blue, madder red, and black through many rounds of printing, washing, and dyeing. It is centered in Kutch, around Dhamadka and Ajrakhpur.",
+      "Ajrakh is closely tied to Sindhi Muslim craft traditions, a reminder that Gujarati textiles reach well beyond any single religious community. Because it depends on so much clean water and so many dye baths, drought and water quality directly threaten it, and dyers have had to move as rivers changed. A GI tag now protects the name Kutch Ajrakh, though a tag protects a name, not always a wage."],
+    site:{ name:"Kutch and Jamnagar", note:"Centers of Bandhani tie-dye; Dhamadka and Ajrakhpur in Kutch are the homes of Ajrakh block printing." },
+    sources:["Khamir, craft documentation on Bandhani and Ajrakh","Geographical Indications Registry, Government of India","The Metropolitan Museum of Art, essays on Indian dyed and printed cottons"] },
+
+  { id:"t_patola", category:"textile", yr:"living craft", title:"Patola and the loom",
+    img: FP + "Gujarat%20patola.jpg?width=1000",
+    blurb:"Patan's double-ikat silk is among the most painstaking weaves anywhere, made by dyeing the threads before a single row is woven.",
+    body:[
+      "Patola is a silk textile from Patan woven in double ikat: both the lengthwise and crosswise threads are tie-dyed to a plan before weaving, so the pattern emerges from the yarn itself and reads the same on both faces of the cloth. A single sari can take months of preparation and weeks of weaving.",
+      "Patola's custodian families trace the tradition back to the Solanki era, and its named bhat motifs are woven rather than printed. The precision required makes true double-ikat Patola rare and expensive, and 'Patola' is sometimes used loosely in the market even when real double ikat is not present.",
+      "Gujarat has other important weaves too. Mashru is a cotton-and-silk cloth, historically made so silk showed on the outside while soft cotton touched the skin. Tangaliya, from Surendranagar and made by the Dangasia community, builds raised dots into the weave itself. Kala Cotton is a hardy, rain-fed cotton revived in Kutch for more sustainable, locally grown cloth.",
+      "These weaves carry hard questions along with their beauty: months of skilled, often underpaid labor, a shrinking number of master weavers, and ongoing debate over what counts as authentic. GI protection now covers Patan Patola."],
+    site:{ name:"Patan", note:"Home of double-ikat Patola, with a family-run Patola heritage museum." },
+    sources:["Patan Patola Heritage","Khamir, documentation on Tangaliya, Mashru, and Kala Cotton","Geographical Indications Registry, Government of India"] }
+);
+
+/* ---- Module: Food and Cooking ---- */
+ERAS.push(
+  { id:"f_street", category:"foodways", yr:"living tradition", title:"Street food and farsan",
+    img: FP + "Jalebi%20Fafda.jpg?width=1000",
+    blurb:"Gujarat's trading cities gave it a fast, inventive snack culture, from fafda and jalebi to Surat's own locho.",
+    body:[
+      "Farsan, the wide world of savory snacks, is central to how Gujarat eats. Fafda, crisp chickpea-flour strips, paired with syrupy jalebi is a classic Sunday and festival breakfast, especially on Dussehra.",
+      "Steamed snacks like khaman and dhokla, crisp khakhra for travel, and chaat such as bhel and pani puri fill tea-time and the evening street. Dabeli, a spiced potato bun, comes from Kutch.",
+      "Surat has its own beloved street foods, including locho, a soft savory steamed dish, and khichu, and the city is famous for an indulgent, sweet-leaning palate shaped by its long history as a trading port.",
+      "Street food follows the rhythm of the cities: fast, cheap, portable, and social, sold from carts, at chowks, and in night markets. It is one of the liveliest and most democratic parts of Gujarati food."],
+    site:{ name:"Surat and Ahmedabad", note:"The great street-food cities of Gujarat, each with its own specialties." },
+    sources:["Gujarat Tourism, Gujarati Cuisines","Sahapedia, documentation on Surat and its foodways"] },
+
+  { id:"f_faith", category:"foodways", yr:"living tradition", title:"Faith, fasting, and 'pure veg'",
+    img: FP + "Undhiyu.jpg?width=1000",
+    blurb:"What people eat in Gujarat is shaped by faith and community, and 'pure veg' means something stricter than simply vegetarian.",
+    body:[
+      "Vegetarianism is a strong tradition for many Hindu and Jain families, but 'pure veg' here usually means something stricter: no onion, no garlic, and no eggs. This 'no onion, no garlic' cooking is rooted in Jain and Swaminarayan practice, where onion and garlic are avoided as foods thought to heat the body and unsettle the mind, and it is now a common restaurant label and, for many, a marker of purity and status.",
+      "Jain food goes further and also avoids root vegetables like potato and carrot, because uprooting the whole plant is seen as taking more life, and the rules tighten during the festival of Paryushan. On fasting days people eat farali food, such as samo grain, rajgira, potato, and rock salt, in place of everyday grains.",
+      "Festive cooking has its own dishes. Undhiyu, a slow-cooked mix of winter vegetables and muthiya, is eaten especially around Uttarayan, and sweets mark most celebrations.",
+      "It is important not to flatten Gujarat into a single vegetarian image. Muslim, Bohra, Parsi, coastal, and many Adivasi communities have their own food, including meat and fish. Vegetarianism is real and deep for some, but as a description of the whole region the 'purely vegetarian Gujarat' picture is partial, and often an upper-caste one."],
+    site:{ name:"Across Gujarat", note:"Diet here is shaped by Jain, Swaminarayan, Hindu, Muslim, Bohra, Parsi, and Adivasi traditions, not one." },
+    sources:["BAPS and JAINA dietary resources","Official Dawoodi Bohra material on thaal dining","Gujarat Tourism, Gujarati Cuisines"] },
+
+  { id:"f_ports", category:"foodways", yr:"ancient - present", title:"Food from the ports",
+    img: FP + "Lothal_Dockyard.jpg?width=1000",
+    blurb:"Gujarat's kitchen carries its trade history, from a Harappan dockyard to the chili and potato that arrived by sea.",
+    body:[
+      "Gujarat's food is shaped by the sea. Lothal, on the coast, was a Harappan port with a dockyard thousands of years ago, and later Khambhat and Surat became busy ports on the Arabian Sea, moving spices, sugar, cloth, and people.",
+      "Many staples now treated as timeless arrived only a few centuries ago through this trade. Chili, tomato, and potato came after the Columbian exchange crossed the oceans, so even 'classic' Gujarati dishes are historically layered.",
+      "Trade also shaped who cooked and ate what. Merchant communities carried portable foods like thepla and khakhra on long journeys, and port cities mixed cooking across communities, from Bohra thaal dining to Parsi dishes.",
+      "Reading Gujarati food as a trade history, rather than a fixed regional menu, keeps it honest: it is a system that kept absorbing new ingredients and techniques from across the Indian Ocean."],
+    site:{ name:"Lothal, Khambhat, and Surat", note:"The ports, ancient and early-modern, that shaped the Gujarati kitchen." },
+    sources:["UNESCO World Heritage Centre, Lothal","NCERT and NIOS materials on crop transfers","Scholarship on Gujarat's Indian Ocean trade"] }
 );
 
 /* attach each era's Gujarati summary (must run after all eras are pushed) */
