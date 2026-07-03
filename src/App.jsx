@@ -1650,7 +1650,7 @@ const CONVERSATIONS = [
 
 /* ============================ VOCAB TOPICS ============================ */
 const TOPICS = [
-  { id:"slang", title:"Modern slang", icon:"spark", tag:"New", note:"Casual words younger people actually use, often mixed with Hindi and English. Fun with friends, but skip them in formal settings.", words:[
+  { id:"slang", title:"Modern slang 1", icon:"spark", note:"Casual words younger people actually use, often mixed with Hindi and English. Fun with friends, but skip them in formal settings.", words:[
     { gu:"મસ્ત", r:"mast", en:"awesome / cool" },
     { gu:"ફાડુ", r:"faaḍu", en:"awesome / top-tier" },
     { gu:"જબરું", r:"jabaruṁ", en:"amazing" },
@@ -1660,14 +1660,16 @@ const TOPICS = [
     { gu:"બિંદાસ", r:"bindaas", en:"chill / carefree" },
     { gu:"વાત છે", r:"vaat chhe", en:"now that's impressive" },
     { gu:"ટાઇટ", r:"ṭaaiṭ", en:"excellent (from English 'tight')" },
+  ]},
+  { id:"slang2", title:"Modern slang 2", icon:"spark", tag:"New", note:"More casual talk: reactions, ways to address a friend, and words for a mess. Tone matters, so use the teasing ones only with people you know.", words:[
     { gu:"શું ચાલે?", r:"shu chaale?", en:"what's up?" },
     { gu:"ટેન્શન નહીં", r:"ṭension nahi", en:"no worries" },
+    { gu:"ના હોય!", r:"na hoy!", en:"no way!" },
     { gu:"લોચો", r:"locho", en:"a mix-up / mess" },
     { gu:"લફડો", r:"lafḍo", en:"a mess / drama / trouble" },
     { gu:"ભાઈ", r:"bhaai", en:"bro / dude" },
     { gu:"બકા", r:"baka", en:"buddy / dear (friendly)" },
     { gu:"હેડો", r:"heḍo", en:"let's go (Ahmedabad)" },
-    { gu:"ના હોય!", r:"na hoy!", en:"no way!" },
     { gu:"ટોપા", r:"ṭopaa", en:"fool (teasing, friends only)" },
   ]},
   { id:"family", title:"Family", icon:"family", note:"Gujarati kinship is specific: it marks older vs younger siblings, and whether an aunt or uncle is on your mother's or father's side.", words:[
@@ -4938,6 +4940,34 @@ TOPICS.push(
     { gu:"લોટ", r:"loṭ", en:"flour / dough" },
     { gu:"મસાલો", r:"masaalo", en:"spice mix" },
     { gu:"ઉકાળવું", r:"ukaaḷvuṁ", en:"to boil" },
+  ]}
+);
+
+/* ============================ VOCAB: sports and connecting words (added) ============================ */
+TOPICS.push(
+  { id:"sports", title:"Sports and games", icon:"trophy", words:[
+    { gu:"રમત", r:"ramat", en:"game / sport" },
+    { gu:"ક્રિકેટ", r:"krikeṭ", en:"cricket" },
+    { gu:"દડો", r:"daḍo", en:"ball" },
+    { gu:"પતંગ", r:"patang", en:"kite" },
+    { gu:"ટીમ", r:"ṭeem", en:"team" },
+    { gu:"રમવું", r:"ramvuṁ", en:"to play" },
+    { gu:"જીતવું", r:"jeetvuṁ", en:"to win" },
+    { gu:"હારવું", r:"haarvuṁ", en:"to lose" },
+    { gu:"દોડવું", r:"doḍvuṁ", en:"to run" },
+    { gu:"તરવું", r:"tarvuṁ", en:"to swim" },
+  ]},
+  { id:"connectors", title:"Joining words", icon:"link", note:"The small words that link ideas together. Learning a few makes your sentences flow.", words:[
+    { gu:"અને", r:"ane", en:"and" },
+    { gu:"પણ", r:"paṇ", en:"but / also" },
+    { gu:"કારણ કે", r:"kaaraṇ ke", en:"because" },
+    { gu:"તેથી", r:"tethi", en:"so / therefore" },
+    { gu:"પછી", r:"pachhi", en:"then / after" },
+    { gu:"પહેલાં", r:"pahelaan", en:"before" },
+    { gu:"હમણાં", r:"hamṇaan", en:"now / just now" },
+    { gu:"હંમેશા", r:"hammeshaa", en:"always" },
+    { gu:"ક્યારેય", r:"kyaarey", en:"never" },
+    { gu:"કદાચ", r:"kadaach", en:"maybe" },
   ]}
 );
 
