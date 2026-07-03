@@ -556,6 +556,30 @@ const CSS = `
 .node-label{font-size:12.5px;font-weight:700;color:var(--ink);text-align:center;max-width:130px;line-height:1.15}
 .node.cur ~ .node-label, .node-wrap:has(.node.cur) .node-label{color:var(--brand);font-weight:800}
 .node-label .kk{display:block;font-size:10.5px;color:var(--muted);font-weight:600}
+
+/* lesson journey: a vertical list of lesson cards connected by a spine */
+.lpath{position:relative;display:flex;flex-direction:column;gap:10px;padding:4px 0 2px}
+.lpath::before{content:"";position:absolute;top:26px;bottom:26px;left:38px;width:3px;transform:translateX(-50%);background:var(--line);box-shadow:var(--bevel-inset);border-radius:999px;z-index:0}
+.lrow{position:relative;z-index:1;display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:none;cursor:pointer;
+  background:var(--card);border-radius:16px;padding:10px 14px;box-shadow:var(--bevel-inset);
+  transition:background-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.lrow:hover{background:var(--hover)}
+.lrow:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.lbadge{width:48px;height:48px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;--edge:#E0D3CB;
+  box-shadow:0 4px 0 var(--edge), 0 6px 9px rgba(70,45,40,.16), inset 0 2px 3px rgba(255,255,255,.5)}
+.lbadge svg{width:24px;height:24px}
+.lrow.todo .lbadge{background:var(--card);color:var(--brand);--edge:#E0D3CB}
+.lrow.done .lbadge{background:var(--ok);--edge:#1E4C2E}
+.lrow.cur .lbadge{background:var(--gold);color:#3b2a06;--edge:#B07E1C}
+.lrow.check .lbadge{background:var(--brand);--edge:#5E1128}
+.ltext{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.ltitle{font-size:15.5px;font-weight:800;color:var(--ink)}
+.lstatus{font-size:12px;font-weight:700;color:var(--muted)}
+.lchev{flex:none;color:var(--muted);display:flex}
+.lrow.cur{background:var(--brand-soft);box-shadow:var(--bevel-inset), 0 0 0 1.5px var(--brand)}
+.lrow.cur .lstatus{color:var(--brand)}
+.lrow.cur .lchev{color:var(--brand)}
+.lrow.done .ltitle{color:var(--muted)}
 .startpill{position:absolute;top:-26px;left:50%;transform:translateX(-50%);
   background:var(--ink);color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;
   padding:4px 9px;border-radius:999px;white-space:nowrap;z-index:3}
@@ -988,14 +1012,9 @@ const CSS = `
   .dhatu:has(> .nav) .scriptfoot{left:240px;right:0;max-width:760px;margin:0 auto;transform:none}
   .guides{grid-template-columns:repeat(2,1fr)}
   .chargrid{grid-template-columns:repeat(6,1fr)}
-  /* keep the lesson path a tight, centered winding column instead of scattering
-     the nodes across the full width; make the circles bigger */
-  .dhatu:has(> .nav) .path{max-width:380px;margin:0 auto}
-  .dhatu:has(> .nav) .node-row{height:96px}
-  .dhatu:has(> .nav) .node{width:88px;height:84px}
-  .dhatu:has(> .nav) .node .disc{width:84px;height:80px}
-  .dhatu:has(> .nav) .node svg{width:36px;height:36px}
-  .dhatu:has(> .nav) .node-label{font-size:13px}
+  /* keep the lesson list a comfortable reading width on desktop */
+  .dhatu:has(> .nav) .lpath{max-width:560px;margin:0 auto}
+  .dhatu:has(> .nav) .unit-h{max-width:560px;margin-left:auto;margin-right:auto}
 }
 @media (min-width:1200px){
   .wide-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
@@ -1983,22 +2002,21 @@ function CourseApp({ user }) {
                 <h2>{u.ku}: {u.title}</h2>
                 <p>{u.sub}</p>
               </div>
-              <div className="path">
-                {u.lessons.map((l, i) => {
+              <div className="lpath">
+                {u.lessons.map((l) => {
                   const done = completed.includes(l.id);
                   const isRec = l.id === recId;
-                  const off = i % 3 === 1 ? 62 : i % 3 === 2 ? -62 : 0;
+                  const status = done ? "done" : isRec ? "cur" : l.kind === "check" ? "check" : "todo";
+                  const LIcon = lessonIcon(l);
                   return (
-                    <div key={l.id} className="node-row">
-                      <div className="node-wrap" style={{ transform: `translateX(${off}px)` }}>
-                        <button className={"node " + (done ? "done" : isRec ? "cur" : l.kind === "check" ? "check" : "todo")} onClick={() => startLesson(l.id)}>
-                          <div className="disc">
-                            {done ? <Ic.check /> : (() => { const LIcon = lessonIcon(l); return <LIcon />; })()}
-                          </div>
-                        </button>
-                        <div className="node-label">{l.label}</div>
-                      </div>
-                    </div>
+                    <button key={l.id} className={"lrow " + status} onClick={() => startLesson(l.id)}>
+                      <span className="lbadge">{done ? <Ic.check /> : (l.kind === "check" ? <Ic.trophy /> : <LIcon />)}</span>
+                      <span className="ltext">
+                        <span className="ltitle">{l.label}</span>
+                        <span className="lstatus">{done ? "Completed" : isRec ? "Continue" : l.kind === "check" ? "Checkpoint" : "Start"}</span>
+                      </span>
+                      <span className="lchev">{done ? <Ic.check /> : <Ic.play />}</span>
+                    </button>
                   );
                 })}
               </div>
