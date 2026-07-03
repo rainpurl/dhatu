@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { onAuthChange, signInWithGoogle, signOutUser, loadProgressToLocal, clearLocalProgress, scheduleSave } from "./firebase";
 
 /* ============================================================
    Dhatu (ધાતુ) - a research-based Gujarati course for English
@@ -807,6 +808,30 @@ const CSS = `
 .supportlink b{font-size:15px;display:block}
 .supportlink small{color:#6b5a2e;font-size:12px;font-weight:600;display:block;margin-top:1px}
 
+/* account card in Profile */
+.acct{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:12px 14px;margin-bottom:14px;box-shadow:var(--bevel-inset)}
+.acct-pic{width:48px;height:48px;border-radius:50%;flex:none;object-fit:cover;box-shadow:var(--bevel-inset)}
+.acct-pic.ph{background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px;box-shadow:var(--sink-brand)}
+.acct-info b{font-size:16px;font-weight:800;display:block}
+.acct-info small{color:var(--muted);font-size:12.5px;font-weight:600;display:block;margin-top:1px}
+
+/* sign-in gate */
+.gate{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  gap:16px;padding:26px 22px calc(26px + env(safe-area-inset-bottom));max-width:460px;margin:0 auto}
+.gate .big-mark{width:96px;height:96px;border-radius:28px;background:var(--brand);color:#fff;display:grid;place-items:center;
+  font-family:var(--fgu);font-weight:800;font-size:52px;box-shadow:var(--sink-brand)}
+.gate h1{font-size:30px;font-weight:800;margin:6px 0 0;letter-spacing:-.5px}
+.gate .tagline{font-size:16px;color:#5b4a51;line-height:1.5;max-width:320px;margin:0}
+.gate .err{color:var(--no-dark);font-size:13px;font-weight:600;max-width:320px}
+.gate .fineprint{font-size:12px;color:var(--muted);max-width:320px;margin-top:2px}
+.gbtn{display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;font-family:var(--fen);
+  font-weight:700;font-size:16px;border:none;border-radius:14px;padding:14px 18px;width:100%;max-width:320px;
+  background:var(--card);color:var(--ink);box-shadow:var(--bevel-inset);transition:background-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+.gbtn:hover{background:var(--hover)}
+.gbtn:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
+.gbtn:disabled{opacity:.6;cursor:default}
+.gbtn .g{width:20px;height:20px;flex:none}
+
 /* entrance animation for screens */
 @keyframes screenIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .scr, .scr.plain, .onb, .done-wrap{animation:screenIn .22s var(--ease)}
@@ -1442,12 +1467,13 @@ function useLocalState(key, initial) {
   useEffect(() => {
     try {
       window.localStorage.setItem(key, JSON.stringify(state));
+      scheduleSave();
     } catch (e) {}
   }, [key, state]);
   return [state, setState];
 }
 
-export default function App() {
+function CourseApp({ user }) {
   const [onboarded, setOnboarded] = useLocalState("dhatu_onboarded", false);
   const [screen, setScreen] = useState(() => (onboarded ? "learn" : "onboarding"));
   const [tab, setTab] = useState("learn");
@@ -2258,6 +2284,17 @@ export default function App() {
         <style>{CSS}</style>
         <div className="scr">
           <TopBar title="Profile" sub="Your progress" />
+          {user && (
+            <div className="acct">
+              {user.photoURL
+                ? <img className="acct-pic" src={user.photoURL} alt="" referrerPolicy="no-referrer" />
+                : <div className="acct-pic ph">{(user.displayName || user.email || "?").slice(0, 1).toUpperCase()}</div>}
+              <div className="acct-info">
+                <b>{user.displayName || "Signed in"}</b>
+                <small>{user.email || ""}</small>
+              </div>
+            </div>
+          )}
           <div className="stats">
             <div className="stat">
               <div className="n"><Ic.kaudi width={20} height={20} style={{ color: "var(--gold)" }} />{kaudi}</div>
@@ -2336,6 +2373,9 @@ export default function App() {
               <button className="btn ghost" style={{ marginTop: 8 }} onClick={() => setConfirmReset(false)}>Cancel</button>
             </div>
           )}
+          <button className="btn ghost" style={{ marginTop: 8 }} onClick={async () => { await signOutUser(); clearLocalProgress(); }}>
+            Sign out
+          </button>
           <div style={{ height: 10 }} />
         </div>
         <NavBar />
@@ -3082,3 +3122,83 @@ ERAS.push(
 
 /* attach each era's Gujarati summary (must run after all eras are pushed) */
 ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });
+
+/* ---------------- auth gate ---------------- */
+function GoogleG(props) {
+  return (
+    <svg className="g" viewBox="0 0 48 48" aria-hidden="true" {...props}>
+      <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.4 0 24 0 14.6 0 6.4 5.4 2.5 13.3l7.9 6.1C12.3 13.2 17.7 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.9 7.2l7.6 5.9c4.4-4.1 7.1-10.1 7.1-17.6z"/>
+      <path fill="#FBBC05" d="M10.4 28.6c-.5-1.5-.8-3-.8-4.6s.3-3.1.8-4.6l-7.9-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.5 10.7l7.9-6.1z"/>
+      <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.3 0-11.7-3.7-13.6-9.1l-7.9 6.1C6.4 42.6 14.6 48 24 48z"/>
+    </svg>
+  );
+}
+
+function Splash() {
+  return (
+    <div className="dhatu">
+      <style>{CSS}</style>
+      <div className="gate">
+        <div className="big-mark gu">ધા</div>
+        <p className="tagline">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+function SignIn() {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  return (
+    <div className="dhatu">
+      <style>{CSS}</style>
+      <div className="gate">
+        <div className="big-mark gu">ધા</div>
+        <h1>Dhātu</h1>
+        <p className="tagline">Learn Gujarati, from the roots up. Sign in to save your progress and keep it across devices.</p>
+        <button
+          className="gbtn"
+          disabled={busy}
+          onClick={async () => {
+            setErr("");
+            setBusy(true);
+            try {
+              await signInWithGoogle();
+            } catch (e) {
+              const code = e && e.code;
+              if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") setErr("Sign-in was cancelled.");
+              else setErr("Could not sign in. Please try again.");
+              setBusy(false);
+            }
+          }}
+        >
+          <GoogleG /> {busy ? "Signing in..." : "Continue with Google"}
+        </button>
+        {err && <div className="err">{err}</div>}
+        <p className="fineprint">Your streak, Kaudi, and finished lessons stay tied to your account.</p>
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  const [user, setUser] = useState(undefined); // undefined = still checking
+  const [ready, setReady] = useState(false);
+  useEffect(
+    () =>
+      onAuthChange(async (u) => {
+        setReady(false);
+        setUser(u);
+        if (u) {
+          await loadProgressToLocal(u.uid);
+          setReady(true);
+        }
+      }),
+    []
+  );
+  if (user === undefined) return <Splash />;
+  if (!user) return <SignIn />;
+  if (!ready) return <Splash />;
+  return <CourseApp user={user} />;
+}
