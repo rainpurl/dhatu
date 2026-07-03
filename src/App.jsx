@@ -1428,6 +1428,7 @@ const LESSON_ICON = {
   u6l1:"diya", u6l4:"film",
   u7l1:"palette", u7l2:"link", u7l3:"shirt", u7l4:"book",
   u8l1:"bowl", u8l2:"cup", u8l3:"bowl", u8l4:"book",
+  u9l1:"star", u9l2:"profile", u9l3:"bulb", u9l4:"temple",
 };
 const lessonIcon = (l) => {
   if (l.kind === "check") return Ic.trophy;
@@ -3551,6 +3552,76 @@ UNITS.push({ id:"u8", ku:"Unit 8", title:"Food and cooking", sub:"The thali, sna
   lessons:[ {id:"u8l1",label:"Reading a thali"}, {id:"u8l2",label:"Snacks and farsan"}, {id:"u8l3",label:"Everyday meals"}, {id:"u8l4",label:"Food, faith, and trade"}, {id:"u8c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u8l1", "u8l2", "u8l3", "u8l4", "u8c");
 
+/* ============================ MODULE: Describing the world ============================ */
+Object.assign(LESSONS, {
+  u9l1: { title:"Opposites", ex: [
+    { t:"note", title:"Many adjectives change with gender", body:[
+      "Adjectives that end in -ું shift to match the noun: મોટું (neuter), મોટો (masculine), મોટી (feminine).",
+      "So it is મોટો ભાઈ (big brother), મોટી બહેન (big sister), and મોટું ઘર (big house).",
+      "Some adjectives, like ખરાબ (bad) and ગરમ (hot), do not change at all."], ex:[
+      {gu:"મોટું ઘર",roman:"moṭuṁ ghar",en:"a big house"},
+      {gu:"નાની બહેન",roman:"naani bahen",en:"a small/younger sister"}] },
+    { t:"intro", gu:"મોટું", roman:"moṭuṁ", en:"big" },
+    { t:"intro", gu:"નાનું", roman:"naanuṁ", en:"small" },
+    { t:"intro", gu:"સારું", roman:"saaruṁ", en:"good" },
+    { t:"intro", gu:"ખરાબ", roman:"kharaab", en:"bad" },
+    { t:"intro", gu:"નવું", roman:"navuṁ", en:"new" },
+    { t:"intro", gu:"જૂનું", roman:"joonuṁ", en:"old" },
+    { t:"match", pairs:[{gu:"મોટું",en:"big"},{gu:"નાનું",en:"small"},{gu:"સારું",en:"good"},{gu:"ખરાબ",en:"bad"}] },
+    { t:"listen", say:"જૂનું", roman:"joonuṁ", options:["old","new","big"], answer:"old" },
+    { t:"speak", gu:"આ ઘર મોટું છે", roman:"aa ghar moṭuṁ chhe", en:"This house is big." },
+  ]},
+  u9l2: { title:"The body", ex: [
+    { t:"intro", gu:"માથું", roman:"maathuṁ", en:"head" },
+    { t:"intro", gu:"હાથ", roman:"haath", en:"hand" },
+    { t:"intro", gu:"આંખ", roman:"aankh", en:"eye" },
+    { t:"intro", gu:"કાન", roman:"kaan", en:"ear" },
+    { t:"intro", gu:"નાક", roman:"naak", en:"nose" },
+    { t:"intro", gu:"પેટ", roman:"peṭ", en:"stomach" },
+    { t:"match", pairs:[{gu:"માથું",en:"head"},{gu:"હાથ",en:"hand"},{gu:"આંખ",en:"eye"},{gu:"કાન",en:"ear"}] },
+    { t:"listen", say:"પેટ", roman:"peṭ", options:["stomach","nose","ear"], answer:"stomach" },
+    { t:"speak", gu:"આ મારો હાથ છે", roman:"aa maaro haath chhe", en:"This is my hand." },
+  ]},
+  u9l3: { title:"Weather and seasons", ex: [
+    { t:"intro", gu:"વરસાદ", roman:"varsaad", en:"rain" },
+    { t:"intro", gu:"તડકો", roman:"taḍko", en:"sunshine" },
+    { t:"intro", gu:"ઠંડી", roman:"ṭhanḍi", en:"cold (weather)" },
+    { t:"intro", gu:"ગરમી", roman:"garmi", en:"heat" },
+    { t:"intro", gu:"પવન", roman:"pavan", en:"wind" },
+    { t:"note", title:"Three seasons", body:[
+      "The Gujarati year is often split into three seasons.",
+      "ઉનાળો is summer, ચોમાસું is the monsoon, and શિયાળો is winter.",
+      "The monsoon rains matter most, since so much farming depends on them."], ex:[
+      {gu:"ઉનાળો",roman:"unaaḷo",en:"summer"},
+      {gu:"ચોમાસું",roman:"chomaasuṁ",en:"the monsoon"}] },
+    { t:"match", pairs:[{gu:"વરસાદ",en:"rain"},{gu:"તડકો",en:"sunshine"},{gu:"ઠંડી",en:"cold"},{gu:"પવન",en:"wind"}] },
+    { t:"listen", say:"ગરમી", roman:"garmi", options:["heat","cold","rain"], answer:"heat" },
+    { t:"speak", gu:"આજે વરસાદ છે", roman:"aaje varsaad chhe", en:"It is raining today." },
+  ]},
+  u9l4: { title:"Around town", ex: [
+    { t:"intro", gu:"શહેર", roman:"shaher", en:"city" },
+    { t:"intro", gu:"ગામ", roman:"gaam", en:"village" },
+    { t:"intro", gu:"રસ્તો", roman:"rasto", en:"road" },
+    { t:"intro", gu:"મંદિર", roman:"mandir", en:"temple" },
+    { t:"intro", gu:"દવાખાનું", roman:"davaakhaanuṁ", en:"hospital / clinic" },
+    { t:"intro", gu:"શાળા", roman:"shaaḷaa", en:"school" },
+    { t:"match", pairs:[{gu:"શહેર",en:"city"},{gu:"ગામ",en:"village"},{gu:"મંદિર",en:"temple"},{gu:"શાળા",en:"school"}] },
+    { t:"listen", say:"દવાખાનું", roman:"davaakhaanuṁ", options:["hospital","road","village"], answer:"hospital" },
+    { t:"build", en:"Where is the temple?", answer:["મંદિર","ક્યાં","છે"], extra:["શહેર","ગામ"], roman:"mandir kyaan chhe?" },
+    { t:"speak", gu:"દવાખાનું ક્યાં છે?", roman:"davaakhaanuṁ kyaan chhe?", en:"Where is the hospital?" },
+  ]},
+  u9c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"મોટું",en:"big"},{gu:"હાથ",en:"hand"},{gu:"વરસાદ",en:"rain"},{gu:"શહેર",en:"city"}] },
+    { t:"listen", say:"મંદિર", roman:"mandir", options:["temple","school","road"], answer:"temple" },
+    { t:"listen", say:"આંખ", roman:"aankh", options:["eye","ear","head"], answer:"eye" },
+    { t:"build", en:"This house is big.", answer:["આ","ઘર","મોટું","છે"], extra:["નાનું","સારું"], roman:"aa ghar moṭuṁ chhe" },
+    { t:"speak", gu:"આ શહેર સુંદર છે", roman:"aa shaher sundar chhe", en:"This city is beautiful." },
+  ]},
+});
+UNITS.push({ id:"u9", ku:"Unit 9", title:"Describing the world", sub:"Opposites, the body, weather, and places around town", color:"#4E8098",
+  lessons:[ {id:"u9l1",label:"Opposites"}, {id:"u9l2",label:"The body"}, {id:"u9l3",label:"Weather and seasons"}, {id:"u9l4",label:"Around town"}, {id:"u9c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u9l1", "u9l2", "u9l3", "u9l4", "u9c");
+
 /* ============================ VOCAB: festivals + textiles (added) ============================ */
 TOPICS.push(
   { id:"time", title:"Time and days", icon:"clock", words:[
@@ -3597,6 +3668,62 @@ TOPICS.push(
     { gu:"ઊંધિયું", r:"uṅdhiyuṁ", en:"winter vegetable dish" },
     { gu:"થેપલા", r:"theplaa", en:"spiced flatbread" },
     { gu:"દાબેલી", r:"daabeli", en:"street-food bun" },
+  ]}
+);
+
+/* ============================ VOCAB: describing the world (added) ============================ */
+TOPICS.push(
+  { id:"adjectives", title:"Opposites and describing", icon:"star", note:"Many of these change ending to match the noun's gender: મોટું, મોટો, મોટી.", words:[
+    { gu:"મોટું", r:"moṭuṁ", en:"big" },
+    { gu:"નાનું", r:"naanuṁ", en:"small" },
+    { gu:"સારું", r:"saaruṁ", en:"good" },
+    { gu:"ખરાબ", r:"kharaab", en:"bad" },
+    { gu:"નવું", r:"navuṁ", en:"new" },
+    { gu:"જૂનું", r:"joonuṁ", en:"old" },
+    { gu:"ગરમ", r:"garam", en:"hot" },
+    { gu:"ઠંડું", r:"ṭhanḍuṁ", en:"cold" },
+    { gu:"સુંદર", r:"sundar", en:"beautiful" },
+    { gu:"ઝડપી", r:"jhaḍpi", en:"fast" },
+  ]},
+  { id:"body", title:"The body", icon:"profile", words:[
+    { gu:"માથું", r:"maathuṁ", en:"head" },
+    { gu:"વાળ", r:"vaaḷ", en:"hair" },
+    { gu:"આંખ", r:"aankh", en:"eye" },
+    { gu:"કાન", r:"kaan", en:"ear" },
+    { gu:"નાક", r:"naak", en:"nose" },
+    { gu:"મોઢું", r:"moḍhuṁ", en:"mouth / face" },
+    { gu:"હાથ", r:"haath", en:"hand" },
+    { gu:"પગ", r:"pag", en:"leg / foot" },
+    { gu:"પેટ", r:"peṭ", en:"stomach" },
+  ]},
+  { id:"weather", title:"Weather and seasons", icon:"bulb", words:[
+    { gu:"વરસાદ", r:"varsaad", en:"rain" },
+    { gu:"તડકો", r:"taḍko", en:"sunshine" },
+    { gu:"ઠંડી", r:"ṭhanḍi", en:"cold" },
+    { gu:"ગરમી", r:"garmi", en:"heat" },
+    { gu:"પવન", r:"pavan", en:"wind" },
+    { gu:"વાદળ", r:"vaadaḷ", en:"cloud" },
+    { gu:"ઉનાળો", r:"unaaḷo", en:"summer" },
+    { gu:"શિયાળો", r:"shiyaaḷo", en:"winter" },
+    { gu:"ચોમાસું", r:"chomaasuṁ", en:"monsoon" },
+  ]},
+  { id:"places", title:"Places around town", icon:"temple", words:[
+    { gu:"શહેર", r:"shaher", en:"city" },
+    { gu:"ગામ", r:"gaam", en:"village" },
+    { gu:"રસ્તો", r:"rasto", en:"road" },
+    { gu:"મંદિર", r:"mandir", en:"temple" },
+    { gu:"દવાખાનું", r:"davaakhaanuṁ", en:"hospital" },
+    { gu:"શાળા", r:"shaaḷaa", en:"school" },
+    { gu:"સ્ટેશન", r:"sṭeshan", en:"station" },
+    { gu:"બજાર", r:"bajaar", en:"market" },
+  ]},
+  { id:"feelings", title:"Feelings", icon:"spark", words:[
+    { gu:"ખુશ", r:"khush", en:"happy" },
+    { gu:"ઉદાસ", r:"udaas", en:"sad" },
+    { gu:"ગુસ્સો", r:"gusso", en:"anger" },
+    { gu:"થાકેલું", r:"thaakeluṁ", en:"tired" },
+    { gu:"ભૂખ", r:"bhookh", en:"hunger" },
+    { gu:"ડર", r:"ḍar", en:"fear" },
   ]}
 );
 
