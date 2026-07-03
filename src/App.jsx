@@ -548,6 +548,17 @@ const CSS = `
 .resume .rsub{font-size:13px;opacity:.88;margin:2px 0 0;font-weight:500}
 .resume .rprog{display:block;margin-top:9px;height:7px;border-radius:999px;background:rgba(0,0,0,.26);box-shadow:inset 0 1px 2px rgba(0,0,0,.4);overflow:hidden}
 .resume .rprog > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),#F2C368);transition:width .5s var(--ease)}
+/* daily goal strip */
+.goalcard{display:flex;align-items:center;gap:14px;border-radius:16px;padding:13px 16px;margin:0 0 14px;background:var(--card);box-shadow:var(--bevel-inset)}
+.goalcard .gc-ic{width:38px;height:38px;flex:none;border-radius:12px;display:grid;place-items:center;color:var(--diya);background:var(--card);box-shadow:var(--bevel-inset)}
+.goalcard.met .gc-ic{color:#fff;background:var(--ok);box-shadow:var(--sink-ok)}
+.goalcard .gc-body{flex:1;min-width:0}
+.goalcard .gc-label{font-weight:800;font-size:14px;letter-spacing:-.2px}
+.goalcard .gc-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.goaldots{display:flex;gap:7px;flex:none}
+.goaldots i{width:15px;height:15px;border-radius:50%;background:var(--line);box-shadow:var(--bevel-inset)}
+.goaldots i.on{background:var(--gold);box-shadow:0 2px 0 #B07E1C, 0 3px 5px rgba(0,0,0,.15)}
+.goalcard.met .goaldots i.on{background:var(--ok);box-shadow:0 2px 0 #1E4C2E, 0 3px 5px rgba(0,0,0,.15)}
 
 /* winding path */
 .path{position:relative;padding:10px 0 4px}
@@ -1770,6 +1781,8 @@ function CourseApp({ user }) {
   const [srs, setSrs] = useLocalState("dhatu_srs", []);
   const [weekHit, setWeekHit] = useLocalState("dhatu_weekHit", [false, false, false, false, false, false, false]);
   const [lastActive, setLastActive] = useLocalState("dhatu_lastActive", "");
+  const [dayLog, setDayLog] = useLocalState("dhatu_dayLog", { date: "", count: 0 });
+  const DAILY_GOAL = 3;
 
   const [activeLesson, setActiveLesson] = useState(null);
   const [exIdx, setExIdx] = useState(0);
@@ -1915,6 +1928,10 @@ function CourseApp({ user }) {
     const reward = Math.max(2, 10 - sessionWrong * 2);
     setSessionKaudi(reward);
     setKaudi((k) => k + reward);
+    setDayLog((d) => {
+      const t = _dstr(new Date());
+      return { date: t, count: (d.date === t ? d.count : 0) + 1 };
+    });
     recordActivity();
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 1800);
@@ -2061,6 +2078,8 @@ function CourseApp({ user }) {
     const totalPct = Math.round((totalDone / allLessons.length) * 100);
     const recLesson = allLessons.find((l) => l.id === recId);
     const started = totalDone > 0;
+    const todayCount = dayLog.date === _dstr(new Date()) ? dayLog.count : 0;
+    const goalMet = todayCount >= DAILY_GOAL;
     return (
       <div className="dhatu">
         <style>{CSS}</style>
@@ -2077,6 +2096,18 @@ function CourseApp({ user }) {
               </span>
             </button>
           )}
+          <div className={"goalcard" + (goalMet ? " met" : "")}>
+            <span className="gc-ic">{goalMet ? <Ic.check /> : <Ic.diya />}</span>
+            <span className="gc-body">
+              <div className="gc-label">{goalMet ? "Daily goal complete" : "Today's goal"}</div>
+              <div className="gc-sub">{goalMet ? "Nice work keeping your streak alive." : todayCount + " of " + DAILY_GOAL + " lessons done today"}</div>
+            </span>
+            <span className="goaldots">
+              {Array.from({ length: DAILY_GOAL }).map((_, i) => (
+                <i key={i} className={i < todayCount ? "on" : ""} />
+              ))}
+            </span>
+          </div>
           <div className="guides">
             <button className="guide" style={{ background: "linear-gradient(135deg,#1E6E7E,#164F5A)" }} onClick={() => setScreen("grammar")}>
               <Ic.book className="gi" />
