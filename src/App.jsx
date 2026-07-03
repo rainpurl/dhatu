@@ -1802,6 +1802,7 @@ const SIGNS = [
   { gu:"ઃ", roman:"visarg", hint:"a soft h breath at the end of a syllable" },
   { gu:"ઁ", roman:"candrabindu", hint:"nasalizes the whole vowel, as in ચાંદ" },
   { gu:"્", roman:"halant", hint:"removes the built-in 'a' from a consonant" },
+  { gu:"ૃ", say:"કૃ", roman:"ru", hint:"the vocalic r vowel sign: a hook added under a consonant", ex:{gu:"કૃપા", roman:"krupaa"} },
   { gu:"ૐ", roman:"om", hint:"the sacred syllable Om" },
   { gu:"।", roman:"danda", hint:"a vertical bar used as a full stop, like a period" },
   { gu:"॥", roman:"double danda", hint:"marks the end of a verse or a section" },
@@ -3019,7 +3020,7 @@ function CourseApp({ user }) {
 
   if (screen === "script") {
     const tapChar = (c) => {
-      speakGu(c.gu);
+      speakGu(c.say || c.gu);
       setPlayChar(c.gu);
       setCharInfo(c);
       setTimeout(() => setPlayChar((p) => (p === c.gu ? null : p)), 650);
