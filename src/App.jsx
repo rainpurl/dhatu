@@ -2597,6 +2597,7 @@ function CourseApp({ user }) {
   const [selScriptLesson, setSelScriptLesson] = useState(null);
   const [examsDone, setExamsDone] = useLocalState("dhatu_examsDone", {});
   const [activeExam, setActiveExam] = useState(null);
+  const [awardsEarned, setAwardsEarned] = useLocalState("dhatu_awardsEarned", []);
   const DAILY_GOAL = 3;
 
   const [activeLesson, setActiveLesson] = useState(null);
@@ -2733,6 +2734,23 @@ function CourseApp({ user }) {
       setLastActive(_dstr(y)); // bridge the gap so the streak survives
     }
   }, []);
+
+  // Awards, once earned, are permanent: record any newly-met condition so a badge
+  // never disappears if the user later spends Kaudi or breaks a streak.
+  const scriptAllDone = SCRIPT_LESSONS_RESOLVED.length > 0 && SCRIPT_LESSONS_RESOLVED.every((l) => scriptDone.includes(l.id));
+  const allLessonIds = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
+  const masteryDone = allLessonIds.length > 0 && allLessonIds.every((id) => completed.includes(id));
+  const awardConds = {
+    b1: completed.length >= 1, b2: completed.some((c) => c.endsWith("c")),
+    b3: kaudi >= 100, b4: srs.length > 0, b5: scriptAllDone, b6: friendList.length >= 2,
+    b7: streak >= 7, b8: streak >= 30, b12: streak >= 100, b13: streak >= 365,
+    b9: kaudi >= 1000, b10: kaudi >= 5000, b11: masteryDone,
+  };
+  useEffect(() => {
+    const newly = Object.keys(awardConds).filter((id) => awardConds[id] && !awardsEarned.includes(id));
+    if (newly.length) setAwardsEarned((prev) => [...prev, ...newly.filter((id) => !prev.includes(id))]);
+  }, [kaudi, streak, completed, srs, scriptDone, friendList]);
+
   function streakBroken() {
     if (!lastActive || streak < 1) return false;
     const now = new Date();
@@ -3697,23 +3715,23 @@ function CourseApp({ user }) {
   /* ---------------- PROFILE ---------------- */
   if (screen === "profile") {
     const days = ["S", "M", "T", "W", "T", "F", "S"];
-    const allLessonIds = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
-    const scriptAllDone = SCRIPT_LESSONS_RESOLVED.length > 0 && SCRIPT_LESSONS_RESOLVED.every((l) => scriptDone.includes(l.id));
-    const masteryDone = allLessonIds.length > 0 && allLessonIds.every((id) => completed.includes(id));
+    // on = earned-ever (persisted) OR currently meets the condition; once earned a
+    // badge never turns off, even if Kaudi is later spent or a streak breaks.
+    const won = (id) => awardsEarned.includes(id) || !!awardConds[id];
     const badgeDefs = [
-      { id: "b1", label: "First lesson", sub: "Complete a lesson", icon: "spark", on: completed.length >= 1 },
-      { id: "b2", label: "Checkpoint", sub: "Pass a checkpoint", icon: "check", on: completed.some((c) => c.endsWith("c")) },
-      { id: "b3", label: "Wordsmith", sub: "100 Kaudi earned", icon: "kaudi", on: kaudi >= 100 },
-      { id: "b4", label: "Reviewer", sub: "Add words to Review", icon: "review", on: srs.length > 0 },
-      { id: "b5", label: "Literally literate", sub: "Finish every script lesson", icon: "script", on: scriptAllDone },
-      { id: "b6", label: "Saaro mitra", sub: "Follow two friends", icon: "chats", on: friendList.length >= 2 },
-      { id: "b7", label: "Satat jyot", sub: "Keep a 7-day streak", icon: "diya", on: streak >= 7 },
-      { id: "b8", label: "Amar jyot", sub: "Keep a 30-day streak", icon: "diya", on: streak >= 30 },
-      { id: "b12", label: "Akhand jyot", sub: "Keep a 100-day streak", icon: "diya", on: streak >= 100 },
-      { id: "b13", label: "Suvarṇa jyot", sub: "Keep a 365-day streak", icon: "diya", on: streak >= 365 },
-      { id: "b9", label: "Dhanvaan", sub: "1000 Kaudi earned", icon: "kaudi", on: kaudi >= 1000 },
-      { id: "b10", label: "Conversationalist", sub: "5000 Kaudi earned", icon: "talk", on: kaudi >= 5000 },
-      { id: "b11", label: "Mastery", sub: "Complete every lesson", icon: "trophy", on: masteryDone },
+      { id: "b1", label: "First lesson", sub: "Complete a lesson", icon: "spark", on: won("b1") },
+      { id: "b2", label: "Checkpoint", sub: "Pass a checkpoint", icon: "check", on: won("b2") },
+      { id: "b3", label: "Wordsmith", sub: "100 Kaudi earned", icon: "kaudi", on: won("b3") },
+      { id: "b4", label: "Reviewer", sub: "Add words to Review", icon: "review", on: won("b4") },
+      { id: "b5", label: "Literally literate", sub: "Finish every script lesson", icon: "script", on: won("b5") },
+      { id: "b6", label: "Saaro mitra", sub: "Follow two friends", icon: "chats", on: won("b6") },
+      { id: "b7", label: "Satat jyot", sub: "Keep a 7-day streak", icon: "diya", on: won("b7") },
+      { id: "b8", label: "Amar jyot", sub: "Keep a 30-day streak", icon: "diya", on: won("b8") },
+      { id: "b12", label: "Akhand jyot", sub: "Keep a 100-day streak", icon: "diya", on: won("b12") },
+      { id: "b13", label: "Suvarṇa jyot", sub: "Keep a 365-day streak", icon: "diya", on: won("b13") },
+      { id: "b9", label: "Dhanvaan", sub: "1000 Kaudi earned", icon: "kaudi", on: won("b9") },
+      { id: "b10", label: "Conversationalist", sub: "5000 Kaudi earned", icon: "talk", on: won("b10") },
+      { id: "b11", label: "Mastery", sub: "Complete every lesson", icon: "trophy", on: won("b11") },
     ];
     return (
       <div className="dhatu">
@@ -3771,9 +3789,9 @@ function CourseApp({ user }) {
             <div className="heal-ic"><Ic.diya width={22} height={22} /></div>
             <div className="heal-tx">
               <b>Extra oil{oil > 0 ? ` × ${oil}` : ""}</b>
-              <small>Keeps your diya lit if you miss a day. Lasts one day, and covers up to {OIL_MAX_RUN} days in a row.</small>
+              <small>Keeps your diya lit if you miss a day.</small>
             </div>
-            <button className="btn gold sm" disabled={kaudi < OIL_COST} onClick={buyOil}>Buy {OIL_COST}</button>
+            <button className="btn gold sm" disabled={kaudi < OIL_COST} onClick={buyOil}>Buy for {OIL_COST} Kaudi</button>
           </div>
 
           <div className="section-h">This week</div>
