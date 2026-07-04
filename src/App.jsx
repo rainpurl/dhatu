@@ -1631,8 +1631,8 @@ const GRAMMAR = [
     points:["The order is Subject, Object, Verb.","'I water drink' means 'I drink water'.","In the present tense the verb agrees with the subject."],
     examples:[{gu:"હું પાણી પીઉં છું",roman:"huṁ paṇi piuṁ chuṁ",en:"I drink water."},{gu:"તે ભાત ખાય છે",roman:"te bhaat khaay chhe",en:"He eats rice."}] },
   { id:"g2", color:"#C77B1E", title:"Postpositions", summary:"Little words like on, for, with come after the noun.",
-    points:["પર on, માટે for, સાથે with, માં in.","They follow the noun, unlike English prepositions.","Pronouns shift before them: તું becomes તારા."],
-    examples:[{gu:"મેજ પર",roman:"mej par",en:"on the table"},{gu:"તારા માટે",roman:"taaraa maaṭe",en:"for you"},{gu:"મારી સાથે",roman:"maari saathe",en:"with me"}] },
+    points:["પર on, માટે for, સાથે with, માં in, થી from, સુધી until.","They follow the noun, unlike English prepositions.","Pronouns shift before them: તું becomes તારા."],
+    examples:[{gu:"મેજ પર",roman:"mej par",en:"on the table"},{gu:"તારા માટે",roman:"taaraa maaṭe",en:"for you"},{gu:"ઘરથી",roman:"gharthi",en:"from home"}] },
   { id:"g3", color:"#8A1C3B", title:"Gender and 'my'", summary:"Nouns are masculine, feminine, or neuter, and words around them agree.",
     points:["'my' is મારો (m.), મારી (f.), મારું (neuter).","'your' follows the same shape: તારો / તારી / તારું.","Many adjectives ending in -o change too: મોટો, મોટી, મોટું."],
     examples:[{gu:"મારો ભાઈ",roman:"maaro bhaai",en:"my brother"},{gu:"મારી બહેન",roman:"maari bahen",en:"my sister"},{gu:"મારું ઘર",roman:"maaruṁ ghar",en:"my house"}] },
@@ -1672,9 +1672,9 @@ const GRAMMAR = [
   { id:"g15", color:"#8A1C3B", title:"Showing possession", summary:"Add -no, -ni, or -nuṁ to mean 's or 'of', matching the thing owned.",
     points:["The marker agrees with the thing owned, not the owner: -નો (masc), -ની (fem), -નું (neuter).","રામનું ઘર = Ram's house; શિક્ષકની વાત = the teacher's words.","The possessive pronouns follow the same pattern: મારું, તમારું, તેનું."],
     examples:[{gu:"રામનું ઘર",roman:"raamnuṁ ghar",en:"Ram's house"},{gu:"શિક્ષકની વાત",roman:"shikshakni vaat",en:"the teacher's words"},{gu:"આ કોનું છે?",roman:"aa konuṁ chhe?",en:"Whose is this?"}] },
-  { id:"g16", color:"#4A7A8C", title:"Postpositions (in, on, from)", summary:"Little words after a noun show place and direction, like English prepositions but placed after.",
-    points:["માં = in, પર = on, થી = from or by, સુધી = until, માટે = for.","They come after the noun: ઘરમાં (in the house), ટેબલ પર (on the table).","The noun often shifts to an oblique form first, e.g. ઘર becomes ઘરમાં."],
-    examples:[{gu:"હું ઘરમાં છું",roman:"huṁ gharmaan chuṁ",en:"I am in the house."},{gu:"પુસ્તક ટેબલ પર છે",roman:"pustak ṭebal par chhe",en:"The book is on the table."},{gu:"આ તમારા માટે છે",roman:"aa tamaaraa maaṭe chhe",en:"This is for you."}] },
+  { id:"g16", color:"#4A7A8C", title:"The -ne marker (to, for)", summary:"Add -ne to mark who or what receives the action, like to or a direct object.",
+    points:["Pronouns take special forms: હું becomes મને, તું becomes તને, તે becomes તેને.","On a name or noun, add -ને: રામને કહો (tell Ram).","It marks the recipient (to me) and often a specific object (I saw him)."],
+    examples:[{gu:"મને કહો",roman:"mane kaho",en:"Tell me."},{gu:"રામને પૂછો",roman:"raamne poochho",en:"Ask Ram."},{gu:"મેં તેને જોયો",roman:"meṁ tene joyo",en:"I saw him."}] },
 ];
 
 /* ============================ PROFICIENCY EXAMS ============================ */
@@ -3514,7 +3514,7 @@ const EXAMS = [
   },
   {
     "id": "ex_pf",
-    "afterUnit": "u22",
+    "afterUnit": "u23",
     "ilr": "ILR 4",
     "title": "Primary Fluency",
     "timeSec": 2700,
@@ -4832,6 +4832,21 @@ const CONVERSATIONS = [
     { who:"them", gu:"ખૂબ ખૂબ અભિનંદન!", roman:"khoob khoob abhinandan!", en:"Many congratulations!" },
     { who:"you", gu:"આભાર! તમે જરૂર આવજો.", roman:"aabhaar! tame jaroor aavjo.", en:"Thank you! Do come." },
     { who:"them", gu:"ચોક્કસ આવીશ.", roman:"chokkas aaveesh.", en:"I will definitely come." },
+  ]},
+  { id:"c29", title:"Buying a train ticket", icon:"car", turns:[
+    { who:"them", gu:"ક્યાં જવું છે?", roman:"kyaan javuṁ chhe?", en:"Where do you want to go?" },
+    { who:"you", gu:"મારે અમદાવાદ જવું છે.", roman:"maare amdaavaad javuṁ chhe.", en:"I want to go to Ahmedabad.", choices:["મારે અમદાવાદ જવું છે","હું મજામાં છું","આભાર"] },
+    { who:"them", gu:"કેટલી ટિકિટ?", roman:"keṭli ṭikiṭ?", en:"How many tickets?" },
+    { who:"you", gu:"બે, કૃપા કરીને.", roman:"be, kṛpaa karine.", en:"Two, please." },
+    { who:"them", gu:"ટ્રેન બે વાગ્યે ઊપડશે.", roman:"ṭren be vaagye oopaḍshe.", en:"The train leaves at two o'clock." },
+    { who:"you", gu:"આભાર. પ્લેટફોર્મ કયું?", roman:"aabhaar. pleṭphorm kayuṁ?", en:"Thanks. Which platform?" },
+  ]},
+  { id:"c30", title:"Chatting with a neighbor", icon:"chat", turns:[
+    { who:"them", gu:"કેમ છો? બધું બરાબર?", roman:"kem chho? badhuṁ baraabar?", en:"How are you? All well?" },
+    { who:"you", gu:"હા, બધું બરાબર. તમે?", roman:"haa, badhuṁ baraabar. tame?", en:"Yes, all well. You?", choices:["હા, બધું બરાબર","ના, આભાર","આવજો"] },
+    { who:"them", gu:"મજામાં. તમારાં બાળકો કેમ છે?", roman:"majaamaan. tamaaraan baaḷko kem chhe?", en:"Well. How are your kids?" },
+    { who:"you", gu:"તેઓ મોટા થઈ ગયા!", roman:"teo moṭa thai gayaa!", en:"They've grown up!" },
+    { who:"them", gu:"સમય કેવો જાય છે!", roman:"samay kevo jaay chhe!", en:"How time flies!" },
   ]},
 ];
 
@@ -9103,6 +9118,61 @@ Object.assign(LESSONS, {
 UNITS.push({ id:"u22", ku:"Unit 22", title:"Shades of meaning", sub:"Emphasis, quantity, and frequency: the small words that add nuance", color:"#5A6E7A",
   lessons:[ {id:"u22l1",label:"Just, only, and even"}, {id:"u22l2",label:"A little, a lot, enough"}, {id:"u22l3",label:"Always, sometimes, never"}, {id:"u22c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u22l1", "u22l2", "u22l3", "u22c");
+/* ============================ MODULE: Numbers in real life (advanced) ============================ */
+Object.assign(LESSONS, {
+  u23l1: { title:"Telling the time", ex: [
+    { t:"intro", gu:"વાગ્યા", roman:"vaagyaa", en:"o'clock" },
+    { t:"intro", gu:"સાડા", roman:"saaḍaa", en:"half past" },
+    { t:"intro", gu:"પોણા", roman:"poṇaa", en:"quarter to" },
+    { t:"note", title:"Reading the clock", body:[
+      "For the hour use વાગ્યા: ત્રણ વાગ્યા (three o'clock). For half past, put સાડા before the hour: સાડા ત્રણ (3:30).",
+      "1:30 and 2:30 are special, દોઢ and અઢી. Quarter past is સવા, quarter to is પોણા."], ex:[
+      {gu:"ત્રણ વાગ્યા",roman:"traṇ vaagyaa",en:"three o'clock"},
+      {gu:"સાડા ચાર",roman:"saaḍaa chaar",en:"half past four (4:30)"},
+      {gu:"પોણા પાંચ",roman:"poṇaa paanch",en:"quarter to five (4:45)"}] },
+    { t:"build", en:"It is three o'clock.", answer:["ત્રણ","વાગ્યા","છે"], extra:["સાડા","પોણા"], roman:"traṇ vaagyaa chhe" },
+    { t:"type", en:"half past four", answer:"સાડા ચાર", roman:"saaḍaa chaar" },
+    { t:"speak", gu:"અત્યારે સાડા ત્રણ વાગ્યા છે", roman:"atyaare saaḍaa traṇ vaagyaa chhe", en:"It is half past three now." },
+  ]},
+  u23l2: { title:"Prices and shopping", ex: [
+    { t:"intro", gu:"કિંમત", roman:"kimmat", en:"price / cost" },
+    { t:"intro", gu:"રોકડ", roman:"rokaḍ", en:"cash" },
+    { t:"intro", gu:"છૂટા", roman:"chhooṭaa", en:"change (coins)" },
+    { t:"note", title:"Talking about price", body:[
+      "કિંમત or ભાવ is the price; કેટલા? asks 'how much?'.",
+      "રોકડ is cash and છૂટા is small change; મોંઘું is expensive, સસ્તું is cheap."], ex:[
+      {gu:"આની કિંમત શું છે?",roman:"aani kimmat shuṁ chhe?",en:"What is the price of this?"},
+      {gu:"આ બહુ મોંઘું છે",roman:"aa bahu monghuṁ chhe",en:"This is very expensive."},
+      {gu:"છૂટા છે?",roman:"chhooṭaa chhe?",en:"Do you have change?"}] },
+    { t:"build", en:"This is very expensive.", answer:["આ","બહુ","મોંઘું","છે"], extra:["સસ્તું","રોકડ"], roman:"aa bahu monghuṁ chhe" },
+    { t:"type", en:"What is the price of this?", answer:"આની કિંમત શું છે", accept:["આની કિંમત કેટલી છે"], roman:"aani kimmat shuṁ chhe" },
+    { t:"speak", gu:"આ સસ્તું છે, હું લઈશ", roman:"aa sastuṁ chhe, huṁ laish", en:"This is cheap, I will take it." },
+  ]},
+  u23l3: { title:"Dates and amounts", ex: [
+    { t:"intro", gu:"તારીખ", roman:"taareekh", en:"date" },
+    { t:"intro", gu:"અડધો", roman:"aḍdho", en:"half" },
+    { t:"intro", gu:"ડઝન", roman:"ḍajan", en:"dozen" },
+    { t:"note", title:"Dates and quantities", body:[
+      "તારીખ is the date, used with a number: પહેલી તારીખ (the 1st).",
+      "For amounts: અડધો is half, દોઢ is one and a half; things are counted in ડઝન (dozen) or કિલો (kilo)."], ex:[
+      {gu:"આજે કઈ તારીખ છે?",roman:"aaje kai taareekh chhe?",en:"What is today's date?"},
+      {gu:"અડધો કિલો",roman:"aḍdho kilo",en:"half a kilo"},
+      {gu:"એક ડઝન કેળાં",roman:"ek ḍajan keḷaan",en:"a dozen bananas"}] },
+    { t:"build", en:"half a kilo", answer:["અડધો","કિલો"], extra:["ડઝન","દોઢ"], roman:"aḍdho kilo" },
+    { t:"type", en:"What is today's date?", answer:"આજે કઈ તારીખ છે", roman:"aaje kai taareekh chhe" },
+    { t:"speak", gu:"મને એક ડઝન કેળાં જોઈએ", roman:"mane ek ḍajan keḷaan joie", en:"I want a dozen bananas." },
+  ]},
+  u23c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"વાગ્યા",en:"o'clock"},{gu:"સાડા",en:"half past"},{gu:"કિંમત",en:"price"},{gu:"તારીખ",en:"date"}] },
+    { t:"build", en:"It is three o'clock.", answer:["ત્રણ","વાગ્યા","છે"], extra:["સાડા","કિંમત"], roman:"traṇ vaagyaa chhe" },
+    { t:"type", en:"half a kilo", answer:"અડધો કિલો", roman:"aḍdho kilo" },
+    { t:"speak", gu:"આ બહુ મોંઘું છે", roman:"aa bahu monghuṁ chhe", en:"This is very expensive." },
+  ]},
+});
+UNITS.push({ id:"u23", ku:"Unit 23", title:"Numbers in real life", sub:"Telling time, talking prices, and giving dates and amounts", color:"#8A6D3B",
+  lessons:[ {id:"u23l1",label:"Telling the time"}, {id:"u23l2",label:"Prices and shopping"}, {id:"u23l3",label:"Dates and amounts"}, {id:"u23c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u23l1", "u23l2", "u23l3", "u23c");
+
 
 
 /* Roughly double the practice in every lesson by appending auto-generated
@@ -9759,6 +9829,50 @@ TOPICS.push(
   ]}
 );
 
+/* ============================ VOCAB: creatures, materials (added) ============================ */
+TOPICS.push(
+  { id:"creatures", title:"Bugs and small creatures", icon:"paw", note:"The little animals around the house and garden.", words:[
+    { gu:"કીડી", r:"keeḍi", en:"ant" },
+    { gu:"માખી", r:"maakhi", en:"fly" },
+    { gu:"મચ્છર", r:"machchhar", en:"mosquito" },
+    { gu:"પતંગિયું", r:"patangiyuṁ", en:"butterfly" },
+    { gu:"મધમાખી", r:"madhmaakhi", en:"bee" },
+    { gu:"ગોકળગાય", r:"gokaḷgaay", en:"snail" },
+    { gu:"દેડકો", r:"deḍko", en:"frog" },
+  ]},
+  { id:"materials", title:"Materials and substances", icon:"gear", note:"What things are made of.", words:[
+    { gu:"લાકડું", r:"laakḍuṁ", en:"wood" },
+    { gu:"પથ્થર", r:"paththar", en:"stone" },
+    { gu:"લોખંડ", r:"lokhanḍ", en:"iron" },
+    { gu:"સોનું", r:"sonuṁ", en:"gold" },
+    { gu:"કાચ", r:"kaach", en:"glass" },
+    { gu:"કાગળ", r:"kaagaḷ", en:"paper" },
+    { gu:"ચામડું", r:"chaamḍuṁ", en:"leather" },
+  ]}
+);
+
+/* ============================ VOCAB: tools, jewelry (added) ============================ */
+TOPICS.push(
+  { id:"tools", title:"Tools and repair", icon:"gear", note:"Handy things for fixing and making.", words:[
+    { gu:"હથોડી", r:"hathoḍi", en:"hammer" },
+    { gu:"ખીલી", r:"kheeli", en:"nail" },
+    { gu:"કાતર", r:"kaatar", en:"scissors" },
+    { gu:"સોય", r:"soy", en:"needle" },
+    { gu:"દોરી", r:"dori", en:"rope / string" },
+    { gu:"પેચકસ", r:"pechkas", en:"screwdriver" },
+    { gu:"કરવત", r:"karvat", en:"saw" },
+  ]},
+  { id:"jewelry", title:"Jewelry and accessories", icon:"spark", note:"Things people wear, dear to Gujarati weddings and daily life alike.", words:[
+    { gu:"હાર", r:"haar", en:"necklace" },
+    { gu:"બંગડી", r:"bangḍi", en:"bangle" },
+    { gu:"વીંટી", r:"veenṭi", en:"ring" },
+    { gu:"ઝુમખાં", r:"jhumkhaan", en:"earrings" },
+    { gu:"ઘડિયાળ", r:"ghaḍiyaaḷ", en:"watch / clock" },
+    { gu:"ચશ્માં", r:"chashmaan", en:"glasses / spectacles" },
+    { gu:"પર્સ", r:"pars", en:"purse" },
+  ]}
+);
+
 Ic.coffee = (p) => (
   <svg {...S(p)}>
     <path d="M5 9h12v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z" />
@@ -9977,6 +10091,9 @@ const ERA_GU_SUMMARY = {
   surat_diamond: "સુરત હીરા ઉદ્યોગ માટે દુનિયાભરમાં પ્રખ્યાત છે. દુનિયાના મોટા ભાગના હીરા અહીં ઘસાઈ અને પોલિશ થાય છે. વીસમી સદીના મધ્યભાગથી આ ઉદ્યોગ વધ્યો અને આજે લાખો લોકોને રોજગાર આપે છે. બહારથી આવેલા કાચા હીરા સુરતમાં કાપીને તૈયાર કરવામાં આવે છે. ૨૦૨૩માં સુરત ડાયમંડ બુર્સ ખૂલ્યું, જે દુનિયાની સૌથી મોટી ઓફિસ ઇમારતોમાંની એક છે. સુરત જૂના જમાનાથી વેપાર અને કારીગરીનું કેન્દ્ર રહ્યું છે.",
   ahmedabad_whc: "અમદાવાદ ૧૪૧૧માં સુલતાન અહમદ શાહે સાબરમતી નદીના કિનારે વસાવ્યું. જૂનું કોટવાળું શહેર પોળોથી બનેલું છે; પોળ એટલે એક દરવાજામાંથી પહોંચાતો, વચ્ચે ચોક અને કૂવાવાળો મહોલ્લો. અહીં જૈન દેરાસર, હિન્દુ મંદિર અને ઇસ્લામિક મસ્જિદો સાથે લાકડાની કોતરણીવાળાં જૂનાં ઘર જોવા મળે છે. ૨૦૧૭માં યુનેસ્કોએ અમદાવાદને ભારતનું પહેલું વર્લ્ડ હેરિટેજ સિટી જાહેર કર્યું. આજે પણ લોકો આ જૂનાં ઘરોમાં રહે છે, એટલે તે એક જીવંત ધરોહર છે.",
   statue_unity: "સ્ટેચ્યુ ઓફ યુનિટી નર્મદા નદી પાસે આવેલી દુનિયાની સૌથી ઊંચી પ્રતિમા છે, જે લગભગ ૧૮૨ મીટર ઊંચી છે. તે ૨૦૧૮માં ખુલ્લી મુકાઈ. આ પ્રતિમા સરદાર વલ્લભભાઈ પટેલની યાદમાં બની છે, જેમણે આઝાદી પછી રજવાડાંને ભારત સાથે જોડ્યાં અને લોખંડી પુરુષ કહેવાયા. પટેલ ગુજરાતના હતા. પ્રતિમા સરદાર સરોવર બંધ પાસે છે અને ઘણા પ્રવાસીઓને આકર્ષે છે. તેની કિંમત અને સ્થાનિક લોકોના વિસ્થાપન અંગે ચર્ચા પણ થઈ છે.",
+  bohra: "દાઉદી વહોરા ગુજરાતનો એક જાણીતો વેપારી સમાજ છે, જે ઇસ્માઇલી શિયા ઇસ્લામ સાથે જોડાયેલો છે. સુરત તેમનું મહત્વનું કેન્દ્ર છે. તેમના ધર્મગુરુ સૈયદના કહેવાય છે અને સમાજ ખૂબ સંગઠિત છે. વહોરા સ્ત્રીઓ રંગીન રીદા પહેરે છે અને પુરુષો સફેદ ઝભ્ભા સાથે સોનેરી કિનારવાળી ટોપી પહેરે છે. તેઓ થાળ નામની રીતે એક મોટા થાળમાંથી સાથે મળીને જમે છે. પારસી અને જૈન સમાજની જેમ વહોરા સમાજે પણ ગુજરાતના વેપારને ઘડ્યો છે.",
+  uttarayan: "ઉત્તરાયણ, જેને મકરસંક્રાંતિ પણ કહે છે, જાન્યુઆરીની મધ્યમાં આવતો તહેવાર છે. તે દિવસે સૂર્ય ઉત્તર તરફ ખસે છે. ગુજરાતમાં આ પતંગનો તહેવાર છે, અને આખો દિવસ લોકો છત પર ચઢીને પતંગ ચગાવે છે. માંજા નામની ધારદાર દોરીથી પતંગ કાપવાની હરીફાઈ થાય છે, અને પતંગ કપાય ત્યારે કાઇપો છે એવી બૂમ પડે છે. ઊંધિયું, ચીકી અને જલેબી ખાસ ખવાય છે. અમદાવાદમાં આંતરરાષ્ટ્રીય પતંગ મહોત્સવ યોજાય છે. જોકે માંજાથી પક્ષીઓને ઈજા થાય છે, એટલે તેમને બચાવવાના પ્રયાસો પણ થાય છે.",
+  wildass: "કચ્છનું નાનું રણ ભારતના ઘુડખર એટલે કે જંગલી ગધેડાનું એકમાત્ર ઘર છે. અહીં ઘુડખર અભયારણ્ય આવેલું છે. ઘુડખર સફેદ મીઠાના રણમાં રહેવા ટેવાયેલું છે અને ખૂબ ઝડપથી દોડે છે. એક સમયે તેની સંખ્યા ઘટી ગઈ હતી, પણ રક્ષણથી હવે વધી છે. શિયાળામાં આ રણમાં હજારો સુરખાબ પણ આવે છે, અને અગરિયા લોકો અહીં મીઠું પકવે છે. ગીરના સિંહની જેમ ઘુડખર પણ ગુજરાતના વૈવિધ્યસભર વન્યજીવનનો ભાગ છે.",
 };
 
 /* ---- Category: Ancient Foundations ---- */
@@ -10504,6 +10621,42 @@ ERAS.push(
       "The statue has also drawn debate: over its very large cost, over the displacement and rights of Adivasi communities in the dam and monument area, and over the politics of such a grand memorial. Like much of modern Gujarat, it sits at the meeting point of ambition, development, and the hard questions those bring."],
     site:{ name:"Kevadia, on the Narmada", note:"The world's tallest statue (about 182 m, unveiled 2018), honoring Sardar Vallabhbhai Patel." },
     sources:["Reporting on the Statue of Unity and its construction","Encyclopaedia Britannica, Vallabhbhai Patel","Wikipedia, Statue of Unity"] },
+);
+
+ERAS.push(
+
+  { id:"bohra", category:"trade", yr:"1000s - present", title:"The Dawoodi Bohra",
+    blurb:"A close-knit Gujarati trading community with a distinctive dress, a communal way of dining, and a global business network.",
+    body:[
+      "The Dawoodi Bohra are a community within Ismaili Shia Islam who have been settled in Gujarat for many centuries, with Surat as one of their most important spiritual and historical centers. Like the Parsis and many Jain and Hindu groups, they are traditionally a merchant community, and their trading networks have long reached across the Indian Ocean and, today, around the world.",
+      "The community is unusually tightly organized, led by a spiritual head known as the Dai al-Mutlaq, addressed as Syedna. That central leadership, along with a strong emphasis on education and business, has helped the Bohras maintain a distinct identity while spreading into a worldwide diaspora that still keeps close ties to Gujarat.",
+      "Their culture is visible in dress and in food. Bohra women wear the rida, a colorful two-piece garment, and men often wear a white kurta with a gold-bordered cap. Meals are famously eaten as thaal: a group sits around one large shared platter and eats together in a set sequence, a practice that expresses community and equality at the table.",
+      "The Bohras are one of several mercantile communities, alongside Parsis, Jains, and others, whose trade and philanthropy shaped Gujarat's towns and its reputation as a land of merchants. Their presence is another reminder that 'Gujarati' has always covered many faiths and communities, not one."],
+    site:{ name:"Surat and worldwide", note:"A Gujarati Ismaili trading community; Surat is a key center, with a global diaspora." },
+    sources:["Official Dawoodi Bohra community material on thaal and community life","Scholarship on Gujarat's mercantile communities","Wikipedia, Dawoodi Bohra"] },
+);
+
+ERAS.push(
+
+  { id:"uttarayan", category:"modern", yr:"living tradition", title:"Uttarayan, the kite festival",
+    blurb:"For one day in January the sky over Gujarat fills with kites, as the whole state climbs to its rooftops.",
+    body:[
+      "Uttarayan, also called Makar Sankranti, falls in mid-January and marks the sun's turn to the north. Across the country it is a harvest festival, but in Gujarat it has become above all the great kite festival, when families climb to their rooftops and terraces for a full day of flying kites in a sky crowded with color.",
+      "The heart of the day is kite fighting: flyers use manja, a sharp coated string, to try to cut the strings of rival kites, and when one is cut a cry of 'kai po che!' goes up across the neighborhood. Special seasonal foods go with it, undhiyu, chikki (a sesame or peanut brittle), and jalebi among them, and flying often carries on after dark with paper lanterns.",
+      "Ahmedabad hosts an International Kite Festival that draws flyers and huge crowds from around the world, and the day is one of the most visible and joyful moments in Gujarat's calendar.",
+      "There is a shadow to the festival: manja string injures and kills many birds each year, and has hurt people too, which has led to rescue drives and to bans on the most dangerous kinds of coated and synthetic string."],
+    site:{ name:"Ahmedabad and across Gujarat", note:"Uttarayan (Makar Sankranti), mid-January; Ahmedabad's International Kite Festival is world-famous." },
+    sources:["Gujarat Tourism, on Uttarayan and the International Kite Festival","Reporting on manja bans and bird-rescue efforts","Wikipedia, Makar Sankranti and the International Kite Festival, Gujarat"] },
+
+  { id:"wildass", category:"modern", yr:"living landscape", title:"The wild ass of the Little Rann",
+    blurb:"A fast, hardy wild donkey found nowhere else, roaming a vast salt desert alongside flamingos and salt farmers.",
+    body:[
+      "The Little Rann of Kutch, a vast flat expanse of salt and scrub, is the only home in the world of the Indian wild ass, the ghudkhar. The Wild Ass Sanctuary protects it, and the animal has become a symbol of the region, much as the lion is of Gir.",
+      "The wild ass is superbly adapted to this harsh salt desert, able to go without much water and to run at high speed across the open flats in herds. Hunted and hit by disease in the past, its numbers fell sharply, but decades of protection have brought the population back into the thousands.",
+      "The Rann is a shared landscape. In winter it fills with migratory birds, including large flocks of flamingos, and it is also worked by the Agariyas, salt-pan farmers who spend months on the flats harvesting salt in punishing conditions.",
+      "Together with Gir's lions, the wild ass shows how varied Gujarat's wild places are, from forest to salt desert, and how closely wildlife and human livelihoods are woven together here."],
+    site:{ name:"Little Rann of Kutch", note:"The Wild Ass Sanctuary; the only home of the Indian wild ass (ghudkhar), also rich in flamingos." },
+    sources:["Gujarat Forest Department, Wild Ass Sanctuary","Scholarship and reporting on the Agariya salt farmers","Wikipedia, Indian wild ass and the Rann of Kutch"] },
 );
 
 ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });

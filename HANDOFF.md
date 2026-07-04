@@ -131,7 +131,7 @@ progress; it fully resets only accounts with no local copy.
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **3,550 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **3,959 clips**). The app's
   `speak(text, lang, voice)` plays a clip when the manifest has one, else falls
   back to browser TTS. A missing manifest just means TTS-as-before.
 - **Voices (multi-voice):** the default narrator is Google **Chirp3-HD**
@@ -342,7 +342,7 @@ progress; it fully resets only accounts with no local copy.
   "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
   summary per chapter), sources. A "Did you know?" fun-fact card rotates every
   10 hours (one fact notes the kaudi shell as early Gujarati currency).
-- **Grammar guide:** 16 topics. **Conversations (Talk):** 28 dialogues with
+- **Grammar guide:** 16 topics. **Conversations (Talk):** 30 dialogues with
   speaking practice, beginner through advanced (the two speakers use different
   voices).
 - **Profile:** account card (name, @username, change username), stats, a
@@ -390,9 +390,9 @@ message. This is a platform limit, intentionally left as graceful fallback.
 
 ## 8. Content inventory
 
-**Scale (current):** 22 Learn units / ~103 lessons; 16 "Learn the letters" script
-lessons; ~56 vocab topics; 16 grammar patterns; 28 conversations; 7 Culture
-categories / 43 chapters; 4 timed proficiency exams; **3,550 audio clips across
+**Scale (current):** 23 Learn units / ~107 lessons; 16 "Learn the letters" script
+lessons; ~60 vocab topics; 16 grammar patterns; 30 conversations; 7 Culture
+categories / 46 chapters; 4 timed proficiency exams; **3,959 audio clips across
 3 voices** (Units 1-21 + earlier content fully generated); ~70 noun images
 (`WORD_IMG`, shown in lessons and the Vocab list) + body/family diagrams + color
 swatches; 14 variant pairs (`alt`). Units 1-15 are
@@ -400,9 +400,9 @@ foundations/themes/practical systems; Units 16-18 are an advanced grammar arc
 (opinions and comparisons; conditionals and modality; reported speech and
 subordinate clauses); Units 19-22 are conversation, complex sentences, sounding
 natural, and shades of meaning (emphasis/quantity/frequency nuance). The Primary
-Fluency final exam is anchored `afterUnit: "u22"` so it stays at the very end.
+Fluency final exam is anchored `afterUnit: "u23"` so it stays at the very end.
 
-**PENDING AUDIO:** content added since the last generate-audio run (the "At the bank"/"At the pharmacy"/"Congratulating a friend" conversations, the Verbs of motion / Eating out / Buildings vocab topics, two new grammar entries, and the Ahmedabad + Statue of Unity culture chapters with their Gujarati summaries) has ~43 Gujarati clips that do not exist yet. The app falls back to browser TTS until the owner runs `GOOGLE_TTS_KEY=<key> npm run audio` and commits the new `public/audio/` files. See AUDIO.md.
+**AUDIO STATUS: all content is voiced.** The manifest is at **3,959 clips** and the consistency gate reports 0 missing audio. Re-run `GOOGLE_TTS_KEY=<key> npm run audio` only after adding new Gujarati content (it skips existing clips).
 
 **Consistency gate:** a checker script (kept in the session scratchpad,
 `check.mjs`) extracts every gu+romanization pair and verifies: every spoken word
@@ -474,6 +474,38 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
 
 ## 9. Pending / next steps
 
+### >>> IMMEDIATE NEXT STEPS (planned right after this compaction) <<<
+
+**A. Update the logo.** The current mark is the inline SVG `Ic.logo` in
+`src/App.jsx` (onboarding screen + desktop sidebar `.navbrand`), plus the browser
+favicon in `index.html` (a bandhani-style favicon). To change it, edit `Ic.logo`
+(and the favicon + any og:image/meta in `index.html`). Keep it a clean SVG so it
+scales for app icons. The user wants this done FIRST, before packaging below.
+
+**B. Build real Android + iOS apps and publish to the Play Store and App Store.**
+The app is a single-page React site (Vite build to `dist/`, on Cloudflare Pages).
+Wrap the web build rather than rewriting:
+- **Recommended: Capacitor** (`@capacitor/core` + `@capacitor/android` +
+  `@capacitor/ios`). `npm run build` makes `dist/`; Capacitor wraps it into native
+  Android (Android Studio/Gradle) and iOS (Xcode) projects. Alternative: PWA + TWA
+  (Bubblewrap) for Android and a WKWebView wrapper for iOS, but Capacitor is cleaner.
+- **Gotchas to solve while packaging:**
+  - **Google sign-in in a webview** breaks the current `signInWithPopup` flow. Use
+    `@capacitor-firebase/authentication` (native Google sign-in) or a redirect/native
+    flow. Auth lives in `src/firebase.js`; this is the main code change needed.
+  - Audio is static in `public/audio/` (bundles fine); Culture images are hotlinked
+    from Wikimedia Commons (need network; note offline behavior).
+  - App **icons + splash** (from the new logo), a **privacy-policy URL** (both stores
+    require one), store listings, and screenshots.
+  - **Store accounts cost money**, which crosses the hard no-cost rule: **Apple
+    Developer ~$99/year** and **Google Play Console ~$25 one-time**. Flag to the
+    owner as an explicit decision before publishing; the code/build stay free, store
+    distribution does not.
+- Order: logo -> add Capacitor -> run in Android emulator + iOS simulator -> fix
+  sign-in -> generate icons/splash -> store listings -> submit.
+
+### Other pending items
+
 1. **Owner: publish the Firestore rules in the Firebase console** (the rules are
    NOT deployed from the repo). Use the full block in AUTH.md; the two admin UIDs
    are already set in `public/staff/index.html` and in AUTH.md's `isAdmin()`. Also:
@@ -482,7 +514,7 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
    **App name** to "Dhatu Learning" so the sign-in popup reads nicely (AUTH.md).
 2. **Owner: rotate the Google TTS API key** (it appeared in chat repeatedly and
    was used again this session). Audio is fully static, so nothing needs a live key.
-3. **All current content is voiced** (**3,550 clips, 3 voices**). Re-run
+3. **All current content is voiced** (**3,959 clips, 3 voices**). Re-run
    `npm run audio` only after adding new Gujarati content; it is idempotent and
    self-syncing (default clip + v2/v3 variants for short items). If you change an
    override or the pause-list rule, delete the affected clips first so they
