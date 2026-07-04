@@ -1553,6 +1553,9 @@ const GRAMMAR = [
   { id:"g13", color:"#C77B1E", title:"Saying you have something", summary:"Gujarati has no single verb 'to have'; it uses પાસે or મને with છે.",
     points:["For things you hold, use પાસે (with, near): મારી પાસે પૈસા છે.","For family, feelings, and ailments, use મને: મને તાવ છે.","છે does the work of 'have' in both frames."],
     examples:[{gu:"મારી પાસે પૈસા છે",roman:"maari paase paisaa chhe",en:"I have money."},{gu:"મને બે ભાઈ છે",roman:"mane be bhaai chhe",en:"I have two brothers."},{gu:"તમારી પાસે સમય છે?",roman:"tamaari paase samay chhe?",en:"Do you have time?"}] },
+  { id:"g14", color:"#2F6E44", title:"Making things plural", summary:"Nouns change their ending to become plural, and the words around them follow.",
+    points:["Masculine nouns ending in -o become -a, so છોકરો becomes છોકરા (boy, boys).","Feminine and many other nouns add -o, so છોકરી becomes છોકરીઓ and વાત becomes વાતો.","Adjectives and verbs then shift to match the plural."],
+    examples:[{gu:"એક છોકરો, બે છોકરા",roman:"ek chhokro, be chhokra",en:"one boy, two boys"},{gu:"ઘણી છોકરીઓ",roman:"ghaṇi chhokrio",en:"many girls"},{gu:"નાનાં બાળકો",roman:"naanaan baaḷko",en:"small children"}] },
 ];
 
 /* ============================ CONVERSATIONS ============================ */
@@ -5358,6 +5361,20 @@ TOPICS.push(
     { gu:"તાળી", r:"taaḷi", en:"clap" },
     { gu:"ગાયક", r:"gaayak", en:"singer" },
     { gu:"સૂર", r:"soor", en:"tune / note" },
+  ]}
+);
+
+/* ============================ VOCAB: quantities (added) ============================ */
+TOPICS.push(
+  { id:"quantity", title:"How much and how many", icon:"blocks", words:[
+    { gu:"થોડું", r:"thoḍuṁ", en:"a little / a few" },
+    { gu:"ઘણું", r:"ghaṇuṁ", en:"a lot / many" },
+    { gu:"બધું", r:"badhuṁ", en:"all / everything" },
+    { gu:"કંઈ", r:"kaṁi", en:"something / anything" },
+    { gu:"કોઈ", r:"koi", en:"someone / anyone" },
+    { gu:"દરેક", r:"darek", en:"each / every" },
+    { gu:"ઓછું", r:"ochhuṁ", en:"less / few" },
+    { gu:"પૂરતું", r:"poortuṁ", en:"enough" },
   ]}
 );
 
