@@ -5306,6 +5306,31 @@ TOPICS.push(
   ]}
 );
 
+/* ============================ VOCAB: spatial words and ordinals (added) ============================ */
+TOPICS.push(
+  { id:"spatial", title:"Where things are", icon:"target", note:"Position words. In Gujarati they come after the noun, like postpositions: મેજ ઉપર (on the table).", words:[
+    { gu:"ઉપર", r:"upar", en:"on / above" },
+    { gu:"નીચે", r:"neeche", en:"under / below" },
+    { gu:"અંદર", r:"andar", en:"inside" },
+    { gu:"બહાર", r:"bahaar", en:"outside" },
+    { gu:"આગળ", r:"aagaḷ", en:"in front / ahead" },
+    { gu:"પાછળ", r:"paachhaḷ", en:"behind" },
+    { gu:"વચ્ચે", r:"vachche", en:"between / in the middle" },
+    { gu:"સામે", r:"saame", en:"opposite / facing" },
+    { gu:"બાજુ", r:"baaju", en:"beside / side" },
+    { gu:"ખૂણો", r:"khooṇo", en:"corner" },
+  ]},
+  { id:"ordinals", title:"First, second, third", icon:"numbers", words:[
+    { gu:"પહેલો", r:"pahelo", en:"first" },
+    { gu:"બીજો", r:"beejo", en:"second" },
+    { gu:"ત્રીજો", r:"treejo", en:"third" },
+    { gu:"ચોથો", r:"chotho", en:"fourth" },
+    { gu:"પાંચમો", r:"paanchmo", en:"fifth" },
+    { gu:"છઠ્ઠો", r:"chhaṭhṭho", en:"sixth" },
+    { gu:"છેલ્લો", r:"chhello", en:"last" },
+  ]}
+);
+
 Ic.coffee = (p) => (
   <svg {...S(p)}>
     <path d="M5 9h12v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z" />
