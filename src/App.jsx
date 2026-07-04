@@ -1504,6 +1504,7 @@ const LESSON_ICON = {
   u14l1:"profile", u14l2:"bulb",
   u15l1:"steps", u15l2:"car",
   u16l1:"bulb", u16l2:"chats", u16l3:"steps",
+  u17l1:"link", u17l2:"star", u17l3:"gear",
 };
 const lessonIcon = (l) => {
   if (l.kind === "check") return Ic.trophy;
@@ -4758,6 +4759,50 @@ Object.assign(LESSONS, {
 UNITS.push({ id:"u16", ku:"Unit 16", title:"Putting it together", sub:"Reasons, opinions, telling a story, and comparing things", color:"#6B4E9E",
   lessons:[ {id:"u16l1",label:"Reasons and opinions"}, {id:"u16l2",label:"Telling a short story"}, {id:"u16l3",label:"Making comparisons"}, {id:"u16c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u16l1", "u16l2", "u16l3", "u16c");
+
+/* ============================ MODULE: Wishes and possibilities (advanced) ============================ */
+Object.assign(LESSONS, {
+  u17l1: { title:"If and then", ex: [
+    { t:"intro", gu:"જો", roman:"jo", en:"if" },
+    { t:"intro", gu:"તો", roman:"to", en:"then" },
+    { t:"note", title:"Making an if-then sentence", body:[
+      "Pair જો (if) at the start of the condition with તો (then) before the result.",
+      "The result clause keeps the usual subject, object, verb order."], ex:[
+      {gu:"જો વરસાદ પડે તો હું નહીં આવું",roman:"jo varsaad paḍe to huṁ nahi aavuṁ",en:"If it rains, then I will not come."}] },
+    { t:"build", en:"If you come, I will come.", answer:["જો","તું","આવે","તો","હું","આવીશ"], extra:["નહીં","પછી"], roman:"jo tuṁ aave to huṁ aaveesh" },
+    { t:"speak", gu:"જો સમય હોય તો મળીશું", roman:"jo samay hoy to maḷeeshuṁ", en:"If there is time, we will meet." },
+  ]},
+  u17l2: { title:"Wishes and hopes", ex: [
+    { t:"intro", gu:"કાશ", roman:"kaash", en:"if only / I wish" },
+    { t:"intro", gu:"આશા", roman:"aashaa", en:"hope" },
+    { t:"note", title:"Wishing and hoping", body:[
+      "કાશ expresses a wish, often for something unlikely.",
+      "For a realistic hope, use આશા છે કે (I hope that) before the clause."], ex:[
+      {gu:"આશા છે કે તું આવીશ",roman:"aashaa chhe ke tuṁ aaveesh",en:"I hope that you will come."}] },
+    { t:"build", en:"I hope you are well.", answer:["આશા","છે","કે","તું","મજામાં","છે"], extra:["કાશ","નહીં"], roman:"aashaa chhe ke tuṁ majaamaan chhe" },
+    { t:"speak", gu:"કાશ હું ગુજરાત જઈ શકું", roman:"kaash huṁ gujaraat jai shakuṁ", en:"I wish I could go to Gujarat." },
+  ]},
+  u17l3: { title:"Can and must", ex: [
+    { t:"intro", gu:"શકું", roman:"shakuṁ", en:"(I) can / am able to" },
+    { t:"intro", gu:"પડશે", roman:"paḍshe", en:"will have to" },
+    { t:"note", title:"Able to, and have to", body:[
+      "Add a form of શકવું after a verb stem to say 'can': હું જઈ શકું છું (I can go).",
+      "Use મારે ... પડશે for 'I will have to': મારે જવું પડશે."], ex:[
+      {gu:"હું જઈ શકું છું",roman:"huṁ jai shakuṁ chuṁ",en:"I can go."},
+      {gu:"મારે જવું પડશે",roman:"maare javuṁ paḍshe",en:"I will have to go."}] },
+    { t:"build", en:"I can speak Gujarati.", answer:["હું","ગુજરાતી","બોલી","શકું","છું"], extra:["જઈ","નહીં"], roman:"huṁ gujaraati boli shakuṁ chuṁ" },
+    { t:"speak", gu:"મારે ઘરે જવું પડશે", roman:"maare ghare javuṁ paḍshe", en:"I have to go home." },
+  ]},
+  u17c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"જો",en:"if"},{gu:"તો",en:"then"},{gu:"કાશ",en:"I wish"},{gu:"આશા",en:"hope"}] },
+    { t:"listen", say:"પડશે", roman:"paḍshe", options:["will have to","can","if"], answer:"will have to" },
+    { t:"build", en:"If you come, I will come.", answer:["જો","તું","આવે","તો","હું","આવીશ"], extra:["કાશ","આશા"], roman:"jo tuṁ aave to huṁ aaveesh" },
+    { t:"speak", gu:"આશા છે કે તું આવીશ", roman:"aashaa chhe ke tuṁ aaveesh", en:"I hope that you will come." },
+  ]},
+});
+UNITS.push({ id:"u17", ku:"Unit 17", title:"Wishes and possibilities", sub:"If-then, wishes and hopes, and saying can and must", color:"#4A7A8C",
+  lessons:[ {id:"u17l1",label:"If and then"}, {id:"u17l2",label:"Wishes and hopes"}, {id:"u17l3",label:"Can and must"}, {id:"u17c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u17l1", "u17l2", "u17l3", "u17c");
 
 /* Roughly double the practice in every lesson by appending auto-generated
    reinforcement questions (listen and match) built from each lesson's own taught
