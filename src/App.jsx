@@ -5018,6 +5018,13 @@ TOPICS.push(
     { gu:"થાકેલું", r:"thaakeluṁ", en:"tired" },
     { gu:"ભૂખ", r:"bhookh", en:"hunger" },
     { gu:"ડર", r:"ḍar", en:"fear" },
+    { gu:"પ્રેમ", r:"prem", en:"love" },
+    { gu:"આનંદ", r:"aanand", en:"joy" },
+    { gu:"ચિંતા", r:"chintaa", en:"worry" },
+    { gu:"આશ્ચર્ય", r:"aashcharya", en:"surprise" },
+    { gu:"કંટાળો", r:"kanṭaaḷo", en:"boredom" },
+    { gu:"ગર્વ", r:"garv", en:"pride" },
+    { gu:"એકલું", r:"ekluṁ", en:"lonely" },
   ]}
 );
 
@@ -5529,6 +5536,7 @@ function SpeakCheck({ target, onResult }) {
 
 /* ============================ HISTORY: Gujarati narration summaries ============================ */
 const ERA_GU_SUMMARY = {
+  siddi: "સીદી સમાજ મૂળ પૂર્વ આફ્રિકાથી આવેલા લોકોના વંશજ છે. સદીઓ પહેલાં તેઓ હિંદ મહાસાગર ઓળંગીને વેપારી, ખલાસી અને સૈનિક તરીકે, અને ગુલામી દ્વારા પણ, આ પ્રદેશમાં આવ્યા. ગુજરાતમાં તેઓ ખાસ કરીને ગીર અને જૂનાગઢ પાસે વસે છે. સીદી ધમાલ નામનું તેમનું ખાસ સંગીત અને નૃત્ય આફ્રિકન તાલ સાચવી રાખે છે. તેઓ બાવા ગોર નામના સૂફી સંતને માને છે. આજે સીદી સમાજ ગુજરાતની વિવિધતાનો જીવંત પુરાવો છે.",
   garba: "ગરબા ગુજરાતની સૌથી જાણીતી સાંસ્કૃતિક પરંપરા છે. નવરાત્રિના નવ દિવસ દરમિયાન લોકો ગોળ ફરીને ગરબા રમે છે, ઘણી વાર વચ્ચે દીવાવાળો ગરબો કે માતાની છબી રાખીને. રાસમાં લોકો હાથમાં દાંડિયા લઈને રમે છે, જે કૃષ્ણ સાથે જોડાયેલો છે. ગરબા ઢોલ અને ગીત સાથે ગવાય છે, અને આજે મોટા આધુનિક કાર્યક્રમો પણ થાય છે. ૨૦૨૩માં યુનેસ્કોએ ગુજરાતના ગરબાને વિશ્વ સાંસ્કૃતિક વારસામાં સ્થાન આપ્યું. ભવાઈ જેવું લોકનાટ્ય પણ ગુજરાતની સમૃદ્ધ કલા-પરંપરાનો ભાગ છે.",
   language: "ગુજરાતી ભાષા સંસ્કૃતમાંથી પ્રાકૃત અને અપભ્રંશ થઈને ઊતરી આવેલી ભાષા છે, અને આજે લગભગ છ કરોડ લોકો તે બોલે છે. ગુજરાતી લિપિ દેવનાગરીમાંથી બની, પણ તેમાં ઉપરની લીટી નથી; એવું કહેવાય છે કે વેપારીઓને ઝડપથી લખવા માટે આ શૈલી અનુકૂળ હતી. પંદરમી સદીમાં નરસિંહ મહેતાએ ભક્તિનાં પદ લખ્યાં. ઓગણીસમી સદીમાં નર્મદે આધુનિક ગુજરાતી ગદ્યનો પાયો નાખ્યો અને પહેલો શબ્દકોશ બનાવ્યો. ગોવર્ધનરામ ત્રિપાઠીની નવલકથા સરસ્વતીચંદ્ર ગુજરાતી સાહિત્યની મોટી કૃતિ છે. ઝવેરચંદ મેઘાણીએ લોકસાહિત્ય ભેગું કર્યું અને ઉમાશંકર જોશીને જ્ઞાનપીઠ પુરસ્કાર મળ્યો. આજે ગુજરાતી ભાષા દુનિયાભરના ગુજરાતી સમાજમાં જીવંત છે.",
   indus: "ગુજરાત નામ પડ્યું તે પહેલાં પણ અહીં સિંધુ ખીણની સભ્યતાનાં મોટાં શહેરો હતાં. કચ્છના રણમાં આવેલું ધોળાવીરા લગભગ સાડા ચાર હજાર વર્ષ જૂનું છે અને તે આખું પથ્થરથી બનેલું હતું. ત્યાં વરસાદનું પાણી સાચવવા માટે સોળ જેટલા મોટા હોજ બનાવેલા હતા, જે દુનિયાની સૌથી જૂની જળ-વ્યવસ્થાઓમાંની એક ગણાય છે. ખંભાતના અખાત પાસે આવેલા લોથલમાં એક ગોદી અને મણકા બનાવવાનાં કારખાનાં મળી આવ્યાં છે. અહીંના લોકો દૂર મેસોપોટેમિયા સુધી વેપાર કરતા હતા. લગભગ ૨૧૦૦ ઈસવીસન પૂર્વે આ સભ્યતા ધીરે ધીરે ઓસરી ગઈ.",
@@ -6000,6 +6008,17 @@ ERAS.push(
       "The tradition won global recognition in 2023, when UNESCO inscribed the Garba of Gujarat on its Representative List of the Intangible Cultural Heritage of Humanity, citing it as a communal ritual and devotional practice that binds people across social lines.",
       "Garba sits within a wider world of Gujarati folk performance. Bhavai, a centuries-old form of folk theatre, mixes satire, music, and dance in open-air shows, and communities across the region carry their own songs, instruments, and dance styles. Together they make performance one of the most visible and living parts of Gujarati culture."],
     sources:["UNESCO, Representative List of the Intangible Cultural Heritage of Humanity (Garba of Gujarat, 2023)","Scholarship on Navratri, Garba, and Gujarati folk performance","Wikipedia, Garba (dance) and Bhavai"] });
+
+ERAS.push(
+  { id:"siddi", category:"trade", yr:"1600s - present", title:"The Siddi, an African Gujarati community",
+    blurb:"African-descended Gujaratis whose ancestors crossed the Indian Ocean, keeping a distinct music and heritage alive.",
+    body:[
+      "The Siddi are a community of African descent living in Gujarat and other parts of the subcontinent, the descendants of people who crossed the Indian Ocean over many centuries from East Africa. They arrived as traders, sailors, and soldiers, and also, painfully, through the Indian Ocean slave trade.",
+      "Their history in the region is long and varied. Some Siddis were free merchants and mariners; others were brought in bondage by sultans, the Portuguese, and local rulers, and a number rose over time to positions of military and political importance. In Gujarat, Siddi communities today are concentrated in Saurashtra, especially around the Gir forest and Junagadh, including the well-known village of Jambur.",
+      "The Siddi have kept a distinct cultural identity. Their best-known tradition is the Siddi Dhamal, an energetic music and dance form built on African-rooted drumming and rhythm, performed at celebrations and at the shrines of their revered Sufi figure Bava Gor, whose following ties the community to the old agate trade of Bharuch.",
+      "Today the Siddi are a relatively small community, recognized as a Scheduled Tribe in Gujarat, and like many such communities they have faced marginalization and economic hardship. Efforts to document and support their music, sport, and heritage have grown in recent decades.",
+      "The Siddi are living evidence that the Indian Ocean carried not only goods but people, and that Gujarat's population has African as well as South Asian, Persian, and other roots. Their presence complicates any tidy story of who counts as Gujarati, and enriches it."],
+    sources:["Scholarship on the Siddi of Gujarat and the African diaspora in South Asia","Helene Basu and others on Siddi Dhamal and the Bava Gor tradition","Wikipedia, Siddi and Siddi (Gujarat)"] });
 
 ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });
 
