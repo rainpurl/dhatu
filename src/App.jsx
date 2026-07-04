@@ -1505,6 +1505,7 @@ const LESSON_ICON = {
   u15l1:"steps", u15l2:"car",
   u16l1:"bulb", u16l2:"chats", u16l3:"steps",
   u17l1:"link", u17l2:"star", u17l3:"gear",
+  u18l1:"chats", u18l2:"clock", u18l3:"link",
 };
 const lessonIcon = (l) => {
   if (l.kind === "check") return Ic.trophy;
@@ -4803,6 +4804,49 @@ Object.assign(LESSONS, {
 UNITS.push({ id:"u17", ku:"Unit 17", title:"Wishes and possibilities", sub:"If-then, wishes and hopes, and saying can and must", color:"#4A7A8C",
   lessons:[ {id:"u17l1",label:"If and then"}, {id:"u17l2",label:"Wishes and hopes"}, {id:"u17l3",label:"Can and must"}, {id:"u17c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u17l1", "u17l2", "u17l3", "u17c");
+
+/* ============================ MODULE: Reporting and connecting (advanced) ============================ */
+Object.assign(LESSONS, {
+  u18l1: { title:"Saying what someone said", ex: [
+    { t:"intro", gu:"કહ્યું", roman:"kahyuṁ", en:"said (past)" },
+    { t:"intro", gu:"પૂછ્યું", roman:"poochhyuṁ", en:"asked (past)" },
+    { t:"note", title:"Reporting speech", body:[
+      "Use કે (that) after a verb of speaking to report what was said.",
+      "The doer takes the -e marker in the past: તેણે કહ્યું (he said)."], ex:[
+      {gu:"તેણે કહ્યું કે તે આવશે",roman:"teṇe kahyuṁ ke te aavshe",en:"He said that he will come."}] },
+    { t:"build", en:"She said that it is good.", answer:["તેણે","કહ્યું","કે","તે","સારું","છે"], extra:["પૂછ્યું","નહીં"], roman:"teṇe kahyuṁ ke te saaruṁ chhe" },
+    { t:"speak", gu:"તેણે પૂછ્યું કે તું ક્યાં છે", roman:"teṇe poochhyuṁ ke tuṁ kyaan chhe", en:"He asked where you are." },
+  ]},
+  u18l2: { title:"When and then", ex: [
+    { t:"intro", gu:"જ્યારે", roman:"jyaare", en:"when" },
+    { t:"intro", gu:"ત્યારે", roman:"tyaare", en:"then / at that time" },
+    { t:"note", title:"Linking events in time", body:[
+      "Pair જ્યારે (when) with ત્યારે (at that time) to connect two events.",
+      "The જ્યારે clause comes first, then the ત્યારે result."], ex:[
+      {gu:"જ્યારે વરસાદ પડે ત્યારે ઠંડી થાય",roman:"jyaare varsaad paḍe tyaare ṭhanḍi thaay",en:"When it rains, it gets cold."}] },
+    { t:"build", en:"When you come, tell me.", answer:["જ્યારે","તું","આવે","ત્યારે","મને","કહે"], extra:["જો","પછી"], roman:"jyaare tuṁ aave tyaare mane kahe" },
+    { t:"speak", gu:"જ્યારે હું નાનો હતો ત્યારે અહીં રહેતો", roman:"jyaare huṁ naano hato tyaare ahiṁ raheto", en:"When I was young, I lived here." },
+  ]},
+  u18l3: { title:"The one that", ex: [
+    { t:"intro", gu:"જે", roman:"je", en:"who / which / the one that" },
+    { t:"intro", gu:"મિત્ર", roman:"mitra", en:"friend" },
+    { t:"note", title:"The one who or which", body:[
+      "જે introduces a description and તે points back to it.",
+      "જે માણસ આવ્યો તે મારો મિત્ર છે folds into 'the man who came is my friend'."], ex:[
+      {gu:"જે માણસ આવ્યો તે મારો મિત્ર છે",roman:"je maaṇas aavyo te maaro mitra chhe",en:"The man who came is my friend."}] },
+    { t:"build", en:"What I said is true.", answer:["મેં","જે","કહ્યું","તે","સાચું","છે"], extra:["જો","નહીં"], roman:"meṁ je kahyuṁ te saachuṁ chhe" },
+    { t:"speak", gu:"જે સારું છે તે લો", roman:"je saaruṁ chhe te lo", en:"Take what is good." },
+  ]},
+  u18c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"કહ્યું",en:"said"},{gu:"જ્યારે",en:"when"},{gu:"ત્યારે",en:"then"},{gu:"જે",en:"which"}] },
+    { t:"listen", say:"પૂછ્યું", roman:"poochhyuṁ", options:["asked","said","when"], answer:"asked" },
+    { t:"build", en:"He said that he will come.", answer:["તેણે","કહ્યું","કે","તે","આવશે"], extra:["જે","જો"], roman:"teṇe kahyuṁ ke te aavshe" },
+    { t:"speak", gu:"જ્યારે તું આવે ત્યારે મને કહે", roman:"jyaare tuṁ aave tyaare mane kahe", en:"When you come, tell me." },
+  ]},
+});
+UNITS.push({ id:"u18", ku:"Unit 18", title:"Reporting and connecting", sub:"Reported speech, when-then, and the one that", color:"#8A5A2B",
+  lessons:[ {id:"u18l1",label:"Saying what someone said"}, {id:"u18l2",label:"When and then"}, {id:"u18l3",label:"The one that"}, {id:"u18c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u18l1", "u18l2", "u18l3", "u18c");
 
 /* Roughly double the practice in every lesson by appending auto-generated
    reinforcement questions (listen and match) built from each lesson's own taught
