@@ -122,7 +122,7 @@ progress; it fully resets only accounts with no local copy.
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **2,560 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **2,826 clips**). The app's
   `speak(text, lang, voice)` plays a clip when the manifest has one, else falls
   back to browser TTS. A missing manifest just means TTS-as-before.
 - **Voices (multi-voice):** the default narrator is Google **Chirp3-HD**
@@ -262,6 +262,9 @@ progress; it fully resets only accounts with no local copy.
   user has review items** (`srs.length > 0`), so a new learner never sees an empty
   tab.
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
+  Words with a common variation carry an optional `alt:[{gu,r}]` list, shown as a
+  tappable "also ..." line under the word (e.g. potato બટાકા / બટાટા, onion
+  ડુંગળી / કાંદા, hospital દવાખાનું / હોસ્પિટલ). 14 variant pairs so far.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
   the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat, Textiles and
   Fashion, Food and Cooking), each with
@@ -269,12 +272,21 @@ progress; it fully resets only accounts with no local copy.
   "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
   summary per chapter), sources. A "Did you know?" fun-fact card rotates every
   10 hours (one fact notes the kaudi shell as early Gujarati currency).
-- **Grammar guide:** 13 topics. **Conversations (Talk):** 18 dialogues with
-  speaking practice.
+- **Grammar guide:** 13 topics. **Conversations (Talk):** 21 dialogues with
+  speaking practice, beginner through advanced (the two speakers use different
+  voices).
 - **Profile:** account card (name, @username, change username), stats, streak
-  repair, this-week activity, **Friends** (follow by username, see streak/Kaudi,
-  poke, pokes received), badges, settings (read/write, Culture tab, Vocab tab),
-  Ko-fi support, sign out. Real daily-streak tracking (via `dhatu_lastActive`).
+  repair, **Extra oil** (a streak freeze in the diya theme: buy for 50 Kaudi,
+  auto-consumed on a missed day to keep the streak; one charge per day, cannot
+  bridge more than 4 days in a row; `dhatu_oil`/`dhatu_oilRun`, applied via a
+  mount reconcile effect), this-week activity, **Friends** (follow by username,
+  see streak/Kaudi, poke, pokes received), **Awards** (13 badges that turn gold
+  when earned, each with its own icon: First lesson, Checkpoint, Wordsmith 100
+  Kaudi, Reviewer, Literally literate = all script lessons, Saaro mitra = 2
+  friends, Satat/Amar/Akhand/Suvarṇa jyot = 7/30/100/365-day streaks, Dhanvaan
+  1000 Kaudi, Conversationalist 5000 Kaudi, Mastery = every lesson), settings
+  (read/write, Culture tab, Vocab tab), Ko-fi support, sign out. Real
+  daily-streak tracking (via `dhatu_lastActive`).
 
 Speech check note: browser speech recognition barely supports gu-IN, so speaking
 checks degrade to an "I said it out loud" self-confirm with a calm (not red)
@@ -284,10 +296,13 @@ message. This is a platform limit, intentionally left as graceful fallback.
 
 ## 8. Content inventory
 
-**Scale (current):** 15 Learn units / 75 lessons; 16 "Learn the letters" script
-lessons; ~40 vocab topics; 13 grammar patterns; 18 conversations; 7 Culture
-categories / 34 chapters; **2,560 audio clips across 3 voices** (~40 MB); ~34
-noun images + body/family diagrams + color swatches.
+**Scale (current):** 18 Learn units / ~87 lessons; 16 "Learn the letters" script
+lessons; ~41 vocab topics; 13 grammar patterns; 21 conversations; 7 Culture
+categories / 34 chapters; **2,826 audio clips across 3 voices** (~42 MB); ~34
+noun images + body/family diagrams + color swatches. Units 1-15 are
+foundations/themes/practical systems; Units 16-18 are an advanced grammar arc
+(opinions and comparisons; conditionals and modality; reported speech and
+subordinate clauses).
 
 **Consistency gate:** a checker script (kept in the session scratchpad,
 `check.mjs`) extracts every gu+romanization pair and verifies: every spoken word
@@ -305,14 +320,15 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
   textiles, t_bandhani, t_patola. Food and Cooking: food, f_street, f_faith,
   f_ports. (Textiles/Food are Culture *modules* built from the two md files; the
   Learn Units 7/8 are separate.)
-- **Vocab topics (~40):** slang split into slang + slang2 (from a modern-slang
+- **Vocab topics (~41):** slang split into slang + slang2 (from a modern-slang
   research md; slang2 carries the New tag), family (expanded: son/daughter, child/
   offspring, didi, cousin, nephew/niece, and gender-neutral spouse/parents/
   siblings/family/elder), numbers, food, verbs, verbs2, transport, colors, animals,
   time, greetings, market, festivals, culture, adjectives, body, weather, places,
   feelings, numbers2 (11-100), days, routine, professions, health, directions,
   streetfood, diet, textilecraft, household, produce, clothing, nature, school,
-  questions, kitchen, sports, connectors (joining words), tech (phones), money.
+  questions, kitchen, sports, connectors (joining words), tech (phones), money,
+  people (describing people).
 - **Learn units/lessons:** Unit 1 (first words, numbers 1-5, yes/no/sorry,
   numbers 6-10, checkpoint); Unit 2 (family, food, home, colors, animals, getting
   around, checkpoint); Unit 3 (grammar: word order, postpositions, gender, present
@@ -329,7 +345,13 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
   routine, checkpoint); Unit 12 (Making plans: future tense, arranging to meet,
   checkpoint); Unit 13 (People and work: jobs, "what do you do?", checkpoint); Unit
   14 (Health and the body: symptoms, at the doctor, checkpoint); Unit 15 (Travel
-  and directions: left/right, asking the way, checkpoint).
+  and directions: left/right, asking the way, checkpoint); Unit 16 (Putting it
+  together, advanced: reasons and opinions with કારણ કે/તેથી/મને લાગે છે કે,
+  telling a short story in the past, comparisons with કરતાં/વધારે/સૌથી,
+  checkpoint); Unit 17 (Wishes and possibilities: જો...તો conditionals, કાશ/આશા
+  wishes and hopes, can/must with શકવું and મારે...પડશે, checkpoint); Unit 18
+  (Reporting and connecting: reported speech with કે, જ્યારે...ત્યારે time
+  clauses, જે...તે relative clauses, checkpoint).
   Unit 1 also has a greetings/courtesy lesson. Most vocab lessons were built from
   existing vocab topics, so those words already have audio. Textiles and food used
   to be nested lessons inside Unit 6 (u6l2/u6l3); they were split out into the
@@ -339,10 +361,11 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
 - **Grammar (13):** word order, postpositions, gender/my, present tense, past/-e
   marker, polite you, negation, questions, future tense, commands/requests,
   want-like-need (joie/game), this-that-here-there, have (paase/mane + chhe).
-- **Conversations (18):** hello, tea stall, asking the way, market haggling,
+- **Conversations (21):** hello, tea stall, asking the way, market haggling,
   meeting family, at the doctor, at the station, making plans, work, telling time,
   on the phone, buying clothes, restaurant, Diwali, please-repeat, catching up
-  (slang + code-mix), at the temple, auto-rickshaw haggling.
+  (slang + code-mix), at the temple, auto-rickshaw haggling, weather, weekend
+  plans (conditionals), job interview (can/experience).
 - **Only `nav_nirman` lacks a cover image** (no free-licensed one found; clean
   colored hero). Do not fabricate image URLs; verify each with
   `curl -sI -L "<FilePath URL>"` (expect 200; 429 means retry).
@@ -359,7 +382,7 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
    **App name** to "Dhatu Learning" so the sign-in popup reads nicely (AUTH.md).
 2. **Owner: rotate the Google TTS API key** (it appeared in chat repeatedly and
    was used again this session). Audio is fully static, so nothing needs a live key.
-3. **All current content is voiced** (**2,560 clips, 3 voices**). Re-run
+3. **All current content is voiced** (**2,826 clips, 3 voices**). Re-run
    `npm run audio` only after adding new Gujarati content; it is idempotent and
    self-syncing (default clip + v2/v3 variants for short items). If you change an
    override or the pause-list rule, delete the affected clips first so they
