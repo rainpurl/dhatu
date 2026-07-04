@@ -82,7 +82,7 @@ const PRONUNCIATION_OVERRIDES = {
   "ઔ": "ɔː",  // "aw", as in "bought"
   "ઍ": "æ",   // "a", as in "apple"
   "કૅ": "kæ", // candra-e matra on ka; Chirp3 mangles the candra-e like the vowel above
-  "ક્": "kh",  // halant demo: a "k" released into an h-breath (IPA /k/+/h/) = an aspirated "kh" sound with NO vowel after it. Renders distinct from both the bare k-burst and the vowel forms.
+  // (halant ક્ uses a recorded clip via MANUAL_CLIPS, not TTS)
   // Rare/borrowed consonants (nukta letters): TTS is silent on the bare glyphs,
   // so we synthesize the target sound by IPA, exactly like the vowels above.
   "ૹ": "ʒə",      // zha, like the 's' in "vision"
@@ -218,6 +218,12 @@ const VARIANT_MAX_LEN = 70;
 // voices vowel-break (e.g. ન્ન read as "nana"). Skip variants for these so the
 // script tab falls back to the correct default-voice clip in every style.
 const VARIANT_SKIP = new Set(["ક્ષ", "જ્ઞ", "શ્રી", "ત્ર", "ન્ન"]);
+// Hand-placed recorded clips that must NOT be TTS-generated (kept as-is in the
+// manifest). The halant demo is a real recorded bare consonant, because TTS
+// cannot produce a vowel-less plosive (it either adds a vowel or reads a
+// fallback letter). Source: "Voiceless velar plosive" by Karmosin, Wikimedia
+// Commons, CC BY-SA 3.0, converted to m4a.
+const MANUAL_CLIPS = { "gu|ક્": "gu-halant.m4a" };
 
 /* ---------------- providers ---------------- */
 function voiceFor(lang) {
@@ -377,6 +383,7 @@ async function main() {
   let failed = 0;
 
   for (const it of list) {
+    if (MANUAL_CLIPS[keyFor(it.text, it.lang)]) { skipped++; continue; } // hand-placed recording, never TTS
     const file = fileFor(it.text, it.lang);
     const dest = path.join(OUT_DIR, file);
     items[keyFor(it.text, it.lang)] = file;
@@ -415,6 +422,7 @@ async function main() {
       if (it.text.length > VARIANT_MAX_LEN) continue;
       if (PRONUNCIATION_OVERRIDES[it.text]) continue; // special IPA/Arabic clips stay single-voice
       if (VARIANT_SKIP.has(it.text)) continue; // isolated conjuncts the alt voices mangle
+      if (MANUAL_CLIPS[keyFor(it.text, it.lang)]) continue; // hand-placed recording, single clip
       for (const v of VOICE_VARIANTS) {
         const key = keyFor(it.text, it.lang) + "|" + v.tag;
         const file = fileForVoice(it.text, it.lang, v.gu);
@@ -438,6 +446,9 @@ async function main() {
       }
     }
   }
+
+  // Merge hand-placed recorded clips into the manifest (kept across re-runs).
+  for (const k in MANUAL_CLIPS) items[k] = MANUAL_CLIPS[k];
 
   const manifest = {
     version: 1,

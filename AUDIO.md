@@ -149,3 +149,12 @@ Azure voice names: `gu-IN-DhwaniNeural` (female, default) and
   You can re-run to retry them.
 - **No sound after publishing**: make sure `public/audio/` (including
   `manifest.json`) was actually committed and pushed.
+
+## Credits (recorded clips)
+
+Most audio is TTS-generated, but one clip is a real recording because TTS cannot
+produce a vowel-less consonant (the halant demo). `public/audio/gu-halant.m4a`
+is from "Voiceless velar plosive" by Karmosin, Wikimedia Commons, licensed
+**CC BY-SA 3.0** (https://commons.wikimedia.org/wiki/File:Voiceless_velar_plosive.ogg),
+converted to m4a. It is wired via `MANUAL_CLIPS` in `scripts/generate-audio.mjs`
+so re-running the generator never overwrites it.
