@@ -4527,6 +4527,22 @@ const CONVERSATIONS = [
     { who:"you", gu:"મિત્રો સાથે જમ્યો.", roman:"mitro saathe jamyo.", en:"I ate with friends." },
     { who:"them", gu:"સરસ! આરામ કર.", roman:"saras! aaraam kar.", en:"Nice! Get some rest." },
   ]},
+  { id:"c26", title:"At the bank", icon:"tag", turns:[
+    { who:"them", gu:"નમસ્તે, હું શું મદદ કરું?", roman:"namaste, huṁ shuṁ madad karuṁ?", en:"Hello, how can I help?" },
+    { who:"you", gu:"મારે ખાતું ખોલવું છે.", roman:"maare khaatuṁ kholvuṁ chhe.", en:"I want to open an account.", choices:["મારે ખાતું ખોલવું છે","મને ચા જોઈએ","આવજો"] },
+    { who:"them", gu:"તમારું ઓળખપત્ર છે?", roman:"tamaaruṁ oḷakhpatra chhe?", en:"Do you have your ID?" },
+    { who:"you", gu:"હા, આ રહ્યું.", roman:"haa, aa rahyuṁ.", en:"Yes, here it is." },
+    { who:"them", gu:"કેટલા પૈસા જમા કરશો?", roman:"keṭlaa paisaa jamaa karsho?", en:"How much will you deposit?" },
+    { who:"you", gu:"પાંચસો રૂપિયા.", roman:"paanchso rupiyaa.", en:"Five hundred rupees." },
+  ]},
+  { id:"c27", title:"At the pharmacy", icon:"profile", turns:[
+    { who:"them", gu:"શું જોઈએ છે?", roman:"shuṁ joie chhe?", en:"What do you need?" },
+    { who:"you", gu:"મને શરદી માટે દવા જોઈએ.", roman:"mane shardi maaṭe davaa joie.", en:"I need medicine for a cold.", choices:["મને શરદી માટે દવા જોઈએ","હું મજામાં છું","આભાર"] },
+    { who:"them", gu:"તાવ પણ છે?", roman:"taav paṇ chhe?", en:"Do you have a fever too?" },
+    { who:"you", gu:"થોડો તાવ છે.", roman:"thoḍo taav chhe.", en:"A little fever." },
+    { who:"them", gu:"આ ગોળી દિવસમાં બે વાર લો.", roman:"aa goḷi divasmaan be vaar lo.", en:"Take this tablet twice a day." },
+    { who:"you", gu:"આભાર. કેટલા પૈસા થયા?", roman:"aabhaar. keṭlaa paisaa thayaa?", en:"Thank you. How much is it?" },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
@@ -9432,6 +9448,19 @@ TOPICS.push(
   ]}
 );
 
+/* ============================ VOCAB: verbs of motion (added) ============================ */
+TOPICS.push(
+  { id:"motion", title:"Verbs of motion", icon:"steps", note:"Ways to move, in the -વું dictionary form.", words:[
+    { gu:"દોડવું", r:"doḍvuṁ", en:"to run" },
+    { gu:"કૂદવું", r:"koodvuṁ", en:"to jump" },
+    { gu:"પડવું", r:"paḍvuṁ", en:"to fall" },
+    { gu:"ઊઠવું", r:"ooṭhvuṁ", en:"to get up" },
+    { gu:"બેસવું", r:"besvuṁ", en:"to sit" },
+    { gu:"પહોંચવું", r:"pahonchvuṁ", en:"to arrive / reach" },
+    { gu:"ફરવું", r:"pharvuṁ", en:"to wander / go around" },
+  ]}
+);
+
 Ic.coffee = (p) => (
   <svg {...S(p)}>
     <path d="M5 9h12v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z" />
@@ -9648,6 +9677,7 @@ const ERA_GU_SUMMARY = {
   swaminarayan: "સ્વામિનારાયણ સંપ્રદાય ઓગણીસમી સદીની શરૂઆતમાં ભગવાન સ્વામિનારાયણ દ્વારા ગુજરાતમાં સ્થપાયો. તેમણે ભક્તિ, અહિંસા અને સદાચાર પર ભાર મૂક્યો. આ સંપ્રદાયનાં અમદાવાદ અને વડતાલમાં જૂનાં મંદિરો છે. આજે બી.એ.પી.એસ. જેવી સંસ્થાઓએ દુનિયાભરમાં મોટાં અક્ષરધામ મંદિરો બાંધ્યાં છે, જેમાં ગાંધીનગરનું અક્ષરધામ ખાસ જાણીતું છે. આ મંદિરો બારીક કોતરણી અને સેવાકાર્ય માટે પ્રખ્યાત છે. સ્વામિનારાયણ પરંપરા ગુજરાતી ભોજનની 'ડુંગળી-લસણ વગરની' રીત સાથે પણ જોડાયેલી છે.",
   amul: "અમૂલ ગુજરાતના આણંદમાં શરૂ થયેલી દૂધની સહકારી મંડળી છે. ૧૯૪૬માં ખેડા જિલ્લાના ખેડૂતોએ વચેટિયાઓના શોષણ સામે સંગઠિત થઈને આ મંડળી બનાવી. વર્ગીસ કુરિયનના નેતૃત્વમાં શ્વેત ક્રાંતિ થઈ અને ભારત દુનિયાનો સૌથી મોટો દૂધ ઉત્પાદક દેશ બન્યો. અમૂલ ખેડૂતોની માલિકીની મંડળી છે, જ્યાં નફો સીધો ખેડૂતો સુધી પહોંચે છે. આજે આણંદ દૂધની રાજધાની કહેવાય છે.",
   surat_diamond: "સુરત હીરા ઉદ્યોગ માટે દુનિયાભરમાં પ્રખ્યાત છે. દુનિયાના મોટા ભાગના હીરા અહીં ઘસાઈ અને પોલિશ થાય છે. વીસમી સદીના મધ્યભાગથી આ ઉદ્યોગ વધ્યો અને આજે લાખો લોકોને રોજગાર આપે છે. બહારથી આવેલા કાચા હીરા સુરતમાં કાપીને તૈયાર કરવામાં આવે છે. ૨૦૨૩માં સુરત ડાયમંડ બુર્સ ખૂલ્યું, જે દુનિયાની સૌથી મોટી ઓફિસ ઇમારતોમાંની એક છે. સુરત જૂના જમાનાથી વેપાર અને કારીગરીનું કેન્દ્ર રહ્યું છે.",
+  ahmedabad_whc: "અમદાવાદ ૧૪૧૧માં સુલતાન અહમદ શાહે સાબરમતી નદીના કિનારે વસાવ્યું. જૂનું કોટવાળું શહેર પોળોથી બનેલું છે; પોળ એટલે એક દરવાજામાંથી પહોંચાતો, વચ્ચે ચોક અને કૂવાવાળો મહોલ્લો. અહીં જૈન દેરાસર, હિન્દુ મંદિર અને ઇસ્લામિક મસ્જિદો સાથે લાકડાની કોતરણીવાળાં જૂનાં ઘર જોવા મળે છે. ૨૦૧૭માં યુનેસ્કોએ અમદાવાદને ભારતનું પહેલું વર્લ્ડ હેરિટેજ સિટી જાહેર કર્યું. આજે પણ લોકો આ જૂનાં ઘરોમાં રહે છે, એટલે તે એક જીવંત ધરોહર છે.",
 };
 
 /* ---- Category: Ancient Foundations ---- */
@@ -10149,6 +10179,19 @@ ERAS.push(
       "Surat's diamonds sit alongside its textiles and its famous street food as part of a bigger story: a Gujarati port city that keeps reinventing what it trades, from cloth and spices in the age of sail to polished gems in the global economy."],
     site:{ name:"Surat, south Gujarat", note:"Cuts and polishes most of the world's diamonds; home to the Surat Diamond Bourse (opened 2023)." },
     sources:["Reporting on Surat's diamond industry and the Surat Diamond Bourse","Gems and Jewellery Export Promotion Council figures","Wikipedia, Surat and the diamond industry of India"] },
+);
+
+ERAS.push(
+
+  { id:"ahmedabad_whc", category:"modern", yr:"1411 - present", title:"Ahmedabad, a heritage city",
+    blurb:"India's first UNESCO World Heritage City: a walled old town of tightly packed neighborhoods, carved wooden houses, and shared courtyards.",
+    body:[
+      "When Sultan Ahmed Shah founded Ahmedabad on the bank of the Sabarmati in 1411, he laid out a walled city that grew, over the centuries, into one of the densest and most distinctive historic urban landscapes in the subcontinent. In 2017 that old walled city became the first place in India to be inscribed by UNESCO as a World Heritage City.",
+      "Its most famous feature is the pol: a cluster of houses reached through a gateway and often built around a shared courtyard, with its own well, bird feeder, and sometimes a secret passage between houses. The pols grew up along caste and community lines and gave the old city a fabric of small, self-contained neighborhoods packed tightly together, a form of urban living quite unlike the wide colonial avenues built later.",
+      "The old city mixes traditions in stone and wood: Indo-Islamic mosques and tombs from the sultanate, richly carved wooden house fronts, Hindu and Jain temples, and later additions, all within the same dense grid. The Sidi Saiyyed mosque's stone lattice, the Jama Masjid, and the many pols are all part of what UNESCO recognized.",
+      "What the listing values is not one monument but the whole living town: a place where people still inhabit centuries-old houses and neighborhoods. That also makes it fragile, as old buildings are lost to neglect or redevelopment, and much of the city's heritage effort now goes into keeping the old walled city alive rather than only preserved."],
+    site:{ name:"The walled city of Ahmedabad", note:"India's first UNESCO World Heritage City (2017), known for its pols and Indo-Islamic architecture." },
+    sources:["UNESCO World Heritage Centre, Historic City of Ahmadabad","Ahmedabad Municipal Corporation heritage documentation","Wikipedia, Ahmedabad and the pols of Ahmedabad"] },
 );
 
 ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });
