@@ -217,10 +217,16 @@ progress; it fully resets only accounts with no local copy.
 
 ## 7. Feature inventory (current)
 
-- **Learn:** units with the vertical lesson journey; 9 exercise types (intro,
+- **Learn:** units with the vertical lesson journey; 12 exercise types (intro,
   hvpt = High-Variability Phonetic Training, letter, match, listen, build, fill,
-  note, speak). Tapping any Gujarati word in an exercise plays its audio.
+  note, speak, plus **translate** = English prompt, pick the Gujarati;
+  **oddone** = pick the word that doesn't belong; **tf** = true/false, does this
+  word mean X). Tapping any Gujarati word in an exercise plays its audio.
   "Snooze speaking/listening for 5 min" buttons on those exercise types.
+  `expandLesson()` auto-generates a varied reinforcement top-up (listen +
+  translate + a true/false + a match) from each lesson's own taught words, so
+  the new types appear across all lessons with no new audio. oddone is
+  hand-authored where a clean category exists (e.g. Colors, Animals).
   Every lesson's `ex` array is post-processed once at load by `expandLesson()`
   (just after the last lesson module, before the `TOPICS` pushes): it appends
   auto-generated listen/match reinforcement built from the lesson's own taught

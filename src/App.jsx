@@ -1270,6 +1270,7 @@ const LESSONS = {
     { t:"match", pairs:[{gu:"લાલ",en:"red"},{gu:"લીલો",en:"green"},{gu:"પીળો",en:"yellow"},{gu:"કાળો",en:"black"}] },
     { t:"listen", say:"વાદળી", roman:"vaadaḷi", options:["blue","green","red"], answer:"blue" },
     { t:"build", en:"The book is red.", answer:["પુસ્તક","લાલ","છે"], extra:["લીલો","ઘર"], roman:"pustak laal chhe" },
+    { t:"oddone", options:[{gu:"લાલ",roman:"laal",en:"red"},{gu:"લીલો",roman:"leelo",en:"green"},{gu:"પીળો",roman:"peeḷo",en:"yellow"},{gu:"ગાય",roman:"gaay",en:"cow"}], answer:"ગાય", why:"ગાય is an animal; the others are colors." },
     { t:"speak", gu:"આ લાલ છે", roman:"aa laal chhe", en:"This is red." },
   ]},
   u2l5: { title: "Animals", ex: [
@@ -1281,6 +1282,7 @@ const LESSONS = {
     { t:"match", pairs:[{gu:"કૂતરો",en:"dog"},{gu:"બિલાડી",en:"cat"},{gu:"ગાય",en:"cow"},{gu:"હાથી",en:"elephant"}] },
     { t:"listen", say:"વાઘ", roman:"vaagh", options:["tiger","cow","cat"], answer:"tiger" },
     { t:"listen", say:"કૂતરો", roman:"kootro", options:["dog","elephant","cow"], answer:"dog" },
+    { t:"oddone", options:[{gu:"કૂતરો",roman:"kootro",en:"dog"},{gu:"ગાય",roman:"gaay",en:"cow"},{gu:"હાથી",roman:"haathi",en:"elephant"},{gu:"ભાત",roman:"bhaat",en:"rice"}], answer:"ભાત", why:"ભાત is food; the others are animals." },
     { t:"speak", gu:"આ બિલાડી છે", roman:"aa bilaaḍi chhe", en:"This is a cat." },
   ]},
   u2l6: { title: "Getting around", ex: [
@@ -3977,6 +3979,53 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
           </>
         )}
 
+        {ex.t === "translate" && (
+          <>
+            <div className="q-title">How do you say this?</div>
+            <div className="q-sub" style={{ fontSize: 20, fontWeight: 700, color: "var(--ink)" }}>{ex.en}</div>
+            <div className="opts">
+              {ex.options.map((o, i) => (
+                <button key={i} className={"opt gu" + (picked === o.gu ? " sel" : "") + (feedback && o.gu === ex.answer ? " good" : "") + (feedback === "bad" && picked === o.gu ? " bad" : "")}
+                  onClick={() => { speak(o.gu); if (!feedback) setPicked(o.gu); }}>
+                  {readWrite ? o.gu : o.roman}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {ex.t === "oddone" && (
+          <>
+            <div className="q-title">Which one doesn't belong?</div>
+            <div className="grid2">
+              {ex.options.map((o, i) => (
+                <button key={i} className={"gopt" + (picked === o.gu ? " sel" : "") + (feedback && o.gu === ex.answer ? " good" : "") + (feedback === "bad" && picked === o.gu ? " bad" : "")}
+                  onClick={() => { speak(o.gu); if (!feedback) setPicked(o.gu); }}>
+                  {readWrite ? <div className="gu">{o.gu}</div> : <div style={{ fontWeight: 800, fontSize: 18 }}>{o.roman}</div>}
+                  <small>{o.en}</small>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {ex.t === "tf" && (
+          <>
+            <div className="q-title">True or false?</div>
+            {readWrite ? <div className="bigword gu">{ex.gu}</div> : <div className="bigword" style={{ fontSize: 30 }}>{ex.roman}</div>}
+            <div className="playrow"><button className="playbtn big" onClick={() => speak(ex.gu)}><Ic.play /></button></div>
+            <div style={{ textAlign: "center", fontWeight: 700, fontSize: 17, marginTop: 2 }}>means: {ex.claim}</div>
+            <div className="grid2" style={{ marginTop: 14 }}>
+              {["true", "false"].map((v) => (
+                <button key={v} className={"gopt" + (picked === v ? " sel" : "") + (feedback && v === ex.answer ? " good" : "") + (feedback === "bad" && picked === v ? " bad" : "")}
+                  onClick={() => !feedback && setPicked(v)}>
+                  {v === "true" ? "True" : "False"}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
         {ex.t === "note" && (
           <div className="note">
             <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 4 }}>
@@ -4038,6 +4087,8 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
                   return <span className="gu">{c.gu} ({c.roman})</span>;
                 }
                 if (ex.t === "fill") return <span><span className="gu">{ex.gu}</span> - {ex.en}</span>;
+                if (ex.t === "translate" || ex.t === "oddone") { const c = ex.options.find((o) => o.gu === ex.answer); return <span><span className="gu">{ex.answer}</span>{c && c.roman ? " (" + c.roman + ")" : ""}{ex.t === "oddone" && c ? " - " + c.en : ""}</span>; }
+                if (ex.t === "tf") return <span>{ex.answer === "true" ? "True" : "False"}</span>;
                 return <span>{ex.answer}</span>;
               })()}
             </div>
@@ -4068,7 +4119,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
         </div>
       )}
 
-      {!feedback && (ex.t === "hvpt" || ex.t === "letter" || ex.t === "listen" || ex.t === "fill") && (
+      {!feedback && (ex.t === "hvpt" || ex.t === "letter" || ex.t === "listen" || ex.t === "fill" || ex.t === "translate" || ex.t === "oddone" || ex.t === "tf") && (
         <div className="foot">
           <button className="btn primary" disabled={!picked} onClick={() => checkSingle(ex.answer)}>Check</button>
         </div>
@@ -4914,8 +4965,9 @@ function expandLesson(l) {
   const ens = pairs.map((p) => p.en);
   // A moderate top-up, not a hard doubling: one fresh listen per not-yet-quizzed
   // word plus one extra match, capped so nothing gets repetitive.
-  const CAP = 6;
+  const CAP = 7;
   const listened = new Set(ex.filter((e) => e.t === "listen").map((e) => e.say));
+  const withRoman = pairs.filter((p) => p.roman);
   const extras = [];
   const mkListen = (p, i) => {
     const others = ens.filter((e) => e !== p.en);
@@ -4923,10 +4975,27 @@ function expandLesson(l) {
     if (opts.length < 2) return null;
     return { t: "listen", say: p.gu, roman: p.roman, options: _rotate(opts, i + 1), answer: p.en };
   };
-  // a listen for each taught word not already quizzed by listening
+  // translate: hear an English word, pick the Gujarati (production practice)
+  const mkTranslate = (p, i) => {
+    const others = withRoman.filter((q) => q.gu !== p.gu);
+    if (others.length < 1) return null;
+    const opts = _uniq([p, others[i % others.length], others[(i + 1) % others.length]].filter(Boolean));
+    if (opts.length < 2) return null;
+    return { t: "translate", en: p.en, options: _rotate(opts.map((q) => ({ gu: q.gu, roman: q.roman })), i + 1), answer: p.gu };
+  };
+  // true/false: half the time pair a word with its own meaning, half with another's
+  const mkTf = (p, i) => {
+    const wrong = pairs.find((q) => q.en !== p.en);
+    const showTrue = i % 2 === 0 || !wrong;
+    return { t: "tf", gu: p.gu, roman: p.roman, claim: showTrue ? p.en : wrong.en, answer: showTrue ? "true" : "false" };
+  };
+  // A moderate, varied top-up (listen + translate + a true/false + a match),
+  // all built from this lesson's own taught words so no new audio is needed.
   let i = 0;
-  for (const p of pairs) { if (extras.length >= CAP) break; if (listened.has(p.gu)) continue; const q = mkListen(p, i++); if (q) extras.push(q); }
-  // one extra matching round for reinforcement
+  for (const p of pairs) { if (extras.length >= 3) break; if (listened.has(p.gu)) continue; const q = mkListen(p, i++); if (q) extras.push(q); }
+  let j = 0;
+  for (const p of withRoman) { if (extras.length >= 5) break; const q = mkTranslate(p, j++); if (q) extras.push(q); }
+  if (extras.length < CAP && withRoman.length) { const q = mkTf(withRoman[j % withRoman.length], pairs.length); if (q) extras.push(q); }
   if (extras.length < CAP && pairs.length >= 4) extras.push({ t: "match", pairs: pairs.slice(0, 4).map((p) => ({ gu: p.gu, en: p.en })) });
   if (!extras.length) return ex;
   const out = ex.slice();
