@@ -103,6 +103,18 @@ export function signOutUser() {
   return signOut(auth);
 }
 
+// A short-lived Firebase ID token for the current user, or null if signed out.
+// Used to authenticate calls to the AI-feedback Pages Function so spend is tied
+// to a real account. Returns null (never throws) so callers fall back cleanly.
+export async function getIdToken() {
+  try {
+    if (!auth.currentUser) return null;
+    return await auth.currentUser.getIdToken();
+  } catch (e) {
+    return null;
+  }
+}
+
 /* Pull the signed-in user's saved progress into localStorage. Call this and
    await it before mounting the app so useLocalState initializers read cloud
    values. On a brand-new account we seed the doc from whatever is local. */

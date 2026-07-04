@@ -109,6 +109,15 @@ max-width:none with `5vw` side padding, not a centered column); list screens
 
 Until rules/index are applied, social features fail quietly (app still works).
 
+5. **(Optional) AI writing feedback.** Phase 1 is built (`functions/api/*`, plus
+   the `AIFeedback` component on `type` exercises). It is dormant and shows a
+   non-AI fallback until, in the Cloudflare dashboard: confirm the **Workers Free**
+   plan (no billing), add the **`AI`** Workers AI binding, and create a KV
+   namespace bound as **`GRADER`**. Then redeploy. Full design, budget caps,
+   fallback ladder, and setup steps are in **GRADER.md**. It never bills (free
+   plan overage errors instead of charging) and never gates progress (advisory
+   only; the deterministic exams stay the source of truth).
+
 **Sync safety (do not regress):** `loadProgressToLocal` only replaces local when
 the cloud doc has real `dhatu_` progress keys; an **empty or missing cloud doc
 never clears local** (it re-seeds cloud from local instead). `scheduleSave`
@@ -221,13 +230,27 @@ progress; it fully resets only accounts with no local copy.
 
 ## 7. Feature inventory (current)
 
-- **Learn:** units with the vertical lesson journey; 13 exercise types (intro,
+- **Learn:** units with the vertical lesson journey; 15 exercise types (intro,
   hvpt = High-Variability Phonetic Training, letter, match, listen, build, fill,
   note, speak, translate = English prompt, pick the Gujarati; oddone = pick the
-  word that doesn't belong; tf = true/false; plus **order** = arrange scrambled
-  sentences/lines into a coherent sequence, for discourse and reply-building).
-  Higher units (16-19) lean on build/order/note over vocab drills, emphasizing
-  tense, tone, and carrying a conversation. Tapping any Gujarati word in an exercise plays its audio.
+  word that doesn't belong; tf = true/false; order = arrange scrambled
+  sentences/lines into a coherent sequence, for discourse and reply-building;
+  plus two **open-ish production** types added to close the free-form gap:
+  **type** = read an English prompt and *type* the Gujarati translation yourself,
+  and **cloze** = a C-test where you type the missing words in a sentence. Both
+  are auto-graded with **no AI and no cloud cost** by `matchGu()` (module-level,
+  just above `ExamRunner`): NFC-normalize, strip trailing punctuation/whitespace,
+  match against an accept-set, and forgive a single-character slip on longer
+  answers (Levenshtein <= 1, length >= 6). Learners without an OS Gujarati
+  keyboard can use the on-screen **`GuKeyboard`** component (tap-to-type vowels,
+  consonants, matras, halant, space, backspace; matra keys show a dotted circle).
+  type/cloze need no audio (they are read/write), so they add zero clips. Both
+  work in lessons *and* exams. `type`/`cloze` are threaded through the advanced
+  units (u17 if/then + can/must, u18 reported speech + relative clause, and the
+  u20 capstone lessons/checkpoint), introduced by a one-time "Now write it
+  yourself" note in u17l1.
+  Higher units (16-20) lean on build/order/type/cloze/note over vocab drills,
+  emphasizing tense, tone, and carrying a conversation. Tapping any Gujarati word in an exercise plays its audio.
   "Snooze speaking/listening for 5 min" buttons on those exercise types.
   `expandLesson()` auto-generates a varied reinforcement top-up (listen +
   translate + a true/false + a match) from each lesson's own taught words, so
@@ -235,15 +258,23 @@ progress; it fully resets only accounts with no local copy.
   hand-authored where a clean category exists (e.g. Colors, Animals).
   **Timed proficiency exams** (`EXAMS`, framed on the ILR scale per the
   proficiency-exam research report) sit as milestones in the journey: Limited
-  Working (after Unit 5, 30 questions), Professional Working (after 10, 30), Full
-  Professional (after 15, 30), and the **Primary Fluency final exam** at the very
-  end (after the last unit, **50 questions, near-native**). Countdown-timed sets
+  Working (after Unit 5, 36 questions), Professional Working (after 10, 37), Full
+  Professional (after 15, 39), and the **Primary Fluency final exam** at the very
+  end (after the last unit, **62 questions, near-native**). Countdown-timed sets
   of auto-graded questions: listen/translate/tf/oddone plus **read** (a Gujarati
-  passage + comprehension MCQ, used at the higher levels). Difficulty escalates
-  by tier; the final pulls in complex sentences, reported speech, conditionals,
-  comparisons, register (તું vs તમે), idiom/slang, and reading inference. The
+  passage + comprehension MCQ), plus four types added to test *production*
+  rather than only recognition: **build** (assemble a sentence from word tiles), **order**
+  (reassemble a scrambled dialogue; order items reuse the app's own 25
+  conversations, whose lines all have clips), **type** (type the Gujarati
+  yourself), and **cloze** (C-test). Every build tile and order line is verified
+  against the audio manifest at generation time so exams add zero clips; type/cloze
+  need none. Difficulty escalates by tier; the final pulls in complex sentences,
+  reported speech, conditionals, comparisons, register (તું vs તમે), idiom/slang,
+  reading inference, and free-form typed production (e.g. "If it rains, we will
+  stay home"). Timers: 13 / 15 / 19 / 35 min. The
   EXAMS array is generated by `scripts/... exams.mjs` (scratchpad) from vetted
-  word pools + hand-written hard items, then spliced into `src/App.jsx`. Each is
+  word pools + hand-written hard items + production items (build/order/type/cloze,
+  with a clip-verification pass), then spliced into `src/App.jsx`. Each is
   a **test-out**: always available (not locked); passing marks every lesson it
   covers (all units up to its `afterUnit`) as completed. Shows a score and
   pass/fail (70-80% pass), awards 30 Kaudi on first pass, stores results in
@@ -466,10 +497,13 @@ dhatu/
 ├── HANDOFF.md            <- this document
 ├── AUDIO.md              <- how to generate audio (owner guide)
 ├── AUTH.md               <- Firebase + staff-portal setup, full Firestore rules
+├── GRADER.md             <- optional AI writing-feedback design + owner setup
 ├── README.md
 ├── index.html            <- title, bandhani favicon, meta
 ├── package.json          <- react 18, vite 8, firebase; "audio" script
 ├── vite.config.js
+├── functions/
+│   └── api/              <- Cloudflare Pages Functions (AI grader + health)
 ├── scripts/
 │   └── generate-audio.mjs  <- cloud-TTS generator (npm run audio)
 ├── public/

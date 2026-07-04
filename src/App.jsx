@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { onAuthChange, signInWithGoogle, signOutUser, loadProgressToLocal, clearLocalProgress, scheduleSave, hasUsername, getUsername, setUsername, usernameAvailable, validUsername, followByUsername, unfollowUser, getFollowing, pokeUser, getPokes, dismissPoke } from "./firebase";
+import { onAuthChange, signInWithGoogle, signOutUser, loadProgressToLocal, clearLocalProgress, scheduleSave, hasUsername, getUsername, setUsername, usernameAvailable, validUsername, followByUsername, unfollowUser, getFollowing, pokeUser, getPokes, dismissPoke, getIdToken } from "./firebase";
 
 /* ============================================================
    Dhatu (ધાતુ) - a research-based Gujarati course for English
@@ -751,6 +751,45 @@ const CSS = `
 .orderline.inans{background:var(--brand-soft)}
 .orderline.used{opacity:.32;pointer-events:none}
 .orderline .onum{width:22px;height:22px;flex:none;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800}
+
+/* typed production (type / cloze) + on-screen Gujarati keyboard */
+.typehint{font-size:13px;font-weight:600;color:var(--muted);margin:2px 0 8px}
+.typein{width:100%;box-sizing:border-box;background:var(--card);border:2px solid var(--line-strong);border-radius:14px;
+  padding:13px 15px;font-family:var(--fgu);font-size:24px;font-weight:700;color:var(--ink);margin-top:8px;box-shadow:var(--bevel-inset)}
+.typein:focus{outline:none;border-color:var(--brand)}
+.typein:disabled{opacity:.7}
+.clozebox{background:var(--card);border-radius:14px;padding:14px 16px;margin:6px 0 4px;box-shadow:var(--bevel-inset);
+  font-family:var(--fgu);font-size:22px;line-height:2.1;font-weight:700}
+.clozein{width:4.5em;background:transparent;border:none;border-bottom:2px solid var(--brand);border-radius:0;
+  padding:0 4px 2px;font-family:var(--fgu);font-size:22px;font-weight:800;color:var(--brand);text-align:center;margin:0 2px}
+.clozein:focus{outline:none;background:var(--brand-soft)}
+.gk{display:flex;flex-direction:column;gap:6px;margin-top:14px;background:var(--bg-2,rgba(0,0,0,.03));border-radius:14px;padding:8px}
+.gkrow{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.gkey{min-width:34px;height:38px;padding:0 6px;border:none;border-radius:9px;background:var(--card);box-shadow:var(--bevel-raise);
+  font-size:18px;font-weight:700;color:var(--ink);cursor:pointer;display:grid;place-items:center}
+.gkey.matra{color:var(--brand-dark,var(--brand))}
+.gkey.wide{min-width:64px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.gkey:active{transform:translateY(1px);box-shadow:var(--bevel-inset)}
+
+/* AI writing feedback (optional, advisory) */
+.airow{margin-top:12px;display:flex;justify-content:center}
+.aipanel{margin-top:12px;background:var(--card);border-radius:14px;padding:13px 15px;box-shadow:var(--bevel-inset)}
+.aihead{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;margin-bottom:8px}
+.aihint{font-size:14px;font-weight:600;color:var(--muted)}
+.aiscores{display:flex;flex-direction:column;gap:7px}
+.aiscore{display:grid;grid-template-columns:76px auto;align-items:center;column-gap:8px;row-gap:2px}
+.aiscore .ail{font-weight:700;font-size:13px}
+.aiscore .aidots{display:flex;gap:3px}
+.aiscore .aidots i{width:9px;height:9px;border-radius:50%;background:var(--line-strong)}
+.aiscore .aidots i.on{background:var(--brand)}
+.aiscore .aic{grid-column:2;font-size:12.5px;color:var(--muted);line-height:1.4}
+.aisug{margin-top:9px;font-size:13.5px;line-height:1.5}
+.aiover{margin-top:6px;font-size:13px;font-style:italic;color:var(--muted)}
+.aimodel{font-size:15px;margin-bottom:8px}
+.aimodel .gu{font-family:var(--fgu);font-weight:700}
+.aimodel .aimr{color:var(--muted);font-size:13px}
+.aichecklist{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.aichecklist li{font-size:13.5px;line-height:1.45}
 
 /* note / intro cards */
 .note{background:var(--card);border:none;border-radius:20px;padding:18px;box-shadow:var(--bevel-inset)}
@@ -1598,7 +1637,7 @@ const EXAMS = [
     "afterUnit": "u5",
     "ilr": "ILR 1",
     "title": "Limited Working Proficiency",
-    "timeSec": 600,
+    "timeSec": 780,
     "passPct": 70,
     "questions": [
       {
@@ -2049,6 +2088,85 @@ const EXAMS = [
           }
         ],
         "answer": "કૂતરો"
+      },
+      {
+        "t": "build",
+        "en": "This is a mango.",
+        "answer": [
+          "આ",
+          "કેરી",
+          "છે"
+        ],
+        "extra": [
+          "ઘર",
+          "દૂધ"
+        ]
+      },
+      {
+        "t": "build",
+        "en": "The dog is big.",
+        "answer": [
+          "કૂતરો",
+          "મોટું",
+          "છે"
+        ],
+        "extra": [
+          "નાનું",
+          "ગાય"
+        ]
+      },
+      {
+        "t": "order",
+        "en": "Two people greet each other and introduce themselves.",
+        "lines": [
+          {
+            "gu": "નમસ્તે! કેમ છો?",
+            "roman": "namaste! kem chho?"
+          },
+          {
+            "gu": "હું મજામાં છું, આભાર. તમે?",
+            "roman": "huṁ majaamaan chuṁ, aabhaar. tame?"
+          },
+          {
+            "gu": "હું પણ મજામાં છું.",
+            "roman": "huṁ paṇ majaamaan chuṁ."
+          },
+          {
+            "gu": "તમારું નામ શું છે?",
+            "roman": "tamaaruṁ naam shuṁ chhe?"
+          },
+          {
+            "gu": "મારું નામ મીરા છે.",
+            "roman": "maaruṁ naam Meeraa chhe."
+          }
+        ]
+      },
+      {
+        "t": "type",
+        "en": "water",
+        "answer": "પાણી",
+        "accept": []
+      },
+      {
+        "t": "type",
+        "en": "thank you",
+        "answer": "આભાર",
+        "accept": []
+      },
+      {
+        "t": "cloze",
+        "en": "Complete: \"I am well.\"",
+        "parts": [
+          {
+            "t": "text",
+            "v": "હું મજામાં "
+          },
+          {
+            "t": "blank",
+            "a": "છું",
+            "accept": []
+          }
+        ]
       }
     ]
   },
@@ -2057,7 +2175,7 @@ const EXAMS = [
     "afterUnit": "u10",
     "ilr": "ILR 2",
     "title": "Professional Working Proficiency",
-    "timeSec": 720,
+    "timeSec": 900,
     "passPct": 70,
     "questions": [
       {
@@ -2501,6 +2619,109 @@ const EXAMS = [
           }
         ],
         "answer": "સવાર"
+      },
+      {
+        "t": "build",
+        "en": "I will go to the market.",
+        "answer": [
+          "હું",
+          "બજાર",
+          "જઈશ"
+        ],
+        "extra": [
+          "ઘરે",
+          "છું"
+        ]
+      },
+      {
+        "t": "build",
+        "en": "I am a teacher.",
+        "answer": [
+          "હું",
+          "શિક્ષક",
+          "છું"
+        ],
+        "extra": [
+          "વિદ્યાર્થી",
+          "છે"
+        ]
+      },
+      {
+        "t": "build",
+        "en": "Today it is very hot.",
+        "answer": [
+          "આજે",
+          "બહુ",
+          "ગરમ",
+          "છે"
+        ],
+        "extra": [
+          "ઠંડું",
+          "સારું"
+        ]
+      },
+      {
+        "t": "order",
+        "en": "Two friends make plans to go out tomorrow.",
+        "lines": [
+          {
+            "gu": "આવતીકાલે તમે શું કરશો?",
+            "roman": "aavtikaale tame shuṁ karsho?"
+          },
+          {
+            "gu": "હું બજાર જઈશ.",
+            "roman": "huṁ bajaar jaish."
+          },
+          {
+            "gu": "હું પણ આવું?",
+            "roman": "huṁ paṇ aavuṁ?"
+          },
+          {
+            "gu": "હા, સાથે જઈએ.",
+            "roman": "haa, saathe jaie."
+          },
+          {
+            "gu": "કેટલા વાગ્યે?",
+            "roman": "keṭlaa vaagye?"
+          },
+          {
+            "gu": "સવારે દસ વાગ્યે.",
+            "roman": "savaare das vaagye."
+          }
+        ]
+      },
+      {
+        "t": "type",
+        "en": "I will go to the market.",
+        "answer": "હું બજાર જઈશ",
+        "accept": [
+          "હું બજારે જઈશ"
+        ]
+      },
+      {
+        "t": "type",
+        "en": "Today it is hot.",
+        "answer": "આજે ગરમ છે",
+        "accept": []
+      },
+      {
+        "t": "cloze",
+        "en": "Complete: \"What work do you do?\"",
+        "parts": [
+          {
+            "t": "text",
+            "v": "તમે શું "
+          },
+          {
+            "t": "blank",
+            "a": "કામ",
+            "accept": []
+          },
+          {
+            "t": "text",
+            "v": " કરો છો?"
+          }
+        ]
       }
     ]
   },
@@ -2509,7 +2730,7 @@ const EXAMS = [
     "afterUnit": "u15",
     "ilr": "ILR 3",
     "title": "Full Professional Proficiency",
-    "timeSec": 840,
+    "timeSec": 1140,
     "passPct": 75,
     "questions": [
       {
@@ -2934,6 +3155,158 @@ const EXAMS = [
           "Back"
         ],
         "answer": "Right"
+      },
+      {
+        "t": "build",
+        "en": "I can speak Gujarati.",
+        "answer": [
+          "હું",
+          "ગુજરાતી",
+          "બોલી",
+          "શકું",
+          "છું"
+        ],
+        "extra": [
+          "સારું",
+          "તમે"
+        ]
+      },
+      {
+        "t": "build",
+        "en": "I will come home tomorrow.",
+        "answer": [
+          "હું",
+          "કાલે",
+          "ઘરે",
+          "આવીશ"
+        ],
+        "extra": [
+          "તું",
+          "બજાર"
+        ]
+      },
+      {
+        "t": "build",
+        "en": "This is true.",
+        "answer": [
+          "આ",
+          "સાચું",
+          "છે"
+        ],
+        "extra": [
+          "કે",
+          "હા"
+        ]
+      },
+      {
+        "t": "order",
+        "en": "A job interview: put the exchange in order.",
+        "lines": [
+          {
+            "gu": "તમને આ કામનો અનુભવ છે?",
+            "roman": "tamne aa kaamno anubhav chhe?"
+          },
+          {
+            "gu": "હા, મને બે વર્ષનો અનુભવ છે.",
+            "roman": "haa, mane be varshno anubhav chhe."
+          },
+          {
+            "gu": "તમે ગુજરાતી બોલી શકો છો?",
+            "roman": "tame gujaraati boli shako chho?"
+          },
+          {
+            "gu": "હા, હું સારી રીતે બોલી શકું છું.",
+            "roman": "haa, huṁ saari reete boli shakuṁ chuṁ."
+          },
+          {
+            "gu": "ક્યારે શરૂ કરી શકશો?",
+            "roman": "kyaare shuroo kari shaksho?"
+          },
+          {
+            "gu": "આવતા અઠવાડિયે.",
+            "roman": "aavtaa aṭhvaaḍiye."
+          }
+        ]
+      },
+      {
+        "t": "order",
+        "en": "Someone asks for help after losing their phone.",
+        "lines": [
+          {
+            "gu": "મદદ કરો!",
+            "roman": "madad karo!"
+          },
+          {
+            "gu": "શું થયું?",
+            "roman": "shuṁ thayuṁ?"
+          },
+          {
+            "gu": "મારો ફોન ખોવાઈ ગયો.",
+            "roman": "maaro phon khovaai gayo."
+          },
+          {
+            "gu": "ચિંતા ન કરો, હું મદદ કરીશ.",
+            "roman": "chintaa na karo, huṁ madad karish."
+          },
+          {
+            "gu": "પોલીસ સ્ટેશન ક્યાં છે?",
+            "roman": "polees sṭeshan kyaan chhe?"
+          },
+          {
+            "gu": "અહીંથી પાસે છે.",
+            "roman": "ahiṁthi paase chhe."
+          }
+        ]
+      },
+      {
+        "t": "type",
+        "en": "I have to go home.",
+        "answer": "મારે ઘરે જવું પડશે",
+        "accept": []
+      },
+      {
+        "t": "type",
+        "en": "I can speak Gujarati.",
+        "answer": "હું ગુજરાતી બોલી શકું છું",
+        "accept": []
+      },
+      {
+        "t": "cloze",
+        "en": "Complete: \"If there is time, I will come.\"",
+        "parts": [
+          {
+            "t": "text",
+            "v": "જો સમય "
+          },
+          {
+            "t": "blank",
+            "a": "હશે",
+            "accept": []
+          },
+          {
+            "t": "text",
+            "v": " તો હું આવીશ"
+          }
+        ]
+      },
+      {
+        "t": "cloze",
+        "en": "Complete: \"He said that he will come.\"",
+        "parts": [
+          {
+            "t": "text",
+            "v": "તેણે "
+          },
+          {
+            "t": "blank",
+            "a": "કહ્યું",
+            "accept": []
+          },
+          {
+            "t": "text",
+            "v": " કે તે આવશે"
+          }
+        ]
       }
     ]
   },
@@ -2942,7 +3315,7 @@ const EXAMS = [
     "afterUnit": "u20",
     "ilr": "ILR 4",
     "title": "Primary Fluency",
-    "timeSec": 1500,
+    "timeSec": 2100,
     "passPct": 80,
     "final": true,
     "questions": [
@@ -3654,6 +4027,210 @@ const EXAMS = [
           "I already went"
         ],
         "answer": "I have to go"
+      },
+      {
+        "t": "build",
+        "en": "If there is time, I will come.",
+        "answer": [
+          "જો",
+          "સમય",
+          "હશે",
+          "તો",
+          "હું",
+          "આવીશ"
+        ],
+        "extra": [
+          "કાલે",
+          "ઘરે"
+        ]
+      },
+      {
+        "t": "build",
+        "en": "He said that it is true.",
+        "answer": [
+          "તેણે",
+          "કહ્યું",
+          "કે",
+          "આ",
+          "સાચું",
+          "છે"
+        ],
+        "extra": [
+          "તમે",
+          "બહુ"
+        ]
+      },
+      {
+        "t": "build",
+        "en": "He said that he will come.",
+        "answer": [
+          "તેણે",
+          "કહ્યું",
+          "કે",
+          "તે",
+          "આવશે"
+        ],
+        "extra": [
+          "હું",
+          "કાલે"
+        ]
+      },
+      {
+        "t": "build",
+        "en": "He will come tomorrow.",
+        "answer": [
+          "તે",
+          "કાલે",
+          "આવશે"
+        ],
+        "extra": [
+          "હું",
+          "આવીશ"
+        ]
+      },
+      {
+        "t": "order",
+        "en": "Friends make weekend plans, weather permitting.",
+        "lines": [
+          {
+            "gu": "આ શનિવારે શું કરીશ?",
+            "roman": "aa shanivaare shuṁ karish?"
+          },
+          {
+            "gu": "કદાચ ફરવા જઈશ. તું?",
+            "roman": "kadaach pharvaa jaish. tuṁ?"
+          },
+          {
+            "gu": "જો હવામાન સારું હોય તો દરિયે જઈએ.",
+            "roman": "jo havaamaan saaruṁ hoy to dariye jaie."
+          },
+          {
+            "gu": "જોરદાર! હું આવીશ.",
+            "roman": "jordaar! huṁ aaveesh."
+          },
+          {
+            "gu": "સવારે મળીએ?",
+            "roman": "savaare maḷie?"
+          },
+          {
+            "gu": "હા, આશા છે કે વરસાદ નહીં પડે.",
+            "roman": "haa, aashaa chhe ke varsaad nahi paḍe."
+          }
+        ]
+      },
+      {
+        "t": "order",
+        "en": "A chat about how someone's day went (past tense).",
+        "lines": [
+          {
+            "gu": "આજે તારો દિવસ કેવો રહ્યો?",
+            "roman": "aaje taaro divas kevo rahyo?"
+          },
+          {
+            "gu": "સારો રહ્યો. હું કામ પર ગયો.",
+            "roman": "saaro rahyo. huṁ kaam par gayo."
+          },
+          {
+            "gu": "પછી શું કર્યું?",
+            "roman": "pachhi shuṁ karyuṁ?"
+          },
+          {
+            "gu": "મિત્રો સાથે જમ્યો.",
+            "roman": "mitro saathe jamyo."
+          },
+          {
+            "gu": "સરસ! આરામ કર.",
+            "roman": "saras! aaraam kar."
+          }
+        ]
+      },
+      {
+        "t": "order",
+        "en": "Two friends catch up casually, using slang.",
+        "lines": [
+          {
+            "gu": "અરે ભાઈ, શું ચાલે?",
+            "roman": "are bhaai, shu chaale?"
+          },
+          {
+            "gu": "બસ, મજામાં. તું બોલ.",
+            "roman": "bas, majaamaan. tu bol."
+          },
+          {
+            "gu": "કાલે ફિલ્મ જોવા જઈએ?",
+            "roman": "kaale film jovaa jaie?"
+          },
+          {
+            "gu": "જોરદાર! કઈ ફિલ્મ?",
+            "roman": "jordaar! kai film?"
+          },
+          {
+            "gu": "એક નવી ગુજરાતી ફિલ્મ.",
+            "roman": "ek navi gujaraati film."
+          },
+          {
+            "gu": "મસ્ત, પ્લાન પાક્કો!",
+            "roman": "mast, plaan paakko!"
+          }
+        ]
+      },
+      {
+        "t": "type",
+        "en": "I think that it is true.",
+        "answer": "મને લાગે છે કે તે સાચું છે",
+        "accept": []
+      },
+      {
+        "t": "type",
+        "en": "He said that he will come tomorrow.",
+        "answer": "તેણે કહ્યું કે તે કાલે આવશે",
+        "accept": []
+      },
+      {
+        "t": "type",
+        "en": "If it rains, we will stay home.",
+        "answer": "જો વરસાદ પડશે તો અમે ઘરે રહીશું",
+        "accept": [
+          "જો વરસાદ પડે તો અમે ઘરે રહીશું"
+        ]
+      },
+      {
+        "t": "cloze",
+        "en": "Complete: \"It rained yesterday, so we stayed home.\"",
+        "parts": [
+          {
+            "t": "text",
+            "v": "ગઈકાલે વરસાદ પડ્યો, "
+          },
+          {
+            "t": "blank",
+            "a": "તેથી",
+            "accept": []
+          },
+          {
+            "t": "text",
+            "v": " અમે ઘરે રહ્યા"
+          }
+        ]
+      },
+      {
+        "t": "cloze",
+        "en": "Complete: \"Hearing that, I was surprised.\"",
+        "parts": [
+          {
+            "t": "text",
+            "v": "એની વાત "
+          },
+          {
+            "t": "blank",
+            "a": "સાંભળીને",
+            "accept": []
+          },
+          {
+            "t": "text",
+            "v": " મને નવાઈ લાગી"
+          }
+        ]
       }
     ]
   }
@@ -5969,20 +6546,207 @@ function CourseApp({ user }) {
   return null;
 }
 
+/* ============================ AI WRITING FEEDBACK (optional, free) ============================ */
+/* Advisory coaching on typed answers via a Cloudflare Pages Function backed by
+   Workers AI (see functions/api/grade-writing.js and GRADER.md). It NEVER gates
+   progress or changes a score: the deterministic checks stay the source of truth.
+   Every path here degrades to a non-AI fallback (model answer + self-check
+   list), so it works fully even before the AI bindings exist or once the free
+   daily budget is spent. */
+const AI_USER_DAILY = 15; // client-side per-day cap so we don't even call past it
+const AI_SELF_CHECK = [
+  "Is the verb at the end of each clause?",
+  "Right level of politeness (તું for close/informal, તમે for polite or plural)?",
+  "Spelling and matras correct?",
+  "Did you include everything the prompt asked for?",
+];
+async function aiGradeWriting({ text, en, promptId, level }) {
+  const t = (text || "").trim();
+  if (!t) return { fallback: true, reason: "empty" };
+  const today = new Date().toISOString().slice(0, 10);
+  let used = {};
+  try { used = JSON.parse(localStorage.getItem("dhatu_aiUsed") || "{}"); } catch (e) { used = {}; }
+  if (used.date !== today) used = { date: today, n: 0 };
+  if ((used.n || 0) >= AI_USER_DAILY) return { fallback: true, reason: "user-cap" };
+  let token = null;
+  try { token = await getIdToken(); } catch (e) { token = null; }
+  if (!token) return { fallback: true, reason: "signin" };
+  let res;
+  try {
+    res = await fetch("/api/grade-writing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ text: t, en: en || "", promptId: promptId || "", level: level || "ILR 1" }),
+    });
+  } catch (e) { return { fallback: true, reason: "network" }; }
+  let data = null;
+  try { data = await res.json(); } catch (e) { data = null; }
+  if (!res.ok || !data || data.fallback) return { fallback: true, reason: (data && data.reason) || "unavailable" };
+  used.n = (used.n || 0) + 1;
+  try { localStorage.setItem("dhatu_aiUsed", JSON.stringify(used)); } catch (e) {}
+  return { feedback: data };
+}
+const AI_DIM_LABELS = { task: "Task", accuracy: "Accuracy", discourse: "Flow", register: "Register", orthography: "Spelling" };
+// rough ILR target from a lesson id like "u17l1", used only to steer the rubric
+function _ilrForLesson(id) {
+  const m = /^u(\d+)/.exec(String(id || ""));
+  const u = m ? parseInt(m[1], 10) : 1;
+  return u <= 5 ? "ILR 1" : u <= 10 ? "ILR 2" : u <= 15 ? "ILR 3" : "ILR 4";
+}
+function AIFeedback({ text, en, promptId, level, modelAnswer, modelRoman }) {
+  const [status, setStatus] = useState("idle"); // idle | loading | ai | fallback
+  const [data, setData] = useState(null);
+  const run = async () => {
+    setStatus("loading");
+    const r = await aiGradeWriting({ text, en, promptId, level });
+    if (r.feedback) { setData(r.feedback); setStatus("ai"); }
+    else { setData({ reason: r.reason }); setStatus("fallback"); }
+  };
+  if (status === "idle") {
+    return (
+      <div className="airow">
+        <button className="btn ghost sm" disabled={!(text || "").trim()} onClick={run}>Get feedback</button>
+      </div>
+    );
+  }
+  if (status === "loading") {
+    return <div className="aipanel"><div className="aihint">One moment...</div></div>;
+  }
+  if (status === "ai") {
+    return (
+      <div className="aipanel">
+        <div className="aihead">Feedback</div>
+        <div className="aiscores">
+          {Object.keys(AI_DIM_LABELS).map((d) => (
+            <div key={d} className="aiscore">
+              <span className="ail">{AI_DIM_LABELS[d]}</span>
+              <span className="aidots">{[1,2,3,4,5].map((n) => <i key={n} className={n <= (data.scores?.[d] || 0) ? "on" : ""} />)}</span>
+              {data.comments?.[d] && <span className="aic">{data.comments[d]}</span>}
+            </div>
+          ))}
+        </div>
+        {data.suggestion && <div className="aisug"><b>Try:</b> {data.suggestion}</div>}
+        {data.overall && <div className="aiover">{data.overall}</div>}
+      </div>
+    );
+  }
+  // fallback: no detailed feedback available (not signed in, capped, offline, or
+  // not set up yet). Same neutral framing, so the transition is invisible.
+  return (
+    <div className="aipanel">
+      <div className="aihead">Feedback</div>
+      {modelAnswer && (
+        <div className="aimodel">
+          A natural answer: <span className="gu">{modelAnswer}</span>{modelRoman ? <span className="aimr"> ({modelRoman})</span> : null}
+        </div>
+      )}
+      <ul className="aichecklist">
+        {AI_SELF_CHECK.map((c, i) => <li key={i}>{c}</li>)}
+      </ul>
+    </div>
+  );
+}
+
+/* ============================ TYPED-PRODUCTION GRADING ============================ */
+/* Deterministic, free grading for open-ish written production: the learner types
+   Gujarati and we accept it if it matches any acceptable answer after light
+   normalization, forgiving one stray matra in longer answers. This is what makes
+   the `type` (translate by typing) and `cloze` (C-test) exercises auto-gradable
+   with no AI and no cloud cost. */
+function _normGu(s) {
+  return (s || "")
+    .normalize("NFC")
+    .replace(/[‌‍]/g, "")   // zero-width joiners
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/[।॥?!.,;:।॥]+$/g, "")
+    .trim();
+}
+function _lev(a, b) {
+  const m = a.length, n = b.length;
+  if (!m) return n; if (!n) return m;
+  let prev = Array.from({ length: n + 1 }, (_, i) => i);
+  for (let i = 1; i <= m; i++) {
+    const cur = [i];
+    for (let j = 1; j <= n; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    }
+    prev = cur;
+  }
+  return prev[n];
+}
+// input matches if it equals any accepted answer after normalizing; a single
+// diacritic/character slip is forgiven only for longer answers (>=6 chars).
+function matchGu(input, answers) {
+  const n = _normGu(input);
+  if (!n) return false;
+  for (const a of answers) {
+    if (a == null) continue;
+    const t = _normGu(a);
+    if (n === t) return true;
+    if (t.length >= 6 && _lev(n, t) <= 1) return true;
+  }
+  return false;
+}
+
+/* ============================ ON-SCREEN GUJARATI KEYBOARD ============================ */
+/* A tap-to-type Gujarati keyboard so learners can produce script even without an
+   OS Gujarati keyboard. It only emits keystrokes (onInsert / onBackspace); the
+   parent decides which field receives them. Matra keys show a dotted circle so
+   the combining marks are visible on their own. */
+const GK_VOWELS = ["અ", "આ", "ઇ", "ઈ", "ઉ", "ઊ", "ઋ", "એ", "ઐ", "ઓ", "ઔ"];
+const GK_CONS = ["ક", "ખ", "ગ", "ઘ", "ચ", "છ", "જ", "ઝ", "ટ", "ઠ", "ડ", "ઢ", "ણ", "ત", "થ", "દ", "ધ", "ન", "પ", "ફ", "બ", "ભ", "મ", "ય", "ર", "લ", "વ", "શ", "ષ", "સ", "હ", "ળ", "ક્ષ", "જ્ઞ"];
+const GK_MATRAS = ["ા", "િ", "ી", "ુ", "ૂ", "ૃ", "ે", "ૈ", "ો", "ૌ", "ં", "ઃ", "્"];
+function GuKeyboard({ onInsert, onBackspace }) {
+  return (
+    <div className="gk">
+      <div className="gkrow">
+        {GK_VOWELS.map((c) => <button key={c} type="button" className="gkey gu" onClick={() => onInsert(c)}>{c}</button>)}
+      </div>
+      <div className="gkrow">
+        {GK_CONS.map((c) => <button key={c} type="button" className="gkey gu" onClick={() => onInsert(c)}>{c}</button>)}
+      </div>
+      <div className="gkrow">
+        {GK_MATRAS.map((c) => <button key={c} type="button" className="gkey matra gu" onClick={() => onInsert(c)}>{"◌" + c}</button>)}
+        <button type="button" className="gkey wide" onClick={() => onInsert(" ")}>space</button>
+        <button type="button" className="gkey wide" onClick={onBackspace}><Ic.x width={15} height={15} /></button>
+      </div>
+    </div>
+  );
+}
+
 /* ============================ EXAM RUNNER ============================ */
-/* A timed, auto-graded proficiency exam. Steps through single-answer questions
-   (listen, translate, tf, oddone) with a countdown; no per-question feedback,
-   a score and pass/fail at the end. */
+/* A timed, auto-graded proficiency exam. Steps through auto-gradable questions
+   (listen, translate, tf, oddone, read, build, order, type, cloze) with a
+   countdown; no per-question feedback, a score and pass/fail at the end. */
 function ExamRunner({ exam, onFinish, onExit }) {
   const qs = exam.questions;
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState(null);
+  const [buildAns, setBuildAns] = useState([]);
+  const [orderAns, setOrderAns] = useState([]);
+  const [typed, setTyped] = useState("");
+  const [clozeAns, setClozeAns] = useState([]);
+  const [clozeFocus, setClozeFocus] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [left, setLeft] = useState(exam.timeSec);
   const [result, setResult] = useState(null);
   const finishedRef = useRef(false);
   const voice = React.useMemo(() => _voiceForId(exam.id), [exam.id]);
   const say = (t) => speakGu(t, voice);
+
+  // Production questions (build / order) need a shuffled bank recomputed per
+  // question, since ExamRunner (unlike LessonRunner) does not remount per item.
+  const q0 = qs[idx];
+  const buildBank = React.useMemo(
+    () => (q0 && q0.t === "build" ? shuffle([...q0.answer, ...(q0.extra || [])]) : []),
+    [idx]
+  );
+  const orderBank = React.useMemo(
+    () => (q0 && q0.t === "order" ? shuffle(q0.lines.map((l, i) => ({ ...l, i }))) : []),
+    [idx]
+  );
+  const usedIdx = new Set(buildAns.map((a) => a.i));
 
   const finish = (score) => {
     if (finishedRef.current) return;
@@ -6005,14 +6769,55 @@ function ExamRunner({ exam, onFinish, onExit }) {
   // auto-play the listening questions
   useEffect(() => { const q = qs[idx]; if (!result && q && q.t === "listen") say(q.say); }, [idx, result]);
 
+  const clozeBlanks = q0 && q0.t === "cloze" ? q0.parts.filter((p) => p.t === "blank") : [];
+
   const submit = () => {
     const q = qs[idx];
-    const ok = picked != null && picked === q.answer;
+    let ok;
+    if (q.t === "build") {
+      const guess = buildAns.map((a) => a.tok);
+      ok = guess.length === q.answer.length && guess.every((g, i) => g === q.answer[i]);
+    } else if (q.t === "order") {
+      ok = orderAns.length === q.lines.length && orderAns.every((a, i) => a.i === i);
+    } else if (q.t === "type") {
+      ok = matchGu(typed, [q.answer, ...(q.accept || [])]);
+    } else if (q.t === "cloze") {
+      const blanks = q.parts.filter((p) => p.t === "blank");
+      ok = blanks.every((b, i) => matchGu(clozeAns[i] || "", [b.a, ...(b.accept || [])]));
+    } else {
+      ok = picked != null && picked === q.answer;
+    }
     const sc = correct + (ok ? 1 : 0);
     setCorrect(sc);
     setPicked(null);
+    setBuildAns([]);
+    setOrderAns([]);
+    setTyped("");
+    setClozeAns([]);
+    setClozeFocus(0);
     if (idx + 1 >= qs.length) finish(sc);
     else setIdx((i) => i + 1);
+  };
+
+  // whether the current question has enough of an answer to submit
+  const answered =
+    q0 && q0.t === "build"
+      ? buildAns.length === q0.answer.length
+      : q0 && q0.t === "order"
+      ? orderAns.length === q0.lines.length
+      : q0 && q0.t === "type"
+      ? typed.trim() !== ""
+      : q0 && q0.t === "cloze"
+      ? clozeBlanks.every((_, i) => (clozeAns[i] || "").trim() !== "")
+      : picked != null;
+  // on-screen keyboard writes to the type field, or the focused cloze blank
+  const kbInsert = (c) => {
+    if (q0 && q0.t === "cloze") setClozeAns((a) => { const n = [...a]; n[clozeFocus] = (n[clozeFocus] || "") + c; return n; });
+    else setTyped((t) => t + c);
+  };
+  const kbBackspace = () => {
+    if (q0 && q0.t === "cloze") setClozeAns((a) => { const n = [...a]; n[clozeFocus] = (n[clozeFocus] || "").slice(0, -1); return n; });
+    else setTyped((t) => t.slice(0, -1));
   };
 
   if (result) {
@@ -6112,10 +6917,78 @@ function ExamRunner({ exam, onFinish, onExit }) {
           </>
         )}
 
+        {q.t === "build" && (
+          <>
+            <div className="q-title">{q.en}</div>
+            <div className="q-sub">Build the sentence, word by word</div>
+            <div className="answerbox">
+              {buildAns.map((a, i) => (
+                <div key={i} className="tok gu inans" onClick={() => { say(a.tok); setBuildAns((x) => x.filter((_, j) => j !== i)); }}>{a.tok}</div>
+              ))}
+            </div>
+            <div className="bank">
+              {buildBank.map((tok, i) => (
+                <div key={i} className={"tok gu" + (usedIdx.has(i) ? " used" : "")} onClick={() => { if (!usedIdx.has(i)) { say(tok); setBuildAns((x) => [...x, { tok, i }]); } }}>{tok}</div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {q.t === "order" && (
+          <>
+            <div className="q-title">Put the conversation in order</div>
+            <div className="q-sub">{q.en}</div>
+            <div className="orderbox">
+              {orderAns.map((a, i) => (
+                <div key={i} className="orderline inans" onClick={() => { say(a.gu); setOrderAns((x) => x.filter((_, j) => j !== i)); }}>
+                  <span className="onum">{i + 1}</span>
+                  <span className="gu">{a.gu}</span>
+                </div>
+              ))}
+            </div>
+            <div className="orderbank">
+              {orderBank.map((l, i) => {
+                const used = orderAns.some((a) => a.i === l.i);
+                return (
+                  <div key={i} className={"orderline" + (used ? " used" : "")} onClick={() => { if (!used) { say(l.gu); setOrderAns((x) => [...x, l]); } }}>
+                    <span className="gu">{l.gu}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+
+        {q.t === "type" && (
+          <>
+            <div className="q-title">Write this in Gujarati</div>
+            <div className="q-sub" style={{ fontSize: 19, fontWeight: 700, color: "var(--ink)" }}>{q.en}</div>
+            <input className="typein gu" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="…" spellCheck={false} autoComplete="off" />
+            <GuKeyboard onInsert={kbInsert} onBackspace={kbBackspace} />
+          </>
+        )}
+
+        {q.t === "cloze" && (
+          <>
+            <div className="q-title">Fill in the missing words</div>
+            {q.en && <div className="q-sub">{q.en}</div>}
+            <div className="clozebox gu">
+              {(() => { let bi = -1; return q.parts.map((p, i) => {
+                if (p.t === "text") return <span key={i}>{p.v}</span>;
+                bi++; const bIdx = bi;
+                return <input key={i} className="clozein gu" value={clozeAns[bIdx] || ""} onFocus={() => setClozeFocus(bIdx)}
+                  onChange={(e) => setClozeAns((a) => { const n = [...a]; n[bIdx] = e.target.value; return n; })}
+                  spellCheck={false} autoComplete="off" />;
+              }); })()}
+            </div>
+            <GuKeyboard onInsert={kbInsert} onBackspace={kbBackspace} />
+          </>
+        )}
+
         <div style={{ height: 100 }} />
       </div>
       <div className="foot">
-        <button className="btn primary" disabled={picked == null} onClick={submit}>{idx + 1 >= qs.length ? "Finish" : "Next"}</button>
+        <button className="btn primary" disabled={!answered} onClick={submit}>{idx + 1 >= qs.length ? "Finish" : "Next"}</button>
       </div>
     </div>
   );
@@ -6133,7 +7006,20 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
   const [buildBank] = useState(() => (ex.t === "build" ? shuffle([...ex.answer, ...(ex.extra || [])]) : []));
   const [orderAns, setOrderAns] = useState([]);
   const [orderBank] = useState(() => (ex.t === "order" ? shuffle(ex.lines.map((l, i) => ({ ...l, i }))) : []));
+  const [typed, setTyped] = useState("");
+  const [clozeAns, setClozeAns] = useState(() => (ex.t === "cloze" ? ex.parts.filter((p) => p.t === "blank").map(() => "") : []));
+  const [clozeFocus, setClozeFocus] = useState(0);
   const [spoke, setSpoke] = useState(false);
+
+  // on-screen keyboard writes to the type field, or the focused cloze blank
+  const kbInsert = (c) => {
+    if (ex.t === "cloze") setClozeAns((a) => { const n = [...a]; n[clozeFocus] = (n[clozeFocus] || "") + c; return n; });
+    else setTyped((t) => t + c);
+  };
+  const kbBackspace = () => {
+    if (ex.t === "cloze") setClozeAns((a) => { const n = [...a]; n[clozeFocus] = (n[clozeFocus] || "").slice(0, -1); return n; });
+    else setTyped((t) => t.slice(0, -1));
+  };
 
   // Give each lesson one of the non-robotic voices, derived from its id so it
   // stays consistent across this lesson's exercises (the component remounts per
@@ -6202,8 +7088,22 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
     else onWrong && onWrong();
     setFeedback(isRight ? "good" : "bad");
   }
+  function checkType() {
+    const isRight = matchGu(typed, [ex.answer, ...(ex.accept || [])]);
+    if (isRight) onCorrect();
+    else onWrong && onWrong();
+    setFeedback(isRight ? "good" : "bad");
+  }
+  function checkCloze() {
+    const blanks = ex.parts.filter((p) => p.t === "blank");
+    const isRight = blanks.every((b, i) => matchGu(clozeAns[i] || "", [b.a, ...(b.accept || [])]));
+    if (isRight) onCorrect();
+    else onWrong && onWrong();
+    setFeedback(isRight ? "good" : "bad");
+  }
 
   const usedIdx = new Set(buildAns.map((a) => a.i));
+  const clozeBlanks = ex.t === "cloze" ? ex.parts.filter((p) => p.t === "blank") : [];
 
   return (
     <div className="dhatu lesson-view">
@@ -6408,6 +7308,34 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
           </>
         )}
 
+        {ex.t === "type" && (
+          <>
+            <div className="q-title">Write this in Gujarati</div>
+            <div className="q-sub" style={{ fontSize: 19, fontWeight: 700, color: "var(--ink)" }}>{ex.en}</div>
+            {ex.hint && <div className="typehint">{ex.hint}</div>}
+            <input className="typein gu" value={typed} disabled={!!feedback} onChange={(e) => setTyped(e.target.value)} placeholder="…" spellCheck={false} autoComplete="off" />
+            {!feedback && <GuKeyboard onInsert={kbInsert} onBackspace={kbBackspace} />}
+            {feedback && <AIFeedback text={typed} en={ex.en} promptId={(lesson && lesson.id ? lesson.id : "") + ":" + exIdx} level={_ilrForLesson(lesson && lesson.id)} modelAnswer={ex.answer} modelRoman={ex.roman} />}
+          </>
+        )}
+
+        {ex.t === "cloze" && (
+          <>
+            <div className="q-title">Fill in the missing words</div>
+            {ex.en && <div className="q-sub">{ex.en}</div>}
+            <div className="clozebox gu">
+              {(() => { let bi = -1; return ex.parts.map((p, i) => {
+                if (p.t === "text") return <span key={i}>{p.v}</span>;
+                bi++; const bIdx = bi;
+                return <input key={i} className="clozein gu" value={clozeAns[bIdx] || ""} disabled={!!feedback} onFocus={() => setClozeFocus(bIdx)}
+                  onChange={(e) => setClozeAns((a) => { const n = [...a]; n[bIdx] = e.target.value; return n; })}
+                  spellCheck={false} autoComplete="off" />;
+              }); })()}
+            </div>
+            {!feedback && <GuKeyboard onInsert={kbInsert} onBackspace={kbBackspace} />}
+          </>
+        )}
+
         {ex.t === "note" && (
           <div className="note">
             <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 4 }}>
@@ -6472,6 +7400,8 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
                 if (ex.t === "translate" || ex.t === "oddone") { const c = ex.options.find((o) => o.gu === ex.answer); return <span><span className="gu">{ex.answer}</span>{c && c.roman ? " (" + c.roman + ")" : ""}{ex.t === "oddone" && c ? " - " + c.en : ""}</span>; }
                 if (ex.t === "tf") return <span>{ex.answer === "true" ? "True" : "False"}</span>;
                 if (ex.t === "order") return <span>{ex.lines.map((l) => l.roman).join("  ·  ")}</span>;
+                if (ex.t === "type") return <span><span className="gu">{ex.answer}</span>{ex.roman ? " (" + ex.roman + ")" : ""}</span>;
+                if (ex.t === "cloze") return <span className="gu">{ex.parts.map((p) => p.t === "text" ? p.v : p.a).join("")}</span>;
                 return <span>{ex.answer}</span>;
               })()}
             </div>
@@ -6517,6 +7447,18 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
       {!feedback && ex.t === "order" && (
         <div className="foot">
           <button className="btn primary" disabled={orderAns.length < ex.lines.length} onClick={checkOrder}>Check</button>
+        </div>
+      )}
+
+      {!feedback && ex.t === "type" && (
+        <div className="foot">
+          <button className="btn primary" disabled={typed.trim() === ""} onClick={checkType}>Check</button>
+        </div>
+      )}
+
+      {!feedback && ex.t === "cloze" && (
+        <div className="foot">
+          <button className="btn primary" disabled={!clozeBlanks.every((_, i) => (clozeAns[i] || "").trim() !== "")} onClick={checkCloze}>Check</button>
         </div>
       )}
     </div>
@@ -7260,6 +8202,12 @@ Object.assign(LESSONS, {
       "The result clause keeps the usual subject, object, verb order."], ex:[
       {gu:"જો વરસાદ પડે તો હું નહીં આવું",roman:"jo varsaad paḍe to huṁ nahi aavuṁ",en:"If it rains, then I will not come."}] },
     { t:"build", en:"If you come, I will come.", answer:["જો","તું","આવે","તો","હું","આવીશ"], extra:["નહીં","પછી"], roman:"jo tuṁ aave to huṁ aaveesh" },
+    { t:"note", title:"Now write it yourself", body:[
+      "From here on, some questions ask you to type Gujarati, not just tap tiles.",
+      "Use your device's Gujarati keyboard, or the on-screen one that appears. A single small slip is forgiven."], ex:[
+      {gu:"જો વરસાદ પડે તો હું નહીં આવું",roman:"jo varsaad paḍe to huṁ nahi aavuṁ",en:"If it rains, then I will not come."}] },
+    { t:"type", en:"If there is time, we will meet.", answer:"જો સમય હોય તો મળીશું", accept:["જો સમય હોય તો આપણે મળીશું"], roman:"jo samay hoy to maḷeeshuṁ" },
+    { t:"cloze", en:"Complete: \"If you come, I will come.\"", parts:[{t:"text",v:"જો તું આવે "},{t:"blank",a:"તો",accept:["તો "]},{t:"text",v:" હું આવીશ"}] },
     { t:"speak", gu:"જો સમય હોય તો મળીશું", roman:"jo samay hoy to maḷeeshuṁ", en:"If there is time, we will meet." },
   ]},
   u17l2: { title:"Wishes and hopes", ex: [
@@ -7281,6 +8229,7 @@ Object.assign(LESSONS, {
       {gu:"હું જઈ શકું છું",roman:"huṁ jai shakuṁ chuṁ",en:"I can go."},
       {gu:"મારે જવું પડશે",roman:"maare javuṁ paḍshe",en:"I will have to go."}] },
     { t:"build", en:"I can speak Gujarati.", answer:["હું","ગુજરાતી","બોલી","શકું","છું"], extra:["જઈ","નહીં"], roman:"huṁ gujaraati boli shakuṁ chuṁ" },
+    { t:"type", en:"I have to go home.", answer:"મારે ઘરે જવું પડશે", roman:"maare ghare javuṁ paḍshe" },
     { t:"speak", gu:"મારે ઘરે જવું પડશે", roman:"maare ghare javuṁ paḍshe", en:"I have to go home." },
   ]},
   u17c: { title:"Checkpoint", check:true, ex: [
@@ -7304,6 +8253,8 @@ Object.assign(LESSONS, {
       "The doer takes the -e marker in the past: તેણે કહ્યું (he said)."], ex:[
       {gu:"તેણે કહ્યું કે તે આવશે",roman:"teṇe kahyuṁ ke te aavshe",en:"He said that he will come."}] },
     { t:"build", en:"She said that it is good.", answer:["તેણે","કહ્યું","કે","તે","સારું","છે"], extra:["પૂછ્યું","નહીં"], roman:"teṇe kahyuṁ ke te saaruṁ chhe" },
+    { t:"cloze", en:"Complete: \"He said that he will come.\"", parts:[{t:"text",v:"તેણે "},{t:"blank",a:"કહ્યું"},{t:"text",v:" કે તે આવશે"}] },
+    { t:"type", en:"He said that he will come.", answer:"તેણે કહ્યું કે તે આવશે", roman:"teṇe kahyuṁ ke te aavshe" },
     { t:"speak", gu:"તેણે પૂછ્યું કે તું ક્યાં છે", roman:"teṇe poochhyuṁ ke tuṁ kyaan chhe", en:"He asked where you are." },
   ]},
   u18l2: { title:"When and then", ex: [
@@ -7324,6 +8275,7 @@ Object.assign(LESSONS, {
       "જે માણસ આવ્યો તે મારો મિત્ર છે folds into 'the man who came is my friend'."], ex:[
       {gu:"જે માણસ આવ્યો તે મારો મિત્ર છે",roman:"je maaṇas aavyo te maaro mitra chhe",en:"The man who came is my friend."}] },
     { t:"build", en:"What I said is true.", answer:["મેં","જે","કહ્યું","તે","સાચું","છે"], extra:["જો","નહીં"], roman:"meṁ je kahyuṁ te saachuṁ chhe" },
+    { t:"type", en:"The man who came is my friend.", answer:"જે માણસ આવ્યો તે મારો મિત્ર છે", roman:"je maaṇas aavyo te maaro mitra chhe" },
     { t:"speak", gu:"જે સારું છે તે લો", roman:"je saaruṁ chhe te lo", en:"Take what is good." },
   ]},
   u18c: { title:"Checkpoint", check:true, ex: [
@@ -7405,6 +8357,8 @@ Object.assign(LESSONS, {
       {gu:"આજે વરસાદ છે.",roman:"aaje varsaad chhe."},
       {gu:"તેથી હું ઘરે રહીશ.",roman:"tethi huṁ ghare raheesh."},
       {gu:"કાલે બહાર જઈશ.",roman:"kaale bahaar jaish."}] },
+    { t:"type", en:"I am at home because it is raining.", answer:"હું ઘરે છું કારણ કે વરસાદ છે", roman:"huṁ ghare chuṁ kaaraṇ ke varsaad chhe" },
+    { t:"cloze", en:"Complete: \"If there is time, I will come.\"", parts:[{t:"text",v:"જો સમય "},{t:"blank",a:"હશે"},{t:"text",v:" તો હું આવીશ"}] },
     { t:"speak", gu:"જો સમય હશે તો હું આવીશ", roman:"jo samay hashe to huṁ aaveesh", en:"If there is time, I will come." },
   ]},
   u20l2: { title:"More in one sentence", ex: [
@@ -7414,6 +8368,8 @@ Object.assign(LESSONS, {
       {gu:"જે મિત્ર આવ્યો તે સરસ છે",roman:"je mitra aavyo te saras chhe",en:"The friend who came is nice."}] },
     { t:"build", en:"The friend who came is nice.", answer:["જે","મિત્ર","આવ્યો","તે","સરસ","છે"], extra:["કે","જો"], roman:"je mitra aavyo te saras chhe" },
     { t:"build", en:"He said that he will come tomorrow.", answer:["તેણે","કહ્યું","કે","તે","કાલે","આવશે"], extra:["જ્યારે","પણ"], roman:"teṇe kahyuṁ ke te kaale aavshe" },
+    { t:"cloze", en:"Complete: \"The friend who came is nice.\"", parts:[{t:"text",v:"જે મિત્ર "},{t:"blank",a:"આવ્યો"},{t:"text",v:" તે સરસ છે"}] },
+    { t:"type", en:"He said that he will come tomorrow.", answer:"તેણે કહ્યું કે તે કાલે આવશે", roman:"teṇe kahyuṁ ke te kaale aavshe" },
     { t:"speak", gu:"મને લાગે છે કે તે સાચું છે", roman:"mane laage chhe ke te saachuṁ chhe", en:"I think that it is true." },
   ]},
   u20l3: { title:"Telling a longer story", ex: [
@@ -7429,6 +8385,7 @@ Object.assign(LESSONS, {
       {gu:"કાલે હું વહેલો ઊઠીશ.",roman:"kaale huṁ vahelo ooṭheesh."},
       {gu:"પછી બજાર જઈશ.",roman:"pachhi bajaar jaish."},
       {gu:"સાંજે મિત્રોને મળીશ.",roman:"saanje mitrone maḷeesh."}] },
+    { t:"type", en:"In the morning I woke up and drank tea.", answer:"સવારે હું ઊઠ્યો અને ચા પીધી", roman:"savaare huṁ ooṭhyo ane chaa peedhi" },
     { t:"speak", gu:"પછી હું કામ પર ગયો", roman:"pachhi huṁ kaam par gayo", en:"Then I went to work." },
   ]},
   u20c: { title:"Checkpoint", check:true, ex: [
@@ -7438,6 +8395,7 @@ Object.assign(LESSONS, {
       {gu:"પછી મેં ચા પીધી.",roman:"pachhi meṁ chaa peedhi."},
       {gu:"પછી હું કામ પર ગયો.",roman:"pachhi huṁ kaam par gayo."}] },
     { t:"tf", gu:"કારણ કે", roman:"kaaraṇ ke", claim:"because", answer:"true" },
+    { t:"type", en:"I think that it is true.", answer:"મને લાગે છે કે તે સાચું છે", roman:"mane laage chhe ke te saachuṁ chhe" },
     { t:"speak", gu:"જે મિત્ર આવ્યો તે સરસ છે", roman:"je mitra aavyo te saras chhe", en:"The friend who came is nice." },
   ]},
 });
