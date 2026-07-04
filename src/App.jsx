@@ -799,6 +799,15 @@ const CSS = `
 .gkey.wide{min-width:64px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
 .gkey:active{transform:translateY(1px);box-shadow:var(--bevel-inset)}
 
+/* recessed (letterpressed) buttons pop out on hover: lift + a real drop shadow */
+.opt, .gopt, .mtile, .pick, .tok, .orderline, .gkey, .chartile, .ftbtn, .iconbtn, .playbtn{transition:transform .12s var(--ease), box-shadow .12s var(--ease)}
+@media (hover:hover){
+  .opt:hover, .gopt:hover, .mtile:hover:not(.done), .pick:hover, .tok:hover:not(.used), .orderline:hover:not(.used), .gkey:hover, .chartile:hover, .ftbtn:hover, .iconbtn:hover, .playbtn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 7px 16px rgba(70,45,40,.18), inset 0 -1px 0 rgba(255,255,255,.5);
+  }
+}
+
 /* AI writing feedback (optional, advisory) */
 .airow{margin-top:12px;display:flex;justify-content:center}
 .aipanel{margin-top:12px;background:var(--card);border-radius:14px;padding:13px 15px;box-shadow:var(--bevel-inset)}
@@ -1660,6 +1669,12 @@ const GRAMMAR = [
   { id:"g14", color:"#2F6E44", title:"Making things plural", summary:"Nouns change their ending to become plural, and the words around them follow.",
     points:["Masculine nouns ending in -o become -a, so છોકરો becomes છોકરા (boy, boys).","Feminine and many other nouns add -o, so છોકરી becomes છોકરીઓ and વાત becomes વાતો.","Adjectives and verbs then shift to match the plural."],
     examples:[{gu:"એક છોકરો, બે છોકરા",roman:"ek chhokro, be chhokra",en:"one boy, two boys"},{gu:"ઘણી છોકરીઓ",roman:"ghaṇi chhokrio",en:"many girls"},{gu:"નાનાં બાળકો",roman:"naanaan baaḷko",en:"small children"}] },
+  { id:"g15", color:"#8A1C3B", title:"Showing possession", summary:"Add -no, -ni, or -nuṁ to mean 's or 'of', matching the thing owned.",
+    points:["The marker agrees with the thing owned, not the owner: -નો (masc), -ની (fem), -નું (neuter).","રામનું ઘર = Ram's house; શિક્ષકની વાત = the teacher's words.","The possessive pronouns follow the same pattern: મારું, તમારું, તેનું."],
+    examples:[{gu:"રામનું ઘર",roman:"raamnuṁ ghar",en:"Ram's house"},{gu:"શિક્ષકની વાત",roman:"shikshakni vaat",en:"the teacher's words"},{gu:"આ કોનું છે?",roman:"aa konuṁ chhe?",en:"Whose is this?"}] },
+  { id:"g16", color:"#4A7A8C", title:"Postpositions (in, on, from)", summary:"Little words after a noun show place and direction, like English prepositions but placed after.",
+    points:["માં = in, પર = on, થી = from or by, સુધી = until, માટે = for.","They come after the noun: ઘરમાં (in the house), ટેબલ પર (on the table).","The noun often shifts to an oblique form first, e.g. ઘર becomes ઘરમાં."],
+    examples:[{gu:"હું ઘરમાં છું",roman:"huṁ gharmaan chuṁ",en:"I am in the house."},{gu:"પુસ્તક ટેબલ પર છે",roman:"pustak ṭebal par chhe",en:"The book is on the table."},{gu:"આ તમારા માટે છે",roman:"aa tamaaraa maaṭe chhe",en:"This is for you."}] },
 ];
 
 /* ============================ PROFICIENCY EXAMS ============================ */
@@ -2225,7 +2240,7 @@ const EXAMS = [
     "afterUnit": "u10",
     "ilr": "ILR 2",
     "title": "Professional Working Proficiency",
-    "timeSec": 900,
+    "timeSec": 960,
     "passPct": 70,
     "questions": [
       {
@@ -2381,63 +2396,6 @@ const EXAMS = [
         "answer": "માથું"
       },
       {
-        "t": "translate",
-        "en": "eye",
-        "options": [
-          {
-            "gu": "આંખ",
-            "roman": "aankh"
-          },
-          {
-            "gu": "મંદિર",
-            "roman": "mandir"
-          },
-          {
-            "gu": "રાત",
-            "roman": "raat"
-          }
-        ],
-        "answer": "આંખ"
-      },
-      {
-        "t": "translate",
-        "en": "ear",
-        "options": [
-          {
-            "gu": "કાન",
-            "roman": "kaan"
-          },
-          {
-            "gu": "બજાર",
-            "roman": "bajaar"
-          },
-          {
-            "gu": "અઠવાડિયું",
-            "roman": "aṭhvaaḍiyuṁ"
-          }
-        ],
-        "answer": "કાન"
-      },
-      {
-        "t": "translate",
-        "en": "nose",
-        "options": [
-          {
-            "gu": "નાક",
-            "roman": "naak"
-          },
-          {
-            "gu": "દવાખાનું",
-            "roman": "davaakhaanuṁ"
-          },
-          {
-            "gu": "વરસાદ",
-            "roman": "varsaad"
-          }
-        ],
-        "answer": "નાક"
-      },
-      {
         "t": "listen",
         "say": "ખરાબ",
         "options": [
@@ -2498,26 +2456,6 @@ const EXAMS = [
         "answer": "eye"
       },
       {
-        "t": "listen",
-        "say": "કાન",
-        "options": [
-          "ear",
-          "temple",
-          "rain"
-        ],
-        "answer": "ear"
-      },
-      {
-        "t": "listen",
-        "say": "નાક",
-        "options": [
-          "market",
-          "Monday",
-          "nose"
-        ],
-        "answer": "nose"
-      },
-      {
         "t": "tf",
         "gu": "ઠંડું",
         "roman": "ṭhanḍuṁ",
@@ -2553,18 +2491,124 @@ const EXAMS = [
         "answer": "true"
       },
       {
-        "t": "tf",
-        "gu": "નાક",
-        "roman": "naak",
-        "claim": "market",
-        "answer": "false"
+        "t": "translate",
+        "en": "hello",
+        "options": [
+          {
+            "gu": "નમસ્તે",
+            "roman": "namaste"
+          },
+          {
+            "gu": "દૂધ",
+            "roman": "doodh"
+          },
+          {
+            "gu": "બે",
+            "roman": "be"
+          }
+        ],
+        "answer": "નમસ્તે"
+      },
+      {
+        "t": "translate",
+        "en": "thank you",
+        "options": [
+          {
+            "gu": "ચા",
+            "roman": "chaa"
+          },
+          {
+            "gu": "ત્રણ",
+            "roman": "traṇ"
+          },
+          {
+            "gu": "આભાર",
+            "roman": "aabhaar"
+          }
+        ],
+        "answer": "આભાર"
+      },
+      {
+        "t": "translate",
+        "en": "goodbye",
+        "options": [
+          {
+            "gu": "ભાત",
+            "roman": "bhaat"
+          },
+          {
+            "gu": "ચાર",
+            "roman": "chaar"
+          },
+          {
+            "gu": "આવજો",
+            "roman": "aavjo"
+          }
+        ],
+        "answer": "આવજો"
+      },
+      {
+        "t": "translate",
+        "en": "mother",
+        "options": [
+          {
+            "gu": "રોટલી",
+            "roman": "roṭli"
+          },
+          {
+            "gu": "પાંચ",
+            "roman": "paanch"
+          },
+          {
+            "gu": "માતા",
+            "roman": "maataa"
+          }
+        ],
+        "answer": "માતા"
+      },
+      {
+        "t": "listen",
+        "say": "માતા",
+        "options": [
+          "mother",
+          "rice",
+          "ten"
+        ],
+        "answer": "mother"
+      },
+      {
+        "t": "listen",
+        "say": "પિતા",
+        "options": [
+          "father",
+          "roti",
+          "red"
+        ],
+        "answer": "father"
+      },
+      {
+        "t": "listen",
+        "say": "ભાઈ",
+        "options": [
+          "mango",
+          "green",
+          "brother"
+        ],
+        "answer": "brother"
       },
       {
         "t": "tf",
-        "gu": "હાથ",
-        "roman": "haath",
-        "claim": "hand",
+        "gu": "ભાઈ",
+        "roman": "bhaai",
+        "claim": "brother",
         "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "પાણી",
+        "roman": "paṇi",
+        "claim": "one",
+        "answer": "false"
       },
       {
         "t": "oddone",
@@ -2796,7 +2840,7 @@ const EXAMS = [
     "afterUnit": "u15",
     "ilr": "ILR 3",
     "title": "Full Professional Proficiency",
-    "timeSec": 1140,
+    "timeSec": 1320,
     "passPct": 75,
     "questions": [
       {
@@ -2933,63 +2977,6 @@ const EXAMS = [
         "answer": "તાવ"
       },
       {
-        "t": "translate",
-        "en": "medicine",
-        "options": [
-          {
-            "gu": "દવા",
-            "roman": "davaa"
-          },
-          {
-            "gu": "દૂર",
-            "roman": "door"
-          },
-          {
-            "gu": "કામ",
-            "roman": "kaam"
-          }
-        ],
-        "answer": "દવા"
-      },
-      {
-        "t": "translate",
-        "en": "pain",
-        "options": [
-          {
-            "gu": "દુખાવો",
-            "roman": "dukhaavo"
-          },
-          {
-            "gu": "ટિકિટ",
-            "roman": "ṭikiṭ"
-          },
-          {
-            "gu": "સમય",
-            "roman": "samay"
-          }
-        ],
-        "answer": "દુખાવો"
-      },
-      {
-        "t": "translate",
-        "en": "rest",
-        "options": [
-          {
-            "gu": "મુસાફરી",
-            "roman": "musaafari"
-          },
-          {
-            "gu": "ડૉક્ટર",
-            "roman": "ḍokṭar"
-          },
-          {
-            "gu": "આરામ",
-            "roman": "aaraam"
-          }
-        ],
-        "answer": "આરામ"
-      },
-      {
         "t": "listen",
         "say": "વેપારી",
         "options": [
@@ -3040,36 +3027,6 @@ const EXAMS = [
         "answer": "medicine"
       },
       {
-        "t": "listen",
-        "say": "દુખાવો",
-        "options": [
-          "far",
-          "doctor",
-          "pain"
-        ],
-        "answer": "pain"
-      },
-      {
-        "t": "listen",
-        "say": "આરામ",
-        "options": [
-          "ticket",
-          "teacher",
-          "rest"
-        ],
-        "answer": "rest"
-      },
-      {
-        "t": "listen",
-        "say": "ડાબે",
-        "options": [
-          "journey",
-          "farmer",
-          "left"
-        ],
-        "answer": "left"
-      },
-      {
         "t": "tf",
         "gu": "બીમાર",
         "roman": "beemaar",
@@ -3098,18 +3055,179 @@ const EXAMS = [
         "answer": "false"
       },
       {
+        "t": "translate",
+        "en": "big",
+        "options": [
+          {
+            "gu": "શહેર",
+            "roman": "shaher"
+          },
+          {
+            "gu": "મોટું",
+            "roman": "moṭuṁ"
+          },
+          {
+            "gu": "માથું",
+            "roman": "maathuṁ"
+          }
+        ],
+        "answer": "મોટું"
+      },
+      {
+        "t": "translate",
+        "en": "small",
+        "options": [
+          {
+            "gu": "ગામ",
+            "roman": "gaam"
+          },
+          {
+            "gu": "નાનું",
+            "roman": "naanuṁ"
+          },
+          {
+            "gu": "આંખ",
+            "roman": "aankh"
+          }
+        ],
+        "answer": "નાનું"
+      },
+      {
+        "t": "translate",
+        "en": "good",
+        "options": [
+          {
+            "gu": "મંદિર",
+            "roman": "mandir"
+          },
+          {
+            "gu": "સારું",
+            "roman": "saaruṁ"
+          },
+          {
+            "gu": "કાન",
+            "roman": "kaan"
+          }
+        ],
+        "answer": "સારું"
+      },
+      {
+        "t": "translate",
+        "en": "bad",
+        "options": [
+          {
+            "gu": "નાક",
+            "roman": "naak"
+          },
+          {
+            "gu": "બજાર",
+            "roman": "bajaar"
+          },
+          {
+            "gu": "ખરાબ",
+            "roman": "kharaab"
+          }
+        ],
+        "answer": "ખરાબ"
+      },
+      {
+        "t": "listen",
+        "say": "ખરાબ",
+        "options": [
+          "bad",
+          "ear",
+          "hospital"
+        ],
+        "answer": "bad"
+      },
+      {
+        "t": "listen",
+        "say": "ગરમ",
+        "options": [
+          "hot",
+          "nose",
+          "station"
+        ],
+        "answer": "hot"
+      },
+      {
         "t": "tf",
-        "gu": "આરામ",
-        "roman": "aaraam",
-        "claim": "rest",
+        "gu": "ઠંડું",
+        "roman": "ṭhanḍuṁ",
+        "claim": "cold",
         "answer": "true"
       },
       {
         "t": "tf",
-        "gu": "ડાબે",
-        "roman": "ḍaabe",
-        "claim": "journey",
+        "gu": "સુંદર",
+        "roman": "sundar",
+        "claim": "leg",
         "answer": "false"
+      },
+      {
+        "t": "translate",
+        "en": "hello",
+        "options": [
+          {
+            "gu": "નમસ્તે",
+            "roman": "namaste"
+          },
+          {
+            "gu": "દૂધ",
+            "roman": "doodh"
+          },
+          {
+            "gu": "બે",
+            "roman": "be"
+          }
+        ],
+        "answer": "નમસ્તે"
+      },
+      {
+        "t": "translate",
+        "en": "thank you",
+        "options": [
+          {
+            "gu": "ચા",
+            "roman": "chaa"
+          },
+          {
+            "gu": "ત્રણ",
+            "roman": "traṇ"
+          },
+          {
+            "gu": "આભાર",
+            "roman": "aabhaar"
+          }
+        ],
+        "answer": "આભાર"
+      },
+      {
+        "t": "listen",
+        "say": "માતા",
+        "options": [
+          "mother",
+          "rice",
+          "ten"
+        ],
+        "answer": "mother"
+      },
+      {
+        "t": "listen",
+        "say": "પિતા",
+        "options": [
+          "father",
+          "roti",
+          "red"
+        ],
+        "answer": "father"
+      },
+      {
+        "t": "tf",
+        "gu": "ભાઈ",
+        "roman": "bhaai",
+        "claim": "brother",
+        "answer": "true"
       },
       {
         "t": "oddone",
@@ -3399,7 +3517,7 @@ const EXAMS = [
     "afterUnit": "u22",
     "ilr": "ILR 4",
     "title": "Primary Fluency",
-    "timeSec": 2100,
+    "timeSec": 2700,
     "passPct": 80,
     "final": true,
     "questions": [
@@ -4113,6 +4231,171 @@ const EXAMS = [
         "answer": "I have to go"
       },
       {
+        "t": "translate",
+        "en": "hello",
+        "options": [
+          {
+            "gu": "નમસ્તે",
+            "roman": "namaste"
+          },
+          {
+            "gu": "દૂધ",
+            "roman": "doodh"
+          },
+          {
+            "gu": "બે",
+            "roman": "be"
+          }
+        ],
+        "answer": "નમસ્તે"
+      },
+      {
+        "t": "translate",
+        "en": "thank you",
+        "options": [
+          {
+            "gu": "ચા",
+            "roman": "chaa"
+          },
+          {
+            "gu": "ત્રણ",
+            "roman": "traṇ"
+          },
+          {
+            "gu": "આભાર",
+            "roman": "aabhaar"
+          }
+        ],
+        "answer": "આભાર"
+      },
+      {
+        "t": "listen",
+        "say": "માતા",
+        "options": [
+          "mother",
+          "rice",
+          "ten"
+        ],
+        "answer": "mother"
+      },
+      {
+        "t": "tf",
+        "gu": "ભાઈ",
+        "roman": "bhaai",
+        "claim": "brother",
+        "answer": "true"
+      },
+      {
+        "t": "translate",
+        "en": "big",
+        "options": [
+          {
+            "gu": "શહેર",
+            "roman": "shaher"
+          },
+          {
+            "gu": "મોટું",
+            "roman": "moṭuṁ"
+          },
+          {
+            "gu": "માથું",
+            "roman": "maathuṁ"
+          }
+        ],
+        "answer": "મોટું"
+      },
+      {
+        "t": "translate",
+        "en": "small",
+        "options": [
+          {
+            "gu": "ગામ",
+            "roman": "gaam"
+          },
+          {
+            "gu": "નાનું",
+            "roman": "naanuṁ"
+          },
+          {
+            "gu": "આંખ",
+            "roman": "aankh"
+          }
+        ],
+        "answer": "નાનું"
+      },
+      {
+        "t": "listen",
+        "say": "ખરાબ",
+        "options": [
+          "bad",
+          "ear",
+          "hospital"
+        ],
+        "answer": "bad"
+      },
+      {
+        "t": "tf",
+        "gu": "ઠંડું",
+        "roman": "ṭhanḍuṁ",
+        "claim": "cold",
+        "answer": "true"
+      },
+      {
+        "t": "translate",
+        "en": "doctor",
+        "options": [
+          {
+            "gu": "ડૉક્ટર",
+            "roman": "ḍokṭar"
+          },
+          {
+            "gu": "દવા",
+            "roman": "davaa"
+          },
+          {
+            "gu": "પાસે",
+            "roman": "paase"
+          }
+        ],
+        "answer": "ડૉક્ટર"
+      },
+      {
+        "t": "translate",
+        "en": "teacher",
+        "options": [
+          {
+            "gu": "શિક્ષક",
+            "roman": "shikshak"
+          },
+          {
+            "gu": "દુખાવો",
+            "roman": "dukhaavo"
+          },
+          {
+            "gu": "દૂર",
+            "roman": "door"
+          }
+        ],
+        "answer": "શિક્ષક"
+      },
+      {
+        "t": "listen",
+        "say": "વેપારી",
+        "options": [
+          "trader",
+          "rest",
+          "road"
+        ],
+        "answer": "trader"
+      },
+      {
+        "t": "tf",
+        "gu": "બીમાર",
+        "roman": "beemaar",
+        "claim": "sick",
+        "answer": "true"
+      },
+      {
         "t": "build",
         "en": "If there is time, I will come.",
         "answer": [
@@ -4543,6 +4826,13 @@ const CONVERSATIONS = [
     { who:"them", gu:"આ ગોળી દિવસમાં બે વાર લો.", roman:"aa goḷi divasmaan be vaar lo.", en:"Take this tablet twice a day." },
     { who:"you", gu:"આભાર. કેટલા પૈસા થયા?", roman:"aabhaar. keṭlaa paisaa thayaa?", en:"Thank you. How much is it?" },
   ]},
+  { id:"c28", title:"Congratulating a friend", icon:"spark", turns:[
+    { who:"them", gu:"સાંભળ્યું, તારા લગ્ન નક્કી થયા!", roman:"saambhaḷyuṁ, taaraa lagna nakki thayaa!", en:"I heard your wedding is fixed!" },
+    { who:"you", gu:"હા, બે મહિના પછી.", roman:"haa, be mahinaa pachhi.", en:"Yes, in two months.", choices:["હા, બે મહિના પછી","ના, આભાર","હું મજામાં છું"] },
+    { who:"them", gu:"ખૂબ ખૂબ અભિનંદન!", roman:"khoob khoob abhinandan!", en:"Many congratulations!" },
+    { who:"you", gu:"આભાર! તમે જરૂર આવજો.", roman:"aabhaar! tame jaroor aavjo.", en:"Thank you! Do come." },
+    { who:"them", gu:"ચોક્કસ આવીશ.", roman:"chokkas aaveesh.", en:"I will definitely come." },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
@@ -4821,7 +5111,7 @@ const CATEGORIES = [
   { id:"trade", title:"Trade and the Indian Ocean", blurb:"Ports, merchants, and migration linked Gujarat to Africa, Arabia, and beyond long before the word globalization existed.", color:"#1E6E7E", img: FP + "View%20of%20Surat%20from%20across%20the%20River%20Tapti%3B%20by%20A.%20van%20der%20Heen%2C%201782.jpg?width=1000" },
   { id:"colonial", title:"Colonial Rule and Resistance", blurb:"British rule reorganized land and labor. Gujarat answered with a new reading public and a new form of protest.", color:"#4A5568", img: FP + "Gandhi%20at%20Dandi%2C%205%20April%201930.jpg?width=1000" },
   { id:"modern", title:"Modern Gujarat", blurb:"A linguistic state, fast growth, popular protest, and the hard questions that came with all three.", color:"#2F6E44", img: FP + "Statue%20of%20Unity.jpg?width=1000" },
-  { id:"textile", title:"Textiles and Fashion", blurb:"Tie-dye, block print, and double-ikat silk: how Gujarat became one of the great cloth-making regions of the world.", color:"#6E4CA0", img: FP + "Gujarat%20Bandhej%20Saree.jpg?width=1000" },
+  { id:"textile", title:"Textiles and Fashion", blurb:"Tie-dye, block print, and double-ikat silk: how Gujarat became one of the great cloth-making regions of the world.", color:"#6E4CA0", img: FP + "Bandhani%20%288357755412%29.jpg?width=1000" },
   { id:"foodways", title:"Food and Cooking", blurb:"The thali, the street plate, and the faith and trade that shaped a cuisine far richer than 'just vegetarian'.", color:"#B5651D", img: FP + "Gujarati%20Thali%20at%20Vishalla.jpg?width=1000" },
 ];
 
@@ -5331,11 +5621,9 @@ function CourseApp({ user }) {
   const [readWrite, setReadWrite] = useLocalState("dhatu_readWrite", true);
   const [showHistory, setShowHistory] = useLocalState("dhatu_showHistory", true);
   const [vocabTab, setVocabTab] = useLocalState("dhatu_vocabTab", false);
-  // Localization rewards: Gujarati numerals unlock at the halfway mark; a full
-  // Gujarati interface unlocks at 100% mastery. Both default on once unlocked,
-  // with a settings toggle to switch back to English.
+  // Localization reward: Gujarati numerals for the counters unlock at the halfway
+  // mark, default on, with a settings toggle to switch back to English digits.
   const [guNumbers, setGuNumbers] = useLocalState("dhatu_guNumbers", true);
-  const [guInterface, setGuInterface] = useLocalState("dhatu_guInterface", true);
 
   const [kaudi, setKaudi] = useLocalState("dhatu_kaudi", 0);
   // Lifetime Kaudi ever earned (never decreases when spending). Kaudi-based awards
@@ -5515,15 +5803,10 @@ function CourseApp({ user }) {
   const scriptAllDone = SCRIPT_LESSONS_RESOLVED.length > 0 && SCRIPT_LESSONS_RESOLVED.every((l) => scriptDone.includes(l.id));
   const allLessonIds = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
   const masteryDone = allLessonIds.length > 0 && allLessonIds.every((id) => completed.includes(id));
-  // localization unlocks + effective state
+  // Gujarati numerals for the Kaudi/streak counters, unlocked at the halfway mark.
   const guNumUnlocked = allLessonIds.length > 0 && completed.length >= Math.ceil(allLessonIds.length / 2);
-  const guUiUnlocked = masteryDone;
   const useGuNum = guNumUnlocked && guNumbers;
-  const useGuUi = guUiUnlocked && guInterface;
-  // render a number in Gujarati digits once unlocked+on, else plain
   const numFmt = (n) => useGuNum ? String(n).replace(/[0-9]/g, (d) => "૦૧૨૩૪૫૬૭૮૯"[+d]) : String(n);
-  // pick English or Gujarati UI text depending on the interface language
-  const t = (en, gu) => useGuUi ? gu : en;
   const awardConds = {
     b1: completed.length >= 1, b2: completed.some((c) => c.endsWith("c")),
     b3: kaudiEarned >= 100, b4: srs.length > 0, b5: scriptAllDone, b6: friendList.length >= 2,
@@ -5700,30 +5983,30 @@ function CourseApp({ user }) {
     <div className="nav">
       <div className="navbrand"><span className="nbm"><Ic.logo width={22} height={22} /></span><span className="nbt">Dhātu</span></div>
       <button className={"navb" + (tab === "learn" ? " on" : "")} onClick={() => { setTab("learn"); setScreen("learn"); }}>
-        <Ic.learn /> {t("Learn", "શીખો")}
+        <Ic.learn /> Learn
       </button>
       {readWrite && (
         <button className={"navb" + (tab === "script" ? " on" : "")} onClick={() => { setTab("script"); setScreen("script"); }}>
-          <Ic.script /> {t("Script", "લિપિ")}
+          <Ic.script /> Script
         </button>
       )}
       {srs.length > 0 && (
         <button className={"navb" + (tab === "review" ? " on" : "")} onClick={() => { setTab("review"); setScreen("review"); }}>
-          <Ic.review /> {t("Review", "સમીક્ષા")}
+          <Ic.review /> Review
         </button>
       )}
       {vocabTab && (
         <button className={"navb" + (tab === "vocab" ? " on" : "")} onClick={() => { setTab("vocab"); setScreen("vocab"); }}>
-          <Ic.vocab /> {t("Vocab", "શબ્દો")}
+          <Ic.vocab /> Vocab
         </button>
       )}
       {showHistory && (
         <button className={"navb" + (tab === "history" ? " on" : "")} onClick={() => { setTab("history"); setScreen("history"); }}>
-          <Ic.temple /> {t("Culture", "સંસ્કૃતિ")}
+          <Ic.temple /> Culture
         </button>
       )}
       <button className={"navb" + (tab === "profile" ? " on" : "")} onClick={() => { setTab("profile"); setScreen("profile"); }}>
-        <Ic.profile /> {t("Profile", "પ્રોફાઇલ")}
+        <Ic.profile /> Profile
       </button>
     </div>
   );
@@ -5749,7 +6032,7 @@ function CourseApp({ user }) {
       <div className="dhatu withrail">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title={t("Dhātu","ધાતુ")} sub={t("Gujarati, one step at a time","ધીમે ધીમે ગુજરાતી")} />
+          <TopBar title="Dhātu" sub="Gujarati, one step at a time" />
           {recLesson && (
             <button className="resume" onClick={() => startLesson(recLesson.id)}>
               <span className="rico"><Ic.play /></span>
@@ -6142,7 +6425,7 @@ function CourseApp({ user }) {
       <div className={"dhatu script-shell sfont-" + scriptFont}>
         <style>{CSS}</style>
         <div className="scr" style={{ paddingBottom: 150 }}>
-          <TopBar title={t("Script","લિપિ")} sub={t("The Gujarati abugida","ગુજરાતી લિપિ")} />
+          <TopBar title="Script" sub="The Gujarati abugida" />
           <p className="hist-intro">Tap any letter to hear it and see how it sounds. Letters are ordered roughly by how often you will meet them.</p>
           <div className="fonttoggle">
             {[1, 2, 3].map((n) => (
@@ -6207,7 +6490,7 @@ function CourseApp({ user }) {
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title={t("Review","સમીક્ષા")} sub={t(`${due.length} due now`,`${numFmt(due.length)} બાકી`)} />
+          <TopBar title="Review" sub={`${due.length} due now`} />
           {srs.length === 0 && (
             <div className="card" style={{ textAlign: "center", padding: 28 }}>
               <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, color: "var(--muted)" }}><Ic.vocab width={32} height={32} /></div>
@@ -6299,7 +6582,7 @@ function CourseApp({ user }) {
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title={t("Vocab","શબ્દો")} sub={t("Words by topic","વિષય પ્રમાણે શબ્દો")} />
+          <TopBar title="Vocab" sub="Words by topic" />
           <div className="cardgrid">
           {TOPICS.map((t) => (
             <button key={t.id} className="card" style={{ width: "100%", textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", gap: 14 }} onClick={() => setSelTopic(t.id)}>
@@ -6467,7 +6750,7 @@ function CourseApp({ user }) {
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title={t("Culture","સંસ્કૃતિ")} />
+          <TopBar title="Culture" />
           <div className="factcard">
             <div className="factlabel"><Ic.bulb width={15} height={15} /> Did you know?</div>
             <p>{CULTURE_FACTS[Math.floor(Date.now() / (10 * 3600 * 1000)) % CULTURE_FACTS.length]}</p>
@@ -6522,7 +6805,7 @@ function CourseApp({ user }) {
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title={t("Profile","પ્રોફાઇલ")} sub={t("Your progress","તમારી પ્રગતિ")} />
+          <TopBar title="Profile" sub="Your progress" />
           {user && (
             <div className="acct">
               {user.photoURL
@@ -6668,12 +6951,6 @@ function CourseApp({ user }) {
               <div className="toggle">
                 <span className="tt"><b>Gujarati numbers</b><small>Show Kaudi and streak in Gujarati numerals</small></span>
                 <div className={"sw" + (guNumbers ? " on" : "")} onClick={() => setGuNumbers((v) => !v)}><i /></div>
-              </div>
-            )}
-            {guUiUnlocked && (
-              <div className="toggle">
-                <span className="tt"><b>Gujarati interface</b><small>Show the app's labels in Gujarati (unlocked at mastery)</small></span>
-                <div className={"sw" + (guInterface ? " on" : "")} onClick={() => setGuInterface((v) => !v)}><i /></div>
               </div>
             )}
           </div>
@@ -9225,7 +9502,6 @@ TOPICS.push(
     { gu:"રમવું", r:"ramvuṁ", en:"to play" },
     { gu:"જીતવું", r:"jeetvuṁ", en:"to win" },
     { gu:"હારવું", r:"haarvuṁ", en:"to lose" },
-    { gu:"દોડવું", r:"doḍvuṁ", en:"to run" },
     { gu:"તરવું", r:"tarvuṁ", en:"to swim" },
   ]},
   { id:"connectors", title:"Joining words", icon:"link", note:"The small words that link ideas together. Learning a few makes your sentences flow.", words:[
@@ -9259,7 +9535,7 @@ TOPICS.push(
   { id:"verbs2", title:"More verbs", icon:"steps", words:[
     { gu:"આપવું", r:"aapvuṁ", en:"to give" },
     { gu:"લેવું", r:"levuṁ", en:"to take" },
-    { gu:"બેસવું", r:"besvuṁ", en:"to sit" },
+    { gu:"રખડવું", r:"rakhaḍvuṁ", en:"to roam / loaf" },
     { gu:"ખોલવું", r:"kholvuṁ", en:"to open" },
     { gu:"બંધ કરવું", r:"band karvuṁ", en:"to close" },
     { gu:"રહેવું", r:"rahevuṁ", en:"to stay / live" },
@@ -9451,13 +9727,35 @@ TOPICS.push(
 /* ============================ VOCAB: verbs of motion (added) ============================ */
 TOPICS.push(
   { id:"motion", title:"Verbs of motion", icon:"steps", note:"Ways to move, in the -વું dictionary form.", words:[
-    { gu:"દોડવું", r:"doḍvuṁ", en:"to run" },
+    { gu:"લપસવું", r:"lapasvuṁ", en:"to slip" },
     { gu:"કૂદવું", r:"koodvuṁ", en:"to jump" },
     { gu:"પડવું", r:"paḍvuṁ", en:"to fall" },
-    { gu:"ઊઠવું", r:"ooṭhvuṁ", en:"to get up" },
-    { gu:"બેસવું", r:"besvuṁ", en:"to sit" },
+    { gu:"ઊતરવું", r:"ootarvuṁ", en:"to get down / descend" },
+    { gu:"ડૂબવું", r:"ḍoobvuṁ", en:"to sink / drown" },
     { gu:"પહોંચવું", r:"pahonchvuṁ", en:"to arrive / reach" },
     { gu:"ફરવું", r:"pharvuṁ", en:"to wander / go around" },
+  ]}
+);
+
+/* ============================ VOCAB: eating out, buildings (added) ============================ */
+TOPICS.push(
+  { id:"eatingout", title:"Eating out", icon:"cup", note:"Words for a cafe or restaurant. Several are English loanwords.", words:[
+    { gu:"મેનુ", r:"menu", en:"menu" },
+    { gu:"બિલ", r:"bil", en:"bill / check" },
+    { gu:"વેઇટર", r:"veiṭar", en:"waiter" },
+    { gu:"ઓર્ડર", r:"orḍar", en:"order" },
+    { gu:"થાળી", r:"thaaḷi", en:"thali (a full plate)" },
+    { gu:"ટીપ", r:"ṭip", en:"tip" },
+    { gu:"પીણું", r:"peeṇuṁ", en:"a drink" },
+  ]},
+  { id:"buildings", title:"Buildings and rooms", icon:"home", note:"Parts of a building, beyond the basic home words.", words:[
+    { gu:"મકાન", r:"makaan", en:"building" },
+    { gu:"માળ", r:"maaḷ", en:"floor / storey" },
+    { gu:"દાદર", r:"daadar", en:"stairs" },
+    { gu:"લિફ્ટ", r:"lifṭ", en:"lift / elevator" },
+    { gu:"છત", r:"chhat", en:"roof / ceiling" },
+    { gu:"દીવાલ", r:"deevaal", en:"wall" },
+    { gu:"ભોંયતળિયું", r:"bhonytaḷiyuṁ", en:"ground floor" },
   ]}
 );
 
@@ -9678,6 +9976,7 @@ const ERA_GU_SUMMARY = {
   amul: "અમૂલ ગુજરાતના આણંદમાં શરૂ થયેલી દૂધની સહકારી મંડળી છે. ૧૯૪૬માં ખેડા જિલ્લાના ખેડૂતોએ વચેટિયાઓના શોષણ સામે સંગઠિત થઈને આ મંડળી બનાવી. વર્ગીસ કુરિયનના નેતૃત્વમાં શ્વેત ક્રાંતિ થઈ અને ભારત દુનિયાનો સૌથી મોટો દૂધ ઉત્પાદક દેશ બન્યો. અમૂલ ખેડૂતોની માલિકીની મંડળી છે, જ્યાં નફો સીધો ખેડૂતો સુધી પહોંચે છે. આજે આણંદ દૂધની રાજધાની કહેવાય છે.",
   surat_diamond: "સુરત હીરા ઉદ્યોગ માટે દુનિયાભરમાં પ્રખ્યાત છે. દુનિયાના મોટા ભાગના હીરા અહીં ઘસાઈ અને પોલિશ થાય છે. વીસમી સદીના મધ્યભાગથી આ ઉદ્યોગ વધ્યો અને આજે લાખો લોકોને રોજગાર આપે છે. બહારથી આવેલા કાચા હીરા સુરતમાં કાપીને તૈયાર કરવામાં આવે છે. ૨૦૨૩માં સુરત ડાયમંડ બુર્સ ખૂલ્યું, જે દુનિયાની સૌથી મોટી ઓફિસ ઇમારતોમાંની એક છે. સુરત જૂના જમાનાથી વેપાર અને કારીગરીનું કેન્દ્ર રહ્યું છે.",
   ahmedabad_whc: "અમદાવાદ ૧૪૧૧માં સુલતાન અહમદ શાહે સાબરમતી નદીના કિનારે વસાવ્યું. જૂનું કોટવાળું શહેર પોળોથી બનેલું છે; પોળ એટલે એક દરવાજામાંથી પહોંચાતો, વચ્ચે ચોક અને કૂવાવાળો મહોલ્લો. અહીં જૈન દેરાસર, હિન્દુ મંદિર અને ઇસ્લામિક મસ્જિદો સાથે લાકડાની કોતરણીવાળાં જૂનાં ઘર જોવા મળે છે. ૨૦૧૭માં યુનેસ્કોએ અમદાવાદને ભારતનું પહેલું વર્લ્ડ હેરિટેજ સિટી જાહેર કર્યું. આજે પણ લોકો આ જૂનાં ઘરોમાં રહે છે, એટલે તે એક જીવંત ધરોહર છે.",
+  statue_unity: "સ્ટેચ્યુ ઓફ યુનિટી નર્મદા નદી પાસે આવેલી દુનિયાની સૌથી ઊંચી પ્રતિમા છે, જે લગભગ ૧૮૨ મીટર ઊંચી છે. તે ૨૦૧૮માં ખુલ્લી મુકાઈ. આ પ્રતિમા સરદાર વલ્લભભાઈ પટેલની યાદમાં બની છે, જેમણે આઝાદી પછી રજવાડાંને ભારત સાથે જોડ્યાં અને લોખંડી પુરુષ કહેવાયા. પટેલ ગુજરાતના હતા. પ્રતિમા સરદાર સરોવર બંધ પાસે છે અને ઘણા પ્રવાસીઓને આકર્ષે છે. તેની કિંમત અને સ્થાનિક લોકોના વિસ્થાપન અંગે ચર્ચા પણ થઈ છે.",
 };
 
 /* ---- Category: Ancient Foundations ---- */
@@ -10192,6 +10491,19 @@ ERAS.push(
       "What the listing values is not one monument but the whole living town: a place where people still inhabit centuries-old houses and neighborhoods. That also makes it fragile, as old buildings are lost to neglect or redevelopment, and much of the city's heritage effort now goes into keeping the old walled city alive rather than only preserved."],
     site:{ name:"The walled city of Ahmedabad", note:"India's first UNESCO World Heritage City (2017), known for its pols and Indo-Islamic architecture." },
     sources:["UNESCO World Heritage Centre, Historic City of Ahmadabad","Ahmedabad Municipal Corporation heritage documentation","Wikipedia, Ahmedabad and the pols of Ahmedabad"] },
+);
+
+ERAS.push(
+
+  { id:"statue_unity", category:"modern", yr:"2018", title:"The Statue of Unity",
+    blurb:"The world's tallest statue rises beside the Narmada, honoring Sardar Patel, the leader who stitched the princely states into one country.",
+    body:[
+      "On the bank of the Narmada, near the Sardar Sarovar Dam, stands the Statue of Unity, at about 182 metres the tallest statue in the world. It was unveiled in 2018 and depicts Sardar Vallabhbhai Patel, one of the central figures of India's independence movement and its first Deputy Prime Minister and Home Minister.",
+      "Patel, a Gujarati from the Kheda area, is best remembered for the enormous task of persuading and pressing the hundreds of princely states to join the new union after 1947, work that earned him the nickname the Iron Man of India. The statue's name, Unity, points directly at that legacy of holding a diverse country together.",
+      "The monument was built as a large public project, and part of its story was a campaign inviting farmers across the country to donate iron for it, a symbolic tie between the land, its farmers, and the leader being honored. It has since become a major tourist destination, with a viewing gallery, gardens, and attractions drawing visitors into a part of Gujarat that had seen little tourism before.",
+      "The statue has also drawn debate: over its very large cost, over the displacement and rights of Adivasi communities in the dam and monument area, and over the politics of such a grand memorial. Like much of modern Gujarat, it sits at the meeting point of ambition, development, and the hard questions those bring."],
+    site:{ name:"Kevadia, on the Narmada", note:"The world's tallest statue (about 182 m, unveiled 2018), honoring Sardar Vallabhbhai Patel." },
+    sources:["Reporting on the Statue of Unity and its construction","Encyclopaedia Britannica, Vallabhbhai Patel","Wikipedia, Statue of Unity"] },
 );
 
 ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });

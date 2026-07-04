@@ -342,7 +342,7 @@ progress; it fully resets only accounts with no local copy.
   "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
   summary per chapter), sources. A "Did you know?" fun-fact card rotates every
   10 hours (one fact notes the kaudi shell as early Gujarati currency).
-- **Grammar guide:** 14 topics. **Conversations (Talk):** 25 dialogues with
+- **Grammar guide:** 16 topics. **Conversations (Talk):** 28 dialogues with
   speaking practice, beginner through advanced (the two speakers use different
   voices).
 - **Profile:** account card (name, @username, change username), stats, a
@@ -361,20 +361,26 @@ progress; it fully resets only accounts with no local copy.
   Kaudi awards key off lifetime earned, not the current balance**), settings
   (read/write, Culture tab, Vocab tab, and the two localization toggles below),
   Ko-fi support, sign out. Real daily-streak tracking (via `dhatu_lastActive`).
-- **Localization rewards:** **Gujarati numerals** for the Kaudi/streak counters
+- **Localization reward:** **Gujarati numerals** for the Kaudi/streak counters
   unlock at the **halfway** mark (`completed.length >= half of all lessons`, i.e.
-  well after numbers are taught); the **full Gujarati interface** (nav labels +
-  screen title bars, via the `t(en, gu)` helper) unlocks at **100% mastery**. Both
-  default on when unlocked, each with a settings toggle to switch back to English
-  (`dhatu_guNumbers`, `dhatu_guInterface`). `numFmt(n)` maps 0-9 to ૦-૯; only the
-  Kaudi and streak numbers are converted, not lesson content. Interface coverage is
-  the app chrome (nav + TopBar titles); teaching content stays as authored.
+  well after numbers are taught); default on, with a settings toggle to switch back
+  (`dhatu_guNumbers`). `numFmt(n)` maps 0-9 to ૦-૯; only the Kaudi and streak
+  numbers are converted, not lesson content. (An earlier full-Gujarati-interface
+  reward at 100% mastery was **removed** by request; only the numerals remain.)
 - **Culture cards:** cover images are now **square** (`aspect-ratio:1` on
   `.era-band` / `.cat-cover`) so more of each photo shows. `SafeImg` now sends
   `referrerPolicy="no-referrer"` (matching the working WORD_IMG hotlinks), which
   fixes the Commons covers that previously failed to load (e.g. the ones that were
   silently hidden). A few chapters (e.g. nav_nirman) still have no cover file and
   render as a clean colored square.
+- **Recessed buttons pop out on hover:** the UI uses a soft letterpress look
+  (`--bevel-raise` and `--bevel-inset` are the same inset shadow), so on
+  hover-capable devices the interactive tiles/options/keys lift with a real drop
+  shadow (`@media (hover:hover)` rule just after `.gkey:active`).
+- **`ô` pronunciation:** the candra-o vowel ઑ and its matra example કૉ now have
+  PRONUNCIATION_OVERRIDES of `ɑː` (the "o" in "bother" / "a" in "father"). The old
+  (wrong) clips were deleted from `public/audio/` + the manifest, so the next
+  `npm run audio` regenerates them correctly.
 
 Speech check note: browser speech recognition barely supports gu-IN, so speaking
 checks degrade to an "I said it out loud" self-confirm with a calm (not red)
@@ -385,8 +391,8 @@ message. This is a platform limit, intentionally left as graceful fallback.
 ## 8. Content inventory
 
 **Scale (current):** 22 Learn units / ~103 lessons; 16 "Learn the letters" script
-lessons; ~53 vocab topics; 14 grammar patterns; 25 conversations; 7 Culture
-categories / 41 chapters; 4 timed proficiency exams; **3,550 audio clips across
+lessons; ~56 vocab topics; 16 grammar patterns; 28 conversations; 7 Culture
+categories / 43 chapters; 4 timed proficiency exams; **3,550 audio clips across
 3 voices** (Units 1-21 + earlier content fully generated); ~70 noun images
 (`WORD_IMG`, shown in lessons and the Vocab list) + body/family diagrams + color
 swatches; 14 variant pairs (`alt`). Units 1-15 are
@@ -396,13 +402,7 @@ subordinate clauses); Units 19-22 are conversation, complex sentences, sounding
 natural, and shades of meaning (emphasis/quantity/frequency nuance). The Primary
 Fluency final exam is anchored `afterUnit: "u22"` so it stays at the very end.
 
-**PENDING AUDIO (this batch):** Unit 22's lessons, the three new vocab topics
-(airport, cleaning, office), and the two new culture chapters (Amul, Surat
-diamonds, each with a Gujarati `guSummary` + English narration) added ~32 new
-Gujarati clips + 2 English chapter readings that do NOT exist yet. The app falls
-back to browser TTS for them until the owner runs `GOOGLE_TTS_KEY=<key> npm run
-audio` (auto-discovers new strings, skips existing), then commits the new
-`public/audio/` files. See AUDIO.md.
+**PENDING AUDIO:** content added since the last generate-audio run (the "At the bank"/"At the pharmacy"/"Congratulating a friend" conversations, the Verbs of motion / Eating out / Buildings vocab topics, two new grammar entries, and the Ahmedabad + Statue of Unity culture chapters with their Gujarati summaries) has ~43 Gujarati clips that do not exist yet. The app falls back to browser TTS until the owner runs `GOOGLE_TTS_KEY=<key> npm run audio` and commits the new `public/audio/` files. See AUDIO.md.
 
 **Consistency gate:** a checker script (kept in the session scratchpad,
 `check.mjs`) extracts every gu+romanization pair and verifies: every spoken word

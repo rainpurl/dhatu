@@ -81,6 +81,8 @@ const PRONUNCIATION_OVERRIDES = {
   "ઐ": "ɛː",  // "eh", as in "bed"
   "ઔ": "ɔː",  // "aw", as in "bought"
   "ઍ": "æ",   // "a", as in "apple"
+  "ઑ": "ɑː",  // candra-o: the "o" in "bother" / the "a" in "father"
+  "કૉ": "kɑː", // candra-o matra on ka: same open "aw" sound
   "કૅ": "kæ", // candra-e matra on ka; Chirp3 mangles the candra-e like the vowel above
   // (halant ક્ uses a recorded clip via MANUAL_CLIPS, not TTS)
   // Rare/borrowed consonants (nukta letters): TTS is silent on the bare glyphs,
