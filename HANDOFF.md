@@ -217,11 +217,13 @@ progress; it fully resets only accounts with no local copy.
 
 ## 7. Feature inventory (current)
 
-- **Learn:** units with the vertical lesson journey; 12 exercise types (intro,
+- **Learn:** units with the vertical lesson journey; 13 exercise types (intro,
   hvpt = High-Variability Phonetic Training, letter, match, listen, build, fill,
-  note, speak, plus **translate** = English prompt, pick the Gujarati;
-  **oddone** = pick the word that doesn't belong; **tf** = true/false, does this
-  word mean X). Tapping any Gujarati word in an exercise plays its audio.
+  note, speak, translate = English prompt, pick the Gujarati; oddone = pick the
+  word that doesn't belong; tf = true/false; plus **order** = arrange scrambled
+  sentences/lines into a coherent sequence, for discourse and reply-building).
+  Higher units (16-19) lean on build/order/note over vocab drills, emphasizing
+  tense, tone, and carrying a conversation. Tapping any Gujarati word in an exercise plays its audio.
   "Snooze speaking/listening for 5 min" buttons on those exercise types.
   `expandLesson()` auto-generates a varied reinforcement top-up (listen +
   translate + a true/false + a match) from each lesson's own taught words, so
@@ -232,9 +234,12 @@ progress; it fully resets only accounts with no local copy.
   Working (after Unit 5), Professional Working (after 10), Full Professional
   (after 15), and the **Primary Fluency final exam** at the very end (after 18).
   Each is a countdown-timed set of auto-graded questions (listen/translate/tf/
-  oddone) built from taught words; it unlocks when the preceding unit is done,
-  shows a score and pass/fail (70-75% pass), awards 30 Kaudi on first pass, and
-  stores results in `dhatu_examsDone`. Rendered by `ExamRunner`.
+  oddone) built from taught words. Each is a **test-out**: always available (not
+  locked), and passing marks every lesson it covers (all units up to its
+  `afterUnit`) as completed, so a proficient learner can skip ahead. Shows a
+  score and pass/fail (70-75% pass), awards 30 Kaudi on first pass, stores
+  results in `dhatu_examsDone`. Rendered by `ExamRunner`. The final exam's
+  `afterUnit` tracks the last unit so it stays at the very end.
   Every lesson's `ex` array is post-processed once at load by `expandLesson()`
   (just after the last lesson module, before the `TOPICS` pushes): it appends
   auto-generated listen/match reinforcement built from the lesson's own taught
@@ -310,7 +315,7 @@ message. This is a platform limit, intentionally left as graceful fallback.
 
 ## 8. Content inventory
 
-**Scale (current):** 18 Learn units / ~87 lessons; 16 "Learn the letters" script
+**Scale (current):** 19 Learn units / ~91 lessons; 16 "Learn the letters" script
 lessons; ~41 vocab topics; 13 grammar patterns; 21 conversations; 7 Culture
 categories / 34 chapters; **2,826 audio clips across 3 voices** (~42 MB); ~34
 noun images + body/family diagrams + color swatches. Units 1-15 are

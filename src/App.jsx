@@ -741,6 +741,15 @@ const CSS = `
 .tok:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
 .tok.used{opacity:.32;pointer-events:none}
 .tok.inans{background:var(--brand-soft);border-color:var(--brand)}
+/* order (arrange sentences/lines) */
+.orderbox{min-height:56px;display:flex;flex-direction:column;gap:8px;padding:6px 0 10px;margin-bottom:6px;border-bottom:2px dashed var(--line-strong)}
+.orderbank{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.orderline{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:11px 13px;cursor:pointer;box-shadow:var(--bevel-raise);text-align:left}
+.orderline .gu{font-family:var(--fgu);font-size:18px;font-weight:700}
+.orderline .rm{font-size:14px;font-weight:600}
+.orderline.inans{background:var(--brand-soft)}
+.orderline.used{opacity:.32;pointer-events:none}
+.orderline .onum{width:22px;height:22px;flex:none;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800}
 
 /* note / intro cards */
 .note{background:var(--card);border:none;border-radius:20px;padding:18px;box-shadow:var(--bevel-inset)}
@@ -1520,6 +1529,7 @@ const LESSON_ICON = {
   u16l1:"bulb", u16l2:"chats", u16l3:"steps",
   u17l1:"link", u17l2:"star", u17l3:"gear",
   u18l1:"chats", u18l2:"clock", u18l3:"link",
+  u19l1:"chat", u19l2:"chats", u19l3:"talk",
 };
 const lessonIcon = (l) => {
   if (l.kind === "check") return Ic.trophy;
@@ -1616,7 +1626,7 @@ const EXAMS = [
     { t:"oddone", options:[{gu:"સોમવાર",roman:"somvaar",en:"Monday"},{gu:"શુક્રવાર",roman:"shukravaar",en:"Friday"},{gu:"રવિવાર",roman:"ravivaar",en:"Sunday"},{gu:"સવાર",roman:"savaar",en:"morning"}], answer:"સવાર" },
     { t:"listen", say:"ટિકિટ", options:["ticket","journey","station"], answer:"ticket" },
   ]},
-  { id:"ex_pf", afterUnit:"u18", ilr:"ILR 4", title:"Primary Fluency", timeSec:480, passPct:75, final:true, questions:[
+  { id:"ex_pf", afterUnit:"u19", ilr:"ILR 4", title:"Primary Fluency", timeSec:480, passPct:75, final:true, questions:[
     { t:"translate", en:"if", options:[{gu:"જો",roman:"jo"},{gu:"તો",roman:"to"},{gu:"કારણ કે",roman:"kaaraṇ ke"}], answer:"જો" },
     { t:"tf", gu:"કાશ", roman:"kaash", claim:"if only / I wish", answer:"true" },
     { t:"translate", en:"when", options:[{gu:"જ્યારે",roman:"jyaare"},{gu:"ત્યારે",roman:"tyaare"},{gu:"પછી",roman:"pachhi"}], answer:"જ્યારે" },
@@ -2670,6 +2680,13 @@ function CourseApp({ user }) {
   }
 
   function startExam(id) { stopSpeak(); setActiveExam(id); setScreen("exam"); }
+  // All lesson ids in units up to and including the exam's anchor unit (the
+  // content that exam covers), for testing out.
+  function examCoveredLessons(exam) {
+    const uIdx = UNITS.findIndex((u) => u.id === exam.afterUnit);
+    if (uIdx < 0) return [];
+    return UNITS.slice(0, uIdx + 1).flatMap((u) => u.lessons.map((l) => l.id));
+  }
   function finishExam(exam, correct, pct) {
     const passed = pct >= exam.passPct;
     const already = examsDone[exam.id] && examsDone[exam.id].passed;
@@ -2677,7 +2694,12 @@ function CourseApp({ user }) {
       const cur = prev[exam.id];
       return { ...prev, [exam.id]: { passed: passed || (cur && cur.passed), pct: Math.max(pct, cur ? cur.pct : 0) } };
     });
-    if (passed && !already) { setKaudi((k) => k + 30); recordActivity(); }
+    if (passed) {
+      // Test out: mark all lessons this exam covers as completed.
+      const covered = examCoveredLessons(exam);
+      setCompleted((c) => Array.from(new Set([...c, ...covered])));
+      if (!already) { setKaudi((k) => k + 30); recordActivity(); }
+    }
   }
 
   function exitLesson() {
@@ -3046,16 +3068,15 @@ function CourseApp({ user }) {
                 const exm = EXAMS.find((e) => e.afterUnit === u.id);
                 if (!exm) return null;
                 const rec = examsDone[exm.id];
-                const unlocked = uComplete;
                 const mins = Math.round(exm.timeSec / 60);
                 return (
-                  <button className={"examcard" + (unlocked ? "" : " locked") + (rec && rec.passed ? " passed" : "")} disabled={!unlocked} onClick={() => unlocked && startExam(exm.id)}>
-                    <span className="ex-ic">{rec && rec.passed ? <Ic.trophy /> : unlocked ? <Ic.clock /> : <Ic.lock />}</span>
+                  <button className={"examcard" + (rec && rec.passed ? " passed" : "")} onClick={() => startExam(exm.id)}>
+                    <span className="ex-ic">{rec && rec.passed ? <Ic.trophy /> : <Ic.clock />}</span>
                     <span className="ex-tx">
                       <b>{exm.title}{exm.final ? " (final exam)" : ""}</b>
-                      <small>{unlocked ? (rec ? (rec.passed ? `Passed - best ${rec.pct}%` : `Best ${rec.pct}% - try again`) : `${exm.ilr} - ${mins} min, timed`) : `Finish ${u.ku} to unlock`}</small>
+                      <small>{rec ? (rec.passed ? `Passed - best ${rec.pct}%` : `Best ${rec.pct}% - try again`) : `${exm.ilr} - ${mins} min, timed. Pass to test out.`}</small>
                     </span>
-                    <span className="ex-chev">{rec && rec.passed ? <Ic.check /> : unlocked ? <Ic.play /> : null}</span>
+                    <span className="ex-chev">{rec && rec.passed ? <Ic.check /> : <Ic.play />}</span>
                   </button>
                 );
               })()}
@@ -3954,7 +3975,7 @@ function ExamRunner({ exam, onFinish, onExit }) {
           <h1>{result.passed ? "Passed!" : "Not yet"}</h1>
           <div className="ds" style={{ fontWeight: 800 }}>{exam.title} ({exam.ilr})</div>
           <div className="ds">You scored {result.score} of {qs.length} ({result.pct}%).{result.passed ? "" : ` The pass mark is ${exam.passPct}%.`}</div>
-          {result.passed && <div className="ds" style={{ color: "var(--gold-dark)", fontWeight: 800 }}>Well done, exam cleared.</div>}
+          {result.passed && <div className="ds" style={{ color: "var(--gold-dark)", fontWeight: 800 }}>Passed. The lessons this exam covers are now marked complete.</div>}
           <button className="btn primary" style={{ maxWidth: 320 }} onClick={onExit}>Back to the journey</button>
         </div>
       </div>
@@ -4046,6 +4067,8 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
   const [leftOrder] = useState(() => (ex.t === "match" ? shuffle(ex.pairs) : []));
   const [buildAns, setBuildAns] = useState([]);
   const [buildBank] = useState(() => (ex.t === "build" ? shuffle([...ex.answer, ...(ex.extra || [])]) : []));
+  const [orderAns, setOrderAns] = useState([]);
+  const [orderBank] = useState(() => (ex.t === "order" ? shuffle(ex.lines.map((l, i) => ({ ...l, i }))) : []));
   const [spoke, setSpoke] = useState(false);
 
   // Give each lesson one of the non-robotic voices, derived from its id so it
@@ -4105,6 +4128,12 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
   function checkBuild() {
     const guess = buildAns.map((a) => a.tok);
     const isRight = guess.length === ex.answer.length && guess.every((g, i) => g === ex.answer[i]);
+    if (isRight) onCorrect();
+    else onWrong && onWrong();
+    setFeedback(isRight ? "good" : "bad");
+  }
+  function checkOrder() {
+    const isRight = orderAns.length === ex.lines.length && orderAns.every((a, i) => a.i === i);
     if (isRight) onCorrect();
     else onWrong && onWrong();
     setFeedback(isRight ? "good" : "bad");
@@ -4290,6 +4319,31 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
           </>
         )}
 
+        {ex.t === "order" && (
+          <>
+            <div className="q-title">Put it in the right order</div>
+            <div className="q-sub">{ex.en}</div>
+            <div className="orderbox">
+              {orderAns.map((a, i) => (
+                <div key={i} className="orderline inans" onClick={() => { speak(a.gu); if (!feedback) setOrderAns((x) => x.filter((_, j) => j !== i)); }}>
+                  <span className="onum">{i + 1}</span>
+                  <span>{readWrite ? <span className="gu">{a.gu}</span> : <span className="rm">{a.roman}</span>}</span>
+                </div>
+              ))}
+            </div>
+            <div className="orderbank">
+              {orderBank.map((l, i) => {
+                const used = orderAns.some((a) => a.i === l.i);
+                return (
+                  <div key={i} className={"orderline" + (used ? " used" : "")} onClick={() => { if (!used) { speak(l.gu); if (!feedback) setOrderAns((x) => [...x, l]); } }}>
+                    {readWrite ? <span className="gu">{l.gu}</span> : <span className="rm">{l.roman}</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+
         {ex.t === "note" && (
           <div className="note">
             <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 4 }}>
@@ -4353,6 +4407,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
                 if (ex.t === "fill") return <span><span className="gu">{ex.gu}</span> - {ex.en}</span>;
                 if (ex.t === "translate" || ex.t === "oddone") { const c = ex.options.find((o) => o.gu === ex.answer); return <span><span className="gu">{ex.answer}</span>{c && c.roman ? " (" + c.roman + ")" : ""}{ex.t === "oddone" && c ? " - " + c.en : ""}</span>; }
                 if (ex.t === "tf") return <span>{ex.answer === "true" ? "True" : "False"}</span>;
+                if (ex.t === "order") return <span>{ex.lines.map((l) => l.roman).join("  ·  ")}</span>;
                 return <span>{ex.answer}</span>;
               })()}
             </div>
@@ -4392,6 +4447,12 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
       {!feedback && ex.t === "build" && (
         <div className="foot">
           <button className="btn primary" disabled={buildAns.length === 0} onClick={checkBuild}>Check</button>
+        </div>
+      )}
+
+      {!feedback && ex.t === "order" && (
+        <div className="foot">
+          <button className="btn primary" disabled={orderAns.length < ex.lines.length} onClick={checkOrder}>Check</button>
         </div>
       )}
     </div>
@@ -5211,6 +5272,61 @@ Object.assign(LESSONS, {
 UNITS.push({ id:"u18", ku:"Unit 18", title:"Reporting and connecting", sub:"Reported speech, when-then, and the one that", color:"#8A5A2B",
   lessons:[ {id:"u18l1",label:"Saying what someone said"}, {id:"u18l2",label:"When and then"}, {id:"u18l3",label:"The one that"}, {id:"u18c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u18l1", "u18l2", "u18l3", "u18c");
+
+/* ============================ MODULE: Carrying a conversation (advanced) ============================ */
+Object.assign(LESSONS, {
+  u19l1: { title:"Reacting and following up", ex: [
+    { t:"intro", gu:"ખરેખર", roman:"kharekhar", en:"really" },
+    { t:"intro", gu:"અરે", roman:"are", en:"oh! / hey!" },
+    { t:"intro", gu:"વાહ", roman:"vaah", en:"wow" },
+    { t:"note", title:"Words that keep a chat going", body:[
+      "Small reactions show you are listening without taking over: ખરેખર? (really?), અરે! (oh!), વાહ! (wow!).",
+      "Dropping these in makes your speech sound natural rather than like a list of facts."], ex:[
+      {gu:"અરે, ખરેખર?",roman:"are, kharekhar?",en:"Oh, really?"}] },
+    { t:"build", en:"Oh, that is very nice!", answer:["અરે","બહુ","સરસ","છે"], extra:["ખરેખર","ના"], roman:"are bahu saras chhe" },
+    { t:"speak", gu:"વાહ, ખરેખર?", roman:"vaah, kharekhar?", en:"Wow, really?" },
+  ]},
+  u19l2: { title:"Agreeing and disagreeing", ex: [
+    { t:"intro", gu:"બરાબર", roman:"baraabar", en:"right / correct" },
+    { t:"intro", gu:"સાચી વાત", roman:"saachi vaat", en:"that's true" },
+    { t:"intro", gu:"ખોટું", roman:"khoṭuṁ", en:"wrong / false" },
+    { t:"note", title:"Yes and no, gracefully", body:[
+      "Agree with હા, બરાબર (yes, right) or તમારી વાત સાચી છે (you are right).",
+      "Disagree gently with મને એવું નથી લાગતું (I don't think so) rather than a flat ના."], ex:[
+      {gu:"તમારી વાત સાચી છે",roman:"tamaari vaat saachi chhe",en:"You are right."},
+      {gu:"મને એવું નથી લાગતું",roman:"mane evuṁ nathi laagtuṁ",en:"I don't think so."}] },
+    { t:"tf", gu:"બરાબર", roman:"baraabar", claim:"right / correct", answer:"true" },
+    { t:"build", en:"Yes, you are right.", answer:["હા","તમારી","વાત","સાચી","છે"], extra:["ના","ખોટું"], roman:"haa tamaari vaat saachi chhe" },
+    { t:"speak", gu:"મને એવું નથી લાગતું", roman:"mane evuṁ nathi laagtuṁ", en:"I don't think so." },
+  ]},
+  u19l3: { title:"Putting a reply together", ex: [
+    { t:"note", title:"A reply has beats", body:[
+      "A natural reply often has three beats: react, answer, then ask back.",
+      "Arrange the lines below into that kind of order."], ex:[
+      {gu:"અરે! હું મજામાં છું. તું કેમ છે?",roman:"are! huṁ majaamaan chuṁ. tuṁ kem chhe?",en:"Oh! I'm well. How are you?"}] },
+    { t:"order", en:"Someone greets you and asks how you are. Order your reply.", lines:[
+      {gu:"અરે, નમસ્તે!",roman:"are, namaste!"},
+      {gu:"હું મજામાં છું.",roman:"huṁ majaamaan chuṁ."},
+      {gu:"તું કેમ છે?",roman:"tuṁ kem chhe?"}] },
+    { t:"order", en:"Order this little exchange about plans.", lines:[
+      {gu:"કાલે શું કરે છે?",roman:"kaale shuṁ kare chhe?"},
+      {gu:"કંઈ ખાસ નહીં.",roman:"kaṁi khaas nahi."},
+      {gu:"તો ચાલ, ફિલ્મ જોવા જઈએ.",roman:"to chaal, film jovaa jaie."}] },
+    { t:"speak", gu:"તું કેમ છે?", roman:"tuṁ kem chhe?", en:"How are you? (informal)" },
+  ]},
+  u19c: { title:"Checkpoint", check:true, ex: [
+    { t:"order", en:"Order the greeting exchange.", lines:[
+      {gu:"નમસ્તે!",roman:"namaste!"},
+      {gu:"કેમ છો?",roman:"kem chho?"},
+      {gu:"હું મજામાં છું.",roman:"huṁ majaamaan chuṁ."}] },
+    { t:"tf", gu:"ખોટું", roman:"khoṭuṁ", claim:"correct", answer:"false" },
+    { t:"build", en:"You are right.", answer:["તમારી","વાત","સાચી","છે"], extra:["ના","હું"], roman:"tamaari vaat saachi chhe" },
+    { t:"speak", gu:"અરે, ખરેખર?", roman:"are, kharekhar?", en:"Oh, really?" },
+  ]},
+});
+UNITS.push({ id:"u19", ku:"Unit 19", title:"Carrying a conversation", sub:"Reactions, agreeing and disagreeing, and stringing a reply together", color:"#985684",
+  lessons:[ {id:"u19l1",label:"Reacting and following up"}, {id:"u19l2",label:"Agreeing and disagreeing"}, {id:"u19l3",label:"Putting a reply together"}, {id:"u19c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u19l1", "u19l2", "u19l3", "u19c");
 
 /* Roughly double the practice in every lesson by appending auto-generated
    reinforcement questions (listen and match) built from each lesson's own taught
