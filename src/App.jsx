@@ -638,6 +638,7 @@ const CSS = `
 .examcard .ex-chev{flex:none;opacity:.9}
 .examtimer{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:16px;color:var(--ink)}
 .examtimer.low{color:var(--no)}
+.exampassage{background:var(--card);border-radius:14px;padding:14px 16px;margin:6px 0 12px;box-shadow:var(--bevel-inset);font-family:var(--fgu);font-size:19px;line-height:1.7}
 .lpath{position:relative;display:flex;flex-direction:column;gap:10px;padding:4px 0 2px}
 .lpath::before{content:"";position:absolute;top:26px;bottom:26px;left:38px;width:3px;transform:translateX(-50%);background:var(--line);box-shadow:var(--bevel-inset);border-radius:999px;z-index:0}
 .lrow{position:relative;z-index:1;display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:none;cursor:pointer;
@@ -1592,56 +1593,2070 @@ const GRAMMAR = [
    (Primary Fluency) sits at the very end. Question types reuse the lesson
    engine's single-answer formats: listen, translate, tf, oddone. */
 const EXAMS = [
-  { id:"ex_lwp", afterUnit:"u5", ilr:"ILR 1", title:"Limited Working Proficiency", timeSec:300, passPct:70, questions:[
-    { t:"listen", say:"પાણી", options:["water","milk","tea"], answer:"water" },
-    { t:"translate", en:"thank you", options:[{gu:"આભાર",roman:"aabhaar"},{gu:"નમસ્તે",roman:"namaste"},{gu:"આવજો",roman:"aavjo"}], answer:"આભાર" },
-    { t:"tf", gu:"ત્રણ", roman:"traṇ", claim:"three", answer:"true" },
-    { t:"oddone", options:[{gu:"માતા",roman:"maataa",en:"mother"},{gu:"પિતા",roman:"pitaa",en:"father"},{gu:"ભાઈ",roman:"bhaai",en:"brother"},{gu:"ભાત",roman:"bhaat",en:"rice"}], answer:"ભાત" },
-    { t:"listen", say:"કૂતરો", options:["dog","cat","cow"], answer:"dog" },
-    { t:"translate", en:"water", options:[{gu:"પાણી",roman:"paṇi"},{gu:"દૂધ",roman:"doodh"},{gu:"ચા",roman:"chaa"}], answer:"પાણી" },
-    { t:"tf", gu:"લાલ", roman:"laal", claim:"green", answer:"false" },
-    { t:"translate", en:"one", options:[{gu:"એક",roman:"ek"},{gu:"બે",roman:"be"},{gu:"દસ",roman:"das"}], answer:"એક" },
-    { t:"oddone", options:[{gu:"લાલ",roman:"laal",en:"red"},{gu:"લીલો",roman:"leelo",en:"green"},{gu:"ગાય",roman:"gaay",en:"cow"},{gu:"પીળો",roman:"peeḷo",en:"yellow"}], answer:"ગાય" },
-    { t:"listen", say:"આભાર", options:["thank you","hello","goodbye"], answer:"thank you" },
-  ]},
-  { id:"ex_pwp", afterUnit:"u10", ilr:"ILR 2", title:"Professional Working Proficiency", timeSec:360, passPct:70, questions:[
-    { t:"translate", en:"big", options:[{gu:"મોટું",roman:"moṭuṁ"},{gu:"નાનું",roman:"naanuṁ"},{gu:"સારું",roman:"saaruṁ"}], answer:"મોટું" },
-    { t:"listen", say:"બજાર", options:["market","shop","road"], answer:"market" },
-    { t:"tf", gu:"ઠંડું", roman:"ṭhanḍuṁ", claim:"cold", answer:"true" },
-    { t:"oddone", options:[{gu:"શહેર",roman:"shaher",en:"city"},{gu:"ગામ",roman:"gaam",en:"village"},{gu:"મંદિર",roman:"mandir",en:"temple"},{gu:"ગરમ",roman:"garam",en:"hot"}], answer:"ગરમ" },
-    { t:"translate", en:"hot", options:[{gu:"ગરમ",roman:"garam"},{gu:"ઠંડું",roman:"ṭhanḍuṁ"},{gu:"મોટું",roman:"moṭuṁ"}], answer:"ગરમ" },
-    { t:"listen", say:"માથું", options:["head","hand","eye"], answer:"head" },
-    { t:"tf", gu:"નાનું", roman:"naanuṁ", claim:"big", answer:"false" },
-    { t:"oddone", options:[{gu:"માથું",roman:"maathuṁ",en:"head"},{gu:"આંખ",roman:"aankh",en:"eye"},{gu:"નાક",roman:"naak",en:"nose"},{gu:"ઘર",roman:"ghar",en:"house"}], answer:"ઘર" },
-    { t:"translate", en:"week", options:[{gu:"અઠવાડિયું",roman:"aṭhvaaḍiyuṁ"},{gu:"સવાર",roman:"savaar"},{gu:"રાત",roman:"raat"}], answer:"અઠવાડિયું" },
-    { t:"listen", say:"વરસાદ", options:["rain","heat","wind"], answer:"rain" },
-  ]},
-  { id:"ex_fpp", afterUnit:"u15", ilr:"ILR 3", title:"Full Professional Proficiency", timeSec:420, passPct:70, questions:[
-    { t:"translate", en:"doctor", options:[{gu:"ડૉક્ટર",roman:"ḍokṭar"},{gu:"શિક્ષક",roman:"shikshak"},{gu:"ખેડૂત",roman:"kheḍoot"}], answer:"ડૉક્ટર" },
-    { t:"listen", say:"તાવ", options:["fever","cough","cold"], answer:"fever" },
-    { t:"tf", gu:"ડાબે", roman:"ḍaabe", claim:"right", answer:"false" },
-    { t:"oddone", options:[{gu:"શિક્ષક",roman:"shikshak",en:"teacher"},{gu:"ખેડૂત",roman:"kheḍoot",en:"farmer"},{gu:"વેપારી",roman:"vepaari",en:"trader"},{gu:"દવા",roman:"davaa",en:"medicine"}], answer:"દવા" },
-    { t:"translate", en:"straight", options:[{gu:"સીધું",roman:"seedhuṁ"},{gu:"ડાબે",roman:"ḍaabe"},{gu:"જમણે",roman:"jamṇe"}], answer:"સીધું" },
-    { t:"listen", say:"મુસાફરી", options:["journey","ticket","road"], answer:"journey" },
-    { t:"tf", gu:"બીમાર", roman:"beemaar", claim:"sick", answer:"true" },
-    { t:"translate", en:"to buy", options:[{gu:"ખરીદવું",roman:"kharidvuṁ"},{gu:"વેચવું",roman:"vechvuṁ"},{gu:"આપવું",roman:"aapvuṁ"}], answer:"ખરીદવું" },
-    { t:"oddone", options:[{gu:"સોમવાર",roman:"somvaar",en:"Monday"},{gu:"શુક્રવાર",roman:"shukravaar",en:"Friday"},{gu:"રવિવાર",roman:"ravivaar",en:"Sunday"},{gu:"સવાર",roman:"savaar",en:"morning"}], answer:"સવાર" },
-    { t:"listen", say:"ટિકિટ", options:["ticket","journey","station"], answer:"ticket" },
-  ]},
-  { id:"ex_pf", afterUnit:"u20", ilr:"ILR 4", title:"Primary Fluency", timeSec:1500, passPct:80, final:true, questions:[
-    { t:"translate", en:"if", options:[{gu:"જો",roman:"jo"},{gu:"તો",roman:"to"},{gu:"કારણ કે",roman:"kaaraṇ ke"}], answer:"જો" },
-    { t:"tf", gu:"કાશ", roman:"kaash", claim:"if only / I wish", answer:"true" },
-    { t:"translate", en:"when", options:[{gu:"જ્યારે",roman:"jyaare"},{gu:"ત્યારે",roman:"tyaare"},{gu:"પછી",roman:"pachhi"}], answer:"જ્યારે" },
-    { t:"oddone", options:[{gu:"કારણ કે",roman:"kaaraṇ ke",en:"because"},{gu:"તેથી",roman:"tethi",en:"so"},{gu:"પણ",roman:"paṇ",en:"but"},{gu:"મિત્ર",roman:"mitra",en:"friend"}], answer:"મિત્ર" },
-    { t:"translate", en:"most", options:[{gu:"સૌથી",roman:"sauthi"},{gu:"વધારે",roman:"vadhaare"},{gu:"કરતાં",roman:"kartaan"}], answer:"સૌથી" },
-    { t:"tf", gu:"મસ્ત", roman:"mast", claim:"awful", answer:"false" },
-    { t:"listen", say:"કહ્યું", options:["said","asked","did"], answer:"said" },
-    { t:"translate", en:"the one that / which", options:[{gu:"જે",roman:"je"},{gu:"કે",roman:"ke"},{gu:"જો",roman:"jo"}], answer:"જે" },
-    { t:"oddone", options:[{gu:"ખુશ",roman:"khush",en:"happy"},{gu:"ઉદાસ",roman:"udaas",en:"sad"},{gu:"ગુસ્સો",roman:"gusso",en:"anger"},{gu:"બજાર",roman:"bajaar",en:"market"}], answer:"બજાર" },
-    { t:"tf", gu:"કરતાં", roman:"kartaan", claim:"than", answer:"true" },
-    { t:"translate", en:"I think", options:[{gu:"મને લાગે છે",roman:"mane laage chhe"},{gu:"મને ગમે છે",roman:"mane game chhe"},{gu:"મને જોઈએ",roman:"mane joie"}], answer:"મને લાગે છે" },
-    { t:"listen", say:"ધમાલ", options:["a blast / wild fun","a mess","a mistake"], answer:"a blast / wild fun" },
-  ]},
+  {
+    "id": "ex_lwp",
+    "afterUnit": "u5",
+    "ilr": "ILR 1",
+    "title": "Limited Working Proficiency",
+    "timeSec": 600,
+    "passPct": 70,
+    "questions": [
+      {
+        "t": "translate",
+        "en": "hello",
+        "options": [
+          {
+            "gu": "નમસ્તે",
+            "roman": "namaste"
+          },
+          {
+            "gu": "દૂધ",
+            "roman": "doodh"
+          },
+          {
+            "gu": "બે",
+            "roman": "be"
+          }
+        ],
+        "answer": "નમસ્તે"
+      },
+      {
+        "t": "translate",
+        "en": "thank you",
+        "options": [
+          {
+            "gu": "ચા",
+            "roman": "chaa"
+          },
+          {
+            "gu": "ત્રણ",
+            "roman": "traṇ"
+          },
+          {
+            "gu": "આભાર",
+            "roman": "aabhaar"
+          }
+        ],
+        "answer": "આભાર"
+      },
+      {
+        "t": "translate",
+        "en": "goodbye",
+        "options": [
+          {
+            "gu": "ભાત",
+            "roman": "bhaat"
+          },
+          {
+            "gu": "ચાર",
+            "roman": "chaar"
+          },
+          {
+            "gu": "આવજો",
+            "roman": "aavjo"
+          }
+        ],
+        "answer": "આવજો"
+      },
+      {
+        "t": "translate",
+        "en": "mother",
+        "options": [
+          {
+            "gu": "રોટલી",
+            "roman": "roṭli"
+          },
+          {
+            "gu": "પાંચ",
+            "roman": "paanch"
+          },
+          {
+            "gu": "માતા",
+            "roman": "maataa"
+          }
+        ],
+        "answer": "માતા"
+      },
+      {
+        "t": "translate",
+        "en": "father",
+        "options": [
+          {
+            "gu": "કેરી",
+            "roman": "keri"
+          },
+          {
+            "gu": "દસ",
+            "roman": "das"
+          },
+          {
+            "gu": "પિતા",
+            "roman": "pitaa"
+          }
+        ],
+        "answer": "પિતા"
+      },
+      {
+        "t": "translate",
+        "en": "brother",
+        "options": [
+          {
+            "gu": "ભાઈ",
+            "roman": "bhaai"
+          },
+          {
+            "gu": "એક",
+            "roman": "ek"
+          },
+          {
+            "gu": "લાલ",
+            "roman": "laal"
+          }
+        ],
+        "answer": "ભાઈ"
+      },
+      {
+        "t": "translate",
+        "en": "water",
+        "options": [
+          {
+            "gu": "બે",
+            "roman": "be"
+          },
+          {
+            "gu": "લીલો",
+            "roman": "leelo"
+          },
+          {
+            "gu": "પાણી",
+            "roman": "paṇi"
+          }
+        ],
+        "answer": "પાણી"
+      },
+      {
+        "t": "translate",
+        "en": "milk",
+        "options": [
+          {
+            "gu": "દૂધ",
+            "roman": "doodh"
+          },
+          {
+            "gu": "ત્રણ",
+            "roman": "traṇ"
+          },
+          {
+            "gu": "પીળો",
+            "roman": "peeḷo"
+          }
+        ],
+        "answer": "દૂધ"
+      },
+      {
+        "t": "translate",
+        "en": "tea",
+        "options": [
+          {
+            "gu": "કાળો",
+            "roman": "kaaḷo"
+          },
+          {
+            "gu": "ચા",
+            "roman": "chaa"
+          },
+          {
+            "gu": "ચાર",
+            "roman": "chaar"
+          }
+        ],
+        "answer": "ચા"
+      },
+      {
+        "t": "translate",
+        "en": "rice",
+        "options": [
+          {
+            "gu": "ભાત",
+            "roman": "bhaat"
+          },
+          {
+            "gu": "પાંચ",
+            "roman": "paanch"
+          },
+          {
+            "gu": "સફેદ",
+            "roman": "safed"
+          }
+        ],
+        "answer": "ભાત"
+      },
+      {
+        "t": "listen",
+        "say": "માતા",
+        "options": [
+          "mother",
+          "rice",
+          "ten"
+        ],
+        "answer": "mother"
+      },
+      {
+        "t": "listen",
+        "say": "પિતા",
+        "options": [
+          "father",
+          "roti",
+          "red"
+        ],
+        "answer": "father"
+      },
+      {
+        "t": "listen",
+        "say": "ભાઈ",
+        "options": [
+          "mango",
+          "green",
+          "brother"
+        ],
+        "answer": "brother"
+      },
+      {
+        "t": "listen",
+        "say": "પાણી",
+        "options": [
+          "yellow",
+          "water",
+          "one"
+        ],
+        "answer": "water"
+      },
+      {
+        "t": "listen",
+        "say": "દૂધ",
+        "options": [
+          "two",
+          "black",
+          "milk"
+        ],
+        "answer": "milk"
+      },
+      {
+        "t": "listen",
+        "say": "ચા",
+        "options": [
+          "tea",
+          "three",
+          "white"
+        ],
+        "answer": "tea"
+      },
+      {
+        "t": "listen",
+        "say": "ભાત",
+        "options": [
+          "four",
+          "dog",
+          "rice"
+        ],
+        "answer": "rice"
+      },
+      {
+        "t": "listen",
+        "say": "રોટલી",
+        "options": [
+          "five",
+          "cat",
+          "roti"
+        ],
+        "answer": "roti"
+      },
+      {
+        "t": "tf",
+        "gu": "ભાઈ",
+        "roman": "bhaai",
+        "claim": "brother",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "પાણી",
+        "roman": "paṇi",
+        "claim": "one",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "દૂધ",
+        "roman": "doodh",
+        "claim": "milk",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "ચા",
+        "roman": "chaa",
+        "claim": "three",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "ભાત",
+        "roman": "bhaat",
+        "claim": "rice",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "રોટલી",
+        "roman": "roṭli",
+        "claim": "five",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "કેરી",
+        "roman": "keri",
+        "claim": "mango",
+        "answer": "true"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "માતા",
+            "roman": "maataa",
+            "en": "mother"
+          },
+          {
+            "gu": "પિતા",
+            "roman": "pitaa",
+            "en": "father"
+          },
+          {
+            "gu": "ભાઈ",
+            "roman": "bhaai",
+            "en": "brother"
+          },
+          {
+            "gu": "પાણી",
+            "roman": "paṇi",
+            "en": "water"
+          }
+        ],
+        "answer": "પાણી"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "ગાય",
+            "roman": "gaay",
+            "en": "cow"
+          },
+          {
+            "gu": "લાલ",
+            "roman": "laal",
+            "en": "red"
+          },
+          {
+            "gu": "લીલો",
+            "roman": "leelo",
+            "en": "green"
+          },
+          {
+            "gu": "પીળો",
+            "roman": "peeḷo",
+            "en": "yellow"
+          }
+        ],
+        "answer": "ગાય"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "ભાત",
+            "roman": "bhaat",
+            "en": "rice"
+          },
+          {
+            "gu": "કૂતરો",
+            "roman": "kootro",
+            "en": "dog"
+          },
+          {
+            "gu": "બિલાડી",
+            "roman": "bilaaḍi",
+            "en": "cat"
+          },
+          {
+            "gu": "ગાય",
+            "roman": "gaay",
+            "en": "cow"
+          }
+        ],
+        "answer": "ભાત"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "એક",
+            "roman": "ek",
+            "en": "one"
+          },
+          {
+            "gu": "બે",
+            "roman": "be",
+            "en": "two"
+          },
+          {
+            "gu": "ત્રણ",
+            "roman": "traṇ",
+            "en": "three"
+          },
+          {
+            "gu": "પાણી",
+            "roman": "paṇi",
+            "en": "water"
+          }
+        ],
+        "answer": "પાણી"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "દૂધ",
+            "roman": "doodh",
+            "en": "milk"
+          },
+          {
+            "gu": "ચા",
+            "roman": "chaa",
+            "en": "tea"
+          },
+          {
+            "gu": "કૂતરો",
+            "roman": "kootro",
+            "en": "dog"
+          },
+          {
+            "gu": "પાણી",
+            "roman": "paṇi",
+            "en": "water"
+          }
+        ],
+        "answer": "કૂતરો"
+      }
+    ]
+  },
+  {
+    "id": "ex_pwp",
+    "afterUnit": "u10",
+    "ilr": "ILR 2",
+    "title": "Professional Working Proficiency",
+    "timeSec": 720,
+    "passPct": 70,
+    "questions": [
+      {
+        "t": "translate",
+        "en": "big",
+        "options": [
+          {
+            "gu": "શહેર",
+            "roman": "shaher"
+          },
+          {
+            "gu": "મોટું",
+            "roman": "moṭuṁ"
+          },
+          {
+            "gu": "માથું",
+            "roman": "maathuṁ"
+          }
+        ],
+        "answer": "મોટું"
+      },
+      {
+        "t": "translate",
+        "en": "small",
+        "options": [
+          {
+            "gu": "ગામ",
+            "roman": "gaam"
+          },
+          {
+            "gu": "નાનું",
+            "roman": "naanuṁ"
+          },
+          {
+            "gu": "આંખ",
+            "roman": "aankh"
+          }
+        ],
+        "answer": "નાનું"
+      },
+      {
+        "t": "translate",
+        "en": "good",
+        "options": [
+          {
+            "gu": "મંદિર",
+            "roman": "mandir"
+          },
+          {
+            "gu": "સારું",
+            "roman": "saaruṁ"
+          },
+          {
+            "gu": "કાન",
+            "roman": "kaan"
+          }
+        ],
+        "answer": "સારું"
+      },
+      {
+        "t": "translate",
+        "en": "bad",
+        "options": [
+          {
+            "gu": "નાક",
+            "roman": "naak"
+          },
+          {
+            "gu": "બજાર",
+            "roman": "bajaar"
+          },
+          {
+            "gu": "ખરાબ",
+            "roman": "kharaab"
+          }
+        ],
+        "answer": "ખરાબ"
+      },
+      {
+        "t": "translate",
+        "en": "hot",
+        "options": [
+          {
+            "gu": "ગરમ",
+            "roman": "garam"
+          },
+          {
+            "gu": "હાથ",
+            "roman": "haath"
+          },
+          {
+            "gu": "દવાખાનું",
+            "roman": "davaakhaanuṁ"
+          }
+        ],
+        "answer": "ગરમ"
+      },
+      {
+        "t": "translate",
+        "en": "cold",
+        "options": [
+          {
+            "gu": "સ્ટેશન",
+            "roman": "sṭeshan"
+          },
+          {
+            "gu": "ઠંડું",
+            "roman": "ṭhanḍuṁ"
+          },
+          {
+            "gu": "પગ",
+            "roman": "pag"
+          }
+        ],
+        "answer": "ઠંડું"
+      },
+      {
+        "t": "translate",
+        "en": "beautiful",
+        "options": [
+          {
+            "gu": "સવાર",
+            "roman": "savaar"
+          },
+          {
+            "gu": "સુંદર",
+            "roman": "sundar"
+          },
+          {
+            "gu": "શહેર",
+            "roman": "shaher"
+          }
+        ],
+        "answer": "સુંદર"
+      },
+      {
+        "t": "translate",
+        "en": "head",
+        "options": [
+          {
+            "gu": "બપોર",
+            "roman": "bapor"
+          },
+          {
+            "gu": "માથું",
+            "roman": "maathuṁ"
+          },
+          {
+            "gu": "ગામ",
+            "roman": "gaam"
+          }
+        ],
+        "answer": "માથું"
+      },
+      {
+        "t": "translate",
+        "en": "eye",
+        "options": [
+          {
+            "gu": "આંખ",
+            "roman": "aankh"
+          },
+          {
+            "gu": "મંદિર",
+            "roman": "mandir"
+          },
+          {
+            "gu": "રાત",
+            "roman": "raat"
+          }
+        ],
+        "answer": "આંખ"
+      },
+      {
+        "t": "translate",
+        "en": "ear",
+        "options": [
+          {
+            "gu": "કાન",
+            "roman": "kaan"
+          },
+          {
+            "gu": "બજાર",
+            "roman": "bajaar"
+          },
+          {
+            "gu": "અઠવાડિયું",
+            "roman": "aṭhvaaḍiyuṁ"
+          }
+        ],
+        "answer": "કાન"
+      },
+      {
+        "t": "translate",
+        "en": "nose",
+        "options": [
+          {
+            "gu": "નાક",
+            "roman": "naak"
+          },
+          {
+            "gu": "દવાખાનું",
+            "roman": "davaakhaanuṁ"
+          },
+          {
+            "gu": "વરસાદ",
+            "roman": "varsaad"
+          }
+        ],
+        "answer": "નાક"
+      },
+      {
+        "t": "listen",
+        "say": "ખરાબ",
+        "options": [
+          "bad",
+          "ear",
+          "hospital"
+        ],
+        "answer": "bad"
+      },
+      {
+        "t": "listen",
+        "say": "ગરમ",
+        "options": [
+          "hot",
+          "nose",
+          "station"
+        ],
+        "answer": "hot"
+      },
+      {
+        "t": "listen",
+        "say": "ઠંડું",
+        "options": [
+          "hand",
+          "morning",
+          "cold"
+        ],
+        "answer": "cold"
+      },
+      {
+        "t": "listen",
+        "say": "સુંદર",
+        "options": [
+          "beautiful",
+          "leg",
+          "afternoon"
+        ],
+        "answer": "beautiful"
+      },
+      {
+        "t": "listen",
+        "say": "માથું",
+        "options": [
+          "city",
+          "night",
+          "head"
+        ],
+        "answer": "head"
+      },
+      {
+        "t": "listen",
+        "say": "આંખ",
+        "options": [
+          "eye",
+          "village",
+          "week"
+        ],
+        "answer": "eye"
+      },
+      {
+        "t": "listen",
+        "say": "કાન",
+        "options": [
+          "ear",
+          "temple",
+          "rain"
+        ],
+        "answer": "ear"
+      },
+      {
+        "t": "listen",
+        "say": "નાક",
+        "options": [
+          "market",
+          "Monday",
+          "nose"
+        ],
+        "answer": "nose"
+      },
+      {
+        "t": "tf",
+        "gu": "ઠંડું",
+        "roman": "ṭhanḍuṁ",
+        "claim": "cold",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "સુંદર",
+        "roman": "sundar",
+        "claim": "leg",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "માથું",
+        "roman": "maathuṁ",
+        "claim": "head",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "આંખ",
+        "roman": "aankh",
+        "claim": "village",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "કાન",
+        "roman": "kaan",
+        "claim": "ear",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "નાક",
+        "roman": "naak",
+        "claim": "market",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "હાથ",
+        "roman": "haath",
+        "claim": "hand",
+        "answer": "true"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "ગરમ",
+            "roman": "garam",
+            "en": "hot"
+          },
+          {
+            "gu": "શહેર",
+            "roman": "shaher",
+            "en": "city"
+          },
+          {
+            "gu": "ગામ",
+            "roman": "gaam",
+            "en": "village"
+          },
+          {
+            "gu": "મંદિર",
+            "roman": "mandir",
+            "en": "temple"
+          }
+        ],
+        "answer": "ગરમ"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "નાક",
+            "roman": "naak",
+            "en": "nose"
+          },
+          {
+            "gu": "ઘર",
+            "roman": "ghar",
+            "en": "house"
+          },
+          {
+            "gu": "માથું",
+            "roman": "maathuṁ",
+            "en": "head"
+          },
+          {
+            "gu": "આંખ",
+            "roman": "aankh",
+            "en": "eye"
+          }
+        ],
+        "answer": "ઘર"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "મોટું",
+            "roman": "moṭuṁ",
+            "en": "big"
+          },
+          {
+            "gu": "નાનું",
+            "roman": "naanuṁ",
+            "en": "small"
+          },
+          {
+            "gu": "ઠંડું",
+            "roman": "ṭhanḍuṁ",
+            "en": "cold"
+          },
+          {
+            "gu": "બજાર",
+            "roman": "bajaar",
+            "en": "market"
+          }
+        ],
+        "answer": "બજાર"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "સોમવાર",
+            "roman": "somvaar",
+            "en": "Monday"
+          },
+          {
+            "gu": "શુક્રવાર",
+            "roman": "shukravaar",
+            "en": "Friday"
+          },
+          {
+            "gu": "રવિવાર",
+            "roman": "ravivaar",
+            "en": "Sunday"
+          },
+          {
+            "gu": "સવાર",
+            "roman": "savaar",
+            "en": "morning"
+          }
+        ],
+        "answer": "સવાર"
+      }
+    ]
+  },
+  {
+    "id": "ex_fpp",
+    "afterUnit": "u15",
+    "ilr": "ILR 3",
+    "title": "Full Professional Proficiency",
+    "timeSec": 840,
+    "passPct": 75,
+    "questions": [
+      {
+        "t": "translate",
+        "en": "doctor",
+        "options": [
+          {
+            "gu": "ડૉક્ટર",
+            "roman": "ḍokṭar"
+          },
+          {
+            "gu": "દવા",
+            "roman": "davaa"
+          },
+          {
+            "gu": "પાસે",
+            "roman": "paase"
+          }
+        ],
+        "answer": "ડૉક્ટર"
+      },
+      {
+        "t": "translate",
+        "en": "teacher",
+        "options": [
+          {
+            "gu": "શિક્ષક",
+            "roman": "shikshak"
+          },
+          {
+            "gu": "દુખાવો",
+            "roman": "dukhaavo"
+          },
+          {
+            "gu": "દૂર",
+            "roman": "door"
+          }
+        ],
+        "answer": "શિક્ષક"
+      },
+      {
+        "t": "translate",
+        "en": "farmer",
+        "options": [
+          {
+            "gu": "ટિકિટ",
+            "roman": "ṭikiṭ"
+          },
+          {
+            "gu": "ખેડૂત",
+            "roman": "kheḍoot"
+          },
+          {
+            "gu": "આરામ",
+            "roman": "aaraam"
+          }
+        ],
+        "answer": "ખેડૂત"
+      },
+      {
+        "t": "translate",
+        "en": "trader",
+        "options": [
+          {
+            "gu": "વેપારી",
+            "roman": "vepaari"
+          },
+          {
+            "gu": "ડાબે",
+            "roman": "ḍaabe"
+          },
+          {
+            "gu": "મુસાફરી",
+            "roman": "musaafari"
+          }
+        ],
+        "answer": "વેપારી"
+      },
+      {
+        "t": "translate",
+        "en": "student",
+        "options": [
+          {
+            "gu": "જમણે",
+            "roman": "jamṇe"
+          },
+          {
+            "gu": "રસ્તો",
+            "roman": "rasto"
+          },
+          {
+            "gu": "વિદ્યાર્થી",
+            "roman": "vidyaarthi"
+          }
+        ],
+        "answer": "વિદ્યાર્થી"
+      },
+      {
+        "t": "translate",
+        "en": "sick",
+        "options": [
+          {
+            "gu": "ખરીદવું",
+            "roman": "kharidvuṁ"
+          },
+          {
+            "gu": "બીમાર",
+            "roman": "beemaar"
+          },
+          {
+            "gu": "સીધું",
+            "roman": "seedhuṁ"
+          }
+        ],
+        "answer": "બીમાર"
+      },
+      {
+        "t": "translate",
+        "en": "fever",
+        "options": [
+          {
+            "gu": "તાવ",
+            "roman": "taav"
+          },
+          {
+            "gu": "પાસે",
+            "roman": "paase"
+          },
+          {
+            "gu": "વેચવું",
+            "roman": "vechvuṁ"
+          }
+        ],
+        "answer": "તાવ"
+      },
+      {
+        "t": "translate",
+        "en": "medicine",
+        "options": [
+          {
+            "gu": "દવા",
+            "roman": "davaa"
+          },
+          {
+            "gu": "દૂર",
+            "roman": "door"
+          },
+          {
+            "gu": "કામ",
+            "roman": "kaam"
+          }
+        ],
+        "answer": "દવા"
+      },
+      {
+        "t": "translate",
+        "en": "pain",
+        "options": [
+          {
+            "gu": "દુખાવો",
+            "roman": "dukhaavo"
+          },
+          {
+            "gu": "ટિકિટ",
+            "roman": "ṭikiṭ"
+          },
+          {
+            "gu": "સમય",
+            "roman": "samay"
+          }
+        ],
+        "answer": "દુખાવો"
+      },
+      {
+        "t": "translate",
+        "en": "rest",
+        "options": [
+          {
+            "gu": "મુસાફરી",
+            "roman": "musaafari"
+          },
+          {
+            "gu": "ડૉક્ટર",
+            "roman": "ḍokṭar"
+          },
+          {
+            "gu": "આરામ",
+            "roman": "aaraam"
+          }
+        ],
+        "answer": "આરામ"
+      },
+      {
+        "t": "listen",
+        "say": "વેપારી",
+        "options": [
+          "trader",
+          "rest",
+          "road"
+        ],
+        "answer": "trader"
+      },
+      {
+        "t": "listen",
+        "say": "વિદ્યાર્થી",
+        "options": [
+          "left",
+          "to buy",
+          "student"
+        ],
+        "answer": "student"
+      },
+      {
+        "t": "listen",
+        "say": "બીમાર",
+        "options": [
+          "right",
+          "to sell",
+          "sick"
+        ],
+        "answer": "sick"
+      },
+      {
+        "t": "listen",
+        "say": "તાવ",
+        "options": [
+          "work",
+          "fever",
+          "straight"
+        ],
+        "answer": "fever"
+      },
+      {
+        "t": "listen",
+        "say": "દવા",
+        "options": [
+          "time",
+          "medicine",
+          "near"
+        ],
+        "answer": "medicine"
+      },
+      {
+        "t": "listen",
+        "say": "દુખાવો",
+        "options": [
+          "far",
+          "doctor",
+          "pain"
+        ],
+        "answer": "pain"
+      },
+      {
+        "t": "listen",
+        "say": "આરામ",
+        "options": [
+          "ticket",
+          "teacher",
+          "rest"
+        ],
+        "answer": "rest"
+      },
+      {
+        "t": "listen",
+        "say": "ડાબે",
+        "options": [
+          "journey",
+          "farmer",
+          "left"
+        ],
+        "answer": "left"
+      },
+      {
+        "t": "tf",
+        "gu": "બીમાર",
+        "roman": "beemaar",
+        "claim": "sick",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "તાવ",
+        "roman": "taav",
+        "claim": "straight",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "દવા",
+        "roman": "davaa",
+        "claim": "medicine",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "દુખાવો",
+        "roman": "dukhaavo",
+        "claim": "far",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "આરામ",
+        "roman": "aaraam",
+        "claim": "rest",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "ડાબે",
+        "roman": "ḍaabe",
+        "claim": "journey",
+        "answer": "false"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "દવા",
+            "roman": "davaa",
+            "en": "medicine"
+          },
+          {
+            "gu": "ડૉક્ટર",
+            "roman": "ḍokṭar",
+            "en": "doctor"
+          },
+          {
+            "gu": "શિક્ષક",
+            "roman": "shikshak",
+            "en": "teacher"
+          },
+          {
+            "gu": "ખેડૂત",
+            "roman": "kheḍoot",
+            "en": "farmer"
+          }
+        ],
+        "answer": "દવા"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "તાવ",
+            "roman": "taav",
+            "en": "fever"
+          },
+          {
+            "gu": "દુખાવો",
+            "roman": "dukhaavo",
+            "en": "pain"
+          },
+          {
+            "gu": "રસ્તો",
+            "roman": "rasto",
+            "en": "road"
+          },
+          {
+            "gu": "બીમાર",
+            "roman": "beemaar",
+            "en": "sick"
+          }
+        ],
+        "answer": "રસ્તો"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "જમણે",
+            "roman": "jamṇe",
+            "en": "right"
+          },
+          {
+            "gu": "સીધું",
+            "roman": "seedhuṁ",
+            "en": "straight"
+          },
+          {
+            "gu": "ટિકિટ",
+            "roman": "ṭikiṭ",
+            "en": "ticket"
+          },
+          {
+            "gu": "ડાબે",
+            "roman": "ḍaabe",
+            "en": "left"
+          }
+        ],
+        "answer": "ટિકિટ"
+      },
+      {
+        "t": "read",
+        "passage": "મીરા ડૉક્ટર છે. તે દરરોજ સવારે દવાખાને જાય છે અને સાંજે ઘરે આવે છે.",
+        "q": "What is Meera's job?",
+        "options": [
+          "Doctor",
+          "Teacher",
+          "Farmer"
+        ],
+        "answer": "Doctor"
+      },
+      {
+        "t": "read",
+        "passage": "રાજને ક્રિકેટ બહુ ગમે છે. તે દર રવિવારે મિત્રો સાથે રમે છે.",
+        "q": "When does Raj play cricket?",
+        "options": [
+          "On Sundays",
+          "On Mondays",
+          "Every morning"
+        ],
+        "answer": "On Sundays"
+      },
+      {
+        "t": "read",
+        "passage": "સ્ટેશન અહીંથી દૂર નથી. સીધા જાઓ, પછી જમણે વળો.",
+        "q": "Where do you turn after going straight?",
+        "options": [
+          "Right",
+          "Left",
+          "Back"
+        ],
+        "answer": "Right"
+      }
+    ]
+  },
+  {
+    "id": "ex_pf",
+    "afterUnit": "u20",
+    "ilr": "ILR 4",
+    "title": "Primary Fluency",
+    "timeSec": 1500,
+    "passPct": 80,
+    "final": true,
+    "questions": [
+      {
+        "t": "translate",
+        "en": "I think that it is true.",
+        "options": [
+          {
+            "gu": "મને લાગે છે કે તે સાચું છે",
+            "roman": "mane laage chhe ke te saachuṁ chhe"
+          },
+          {
+            "gu": "મને એવું નથી લાગતું",
+            "roman": "mane evuṁ nathi laagtuṁ"
+          },
+          {
+            "gu": "મને તે ગમે છે",
+            "roman": "mane te game chhe"
+          }
+        ],
+        "answer": "મને લાગે છે કે તે સાચું છે"
+      },
+      {
+        "t": "translate",
+        "en": "If there is time, I will come.",
+        "options": [
+          {
+            "gu": "જો સમય હશે તો હું આવીશ",
+            "roman": "jo samay hashe to huṁ aaveesh"
+          },
+          {
+            "gu": "જ્યારે સમય હોય ત્યારે આવ",
+            "roman": "jyaare samay hoy tyaare aav"
+          },
+          {
+            "gu": "મારે સમય જોઈએ",
+            "roman": "maare samay joie"
+          }
+        ],
+        "answer": "જો સમય હશે તો હું આવીશ"
+      },
+      {
+        "t": "translate",
+        "en": "He said that he will come tomorrow.",
+        "options": [
+          {
+            "gu": "તેણે કહ્યું કે તે કાલે આવશે",
+            "roman": "teṇe kahyuṁ ke te kaale aavshe"
+          },
+          {
+            "gu": "તેણે પૂછ્યું કે તું ક્યાં છે",
+            "roman": "teṇe poochhyuṁ ke tuṁ kyaan chhe"
+          },
+          {
+            "gu": "તે કાલે આવ્યો",
+            "roman": "te kaale aavyo"
+          }
+        ],
+        "answer": "તેણે કહ્યું કે તે કાલે આવશે"
+      },
+      {
+        "t": "translate",
+        "en": "The friend who came is nice.",
+        "options": [
+          {
+            "gu": "જે મિત્ર આવ્યો તે સરસ છે",
+            "roman": "je mitra aavyo te saras chhe"
+          },
+          {
+            "gu": "મારો મિત્ર આવશે",
+            "roman": "maaro mitra aavshe"
+          },
+          {
+            "gu": "તે મિત્રને મળ્યો",
+            "roman": "te mitrane maḷyo"
+          }
+        ],
+        "answer": "જે મિત્ર આવ્યો તે સરસ છે"
+      },
+      {
+        "t": "translate",
+        "en": "I have to go home.",
+        "options": [
+          {
+            "gu": "મારે ઘરે જવું પડશે",
+            "roman": "maare ghare javuṁ paḍshe"
+          },
+          {
+            "gu": "હું ઘરે જઈશ",
+            "roman": "huṁ ghare jaish"
+          },
+          {
+            "gu": "હું ઘરે છું",
+            "roman": "huṁ ghare chuṁ"
+          }
+        ],
+        "answer": "મારે ઘરે જવું પડશે"
+      },
+      {
+        "t": "translate",
+        "en": "I can speak Gujarati well.",
+        "options": [
+          {
+            "gu": "હું સારી રીતે ગુજરાતી બોલી શકું છું",
+            "roman": "huṁ saari reete gujaraati boli shakuṁ chuṁ"
+          },
+          {
+            "gu": "હું ગુજરાતી શીખું છું",
+            "roman": "huṁ gujaraati shikhuṁ chuṁ"
+          },
+          {
+            "gu": "મને ગુજરાતી ગમે છે",
+            "roman": "mane gujaraati game chhe"
+          }
+        ],
+        "answer": "હું સારી રીતે ગુજરાતી બોલી શકું છું"
+      },
+      {
+        "t": "translate",
+        "en": "This is the best of all.",
+        "options": [
+          {
+            "gu": "આ બધામાં સૌથી સારું છે",
+            "roman": "aa badhaamaan sauthi saaruṁ chhe"
+          },
+          {
+            "gu": "આ કરતાં તે મોટું છે",
+            "roman": "aa kartaan te moṭuṁ chhe"
+          },
+          {
+            "gu": "આ સારું છે",
+            "roman": "aa saaruṁ chhe"
+          }
+        ],
+        "answer": "આ બધામાં સૌથી સારું છે"
+      },
+      {
+        "t": "translate",
+        "en": "When it rains, it gets cold.",
+        "options": [
+          {
+            "gu": "જ્યારે વરસાદ પડે ત્યારે ઠંડી થાય",
+            "roman": "jyaare varsaad paḍe tyaare ṭhanḍi thaay"
+          },
+          {
+            "gu": "વરસાદ પડે તો સારું",
+            "roman": "varsaad paḍe to saaruṁ"
+          },
+          {
+            "gu": "આજે ઠંડી છે",
+            "roman": "aaje ṭhanḍi chhe"
+          }
+        ],
+        "answer": "જ્યારે વરસાદ પડે ત્યારે ઠંડી થાય"
+      },
+      {
+        "t": "tf",
+        "gu": "તું",
+        "roman": "tuṁ",
+        "claim": "the polite, respectful 'you'",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "તમે",
+        "roman": "tame",
+        "claim": "the polite or plural 'you'",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "મેં કેરી ખાધી",
+        "roman": "meṁ keri khaadhi",
+        "claim": "I ate a mango (past)",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "તે નહીં આવે",
+        "roman": "te nahi aave",
+        "claim": "he will not come",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "મને તાવ છે",
+        "roman": "mane taav chhe",
+        "claim": "I have a car",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "કાશ હું ત્યાં હોત",
+        "roman": "kaash huṁ tyaan hot",
+        "claim": "I wish I were there",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "લોચો",
+        "roman": "locho",
+        "claim": "a mix-up or mess",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "ફાડુ",
+        "roman": "faaḍu",
+        "claim": "boring",
+        "answer": "false"
+      },
+      {
+        "t": "tf",
+        "gu": "બિંદાસ",
+        "roman": "bindaas",
+        "claim": "chill / carefree",
+        "answer": "true"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "તો",
+            "roman": "to",
+            "en": "then"
+          },
+          {
+            "gu": "કારણ કે",
+            "roman": "kaaraṇ ke",
+            "en": "because"
+          },
+          {
+            "gu": "મિત્ર",
+            "roman": "mitra",
+            "en": "friend"
+          },
+          {
+            "gu": "જો",
+            "roman": "jo",
+            "en": "if"
+          }
+        ],
+        "answer": "મિત્ર"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "કહ્યું",
+            "roman": "kahyuṁ",
+            "en": "said"
+          },
+          {
+            "gu": "પૂછ્યું",
+            "roman": "poochhyuṁ",
+            "en": "asked"
+          },
+          {
+            "gu": "બોલ્યો",
+            "roman": "bolyo",
+            "en": "spoke"
+          },
+          {
+            "gu": "સૌથી",
+            "roman": "sauthi",
+            "en": "most"
+          }
+        ],
+        "answer": "સૌથી"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "મસ્ત",
+            "roman": "mast",
+            "en": "cool"
+          },
+          {
+            "gu": "જોરદાર",
+            "roman": "jordaar",
+            "en": "amazing"
+          },
+          {
+            "gu": "ફાડુ",
+            "roman": "faaḍu",
+            "en": "top-tier"
+          },
+          {
+            "gu": "ખરાબ",
+            "roman": "kharaab",
+            "en": "bad"
+          }
+        ],
+        "answer": "ખરાબ"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "ઉદાસ",
+            "roman": "udaas",
+            "en": "sad"
+          },
+          {
+            "gu": "ગુસ્સો",
+            "roman": "gusso",
+            "en": "anger"
+          },
+          {
+            "gu": "રસ્તો",
+            "roman": "rasto",
+            "en": "road"
+          },
+          {
+            "gu": "ખુશ",
+            "roman": "khush",
+            "en": "happy"
+          }
+        ],
+        "answer": "રસ્તો"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "મંગળવાર",
+            "roman": "mangaḷvaar",
+            "en": "Tuesday"
+          },
+          {
+            "gu": "બુધવાર",
+            "roman": "budhvaar",
+            "en": "Wednesday"
+          },
+          {
+            "gu": "મહિનો",
+            "roman": "mahino",
+            "en": "month"
+          },
+          {
+            "gu": "સોમવાર",
+            "roman": "somvaar",
+            "en": "Monday"
+          }
+        ],
+        "answer": "મહિનો"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "કરતાં",
+            "roman": "kartaan",
+            "en": "than"
+          },
+          {
+            "gu": "વધારે",
+            "roman": "vadhaare",
+            "en": "more"
+          },
+          {
+            "gu": "સૌથી",
+            "roman": "sauthi",
+            "en": "most"
+          },
+          {
+            "gu": "પાણી",
+            "roman": "paṇi",
+            "en": "water"
+          }
+        ],
+        "answer": "પાણી"
+      },
+      {
+        "t": "oddone",
+        "options": [
+          {
+            "gu": "લાલ",
+            "roman": "laal",
+            "en": "red"
+          },
+          {
+            "gu": "જ્યારે",
+            "roman": "jyaare",
+            "en": "when"
+          },
+          {
+            "gu": "ત્યારે",
+            "roman": "tyaare",
+            "en": "then"
+          },
+          {
+            "gu": "પછી",
+            "roman": "pachhi",
+            "en": "after"
+          }
+        ],
+        "answer": "લાલ"
+      },
+      {
+        "t": "listen",
+        "say": "મને લાગે છે કે તે સાચું છે",
+        "options": [
+          "I think it is true",
+          "I don't like it",
+          "I have to go"
+        ],
+        "answer": "I think it is true"
+      },
+      {
+        "t": "listen",
+        "say": "તેણે કહ્યું કે તે આવશે",
+        "options": [
+          "He said he will come",
+          "He asked where you are",
+          "He came yesterday"
+        ],
+        "answer": "He said he will come"
+      },
+      {
+        "t": "listen",
+        "say": "મારે ઘરે જવું પડશે",
+        "options": [
+          "I have to go home",
+          "I am going home",
+          "I like my home"
+        ],
+        "answer": "I have to go home"
+      },
+      {
+        "t": "listen",
+        "say": "કાશ",
+        "options": [
+          "if only / I wish",
+          "because",
+          "then"
+        ],
+        "answer": "if only / I wish"
+      },
+      {
+        "t": "listen",
+        "say": "ધમાલ",
+        "options": [
+          "a blast / wild fun",
+          "a mistake",
+          "a meeting"
+        ],
+        "answer": "a blast / wild fun"
+      },
+      {
+        "t": "listen",
+        "say": "જોરદાર",
+        "options": [
+          "amazing",
+          "boring",
+          "tired"
+        ],
+        "answer": "amazing"
+      },
+      {
+        "t": "listen",
+        "say": "જ્યારે વરસાદ પડે ત્યારે ઠંડી થાય",
+        "options": [
+          "When it rains, it gets cold",
+          "It rained yesterday",
+          "I like the rain"
+        ],
+        "answer": "When it rains, it gets cold"
+      },
+      {
+        "t": "listen",
+        "say": "તું ક્યાં જાય છે?",
+        "options": [
+          "Where are you going?",
+          "Where do you live?",
+          "What is your name?"
+        ],
+        "answer": "Where are you going?"
+      },
+      {
+        "t": "read",
+        "passage": "ગઈકાલે વરસાદ પડ્યો, તેથી અમે ઘરે રહ્યા. આજે તડકો છે, એટલે અમે બહાર જઈશું.",
+        "q": "Why did they stay home yesterday?",
+        "options": [
+          "It rained",
+          "It was hot",
+          "It was a holiday"
+        ],
+        "answer": "It rained"
+      },
+      {
+        "t": "read",
+        "passage": "જો કાલે વરસાદ નહીં પડે તો અમે બગીચામાં જઈશું, નહીં તો ઘરે ફિલ્મ જોઈશું.",
+        "q": "What will they do if it rains?",
+        "options": [
+          "Watch a movie at home",
+          "Go to the garden",
+          "Stay at work"
+        ],
+        "answer": "Watch a movie at home"
+      },
+      {
+        "t": "read",
+        "passage": "એની વાત સાંભળીને મને બહુ નવાઈ લાગી, કારણ કે મને એની ખબર જ ન હતી.",
+        "q": "How did the speaker feel?",
+        "options": [
+          "Surprised",
+          "Bored",
+          "Angry"
+        ],
+        "answer": "Surprised"
+      },
+      {
+        "t": "read",
+        "passage": "અમિતે કહ્યું કે તે મોડો આવશે, કારણ કે બસ મોડી છે. તેણે મીનાને ફાઇલ આપવાનું કહ્યું.",
+        "q": "Why will Amit be late?",
+        "options": [
+          "The bus is late",
+          "He is sick",
+          "He forgot"
+        ],
+        "answer": "The bus is late"
+      },
+      {
+        "t": "read",
+        "passage": "પહેલાં આ ગામ નાનું હતું, પણ હવે તે મોટું શહેર બની ગયું છે.",
+        "q": "How has the place changed?",
+        "options": [
+          "From a village to a city",
+          "From a city to a village",
+          "It stayed the same"
+        ],
+        "answer": "From a village to a city"
+      },
+      {
+        "t": "read",
+        "passage": "તેને ક્રિકેટ કરતાં વાંચવું વધારે ગમે છે, એટલે તે રજાના દિવસે પુસ્તકાલય જાય છે.",
+        "q": "What does she prefer?",
+        "options": [
+          "Reading over cricket",
+          "Cricket over reading",
+          "Neither"
+        ],
+        "answer": "Reading over cricket"
+      },
+      {
+        "t": "read",
+        "passage": "જો તમે સવારે વહેલા નીકળો તો ટ્રાફિક ઓછો મળશે અને સમયસર પહોંચી જશો.",
+        "q": "What happens if you leave early?",
+        "options": [
+          "Less traffic, arrive on time",
+          "More traffic",
+          "You miss the train"
+        ],
+        "answer": "Less traffic, arrive on time"
+      },
+      {
+        "t": "translate",
+        "en": "because",
+        "options": [
+          {
+            "gu": "કારણ કે",
+            "roman": "kaaraṇ ke"
+          },
+          {
+            "gu": "તેથી",
+            "roman": "tethi"
+          },
+          {
+            "gu": "પણ",
+            "roman": "paṇ"
+          }
+        ],
+        "answer": "કારણ કે"
+      },
+      {
+        "t": "translate",
+        "en": "than",
+        "options": [
+          {
+            "gu": "કરતાં",
+            "roman": "kartaan"
+          },
+          {
+            "gu": "વધારે",
+            "roman": "vadhaare"
+          },
+          {
+            "gu": "સૌથી",
+            "roman": "sauthi"
+          }
+        ],
+        "answer": "કરતાં"
+      },
+      {
+        "t": "translate",
+        "en": "if only / I wish",
+        "options": [
+          {
+            "gu": "કાશ",
+            "roman": "kaash"
+          },
+          {
+            "gu": "આશા",
+            "roman": "aashaa"
+          },
+          {
+            "gu": "જો",
+            "roman": "jo"
+          }
+        ],
+        "answer": "કાશ"
+      },
+      {
+        "t": "translate",
+        "en": "when",
+        "options": [
+          {
+            "gu": "જ્યારે",
+            "roman": "jyaare"
+          },
+          {
+            "gu": "ત્યારે",
+            "roman": "tyaare"
+          },
+          {
+            "gu": "પછી",
+            "roman": "pachhi"
+          }
+        ],
+        "answer": "જ્યારે"
+      },
+      {
+        "t": "translate",
+        "en": "most",
+        "options": [
+          {
+            "gu": "સૌથી",
+            "roman": "sauthi"
+          },
+          {
+            "gu": "વધારે",
+            "roman": "vadhaare"
+          },
+          {
+            "gu": "કરતાં",
+            "roman": "kartaan"
+          }
+        ],
+        "answer": "સૌથી"
+      },
+      {
+        "t": "translate",
+        "en": "said (past)",
+        "options": [
+          {
+            "gu": "કહ્યું",
+            "roman": "kahyuṁ"
+          },
+          {
+            "gu": "પૂછ્યું",
+            "roman": "poochhyuṁ"
+          },
+          {
+            "gu": "બોલ્યો",
+            "roman": "bolyo"
+          }
+        ],
+        "answer": "કહ્યું"
+      },
+      {
+        "t": "tf",
+        "gu": "સૌથી",
+        "roman": "sauthi",
+        "claim": "most",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "જે",
+        "roman": "je",
+        "claim": "which / the one that",
+        "answer": "true"
+      },
+      {
+        "t": "tf",
+        "gu": "કરતાં",
+        "roman": "kartaan",
+        "claim": "more than / than",
+        "answer": "true"
+      },
+      {
+        "t": "listen",
+        "say": "જો સમય હશે તો હું આવીશ",
+        "options": [
+          "If there is time, I will come",
+          "I have a lot of time",
+          "I came on time"
+        ],
+        "answer": "If there is time, I will come"
+      },
+      {
+        "t": "listen",
+        "say": "મારે જવું પડશે",
+        "options": [
+          "I have to go",
+          "I want to go",
+          "I already went"
+        ],
+        "answer": "I have to go"
+      }
+    ]
+  }
 ];
 
 /* ============================ CONVERSATIONS ============================ */
@@ -4076,6 +6091,21 @@ function ExamRunner({ exam, onFinish, onExit }) {
                 <button key={i} className={"gopt" + (picked === o.gu ? " sel" : "")} onClick={() => { say(o.gu); setPicked(o.gu); }}>
                   <div className="gu">{o.gu}</div>
                   <small>{o.en}</small>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {q.t === "read" && (
+          <>
+            <div className="q-title">Read, then answer</div>
+            <div className="exampassage gu">{q.passage}</div>
+            <div className="q-sub" style={{ fontWeight: 700, color: "var(--ink)" }}>{q.q}</div>
+            <div className="opts">
+              {q.options.map((o, i) => (
+                <button key={i} className={"opt" + (picked === o ? " sel" : "")} onClick={() => setPicked(o)}>
+                  <span className="optnum">{String.fromCharCode(65 + i)}</span>{o}
                 </button>
               ))}
             </div>
