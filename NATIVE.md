@@ -6,7 +6,7 @@ with native plugins (native Google sign-in, status bar) and full offline. It is 
 genuine `.aab` you upload to Google Play, not a shortcut to the website.
 
 What is already set up in this repo:
-- `capacitor.config.json` (appId `dev.dhatu.app`, appName Dhātu, `webDir: dist`).
+- `capacitor.config.json` (appId `app.dhatu.learning`, appName Dhātu, `webDir: dist`).
 - Capacitor + plugin deps in `package.json` (`@capacitor/core`, `/android`,
   `/cli`, `/app`, `/status-bar`, and `@capacitor-firebase/authentication`).
 - Native Google sign-in wired in `src/firebase.js`: on a native build it uses the
@@ -37,7 +37,7 @@ Android SDK) and, to publish, a **Google Play Console** account (one-time $25).
 
 3. **Register the app in Firebase (needed for native Google sign-in):**
    - Firebase console -> project **dhatu-9f586** -> Add app -> **Android**.
-   - Package name: **`dev.dhatu.app`** (must match `capacitor.config.json`).
+   - Package name: **`app.dhatu.learning`** (must match `capacitor.config.json`).
    - Add your signing **SHA-1** and **SHA-256** fingerprints. Get the debug one
      from Android Studio (Gradle tab -> `signingReport`) or:
      ```
