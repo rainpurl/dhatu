@@ -6976,6 +6976,12 @@ function CourseApp({ user }) {
             </span>
             <b>Contact support</b>
           </a>
+          <a href="/privacy.html" target="_blank" rel="noopener noreferrer" className="contactlink">
+            <span className="ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z" /></svg>
+            </span>
+            <b>Privacy policy</b>
+          </a>
           <button className="btn ghost" style={{ marginTop: 14 }} onClick={async () => { await signOutUser(); clearLocalProgress(); }}>
             Sign out
           </button>

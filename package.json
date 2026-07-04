@@ -7,14 +7,21 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "audio": "node scripts/generate-audio.mjs"
+    "audio": "node scripts/generate-audio.mjs",
+    "sync": "npm run build && cap sync"
   },
   "dependencies": {
+    "@capacitor-firebase/authentication": "^6.3.0",
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/app": "^6.0.2",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/status-bar": "^6.0.2",
     "firebase": "^11.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^6.2.0",
     "@vitejs/plugin-react": "^6.0.3",
     "vite": "^8.1.3"
   }

@@ -13,6 +13,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithCredential,
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
@@ -95,7 +96,20 @@ export function onAuthChange(cb) {
   });
 }
 
-export function signInWithGoogle() {
+export async function signInWithGoogle() {
+  // In the native (Capacitor) app, signInWithPopup does not work inside the
+  // WebView, so use the native Google sign-in plugin and pass its credential to
+  // the Firebase JS SDK. The import is dynamic + vite-ignored and guarded by the
+  // Capacitor global, so the plain web build never needs the plugin.
+  const cap = typeof window !== "undefined" ? window.Capacitor : null;
+  if (cap && cap.isNativePlatform && cap.isNativePlatform()) {
+    const { FirebaseAuthentication } = await import(/* @vite-ignore */ "@capacitor-firebase/authentication");
+    const result = await FirebaseAuthentication.signInWithGoogle();
+    const idToken = result && result.credential && result.credential.idToken;
+    const accessToken = result && result.credential && result.credential.accessToken;
+    const cred = GoogleAuthProvider.credential(idToken, accessToken);
+    return signInWithCredential(auth, cred);
+  }
   return signInWithPopup(auth, provider);
 }
 
