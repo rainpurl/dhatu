@@ -589,7 +589,7 @@ dhatu/
 ├── NATIVE.md             <- build the native app (Capacitor) + publish to Google Play
 ├── capacitor.config.json <- Capacitor app id / config
 ├── README.md
-├── index.html            <- title, bandhani favicon, meta
+├── index.html            <- title, diamond-logo favicon, manifest + icon links, meta
 ├── package.json          <- react 18, vite 8, firebase; "audio" script
 ├── vite.config.js
 ├── functions/
@@ -598,6 +598,9 @@ dhatu/
 │   └── generate-audio.mjs  <- cloud-TTS generator (npm run audio)
 ├── public/
 │   ├── audio/            <- generated mp3s + manifest.json (committed)
+│   ├── logo.svg + icon-192/512.png + apple-touch-icon.png  <- app/logo icons
+│   ├── manifest.webmanifest  <- web app metadata (icons/theme; not a full PWA)
+│   ├── privacy.html      <- privacy policy, served at /privacy.html
 │   └── staff/index.html  <- staff portal, served at /staff
 └── src/
     ├── main.jsx          <- mounts <App/>
