@@ -227,6 +227,14 @@ progress; it fully resets only accounts with no local copy.
   translate + a true/false + a match) from each lesson's own taught words, so
   the new types appear across all lessons with no new audio. oddone is
   hand-authored where a clean category exists (e.g. Colors, Animals).
+  **Timed proficiency exams** (`EXAMS`, framed on the ILR scale per the
+  proficiency-exam research report) sit as milestones in the journey: Limited
+  Working (after Unit 5), Professional Working (after 10), Full Professional
+  (after 15), and the **Primary Fluency final exam** at the very end (after 18).
+  Each is a countdown-timed set of auto-graded questions (listen/translate/tf/
+  oddone) built from taught words; it unlocks when the preceding unit is done,
+  shows a score and pass/fail (70-75% pass), awards 30 Kaudi on first pass, and
+  stores results in `dhatu_examsDone`. Rendered by `ExamRunner`.
   Every lesson's `ex` array is post-processed once at load by `expandLesson()`
   (just after the last lesson module, before the `TOPICS` pushes): it appends
   auto-generated listen/match reinforcement built from the lesson's own taught

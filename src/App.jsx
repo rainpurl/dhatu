@@ -626,6 +626,18 @@ const CSS = `
 .node-label .kk{display:block;font-size:10.5px;color:var(--muted);font-weight:600}
 
 /* lesson journey: a vertical list of lesson cards connected by a spine */
+/* proficiency exam milestone card + timer */
+.examcard{width:100%;display:flex;align-items:center;gap:12px;margin:12px 0 4px;padding:14px;border:none;border-radius:16px;background:linear-gradient(135deg,#E0A63C,#C77B1E);color:#3b2a06;cursor:pointer;box-shadow:var(--bevel-raise);text-align:left}
+.examcard.locked{background:var(--card);color:var(--muted);box-shadow:var(--bevel-inset);cursor:default}
+.examcard.passed{background:linear-gradient(135deg,#2F8F6B,#1E6E4E);color:#eafff5}
+.examcard .ex-ic{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.28);display:grid;place-items:center;flex:none}
+.examcard.locked .ex-ic{background:var(--line)}
+.examcard .ex-tx{flex:1;min-width:0}
+.examcard .ex-tx b{display:block;font-size:15px}
+.examcard .ex-tx small{font-size:12px;font-weight:600;opacity:.85}
+.examcard .ex-chev{flex:none;opacity:.9}
+.examtimer{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:16px;color:var(--ink)}
+.examtimer.low{color:var(--no)}
 .lpath{position:relative;display:flex;flex-direction:column;gap:10px;padding:4px 0 2px}
 .lpath::before{content:"";position:absolute;top:26px;bottom:26px;left:38px;width:3px;transform:translateX(-50%);background:var(--line);box-shadow:var(--bevel-inset);border-radius:999px;z-index:0}
 .lrow{position:relative;z-index:1;display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:none;cursor:pointer;
@@ -1558,6 +1570,66 @@ const GRAMMAR = [
   { id:"g14", color:"#2F6E44", title:"Making things plural", summary:"Nouns change their ending to become plural, and the words around them follow.",
     points:["Masculine nouns ending in -o become -a, so છોકરો becomes છોકરા (boy, boys).","Feminine and many other nouns add -o, so છોકરી becomes છોકરીઓ and વાત becomes વાતો.","Adjectives and verbs then shift to match the plural."],
     examples:[{gu:"એક છોકરો, બે છોકરા",roman:"ek chhokro, be chhokra",en:"one boy, two boys"},{gu:"ઘણી છોકરીઓ",roman:"ghaṇi chhokrio",en:"many girls"},{gu:"નાનાં બાળકો",roman:"naanaan baaḷko",en:"small children"}] },
+];
+
+/* ============================ PROFICIENCY EXAMS ============================ */
+/* Timed milestone exams placed along the journey, framed on the ILR scale
+   (see the proficiency-exam research report). Each is a timed set of
+   auto-gradable questions built from words already taught, so no new audio.
+   `afterUnit` gates the exam behind finishing that unit; the top exam
+   (Primary Fluency) sits at the very end. Question types reuse the lesson
+   engine's single-answer formats: listen, translate, tf, oddone. */
+const EXAMS = [
+  { id:"ex_lwp", afterUnit:"u5", ilr:"ILR 1", title:"Limited Working Proficiency", timeSec:300, passPct:70, questions:[
+    { t:"listen", say:"પાણી", options:["water","milk","tea"], answer:"water" },
+    { t:"translate", en:"thank you", options:[{gu:"આભાર",roman:"aabhaar"},{gu:"નમસ્તે",roman:"namaste"},{gu:"આવજો",roman:"aavjo"}], answer:"આભાર" },
+    { t:"tf", gu:"ત્રણ", roman:"traṇ", claim:"three", answer:"true" },
+    { t:"oddone", options:[{gu:"માતા",roman:"maataa",en:"mother"},{gu:"પિતા",roman:"pitaa",en:"father"},{gu:"ભાઈ",roman:"bhaai",en:"brother"},{gu:"ભાત",roman:"bhaat",en:"rice"}], answer:"ભાત" },
+    { t:"listen", say:"કૂતરો", options:["dog","cat","cow"], answer:"dog" },
+    { t:"translate", en:"water", options:[{gu:"પાણી",roman:"paṇi"},{gu:"દૂધ",roman:"doodh"},{gu:"ચા",roman:"chaa"}], answer:"પાણી" },
+    { t:"tf", gu:"લાલ", roman:"laal", claim:"green", answer:"false" },
+    { t:"translate", en:"one", options:[{gu:"એક",roman:"ek"},{gu:"બે",roman:"be"},{gu:"દસ",roman:"das"}], answer:"એક" },
+    { t:"oddone", options:[{gu:"લાલ",roman:"laal",en:"red"},{gu:"લીલો",roman:"leelo",en:"green"},{gu:"ગાય",roman:"gaay",en:"cow"},{gu:"પીળો",roman:"peeḷo",en:"yellow"}], answer:"ગાય" },
+    { t:"listen", say:"આભાર", options:["thank you","hello","goodbye"], answer:"thank you" },
+  ]},
+  { id:"ex_pwp", afterUnit:"u10", ilr:"ILR 2", title:"Professional Working Proficiency", timeSec:360, passPct:70, questions:[
+    { t:"translate", en:"big", options:[{gu:"મોટું",roman:"moṭuṁ"},{gu:"નાનું",roman:"naanuṁ"},{gu:"સારું",roman:"saaruṁ"}], answer:"મોટું" },
+    { t:"listen", say:"બજાર", options:["market","shop","road"], answer:"market" },
+    { t:"tf", gu:"ઠંડું", roman:"ṭhanḍuṁ", claim:"cold", answer:"true" },
+    { t:"oddone", options:[{gu:"શહેર",roman:"shaher",en:"city"},{gu:"ગામ",roman:"gaam",en:"village"},{gu:"મંદિર",roman:"mandir",en:"temple"},{gu:"ગરમ",roman:"garam",en:"hot"}], answer:"ગરમ" },
+    { t:"translate", en:"hot", options:[{gu:"ગરમ",roman:"garam"},{gu:"ઠંડું",roman:"ṭhanḍuṁ"},{gu:"મોટું",roman:"moṭuṁ"}], answer:"ગરમ" },
+    { t:"listen", say:"માથું", options:["head","hand","eye"], answer:"head" },
+    { t:"tf", gu:"નાનું", roman:"naanuṁ", claim:"big", answer:"false" },
+    { t:"oddone", options:[{gu:"માથું",roman:"maathuṁ",en:"head"},{gu:"આંખ",roman:"aankh",en:"eye"},{gu:"નાક",roman:"naak",en:"nose"},{gu:"ઘર",roman:"ghar",en:"house"}], answer:"ઘર" },
+    { t:"translate", en:"week", options:[{gu:"અઠવાડિયું",roman:"aṭhvaaḍiyuṁ"},{gu:"સવાર",roman:"savaar"},{gu:"રાત",roman:"raat"}], answer:"અઠવાડિયું" },
+    { t:"listen", say:"વરસાદ", options:["rain","heat","wind"], answer:"rain" },
+  ]},
+  { id:"ex_fpp", afterUnit:"u15", ilr:"ILR 3", title:"Full Professional Proficiency", timeSec:420, passPct:70, questions:[
+    { t:"translate", en:"doctor", options:[{gu:"ડૉક્ટર",roman:"ḍokṭar"},{gu:"શિક્ષક",roman:"shikshak"},{gu:"ખેડૂત",roman:"kheḍoot"}], answer:"ડૉક્ટર" },
+    { t:"listen", say:"તાવ", options:["fever","cough","cold"], answer:"fever" },
+    { t:"tf", gu:"ડાબે", roman:"ḍaabe", claim:"right", answer:"false" },
+    { t:"oddone", options:[{gu:"શિક્ષક",roman:"shikshak",en:"teacher"},{gu:"ખેડૂત",roman:"kheḍoot",en:"farmer"},{gu:"વેપારી",roman:"vepaari",en:"trader"},{gu:"દવા",roman:"davaa",en:"medicine"}], answer:"દવા" },
+    { t:"translate", en:"straight", options:[{gu:"સીધું",roman:"seedhuṁ"},{gu:"ડાબે",roman:"ḍaabe"},{gu:"જમણે",roman:"jamṇe"}], answer:"સીધું" },
+    { t:"listen", say:"મુસાફરી", options:["journey","ticket","road"], answer:"journey" },
+    { t:"tf", gu:"બીમાર", roman:"beemaar", claim:"sick", answer:"true" },
+    { t:"translate", en:"to buy", options:[{gu:"ખરીદવું",roman:"kharidvuṁ"},{gu:"વેચવું",roman:"vechvuṁ"},{gu:"આપવું",roman:"aapvuṁ"}], answer:"ખરીદવું" },
+    { t:"oddone", options:[{gu:"સોમવાર",roman:"somvaar",en:"Monday"},{gu:"શુક્રવાર",roman:"shukravaar",en:"Friday"},{gu:"રવિવાર",roman:"ravivaar",en:"Sunday"},{gu:"સવાર",roman:"savaar",en:"morning"}], answer:"સવાર" },
+    { t:"listen", say:"ટિકિટ", options:["ticket","journey","station"], answer:"ticket" },
+  ]},
+  { id:"ex_pf", afterUnit:"u18", ilr:"ILR 4", title:"Primary Fluency", timeSec:480, passPct:75, final:true, questions:[
+    { t:"translate", en:"if", options:[{gu:"જો",roman:"jo"},{gu:"તો",roman:"to"},{gu:"કારણ કે",roman:"kaaraṇ ke"}], answer:"જો" },
+    { t:"tf", gu:"કાશ", roman:"kaash", claim:"if only / I wish", answer:"true" },
+    { t:"translate", en:"when", options:[{gu:"જ્યારે",roman:"jyaare"},{gu:"ત્યારે",roman:"tyaare"},{gu:"પછી",roman:"pachhi"}], answer:"જ્યારે" },
+    { t:"oddone", options:[{gu:"કારણ કે",roman:"kaaraṇ ke",en:"because"},{gu:"તેથી",roman:"tethi",en:"so"},{gu:"પણ",roman:"paṇ",en:"but"},{gu:"મિત્ર",roman:"mitra",en:"friend"}], answer:"મિત્ર" },
+    { t:"translate", en:"most", options:[{gu:"સૌથી",roman:"sauthi"},{gu:"વધારે",roman:"vadhaare"},{gu:"કરતાં",roman:"kartaan"}], answer:"સૌથી" },
+    { t:"tf", gu:"મસ્ત", roman:"mast", claim:"awful", answer:"false" },
+    { t:"listen", say:"કહ્યું", options:["said","asked","did"], answer:"said" },
+    { t:"translate", en:"the one that / which", options:[{gu:"જે",roman:"je"},{gu:"કે",roman:"ke"},{gu:"જો",roman:"jo"}], answer:"જે" },
+    { t:"oddone", options:[{gu:"ખુશ",roman:"khush",en:"happy"},{gu:"ઉદાસ",roman:"udaas",en:"sad"},{gu:"ગુસ્સો",roman:"gusso",en:"anger"},{gu:"બજાર",roman:"bajaar",en:"market"}], answer:"બજાર" },
+    { t:"tf", gu:"કરતાં", roman:"kartaan", claim:"than", answer:"true" },
+    { t:"translate", en:"I think", options:[{gu:"મને લાગે છે",roman:"mane laage chhe"},{gu:"મને ગમે છે",roman:"mane game chhe"},{gu:"મને જોઈએ",roman:"mane joie"}], answer:"મને લાગે છે" },
+    { t:"listen", say:"ધમાલ", options:["a blast / wild fun","a mess","a mistake"], answer:"a blast / wild fun" },
+  ]},
 ];
 
 /* ============================ CONVERSATIONS ============================ */
@@ -2523,6 +2595,8 @@ function CourseApp({ user }) {
   const [unitOpen, setUnitOpen] = useLocalState("dhatu_unitOpen", {});
   const [scriptDone, setScriptDone] = useLocalState("dhatu_scriptDone", []);
   const [selScriptLesson, setSelScriptLesson] = useState(null);
+  const [examsDone, setExamsDone] = useLocalState("dhatu_examsDone", {});
+  const [activeExam, setActiveExam] = useState(null);
   const DAILY_GOAL = 3;
 
   const [activeLesson, setActiveLesson] = useState(null);
@@ -2592,6 +2666,17 @@ function CourseApp({ user }) {
     setSessionKaudi(0);
     setSessionWrong(0);
     setScreen("lesson");
+  }
+
+  function startExam(id) { stopSpeak(); setActiveExam(id); setScreen("exam"); }
+  function finishExam(exam, correct, pct) {
+    const passed = pct >= exam.passPct;
+    const already = examsDone[exam.id] && examsDone[exam.id].passed;
+    setExamsDone((prev) => {
+      const cur = prev[exam.id];
+      return { ...prev, [exam.id]: { passed: passed || (cur && cur.passed), pct: Math.max(pct, cur ? cur.pct : 0) } };
+    });
+    if (passed && !already) { setKaudi((k) => k + 30); recordActivity(); }
   }
 
   function exitLesson() {
@@ -2839,6 +2924,13 @@ function CourseApp({ user }) {
     </div>
   );
 
+  /* ---------------- PROFICIENCY EXAM ---------------- */
+  if (screen === "exam" && activeExam) {
+    const exam = EXAMS.find((e) => e.id === activeExam);
+    if (!exam) { setScreen("learn"); return null; }
+    return <ExamRunner key={exam.id} exam={exam} onFinish={finishExam} onExit={() => { stopSpeak(); setActiveExam(null); setScreen("learn"); }} />;
+  }
+
   /* ---------------- LEARN ---------------- */
   if (screen === "learn") {
     const recId = nextRecommended();
@@ -2932,6 +3024,23 @@ function CourseApp({ user }) {
                 })}
               </div>
               )}
+              {(() => {
+                const exm = EXAMS.find((e) => e.afterUnit === u.id);
+                if (!exm) return null;
+                const rec = examsDone[exm.id];
+                const unlocked = uComplete;
+                const mins = Math.round(exm.timeSec / 60);
+                return (
+                  <button className={"examcard" + (unlocked ? "" : " locked") + (rec && rec.passed ? " passed" : "")} disabled={!unlocked} onClick={() => unlocked && startExam(exm.id)}>
+                    <span className="ex-ic">{rec && rec.passed ? <Ic.trophy /> : unlocked ? <Ic.clock /> : <Ic.lock />}</span>
+                    <span className="ex-tx">
+                      <b>{exm.title}{exm.final ? " (final exam)" : ""}</b>
+                      <small>{unlocked ? (rec ? (rec.passed ? `Passed - best ${rec.pct}%` : `Best ${rec.pct}% - try again`) : `${exm.ilr} - ${mins} min, timed`) : `Finish ${u.ku} to unlock`}</small>
+                    </span>
+                    <span className="ex-chev">{rec && rec.passed ? <Ic.check /> : unlocked ? <Ic.play /> : null}</span>
+                  </button>
+                );
+              })()}
             </div>
             );
           })}
@@ -3770,6 +3879,143 @@ function CourseApp({ user }) {
   }
 
   return null;
+}
+
+/* ============================ EXAM RUNNER ============================ */
+/* A timed, auto-graded proficiency exam. Steps through single-answer questions
+   (listen, translate, tf, oddone) with a countdown; no per-question feedback,
+   a score and pass/fail at the end. */
+function ExamRunner({ exam, onFinish, onExit }) {
+  const qs = exam.questions;
+  const [idx, setIdx] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [correct, setCorrect] = useState(0);
+  const [left, setLeft] = useState(exam.timeSec);
+  const [result, setResult] = useState(null);
+  const finishedRef = useRef(false);
+  const voice = React.useMemo(() => _voiceForId(exam.id), [exam.id]);
+  const say = (t) => speakGu(t, voice);
+
+  const finish = (score) => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    stopSpeak();
+    const pct = Math.round((score / qs.length) * 100);
+    const passed = pct >= exam.passPct;
+    setResult({ score, pct, passed });
+    onFinish(exam, score, pct);
+  };
+
+  // countdown timer; ends the exam at zero
+  useEffect(() => {
+    if (result) return;
+    if (left <= 0) { finish(correct); return; }
+    const t = setTimeout(() => setLeft((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [left, result]);
+  useEffect(() => () => stopSpeak(), []);
+  // auto-play the listening questions
+  useEffect(() => { const q = qs[idx]; if (!result && q && q.t === "listen") say(q.say); }, [idx, result]);
+
+  const submit = () => {
+    const q = qs[idx];
+    const ok = picked != null && picked === q.answer;
+    const sc = correct + (ok ? 1 : 0);
+    setCorrect(sc);
+    setPicked(null);
+    if (idx + 1 >= qs.length) finish(sc);
+    else setIdx((i) => i + 1);
+  };
+
+  if (result) {
+    return (
+      <div className="dhatu">
+        <style>{CSS}</style>
+        <div className="done-wrap">
+          <div className="done-medal">{result.passed ? <Ic.trophy /> : <Ic.review />}</div>
+          <h1>{result.passed ? "Passed!" : "Not yet"}</h1>
+          <div className="ds" style={{ fontWeight: 800 }}>{exam.title} ({exam.ilr})</div>
+          <div className="ds">You scored {result.score} of {qs.length} ({result.pct}%).{result.passed ? "" : ` The pass mark is ${exam.passPct}%.`}</div>
+          {result.passed && <div className="ds" style={{ color: "var(--gold-dark)", fontWeight: 800 }}>Well done, exam cleared.</div>}
+          <button className="btn primary" style={{ maxWidth: 320 }} onClick={onExit}>Back to the journey</button>
+        </div>
+      </div>
+    );
+  }
+
+  const q = qs[idx];
+  const mm = Math.floor(left / 60), ss = left % 60;
+  return (
+    <div className="dhatu lesson-view">
+      <style>{CSS}</style>
+      <div className="scr">
+        <div className="lhead">
+          <button className="iconbtn" onClick={onExit}><Ic.x /></button>
+          <div className={"examtimer" + (left <= 30 ? " low" : "")}><Ic.clock width={15} height={15} /> {mm}:{String(ss).padStart(2, "0")}</div>
+          <div className="chip gold">{idx + 1}/{qs.length}</div>
+        </div>
+
+        {q.t === "listen" && (
+          <>
+            <div className="q-title">What does this mean?</div>
+            <div className="playrow"><button className="playbtn big" onClick={() => say(q.say)}><Ic.play /></button></div>
+            <div className="opts">
+              {q.options.map((o, i) => (
+                <button key={i} className={"opt" + (picked === o ? " sel" : "")} onClick={() => setPicked(o)}>
+                  <span className="optnum">{String.fromCharCode(65 + i)}</span>{o}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {q.t === "translate" && (
+          <>
+            <div className="q-title">How do you say this?</div>
+            <div className="q-sub" style={{ fontSize: 20, fontWeight: 700, color: "var(--ink)" }}>{q.en}</div>
+            <div className="opts">
+              {q.options.map((o, i) => (
+                <button key={i} className={"opt gu" + (picked === o.gu ? " sel" : "")} onClick={() => { say(o.gu); setPicked(o.gu); }}>{o.gu}</button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {q.t === "tf" && (
+          <>
+            <div className="q-title">True or false?</div>
+            <div className="bigword gu">{q.gu}</div>
+            <div className="playrow"><button className="playbtn big" onClick={() => say(q.gu)}><Ic.play /></button></div>
+            <div style={{ textAlign: "center", fontWeight: 700, fontSize: 17, marginTop: 2 }}>means: {q.claim}</div>
+            <div className="grid2" style={{ marginTop: 14 }}>
+              {["true", "false"].map((v) => (
+                <button key={v} className={"gopt" + (picked === v ? " sel" : "")} onClick={() => setPicked(v)}>{v === "true" ? "True" : "False"}</button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {q.t === "oddone" && (
+          <>
+            <div className="q-title">Which one doesn't belong?</div>
+            <div className="grid2">
+              {q.options.map((o, i) => (
+                <button key={i} className={"gopt" + (picked === o.gu ? " sel" : "")} onClick={() => { say(o.gu); setPicked(o.gu); }}>
+                  <div className="gu">{o.gu}</div>
+                  <small>{o.en}</small>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        <div style={{ height: 100 }} />
+      </div>
+      <div className="foot">
+        <button className="btn primary" disabled={picked == null} onClick={submit}>{idx + 1 >= qs.length ? "Finish" : "Next"}</button>
+      </div>
+    </div>
+  );
 }
 
 /* ============================ LESSON RUNNER ============================ */
