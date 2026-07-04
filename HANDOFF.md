@@ -131,7 +131,7 @@ progress; it fully resets only accounts with no local copy.
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **3,253 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **3,550 clips**). The app's
   `speak(text, lang, voice)` plays a clip when the manifest has one, else falls
   back to browser TTS. A missing manifest just means TTS-as-before.
 - **Voices (multi-voice):** the default narrator is Google **Chirp3-HD**
@@ -230,44 +230,52 @@ progress; it fully resets only accounts with no local copy.
 
 ## 7. Feature inventory (current)
 
-- **Learn:** units with the vertical lesson journey; 15 exercise types (intro,
+- **Learn:** units with the vertical lesson journey; 16 exercise types (intro,
   hvpt = High-Variability Phonetic Training, letter, match, listen, build, fill,
   note, speak, translate = English prompt, pick the Gujarati; oddone = pick the
-  word that doesn't belong; tf = true/false; order = arrange scrambled
+  word that doesn't belong (**options show only the Gujarati/roman word, no English
+  gloss, so it doesn't give itself away**); tf = true/false; order = arrange scrambled
   sentences/lines into a coherent sequence, for discourse and reply-building;
-  plus two **open-ish production** types added to close the free-form gap:
-  **type** = read an English prompt and *type* the Gujarati translation yourself,
-  and **cloze** = a C-test where you type the missing words in a sentence. Both
-  are auto-graded with **no AI and no cloud cost** by `matchGu()` (module-level,
-  just above `ExamRunner`): NFC-normalize, strip trailing punctuation/whitespace,
-  match against an accept-set, and forgive a single-character slip on longer
-  answers (Levenshtein <= 1, length >= 6). Learners without an OS Gujarati
-  keyboard can use the on-screen **`GuKeyboard`** component (tap-to-type vowels,
-  consonants, matras, halant, space, backspace; matra keys show a dotted circle).
-  type/cloze need no audio (they are read/write), so they add zero clips. Both
-  work in lessons *and* exams. `type`/`cloze` are threaded through the advanced
-  units (u17 if/then + can/must, u18 reported speech + relative clause, and the
-  u20 capstone lessons/checkpoint), introduced by a one-time "Now write it
-  yourself" note in u17l1.
+  plus three **typed** types: **type** = read an English prompt and *type* the
+  Gujarati translation yourself; **cloze** = a C-test where you type the missing
+  words in a sentence; **typeen** = shown a Gujarati word (with audio), type its
+  English meaning. Gujarati typing (type/cloze) is graded by **`gradeGu()`**
+  (module-level, just above `GuKeyboard`): exact/accept-variant = **full credit**;
+  a minor typo (small Levenshtein, or only combining marks differ) = **half
+  credit** with a note on what went wrong ("a matra/modifier is off", "check the
+  ending, wrong tense", or a spelling slip); too far = 0. English typing (typeen)
+  is graded by **`matchEn()`**: case-, space-, and punctuation-insensitive, ignores
+  leading articles, accepts a synonym set (glosses split on "/" and ","), and
+  forgives one typo on longer answers. Learners without an OS Gujarati keyboard use
+  the on-screen **`GuKeyboard`** (tap-to-type vowels, consonants, matras, halant,
+  space, backspace; matra keys show a dotted circle). type/cloze/typeen need no new
+  audio (they reuse taught words). Half-credit shows an amber **"Almost, half
+  credit"** feedback sheet (`.sheet.half`). All three work in lessons *and* exams.
+  `type`/`cloze` are threaded through the advanced units (u17-u21); `typeen` is
+  auto-added once per lesson by `expandLesson()` (read/write mode only).
   Higher units (16-20) lean on build/order/type/cloze/note over vocab drills,
   emphasizing tense, tone, and carrying a conversation. Tapping any Gujarati word in an exercise plays its audio.
   "Snooze speaking/listening for 5 min" buttons on those exercise types.
   `expandLesson()` auto-generates a varied reinforcement top-up (listen +
-  translate + a true/false + a match) from each lesson's own taught words, so
-  the new types appear across all lessons with no new audio. oddone is
+  translate + a true/false + a **typeen** + a match) from each lesson's own taught
+  words, so the new types appear across all lessons with no new audio. oddone is
   hand-authored where a clean category exists (e.g. Colors, Animals).
   **Timed proficiency exams** (`EXAMS`, framed on the ILR scale per the
   proficiency-exam research report) sit as milestones in the journey: Limited
-  Working (after Unit 5, 36 questions), Professional Working (after 10, 37), Full
-  Professional (after 15, 39), and the **Primary Fluency final exam** at the very
-  end (after the last unit, **62 questions, near-native**). Countdown-timed sets
+  Working (after Unit 5, 38 questions), Professional Working (after 10, 39), Full
+  Professional (after 15, 41), and the **Primary Fluency final exam** at the very
+  end (**`afterUnit: "u21"`**, **64 questions, near-native**). Countdown-timed sets
   of auto-graded questions: listen/translate/tf/oddone plus **read** (a Gujarati
-  passage + comprehension MCQ), plus four types added to test *production*
-  rather than only recognition: **build** (assemble a sentence from word tiles), **order**
+  passage + comprehension MCQ), and production types **build**, **order**
   (reassemble a scrambled dialogue; order items reuse the app's own 25
-  conversations, whose lines all have clips), **type** (type the Gujarati
-  yourself), and **cloze** (C-test). Every build tile and order line is verified
-  against the audio manifest at generation time so exams add zero clips; type/cloze
+  conversations, whose lines all have clips), **type**, **cloze**, and **typeen**.
+  Scoring is **fractional** (a half-credit Gujarati typo counts 0.5 toward the pct).
+  **After the exam there is a full Review**: every question, marked correct / half /
+  missed, with your answer, the correct answer, and (for typos) the feedback note.
+  A **passed** exam card is **shiny gold** with a sheen sweep (`.examcard.passed`),
+  deliberately not green, since completed units already use green. Every build tile,
+  order line, and typeen word is verified against the audio manifest at generation
+  time so exams add zero clips; type/cloze
   need none. Difficulty escalates by tier; the final pulls in complex sentences,
   reported speech, conditionals, comparisons, register (તું vs તમે), idiom/slang,
   reading inference, and free-form typed production (e.g. "If it rains, we will
@@ -330,25 +338,43 @@ progress; it fully resets only accounts with no local copy.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
   the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat, Textiles and
   Fashion, Food and Cooking), each with
-  photo cover cards; **36 chapters** with photo covers + inline photos, dual
+  photo cover cards; **41 chapters** with photo covers + inline photos, dual
   "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
   summary per chapter), sources. A "Did you know?" fun-fact card rotates every
   10 hours (one fact notes the kaudi shell as early Gujarati currency).
 - **Grammar guide:** 14 topics. **Conversations (Talk):** 25 dialogues with
   speaking practice, beginner through advanced (the two speakers use different
   voices).
-- **Profile:** account card (name, @username, change username), stats, streak
-  repair, **Extra oil** (a streak freeze in the diya theme: buy for 50 Kaudi,
-  auto-consumed on a missed day to keep the streak; one charge per day, cannot
-  bridge more than 4 days in a row; `dhatu_oil`/`dhatu_oilRun`, applied via a
+- **Profile:** account card (name, @username, change username), stats, a
+  **lifetime Kaudi earned** line (`dhatu_kaudiEarned`, bumped by the `earnKaudi`
+  helper alongside the spendable balance; never decreases on spending), streak
+  repair, **Extra oil** (a streak freeze in the diya theme with a flickering-flame
+  animation: buy for 50 Kaudi, auto-consumed on a single missed day; you may hold
+  **at most one charge** (no stockpiling) and freezes cannot run more than
+  **OIL_MAX_RUN = 5** days in a row; `dhatu_oil`/`dhatu_oilRun`, applied via a
   mount reconcile effect), this-week activity, **Friends** (follow by username,
   see streak/Kaudi, poke, pokes received), **Awards** (13 badges that turn gold
   when earned, each with its own icon: First lesson, Checkpoint, Wordsmith 100
   Kaudi, Reviewer, Literally literate = all script lessons, Saaro mitra = 2
   friends, Satat/Amar/Akhand/Suvarṇa jyot = 7/30/100/365-day streaks, Dhanvaan
-  1000 Kaudi, Conversationalist 5000 Kaudi, Mastery = every lesson), settings
-  (read/write, Culture tab, Vocab tab), Ko-fi support, sign out. Real
-  daily-streak tracking (via `dhatu_lastActive`).
+  1000 Kaudi, Conversationalist 5000 Kaudi, Mastery = every lesson; **the three
+  Kaudi awards key off lifetime earned, not the current balance**), settings
+  (read/write, Culture tab, Vocab tab, and the two localization toggles below),
+  Ko-fi support, sign out. Real daily-streak tracking (via `dhatu_lastActive`).
+- **Localization rewards:** **Gujarati numerals** for the Kaudi/streak counters
+  unlock at the **halfway** mark (`completed.length >= half of all lessons`, i.e.
+  well after numbers are taught); the **full Gujarati interface** (nav labels +
+  screen title bars, via the `t(en, gu)` helper) unlocks at **100% mastery**. Both
+  default on when unlocked, each with a settings toggle to switch back to English
+  (`dhatu_guNumbers`, `dhatu_guInterface`). `numFmt(n)` maps 0-9 to ૦-૯; only the
+  Kaudi and streak numbers are converted, not lesson content. Interface coverage is
+  the app chrome (nav + TopBar titles); teaching content stays as authored.
+- **Culture cards:** cover images are now **square** (`aspect-ratio:1` on
+  `.era-band` / `.cat-cover`) so more of each photo shows. `SafeImg` now sends
+  `referrerPolicy="no-referrer"` (matching the working WORD_IMG hotlinks), which
+  fixes the Commons covers that previously failed to load (e.g. the ones that were
+  silently hidden). A few chapters (e.g. nav_nirman) still have no cover file and
+  render as a clean colored square.
 
 Speech check note: browser speech recognition barely supports gu-IN, so speaking
 checks degrade to an "I said it out loud" self-confirm with a calm (not red)
@@ -358,14 +384,25 @@ message. This is a platform limit, intentionally left as graceful fallback.
 
 ## 8. Content inventory
 
-**Scale (current):** 20 Learn units / ~95 lessons; 16 "Learn the letters" script
-lessons; ~46 vocab topics; 14 grammar patterns; 25 conversations; 7 Culture
-categories / 36 chapters; 4 timed proficiency exams; **3,253 audio clips across
-3 voices** (~47 MB); ~70 noun images (`WORD_IMG`, shown in lessons and the Vocab
-list) + body/family diagrams + color swatches; 14 variant pairs (`alt`). Units 1-15 are
+**Scale (current):** 22 Learn units / ~103 lessons; 16 "Learn the letters" script
+lessons; ~53 vocab topics; 14 grammar patterns; 25 conversations; 7 Culture
+categories / 41 chapters; 4 timed proficiency exams; **3,550 audio clips across
+3 voices** (Units 1-21 + earlier content fully generated); ~70 noun images
+(`WORD_IMG`, shown in lessons and the Vocab list) + body/family diagrams + color
+swatches; 14 variant pairs (`alt`). Units 1-15 are
 foundations/themes/practical systems; Units 16-18 are an advanced grammar arc
 (opinions and comparisons; conditionals and modality; reported speech and
-subordinate clauses).
+subordinate clauses); Units 19-22 are conversation, complex sentences, sounding
+natural, and shades of meaning (emphasis/quantity/frequency nuance). The Primary
+Fluency final exam is anchored `afterUnit: "u22"` so it stays at the very end.
+
+**PENDING AUDIO (this batch):** Unit 22's lessons, the three new vocab topics
+(airport, cleaning, office), and the two new culture chapters (Amul, Surat
+diamonds, each with a Gujarati `guSummary` + English narration) added ~32 new
+Gujarati clips + 2 English chapter readings that do NOT exist yet. The app falls
+back to browser TTS for them until the owner runs `GOOGLE_TTS_KEY=<key> npm run
+audio` (auto-discovers new strings, skips existing), then commits the new
+`public/audio/` files. See AUDIO.md.
 
 **Consistency gate:** a checker script (kept in the session scratchpad,
 `check.mjs`) extracts every gu+romanization pair and verifies: every spoken word
@@ -374,7 +411,7 @@ spellings), no in-topic or cross-topic vocab duplicates. Run it after any conten
 change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ ṇ ḷ
 ṣ ṁ) and "oo" for long-u (doodh, phool, roopiyaa).
 
-- **Culture: 7 categories, 36 chapters.** Ancient: indus, maurya, vallabhi,
+- **Culture: 7 categories, 41 chapters.** Ancient: indus, maurya, vallabhi,
   dwarka. Kingdoms: solanki, modhera, sultanate, palitana, narsinh, somnath.
   Trade: surat_trade, diaspora, parsi. Colonial Rule and Resistance (expanded from
   a deep-research report): colonial, many_rulers, peasant, gandhi, rajkot,
@@ -445,7 +482,7 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
    **App name** to "Dhatu Learning" so the sign-in popup reads nicely (AUTH.md).
 2. **Owner: rotate the Google TTS API key** (it appeared in chat repeatedly and
    was used again this session). Audio is fully static, so nothing needs a live key.
-3. **All current content is voiced** (**3,253 clips, 3 voices**). Re-run
+3. **All current content is voiced** (**3,550 clips, 3 voices**). Re-run
    `npm run audio` only after adding new Gujarati content; it is idempotent and
    self-syncing (default clip + v2/v3 variants for short items). If you change an
    override or the pause-list rule, delete the affected clips first so they

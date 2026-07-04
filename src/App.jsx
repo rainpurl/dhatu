@@ -629,7 +629,11 @@ const CSS = `
 /* proficiency exam milestone card + timer */
 .examcard{width:100%;display:flex;align-items:center;gap:12px;margin:12px 0 4px;padding:14px;border:none;border-radius:16px;background:linear-gradient(135deg,#E0A63C,#C77B1E);color:#3b2a06;cursor:pointer;box-shadow:var(--bevel-raise);text-align:left}
 .examcard.locked{background:var(--card);color:var(--muted);box-shadow:var(--bevel-inset);cursor:default}
-.examcard.passed{background:linear-gradient(135deg,#2F8F6B,#1E6E4E);color:#eafff5}
+.examcard.passed{background:linear-gradient(135deg,#FBD24B,#E0A11E);color:#3b2a06;position:relative;overflow:hidden;
+  box-shadow:0 2px 0 #b8850f, 0 6px 16px rgba(210,150,20,.38), inset 0 2px 3px rgba(255,255,255,.65)}
+.examcard.passed::after{content:"";position:absolute;top:0;left:-60%;width:42%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-18deg);animation:sheen 3.4s ease-in-out infinite;pointer-events:none}
+@keyframes sheen{0%,55%{left:-60%}100%{left:135%}}
 .examcard .ex-ic{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.28);display:grid;place-items:center;flex:none}
 .examcard.locked .ex-ic{background:var(--line)}
 .examcard .ex-tx{flex:1;min-width:0}
@@ -639,6 +643,30 @@ const CSS = `
 .examtimer{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:16px;color:var(--ink)}
 .examtimer.low{color:var(--no)}
 .exampassage{background:var(--card);border-radius:14px;padding:14px 16px;margin:6px 0 12px;box-shadow:var(--bevel-inset);font-family:var(--fgu);font-size:19px;line-height:1.7}
+/* post-exam result + review */
+.exam-result{text-align:center;padding:18px 4px 6px}
+.exam-result .done-medal{width:96px;height:96px;margin:0 auto 8px}
+.exam-result .done-medal svg{width:50px;height:50px}
+.exam-result.passed .done-medal{background:linear-gradient(135deg,#FBD24B,#E0A11E);box-shadow:0 4px 14px rgba(210,150,20,.4),inset 0 2px 3px rgba(255,255,255,.6)}
+.exam-result h1{font-size:26px;font-weight:800;margin:6px 0 2px}
+.exam-result .ds{color:#5b4a51;font-size:15px;margin-bottom:4px}
+.reviewhead{font-size:16px;font-weight:800;margin:16px 2px 8px}
+.reviewlist{display:flex;flex-direction:column;gap:8px}
+.reviewitem{border-radius:12px;padding:10px 12px;box-shadow:var(--bevel-inset);background:var(--card)}
+.reviewitem.ok{background:var(--ok-soft)}
+.reviewitem.half{background:#FBF1DA}
+.reviewitem.no{background:var(--no-soft)}
+.rv-top{display:flex;align-items:flex-start;gap:9px}
+.rv-badge{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#fff;margin-top:1px}
+.reviewitem.ok .rv-badge{background:var(--ok)}
+.reviewitem.half .rv-badge{background:var(--gold-dark)}
+.reviewitem.no .rv-badge{background:var(--no)}
+.rv-q{font-size:14px;font-weight:700;line-height:1.4}
+.rv-q .gu{font-family:var(--fgu)}
+.rv-ans{margin:7px 0 0 31px;font-size:13.5px;color:#43333a;display:flex;flex-direction:column;gap:2px}
+.rv-ans .gu{font-family:var(--fgu);font-weight:700}
+.rv-blank{color:var(--muted);font-style:italic}
+.rv-note{color:var(--gold-dark);font-weight:600}
 .lpath{position:relative;display:flex;flex-direction:column;gap:10px;padding:4px 0 2px}
 .lpath::before{content:"";position:absolute;top:26px;bottom:26px;left:38px;width:3px;transform:translateX(-50%);background:var(--line);box-shadow:var(--bevel-inset);border-radius:999px;z-index:0}
 .lrow{position:relative;z-index:1;display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:none;cursor:pointer;
@@ -808,10 +836,11 @@ const CSS = `
 @keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet.good{background:var(--ok-soft);border-top:2px solid var(--ok)}
 .sheet.bad{background:var(--no-soft);border-top:2px solid var(--no)}
+.sheet.half{background:#FBF1DA;border-top:2px solid var(--gold-dark)}
 .sheet .sh{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:6px}
-.sheet.good .sh{color:var(--ok-dark)} .sheet.bad .sh{color:var(--no-dark)}
+.sheet.good .sh{color:var(--ok-dark)} .sheet.bad .sh{color:var(--no-dark)} .sheet.half .sh{color:var(--gold-dark)}
 .sheet .badge{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff}
-.sheet.good .badge{background:var(--ok)} .sheet.bad .badge{background:var(--no)}
+.sheet.good .badge{background:var(--ok)} .sheet.bad .badge{background:var(--no)} .sheet.half .badge{background:var(--gold-dark)}
 .sheet .ans{font-size:14.5px;color:#43333a;margin:2px 0 4px}
 .sheet .ans .gu{font-family:var(--fgu);font-weight:700;font-size:16px}
 .sheet .why{font-size:13px;color:#5b4a51;margin-top:4px;line-height:1.45}
@@ -883,7 +912,7 @@ const CSS = `
   box-shadow:var(--bevel-raise);margin-bottom:12px;transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
 .era-card:hover{box-shadow:var(--bevel-raise)}
 .era-card:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
-.era-band{height:96px;position:relative;display:flex;align-items:flex-end;padding:12px 14px;color:#fff}
+.era-band{aspect-ratio:1;position:relative;display:flex;align-items:flex-end;padding:12px 14px;color:#fff}
 .era-band .emo{position:absolute;top:10px;right:12px;font-size:30px;opacity:.9}
 .era-band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .era-band .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.55))}
@@ -902,7 +931,7 @@ const CSS = `
   background:var(--card);margin-bottom:12px;box-shadow:var(--bevel-raise);
   transition:box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
 .cat-card:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
-.cat-cover{position:relative;height:132px;display:flex;align-items:flex-end;padding:12px 14px;color:#fff}
+.cat-cover{position:relative;aspect-ratio:1;display:flex;align-items:flex-end;padding:12px 14px;color:#fff}
 .cat-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .cat-cover .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.62))}
 .cat-cover-txt{position:relative;z-index:2}
@@ -1089,10 +1118,19 @@ const CSS = `
 .acct-info small{color:var(--muted);font-size:12.5px;font-weight:600;display:block;margin-top:1px}
 
 /* streak repair card */
+.lifetimek{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:700;color:var(--gold-dark);margin:-4px 0 14px}
 .heal{display:flex;align-items:center;gap:12px;background:#FBEFD6;border-radius:16px;padding:12px 14px;margin-bottom:16px;box-shadow:var(--bevel-inset)}
 .heal-ic{width:42px;height:42px;border-radius:12px;background:var(--diya);color:#fff;display:grid;place-items:center;flex:none;box-shadow:var(--sink-gold)}
 .heal-tx{flex:1}.heal-tx b{font-size:14.5px;display:block}
 .heal-tx small{color:#6b5a2e;font-size:12px;font-weight:600;display:block;margin-top:1px}
+/* extra-oil diya flame: always gently flickers; glows brighter when a charge is ready */
+.oil-flame svg{animation:flameFlicker 1.8s ease-in-out infinite;transform-origin:50% 80%}
+@keyframes flameFlicker{0%,100%{transform:scale(1) rotate(-1.5deg);filter:drop-shadow(0 0 1px rgba(255,236,200,.5))}
+  45%{transform:scale(1.1) rotate(1.5deg)}
+  50%{transform:scale(1.12) rotate(1deg);filter:drop-shadow(0 0 5px rgba(255,214,140,.95))}
+  70%{transform:scale(1.04) rotate(-1deg)}}
+.oilcard.lit{background:#FCE3BC;box-shadow:0 0 0 1px rgba(224,166,60,.35),var(--bevel-inset)}
+.oilcard.lit .heal-ic{background:linear-gradient(135deg,#F7B24A,#E0790E);box-shadow:0 0 10px rgba(242,137,46,.6),var(--sink-gold)}
 .heal .btn{width:auto;flex:none}
 
 /* username + friends */
@@ -2167,6 +2205,18 @@ const EXAMS = [
             "accept": []
           }
         ]
+      },
+      {
+        "t": "typeen",
+        "gu": "કૂતરો",
+        "answer": "dog",
+        "accept": []
+      },
+      {
+        "t": "typeen",
+        "gu": "દૂધ",
+        "answer": "milk",
+        "accept": []
       }
     ]
   },
@@ -2721,6 +2771,22 @@ const EXAMS = [
             "t": "text",
             "v": " કરો છો?"
           }
+        ]
+      },
+      {
+        "t": "typeen",
+        "gu": "શહેર",
+        "answer": "city",
+        "accept": [
+          "town"
+        ]
+      },
+      {
+        "t": "typeen",
+        "gu": "ગરમ",
+        "answer": "hot",
+        "accept": [
+          "warm"
         ]
       }
     ]
@@ -3307,12 +3373,30 @@ const EXAMS = [
             "v": " કે તે આવશે"
           }
         ]
+      },
+      {
+        "t": "typeen",
+        "gu": "દવા",
+        "answer": "medicine",
+        "accept": [
+          "medication"
+        ]
+      },
+      {
+        "t": "typeen",
+        "gu": "રસ્તો",
+        "answer": "road",
+        "accept": [
+          "street",
+          "way",
+          "path"
+        ]
       }
     ]
   },
   {
     "id": "ex_pf",
-    "afterUnit": "u20",
+    "afterUnit": "u22",
     "ilr": "ILR 4",
     "title": "Primary Fluency",
     "timeSec": 2100,
@@ -4231,6 +4315,18 @@ const EXAMS = [
             "v": " મને નવાઈ લાગી"
           }
         ]
+      },
+      {
+        "t": "typeen",
+        "gu": "સૌથી",
+        "answer": "most",
+        "accept": []
+      },
+      {
+        "t": "typeen",
+        "gu": "કારણ કે",
+        "answer": "because",
+        "accept": []
       }
     ]
   }
@@ -5073,7 +5169,8 @@ function WriteCanvas({ glyph }) {
 function SafeImg({ src, alt, className }) {
   const [ok, setOk] = useState(true);
   if (!src || !ok) return null;
-  return <img src={src} alt={alt} className={className} onError={() => setOk(false)} />;
+  // no-referrer matches the working WORD_IMG hotlinks; Wikimedia can 403 otherwise
+  return <img src={src} alt={alt} className={className} referrerPolicy="no-referrer" loading="lazy" onError={() => setOk(false)} />;
 }
 
 // Render an icon by its Ic key (used for topic and conversation icons).
@@ -5218,8 +5315,18 @@ function CourseApp({ user }) {
   const [readWrite, setReadWrite] = useLocalState("dhatu_readWrite", true);
   const [showHistory, setShowHistory] = useLocalState("dhatu_showHistory", true);
   const [vocabTab, setVocabTab] = useLocalState("dhatu_vocabTab", false);
+  // Localization rewards: Gujarati numerals unlock at the halfway mark; a full
+  // Gujarati interface unlocks at 100% mastery. Both default on once unlocked,
+  // with a settings toggle to switch back to English.
+  const [guNumbers, setGuNumbers] = useLocalState("dhatu_guNumbers", true);
+  const [guInterface, setGuInterface] = useLocalState("dhatu_guInterface", true);
 
   const [kaudi, setKaudi] = useLocalState("dhatu_kaudi", 0);
+  // Lifetime Kaudi ever earned (never decreases when spending). Kaudi-based awards
+  // key off this so buying oil/repairs can't take an award away.
+  const [kaudiEarned, setKaudiEarned] = useLocalState("dhatu_kaudiEarned", 0);
+  // earn helper: bump both the spendable balance and the lifetime total
+  const earnKaudi = (n) => { setKaudi((k) => k + n); setKaudiEarned((e) => e + n); };
   const [streak, setStreak] = useLocalState("dhatu_streak", 0);
   const [completed, setCompleted] = useLocalState("dhatu_completed", []);
   const [srs, setSrs] = useLocalState("dhatu_srs", []);
@@ -5324,7 +5431,7 @@ function CourseApp({ user }) {
       // Test out: mark all lessons this exam covers as completed.
       const covered = examCoveredLessons(exam);
       setCompleted((c) => Array.from(new Set([...c, ...covered])));
-      if (!already) { setKaudi((k) => k + 30); recordActivity(); }
+      if (!already) { earnKaudi(30); recordActivity(); }
     }
   }
 
@@ -5358,28 +5465,32 @@ function CourseApp({ user }) {
 
   // Streak repair: spend Kaudi to rescue a streak after a missed day.
   const STREAK_HEAL_COST = 30;
-  // Extra oil: a streak freeze. Bought ahead for OIL_COST Kaudi; auto-consumed to
-  // keep the diya lit on a missed day. One charge covers one day, and freezes
-  // cannot cover more than OIL_MAX_RUN days in a row (then the streak resets).
+  // Extra oil: a streak freeze. You may hold at most ONE charge at a time (no
+  // stockpiling), and a charge is auto-consumed to keep the diya lit on a single
+  // missed day. To freeze more than one day you must log in each day and re-buy,
+  // but freezes cannot run more than OIL_MAX_RUN days in a row (then it resets).
   const OIL_COST = 50;
-  const OIL_MAX_RUN = 4;
+  const OIL_MAX_RUN = 5;
   function buyOil() {
     if (kaudi < OIL_COST) return;
+    if (oil >= 1) return;          // hold at most one charge
+    if (oilRun >= OIL_MAX_RUN) return; // can't extend a freeze past the cap
     setKaudi((k) => k - OIL_COST);
-    setOil((o) => o + 1);
+    setOil(1);
   }
-  // On load, auto-apply extra oil to bridge any missed days (up to the run cap).
+  // On load, auto-apply the one charge to bridge a single missed day (within the
+  // run cap). One charge only covers one day, so a longer gap breaks the streak.
   useEffect(() => {
     if (!lastActive || streak < 1) return;
     const today = _dstr(new Date());
     if (lastActive === today) return;
     const daysSince = Math.round((new Date(today + "T00:00:00") - new Date(lastActive + "T00:00:00")) / 86400000);
     const missed = daysSince - 1; // days with no activity, not counting today
-    if (missed >= 1 && oil >= missed && oilRun + missed <= OIL_MAX_RUN) {
-      setOil((o) => o - missed);
-      setOilRun((r) => r + missed);
+    if (missed === 1 && oil >= 1 && oilRun + 1 <= OIL_MAX_RUN) {
+      setOil(0);
+      setOilRun((r) => r + 1);
       const y = new Date(); y.setDate(y.getDate() - 1);
-      setLastActive(_dstr(y)); // bridge the gap so the streak survives
+      setLastActive(_dstr(y)); // bridge the one-day gap so the streak survives
     }
   }, []);
 
@@ -5388,16 +5499,27 @@ function CourseApp({ user }) {
   const scriptAllDone = SCRIPT_LESSONS_RESOLVED.length > 0 && SCRIPT_LESSONS_RESOLVED.every((l) => scriptDone.includes(l.id));
   const allLessonIds = UNITS.flatMap((u) => u.lessons.map((l) => l.id));
   const masteryDone = allLessonIds.length > 0 && allLessonIds.every((id) => completed.includes(id));
+  // localization unlocks + effective state
+  const guNumUnlocked = allLessonIds.length > 0 && completed.length >= Math.ceil(allLessonIds.length / 2);
+  const guUiUnlocked = masteryDone;
+  const useGuNum = guNumUnlocked && guNumbers;
+  const useGuUi = guUiUnlocked && guInterface;
+  // render a number in Gujarati digits once unlocked+on, else plain
+  const numFmt = (n) => useGuNum ? String(n).replace(/[0-9]/g, (d) => "૦૧૨૩૪૫૬૭૮૯"[+d]) : String(n);
+  // pick English or Gujarati UI text depending on the interface language
+  const t = (en, gu) => useGuUi ? gu : en;
   const awardConds = {
     b1: completed.length >= 1, b2: completed.some((c) => c.endsWith("c")),
-    b3: kaudi >= 100, b4: srs.length > 0, b5: scriptAllDone, b6: friendList.length >= 2,
+    b3: kaudiEarned >= 100, b4: srs.length > 0, b5: scriptAllDone, b6: friendList.length >= 2,
     b7: streak >= 7, b8: streak >= 30, b12: streak >= 100, b13: streak >= 365,
-    b9: kaudi >= 1000, b10: kaudi >= 5000, b11: masteryDone,
+    b9: kaudiEarned >= 1000, b10: kaudiEarned >= 5000, b11: masteryDone,
   };
+  // Lifetime total can never be below the current balance (floor for existing users).
+  useEffect(() => { if (kaudiEarned < kaudi) setKaudiEarned(kaudi); }, []);
   useEffect(() => {
     const newly = Object.keys(awardConds).filter((id) => awardConds[id] && !awardsEarned.includes(id));
     if (newly.length) setAwardsEarned((prev) => [...prev, ...newly.filter((id) => !prev.includes(id))]);
-  }, [kaudi, streak, completed, srs, scriptDone, friendList]);
+  }, [kaudiEarned, streak, completed, srs, scriptDone, friendList]);
 
   function streakBroken() {
     if (!lastActive || streak < 1) return false;
@@ -5445,7 +5567,7 @@ function CourseApp({ user }) {
     }
     const reward = Math.max(2, 10 - sessionWrong * 2);
     setSessionKaudi(reward);
-    setKaudi((k) => k + reward);
+    earnKaudi(reward);
     setDayLog((d) => {
       const t = _dstr(new Date());
       return { date: t, count: (d.date === t ? d.count : 0) + 1 };
@@ -5553,8 +5675,8 @@ function CourseApp({ user }) {
         <h1>{title}</h1>
       </div>
       <div className="spacer" />
-      <div className="chip gold"><Ic.kaudi width={15} height={15} />{kaudi}</div>
-      <div className="chip fire"><Ic.diya width={15} height={15} />{streak}</div>
+      <div className="chip gold"><Ic.kaudi width={15} height={15} />{numFmt(kaudi)}</div>
+      <div className="chip fire"><Ic.diya width={15} height={15} />{numFmt(streak)}</div>
     </div>
   );
 
@@ -5562,30 +5684,30 @@ function CourseApp({ user }) {
     <div className="nav">
       <div className="navbrand"><span className="nbm"><Ic.logo width={22} height={22} /></span><span className="nbt">Dhātu</span></div>
       <button className={"navb" + (tab === "learn" ? " on" : "")} onClick={() => { setTab("learn"); setScreen("learn"); }}>
-        <Ic.learn /> Learn
+        <Ic.learn /> {t("Learn", "શીખો")}
       </button>
       {readWrite && (
         <button className={"navb" + (tab === "script" ? " on" : "")} onClick={() => { setTab("script"); setScreen("script"); }}>
-          <Ic.script /> Script
+          <Ic.script /> {t("Script", "લિપિ")}
         </button>
       )}
       {srs.length > 0 && (
         <button className={"navb" + (tab === "review" ? " on" : "")} onClick={() => { setTab("review"); setScreen("review"); }}>
-          <Ic.review /> Review
+          <Ic.review /> {t("Review", "સમીક્ષા")}
         </button>
       )}
       {vocabTab && (
         <button className={"navb" + (tab === "vocab" ? " on" : "")} onClick={() => { setTab("vocab"); setScreen("vocab"); }}>
-          <Ic.vocab /> Vocab
+          <Ic.vocab /> {t("Vocab", "શબ્દો")}
         </button>
       )}
       {showHistory && (
         <button className={"navb" + (tab === "history" ? " on" : "")} onClick={() => { setTab("history"); setScreen("history"); }}>
-          <Ic.temple /> Culture
+          <Ic.temple /> {t("Culture", "સંસ્કૃતિ")}
         </button>
       )}
       <button className={"navb" + (tab === "profile" ? " on" : "")} onClick={() => { setTab("profile"); setScreen("profile"); }}>
-        <Ic.profile /> Profile
+        <Ic.profile /> {t("Profile", "પ્રોફાઇલ")}
       </button>
     </div>
   );
@@ -5611,7 +5733,7 @@ function CourseApp({ user }) {
       <div className="dhatu withrail">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title="Dhātu" sub="Gujarati, one step at a time" />
+          <TopBar title={t("Dhātu","ધાતુ")} sub={t("Gujarati, one step at a time","ધીમે ધીમે ગુજરાતી")} />
           {recLesson && (
             <button className="resume" onClick={() => startLesson(recLesson.id)}>
               <span className="rico"><Ic.play /></span>
@@ -5715,11 +5837,11 @@ function CourseApp({ user }) {
           <h3>Your progress</h3>
           <div className="rstat">
             <span className="ri" style={{ color: "var(--diya)" }}><Ic.diya /></span>
-            <span><div className="rk">{streak}</div><div className="rl">day streak</div></span>
+            <span><div className="rk">{numFmt(streak)}</div><div className="rl">day streak</div></span>
           </div>
           <div className="rstat">
             <span className="ri" style={{ color: "var(--gold-dark)" }}><Ic.kaudi /></span>
-            <span><div className="rk">{kaudi}</div><div className="rl">Kaudi</div></span>
+            <span><div className="rk">{numFmt(kaudi)}</div><div className="rl">Kaudi</div></span>
           </div>
           <div className="rcard">
             <div className="rt">Course progress</div>
@@ -5901,7 +6023,7 @@ function CourseApp({ user }) {
               <div className="l">Correct</div>
             </div>
             <div className="done-stat">
-              <div className="n"><Ic.diya width={16} height={16} />{streak}</div>
+              <div className="n"><Ic.diya width={16} height={16} />{numFmt(streak)}</div>
               <div className="l">Day streak</div>
             </div>
           </div>
@@ -5969,7 +6091,7 @@ function CourseApp({ user }) {
     const nextId = curPos >= 0 && curPos + 1 < SCRIPT_LESSON_ORDER.length ? SCRIPT_LESSON_ORDER[curPos + 1] : null;
     const nextLesson = nextId ? SCRIPT_LESSONS_RESOLVED.find((l) => l.id === nextId) : null;
     const finish = (earned) => {
-      if (earned > 0) setKaudi((k) => k + earned);
+      if (earned > 0) earnKaudi(earned);
       setScriptDone((d) => (d.includes(lesson.id) ? d : [...d, lesson.id]));
     };
     return (
@@ -6004,7 +6126,7 @@ function CourseApp({ user }) {
       <div className={"dhatu script-shell sfont-" + scriptFont}>
         <style>{CSS}</style>
         <div className="scr" style={{ paddingBottom: 150 }}>
-          <TopBar title="Script" sub="The Gujarati abugida" />
+          <TopBar title={t("Script","લિપિ")} sub={t("The Gujarati abugida","ગુજરાતી લિપિ")} />
           <p className="hist-intro">Tap any letter to hear it and see how it sounds. Letters are ordered roughly by how often you will meet them.</p>
           <div className="fonttoggle">
             {[1, 2, 3].map((n) => (
@@ -6069,7 +6191,7 @@ function CourseApp({ user }) {
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title="Review" sub={`${due.length} due now`} />
+          <TopBar title={t("Review","સમીક્ષા")} sub={t(`${due.length} due now`,`${numFmt(due.length)} બાકી`)} />
           {srs.length === 0 && (
             <div className="card" style={{ textAlign: "center", padding: 28 }}>
               <div style={{ display: "flex", justifyContent: "center", marginBottom: 8, color: "var(--muted)" }}><Ic.vocab width={32} height={32} /></div>
@@ -6161,7 +6283,7 @@ function CourseApp({ user }) {
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title="Vocab" sub="Words by topic" />
+          <TopBar title={t("Vocab","શબ્દો")} sub={t("Words by topic","વિષય પ્રમાણે શબ્દો")} />
           <div className="cardgrid">
           {TOPICS.map((t) => (
             <button key={t.id} className="card" style={{ width: "100%", textAlign: "left", cursor: "pointer", display: "flex", alignItems: "center", gap: 14 }} onClick={() => setSelTopic(t.id)}>
@@ -6329,7 +6451,7 @@ function CourseApp({ user }) {
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title="Culture" />
+          <TopBar title={t("Culture","સંસ્કૃતિ")} />
           <div className="factcard">
             <div className="factlabel"><Ic.bulb width={15} height={15} /> Did you know?</div>
             <p>{CULTURE_FACTS[Math.floor(Date.now() / (10 * 3600 * 1000)) % CULTURE_FACTS.length]}</p>
@@ -6384,7 +6506,7 @@ function CourseApp({ user }) {
       <div className="dhatu">
         <style>{CSS}</style>
         <div className="scr">
-          <TopBar title="Profile" sub="Your progress" />
+          <TopBar title={t("Profile","પ્રોફાઇલ")} sub={t("Your progress","તમારી પ્રગતિ")} />
           {user && (
             <div className="acct">
               {user.photoURL
@@ -6404,11 +6526,11 @@ function CourseApp({ user }) {
           </div>
           <div className="stats">
             <div className="stat">
-              <div className="n"><Ic.kaudi width={20} height={20} style={{ color: "var(--gold)" }} />{kaudi}</div>
+              <div className="n"><Ic.kaudi width={20} height={20} style={{ color: "var(--gold)" }} />{numFmt(kaudi)}</div>
               <div className="l">Kaudi</div>
             </div>
             <div className="stat">
-              <div className="n"><Ic.diya width={20} height={20} style={{ color: "var(--diya)" }} />{streak}</div>
+              <div className="n"><Ic.diya width={20} height={20} style={{ color: "var(--diya)" }} />{numFmt(streak)}</div>
               <div className="l">Day streak</div>
             </div>
             <div className="stat">
@@ -6420,25 +6542,32 @@ function CourseApp({ user }) {
               <div className="l">Lessons done</div>
             </div>
           </div>
+          <div className="lifetimek"><Ic.kaudi width={14} height={14} style={{ color: "var(--gold)" }} /> {numFmt(kaudiEarned)} Kaudi earned all-time</div>
 
           {streakBroken() && (
             <div className="heal">
               <div className="heal-ic"><Ic.diya width={22} height={22} /></div>
               <div className="heal-tx">
-                <b>Your {streak}-day streak is at risk</b>
+                <b>Your {numFmt(streak)}-day streak is at risk</b>
                 <small>You missed a day. Repair it for {STREAK_HEAL_COST} Kaudi.</small>
               </div>
               <button className="btn gold sm" disabled={kaudi < STREAK_HEAL_COST} onClick={healStreak}>Repair</button>
             </div>
           )}
 
-          <div className="heal">
-            <div className="heal-ic"><Ic.diya width={22} height={22} /></div>
+          <div className={"heal oilcard" + (oil > 0 ? " lit" : "")}>
+            <div className="heal-ic oil-flame"><Ic.diya width={22} height={22} /></div>
             <div className="heal-tx">
-              <b>Extra oil{oil > 0 ? ` × ${oil}` : ""}</b>
-              <small>Keeps your diya lit if you miss a day.</small>
+              <b>Extra oil{oil > 0 ? " (ready)" : ""}</b>
+              <small>{oilRun >= OIL_MAX_RUN
+                ? `Used ${OIL_MAX_RUN} days running. Log in a day to reset it.`
+                : oil > 0
+                ? "Your diya is protected for one missed day."
+                : "Keeps your diya lit if you miss one day."}</small>
             </div>
-            <button className="btn gold sm" disabled={kaudi < OIL_COST} onClick={buyOil}>Buy for {OIL_COST} Kaudi</button>
+            <button className="btn gold sm" disabled={kaudi < OIL_COST || oil >= 1 || oilRun >= OIL_MAX_RUN} onClick={buyOil}>
+              {oil >= 1 ? "Lit" : `Buy for ${OIL_COST} Kaudi`}
+            </button>
           </div>
 
           <div className="section-h">This week</div>
@@ -6519,6 +6648,18 @@ function CourseApp({ user }) {
               <span className="tt"><b>Vocab tab</b><small>Themed word lists</small></span>
               <div className={"sw" + (vocabTab ? " on" : "")} onClick={() => setVocabTab((v) => !v)}><i /></div>
             </div>
+            {guNumUnlocked && (
+              <div className="toggle">
+                <span className="tt"><b>Gujarati numbers</b><small>Show Kaudi and streak in Gujarati numerals</small></span>
+                <div className={"sw" + (guNumbers ? " on" : "")} onClick={() => setGuNumbers((v) => !v)}><i /></div>
+              </div>
+            )}
+            {guUiUnlocked && (
+              <div className="toggle">
+                <span className="tt"><b>Gujarati interface</b><small>Show the app's labels in Gujarati (unlocked at mastery)</small></span>
+                <div className={"sw" + (guInterface ? " on" : "")} onClick={() => setGuInterface((v) => !v)}><i /></div>
+              </div>
+            )}
           </div>
           <a href="https://ko-fi.com/rainglade" target="_blank" rel="noopener noreferrer" className="supportlink">
             <span className="ic"><Ic.coffee /></span>
@@ -6689,6 +6830,64 @@ function matchGu(input, answers) {
   return false;
 }
 
+// Gujarati combining marks (matras, anusvara, chandrabindu, nukta, virama).
+const _GU_MARKS = /[ઁંઃ઼ા-્]/g;
+// Describe what a near-miss got wrong, for half-credit feedback.
+function _guTypoNote(input, target) {
+  const skel = (s) => s.replace(_GU_MARKS, "");
+  if (skel(input) === skel(target) && input !== target) {
+    return "Almost. The consonants are right, but a vowel sign (matra) or modifier is off.";
+  }
+  // difference concentrated at the end often means a wrong verb ending / tense
+  const minLen = Math.min(input.length, target.length);
+  let i = 0;
+  while (i < minLen && input[i] === target[i]) i++;
+  if (i >= Math.max(2, minLen - 3)) {
+    return "Close. Check the ending, it may be the wrong tense or agreement.";
+  }
+  return "Almost, a small spelling slip. Compare it letter by letter.";
+}
+// Grade a typed Gujarati answer: 1 = correct, 0.5 = minor typo (with a note), 0 = no.
+function gradeGu(input, answers) {
+  const n = _normGu(input);
+  if (!n) return { credit: 0, note: "" };
+  let best = null, bestD = Infinity;
+  for (const a of answers) {
+    if (a == null) continue;
+    const t = _normGu(a);
+    if (!t) continue;
+    if (n === t) return { credit: 1, note: "" };
+    const d = _lev(n, t);
+    if (d < bestD) { bestD = d; best = t; }
+  }
+  if (best == null) return { credit: 0, note: "" };
+  const thresh = best.length >= 8 ? 2 : 1; // "minor" scales with length
+  if (bestD <= thresh) return { credit: 0.5, note: _guTypoNote(n, best) };
+  return { credit: 0, note: "" };
+}
+// Lenient English matching for "type the meaning" questions: case-, space-,
+// punctuation-insensitive, ignores leading articles, accepts a listed synonym
+// set, and forgives one typo on longer answers.
+function _normEn(s) {
+  return (s || "").toLowerCase().normalize("NFC")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\b(a|an|the|to)\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function matchEn(input, answers) {
+  const n = _normEn(input);
+  if (!n) return false;
+  for (const a of answers) {
+    if (a == null) continue;
+    const t = _normEn(a);
+    if (!t) continue;
+    if (n === t) return true;
+    if (t.length >= 5 && _lev(n, t) <= 1) return true;
+  }
+  return false;
+}
+
 /* ============================ ON-SCREEN GUJARATI KEYBOARD ============================ */
 /* A tap-to-type Gujarati keyboard so learners can produce script even without an
    OS Gujarati keyboard. It only emits keystrokes (onInsert / onBackspace); the
@@ -6715,10 +6914,40 @@ function GuKeyboard({ onInsert, onBackspace }) {
   );
 }
 
+/* Helpers for the post-exam review: a short prompt, the correct answer, and
+   whether the answer text should render in the Gujarati font. */
+function examIsGu(q) {
+  return ["translate", "oddone", "build", "order", "type", "cloze"].includes(q.t);
+}
+function examPrompt(q) {
+  switch (q.t) {
+    case "listen": return <span>Meaning of <span className="gu">{q.say}</span>?</span>;
+    case "translate": return <span>Say: {q.en}</span>;
+    case "tf": return <span><span className="gu">{q.gu}</span> means "{q.claim}"?</span>;
+    case "oddone": return "Which one doesn't belong?";
+    case "read": return q.q;
+    case "build": return q.en;
+    case "order": return q.en;
+    case "type": return <span>Write: {q.en}</span>;
+    case "typeen": return <span>Meaning of <span className="gu">{q.gu}</span></span>;
+    case "cloze": return <span>Fill: <span className="gu">{q.parts.map((p) => p.t === "text" ? p.v : " ____ ").join("")}</span></span>;
+    default: return "";
+  }
+}
+function examCorrect(q) {
+  switch (q.t) {
+    case "tf": return q.answer === "true" ? "True" : "False";
+    case "build": return q.answer.join(" ");
+    case "order": return q.lines.map((l) => l.gu).join("  ·  ");
+    case "cloze": return q.parts.map((p) => p.t === "text" ? p.v : p.a).join("");
+    default: return String(q.answer || "");
+  }
+}
+
 /* ============================ EXAM RUNNER ============================ */
 /* A timed, auto-graded proficiency exam. Steps through auto-gradable questions
-   (listen, translate, tf, oddone, read, build, order, type, cloze) with a
-   countdown; no per-question feedback, a score and pass/fail at the end. */
+   (listen, translate, tf, oddone, read, build, order, type, cloze, typeen) with
+   a countdown; no per-question feedback during, then a score and a full review. */
 function ExamRunner({ exam, onFinish, onExit }) {
   const qs = exam.questions;
   const [idx, setIdx] = useState(0);
@@ -6729,6 +6958,7 @@ function ExamRunner({ exam, onFinish, onExit }) {
   const [clozeAns, setClozeAns] = useState([]);
   const [clozeFocus, setClozeFocus] = useState(0);
   const [correct, setCorrect] = useState(0);
+  const [review, setReview] = useState([]);
   const [left, setLeft] = useState(exam.timeSec);
   const [result, setResult] = useState(null);
   const finishedRef = useRef(false);
@@ -6773,21 +7003,29 @@ function ExamRunner({ exam, onFinish, onExit }) {
 
   const submit = () => {
     const q = qs[idx];
-    let ok;
+    let credit = 0, your = "", note = "";
     if (q.t === "build") {
       const guess = buildAns.map((a) => a.tok);
-      ok = guess.length === q.answer.length && guess.every((g, i) => g === q.answer[i]);
+      credit = guess.length === q.answer.length && guess.every((g, i) => g === q.answer[i]) ? 1 : 0;
+      your = guess.join(" ");
     } else if (q.t === "order") {
-      ok = orderAns.length === q.lines.length && orderAns.every((a, i) => a.i === i);
+      credit = orderAns.length === q.lines.length && orderAns.every((a, i) => a.i === i) ? 1 : 0;
+      your = orderAns.map((a) => a.gu).join("  ·  ");
     } else if (q.t === "type") {
-      ok = matchGu(typed, [q.answer, ...(q.accept || [])]);
+      const g = gradeGu(typed, [q.answer, ...(q.accept || [])]); credit = g.credit; note = g.note; your = typed;
     } else if (q.t === "cloze") {
       const blanks = q.parts.filter((p) => p.t === "blank");
-      ok = blanks.every((b, i) => matchGu(clozeAns[i] || "", [b.a, ...(b.accept || [])]));
+      const grades = blanks.map((b, i) => gradeGu(clozeAns[i] || "", [b.a, ...(b.accept || [])]));
+      credit = grades.reduce((s, g) => s + g.credit, 0) / (grades.length || 1);
+      note = (grades.find((g) => g.credit === 0.5) || {}).note || "";
+      your = (clozeAns || []).filter(Boolean).join(", ");
+    } else if (q.t === "typeen") {
+      credit = matchEn(typed, [q.answer, ...(q.accept || [])]) ? 1 : 0; your = typed;
     } else {
-      ok = picked != null && picked === q.answer;
+      credit = picked != null && picked === q.answer ? 1 : 0; your = picked == null ? "" : String(picked);
     }
-    const sc = correct + (ok ? 1 : 0);
+    setReview((r) => [...r, { q, credit, your, note }]);
+    const sc = correct + credit;
     setCorrect(sc);
     setPicked(null);
     setBuildAns([]);
@@ -6805,7 +7043,7 @@ function ExamRunner({ exam, onFinish, onExit }) {
       ? buildAns.length === q0.answer.length
       : q0 && q0.t === "order"
       ? orderAns.length === q0.lines.length
-      : q0 && q0.t === "type"
+      : q0 && (q0.t === "type" || q0.t === "typeen")
       ? typed.trim() !== ""
       : q0 && q0.t === "cloze"
       ? clozeBlanks.every((_, i) => (clozeAns[i] || "").trim() !== "")
@@ -6821,16 +7059,47 @@ function ExamRunner({ exam, onFinish, onExit }) {
   };
 
   if (result) {
+    const nRight = review.filter((r) => r.credit === 1).length;
+    const nHalf = review.filter((r) => r.credit > 0 && r.credit < 1).length;
+    const scoreStr = Number.isInteger(result.score) ? result.score : result.score.toFixed(1);
     return (
-      <div className="dhatu">
+      <div className="dhatu lesson-view">
         <style>{CSS}</style>
-        <div className="done-wrap">
-          <div className="done-medal">{result.passed ? <Ic.trophy /> : <Ic.review />}</div>
-          <h1>{result.passed ? "Passed!" : "Not yet"}</h1>
-          <div className="ds" style={{ fontWeight: 800 }}>{exam.title} ({exam.ilr})</div>
-          <div className="ds">You scored {result.score} of {qs.length} ({result.pct}%).{result.passed ? "" : ` The pass mark is ${exam.passPct}%.`}</div>
-          {result.passed && <div className="ds" style={{ color: "var(--gold-dark)", fontWeight: 800 }}>Passed. The lessons this exam covers are now marked complete.</div>}
-          <button className="btn primary" style={{ maxWidth: 320 }} onClick={onExit}>Back to the journey</button>
+        <div className="scr">
+          <div className={"exam-result" + (result.passed ? " passed" : "")}>
+            <div className="done-medal">{result.passed ? <Ic.trophy /> : <Ic.review />}</div>
+            <h1>{result.passed ? "Passed!" : "Not yet"}</h1>
+            <div className="ds" style={{ fontWeight: 800 }}>{exam.title} ({exam.ilr})</div>
+            <div className="ds">You scored {scoreStr} of {qs.length} ({result.pct}%).{result.passed ? "" : ` The pass mark is ${exam.passPct}%.`}</div>
+            <div className="ds" style={{ fontSize: 13 }}>{nRight} correct{nHalf ? `, ${nHalf} half credit` : ""}, {review.length - nRight - nHalf} missed.</div>
+            {result.passed && <div className="ds" style={{ color: "var(--gold-dark)", fontWeight: 800 }}>The lessons this exam covers are now marked complete.</div>}
+          </div>
+
+          <div className="reviewhead">Review</div>
+          <div className="reviewlist">
+            {review.map((r, i) => {
+              const cls = r.credit === 1 ? "ok" : r.credit > 0 ? "half" : "no";
+              return (
+                <div key={i} className={"reviewitem " + cls}>
+                  <div className="rv-top">
+                    <span className="rv-badge">{r.credit === 1 ? <Ic.check width={14} height={14} /> : r.credit > 0 ? <Ic.bulb width={14} height={14} /> : <Ic.x width={14} height={14} />}</span>
+                    <span className="rv-q">{examPrompt(r.q)}</span>
+                  </div>
+                  {r.credit < 1 && (
+                    <div className="rv-ans">
+                      {r.your ? <div>Your answer: <span className={examIsGu(r.q) ? "gu" : ""}>{r.your}</span></div> : <div className="rv-blank">No answer</div>}
+                      <div>Correct: <span className={examIsGu(r.q) ? "gu" : ""}>{examCorrect(r.q)}</span></div>
+                      {r.note && <div className="rv-note">{r.note}</div>}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ height: 90 }} />
+        </div>
+        <div className="foot">
+          <button className="btn primary" onClick={onExit}>Back to the journey</button>
         </div>
       </div>
     );
@@ -6895,7 +7164,6 @@ function ExamRunner({ exam, onFinish, onExit }) {
               {q.options.map((o, i) => (
                 <button key={i} className={"gopt" + (picked === o.gu ? " sel" : "")} onClick={() => { say(o.gu); setPicked(o.gu); }}>
                   <div className="gu">{o.gu}</div>
-                  <small>{o.en}</small>
                 </button>
               ))}
             </div>
@@ -6968,6 +7236,15 @@ function ExamRunner({ exam, onFinish, onExit }) {
           </>
         )}
 
+        {q.t === "typeen" && (
+          <>
+            <div className="q-title">Type the meaning in English</div>
+            <div className="bigword gu">{q.gu}</div>
+            <div className="playrow"><button className="playbtn big" onClick={() => say(q.gu)}><Ic.play /></button></div>
+            <input className="typein" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="type in English…" spellCheck={false} autoComplete="off" autoFocus />
+          </>
+        )}
+
         {q.t === "cloze" && (
           <>
             <div className="q-title">Fill in the missing words</div>
@@ -7009,6 +7286,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
   const [typed, setTyped] = useState("");
   const [clozeAns, setClozeAns] = useState(() => (ex.t === "cloze" ? ex.parts.filter((p) => p.t === "blank").map(() => "") : []));
   const [clozeFocus, setClozeFocus] = useState(0);
+  const [typoNote, setTypoNote] = useState("");
   const [spoke, setSpoke] = useState(false);
 
   // on-screen keyboard writes to the type field, or the focused cloze blank
@@ -7089,17 +7367,28 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
     setFeedback(isRight ? "good" : "bad");
   }
   function checkType() {
-    const isRight = matchGu(typed, [ex.answer, ...(ex.accept || [])]);
+    const g = gradeGu(typed, [ex.answer, ...(ex.accept || [])]);
+    if (g.credit > 0) onCorrect();
+    else onWrong && onWrong();
+    setTypoNote(g.note || "");
+    setFeedback(g.credit === 1 ? "good" : g.credit === 0.5 ? "half" : "bad");
+  }
+  function checkTypeEn() {
+    const isRight = matchEn(typed, [ex.answer, ...(ex.accept || [])]);
     if (isRight) onCorrect();
     else onWrong && onWrong();
     setFeedback(isRight ? "good" : "bad");
   }
   function checkCloze() {
     const blanks = ex.parts.filter((p) => p.t === "blank");
-    const isRight = blanks.every((b, i) => matchGu(clozeAns[i] || "", [b.a, ...(b.accept || [])]));
-    if (isRight) onCorrect();
+    // average the per-blank credit; full if all right, half if only minor slips
+    const grades = blanks.map((b, i) => gradeGu(clozeAns[i] || "", [b.a, ...(b.accept || [])]));
+    const avg = grades.reduce((s, g) => s + g.credit, 0) / (grades.length || 1);
+    const note = (grades.find((g) => g.credit === 0.5) || {}).note || "";
+    if (avg > 0) onCorrect();
     else onWrong && onWrong();
-    setFeedback(isRight ? "good" : "bad");
+    setTypoNote(note);
+    setFeedback(avg >= 1 ? "good" : avg > 0 ? "half" : "bad");
   }
 
   const usedIdx = new Set(buildAns.map((a) => a.i));
@@ -7259,7 +7548,6 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
                 <button key={i} className={"gopt" + (picked === o.gu ? " sel" : "") + (feedback && o.gu === ex.answer ? " good" : "") + (feedback === "bad" && picked === o.gu ? " bad" : "")}
                   onClick={() => { speak(o.gu); if (!feedback) setPicked(o.gu); }}>
                   {readWrite ? <div className="gu">{o.gu}</div> : <div style={{ fontWeight: 800, fontSize: 18 }}>{o.roman}</div>}
-                  <small>{o.en}</small>
                 </button>
               ))}
             </div>
@@ -7316,6 +7604,15 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
             <input className="typein gu" value={typed} disabled={!!feedback} onChange={(e) => setTyped(e.target.value)} placeholder="…" spellCheck={false} autoComplete="off" />
             {!feedback && <GuKeyboard onInsert={kbInsert} onBackspace={kbBackspace} />}
             {feedback && <AIFeedback text={typed} en={ex.en} promptId={(lesson && lesson.id ? lesson.id : "") + ":" + exIdx} level={_ilrForLesson(lesson && lesson.id)} modelAnswer={ex.answer} modelRoman={ex.roman} />}
+          </>
+        )}
+
+        {ex.t === "typeen" && (
+          <>
+            <div className="q-title">Type the meaning in English</div>
+            {readWrite ? <div className="bigword gu">{ex.gu}</div> : <div className="bigword" style={{ fontSize: 30 }}>{ex.roman}</div>}
+            <div className="playrow"><button className="playbtn big" onClick={() => speak(ex.gu)}><Ic.play /></button></div>
+            <input className="typein" value={typed} disabled={!!feedback} onChange={(e) => setTyped(e.target.value)} placeholder="type in English…" spellCheck={false} autoComplete="off" autoFocus />
           </>
         )}
 
@@ -7386,12 +7683,13 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
       {feedback && feedback !== "matchdone" && (
         <div className={"sheet " + feedback}>
           <div className="sh">
-            <span className="badge">{feedback === "good" ? <Ic.check width={16} height={16} /> : <Ic.x width={16} height={16} />}</span>
-            {feedback === "good" ? "Correct" : "Not quite"}
+            <span className="badge">{feedback === "good" ? <Ic.check width={16} height={16} /> : feedback === "half" ? <Ic.bulb width={16} height={16} /> : <Ic.x width={16} height={16} />}</span>
+            {feedback === "good" ? "Correct" : feedback === "half" ? "Almost, half credit" : "Not quite"}
           </div>
-          {feedback === "bad" && (
+          {feedback === "half" && typoNote && <div className="why">{typoNote}</div>}
+          {(feedback === "bad" || feedback === "half") && (
             <div className="ans">
-              Correct answer: {(() => {
+              {feedback === "half" ? "The correct form: " : "Correct answer: "}{(() => {
                 if (ex.t === "hvpt") {
                   const c = ex.options.find((o) => o.roman === ex.answer);
                   return <span className="gu">{c.gu} ({c.roman})</span>;
@@ -7401,6 +7699,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
                 if (ex.t === "tf") return <span>{ex.answer === "true" ? "True" : "False"}</span>;
                 if (ex.t === "order") return <span>{ex.lines.map((l) => l.roman).join("  ·  ")}</span>;
                 if (ex.t === "type") return <span><span className="gu">{ex.answer}</span>{ex.roman ? " (" + ex.roman + ")" : ""}</span>;
+                if (ex.t === "typeen") return <span>{ex.answer}</span>;
                 if (ex.t === "cloze") return <span className="gu">{ex.parts.map((p) => p.t === "text" ? p.v : p.a).join("")}</span>;
                 return <span>{ex.answer}</span>;
               })()}
@@ -7453,6 +7752,12 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
       {!feedback && ex.t === "type" && (
         <div className="foot">
           <button className="btn primary" disabled={typed.trim() === ""} onClick={checkType}>Check</button>
+        </div>
+      )}
+
+      {!feedback && ex.t === "typeen" && (
+        <div className="foot">
+          <button className="btn primary" disabled={typed.trim() === ""} onClick={checkTypeEn}>Check</button>
         </div>
       )}
 
@@ -8403,6 +8708,110 @@ UNITS.push({ id:"u20", ku:"Unit 20", title:"Complex sentences", sub:"Linking cla
   lessons:[ {id:"u20l1",label:"Linking two ideas"}, {id:"u20l2",label:"More in one sentence"}, {id:"u20l3",label:"Telling a longer story"}, {id:"u20c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u20l1", "u20l2", "u20l3", "u20c");
 
+/* ============================ MODULE: Sounding natural (advanced) ============================ */
+Object.assign(LESSONS, {
+  u21l1: { title:"Please and polite requests", ex: [
+    { t:"intro", gu:"કૃપા કરીને", roman:"kṛpaa karine", en:"please (polite)" },
+    { t:"intro", gu:"જરા", roman:"jaraa", en:"just / a little (softener)" },
+    { t:"intro", gu:"માફ કરશો", roman:"maaf karsho", en:"excuse me / pardon me" },
+    { t:"note", title:"Softening a request", body:[
+      "To ask politely, open with કૃપા કરીને or slip in જરા to make a request gentler.",
+      "માફ કરશો gets someone's attention or apologizes, a step more formal than માફ કરો."], ex:[
+      {gu:"કૃપા કરીને જરા મદદ કરો",roman:"kṛpaa karine jaraa madad karo",en:"Please help me a little."}] },
+    { t:"match", pairs:[{gu:"કૃપા કરીને",en:"please"},{gu:"જરા",en:"a little"},{gu:"માફ કરશો",en:"excuse me"},{gu:"મદદ",en:"help"}] },
+    { t:"build", en:"Please help me a little.", answer:["કૃપા","કરીને","જરા","મદદ","કરો"], extra:["આભાર","હા"], roman:"kṛpaa karine jaraa madad karo" },
+    { t:"type", en:"Excuse me, where is the station?", answer:"માફ કરશો, સ્ટેશન ક્યાં છે", accept:["માફ કરશો સ્ટેશન ક્યાં છે"], roman:"maaf karsho, sṭeshan kyaan chhe" },
+    { t:"speak", gu:"કૃપા કરીને જરા ધીમે બોલો", roman:"kṛpaa karine jaraa dheeme bolo", en:"Please speak a little slowly." },
+  ]},
+  u21l2: { title:"So, that is, and right?", ex: [
+    { t:"intro", gu:"એટલે", roman:"eṭle", en:"so / that is / meaning" },
+    { t:"intro", gu:"ખરું ને", roman:"kharuṁ ne", en:"right? / isn't it?" },
+    { t:"intro", gu:"બરાબર", roman:"baraabar", en:"correct / okay" },
+    { t:"note", title:"Little words that carry a lot", body:[
+      "એટલે links a reason or restates something: 'so' or 'which means'.",
+      "Tag ખરું ને onto a statement to check agreement, like 'right?'. બરાબર confirms it."], ex:[
+      {gu:"વરસાદ છે, એટલે અમે ઘરે છીએ",roman:"varsaad chhe, eṭle ame ghare chhie",en:"It is raining, so we are home."}] },
+    { t:"build", en:"It is raining, so we are home.", answer:["વરસાદ","છે","એટલે","અમે","ઘરે","છીએ"], extra:["પણ","જો"], roman:"varsaad chhe eṭle ame ghare chhie" },
+    { t:"cloze", en:"Complete: \"You will come tomorrow, right?\"", parts:[{t:"text",v:"તું કાલે આવીશ, "},{t:"blank",a:"ખરું ને"},{t:"text",v:"?"}] },
+    { t:"type", en:"That is correct.", answer:"એ બરાબર છે", accept:["આ બરાબર છે","બરાબર છે"], roman:"e baraabar chhe" },
+    { t:"speak", gu:"તું આવીશ, ખરું ને?", roman:"tuṁ aaveesh, kharuṁ ne?", en:"You'll come, right?" },
+  ]},
+  u21l3: { title:"Reacting naturally", ex: [
+    { t:"intro", gu:"સાચે?", roman:"saache?", en:"really?" },
+    { t:"intro", gu:"ચિંતા ન કરો", roman:"chintaa na karo", en:"don't worry" },
+    { t:"intro", gu:"કંઈ વાંધો નહીં", roman:"kaṁi vaandho nahi", en:"no problem / it's fine" },
+    { t:"note", title:"Sounding like a listener", body:[
+      "Short reactions keep a conversation alive: સાચે? shows surprise, ચિંતા ન કરો reassures.",
+      "કંઈ વાંધો નહીં waves off a worry or an apology, like 'no problem'."], ex:[
+      {gu:"મોડું થયું? કંઈ વાંધો નહીં",roman:"moḍuṁ thayuṁ? kaṁi vaandho nahi",en:"Running late? No problem."}] },
+    { t:"match", pairs:[{gu:"સાચે?",en:"really?"},{gu:"ચિંતા ન કરો",en:"don't worry"},{gu:"કંઈ વાંધો નહીં",en:"no problem"},{gu:"મોડું",en:"late"}] },
+    { t:"build", en:"Don't worry, I will help.", answer:["ચિંતા","ન","કરો","હું","મદદ","કરીશ"], extra:["પણ","સાચે"], roman:"chintaa na karo huṁ madad kareesh" },
+    { t:"type", en:"Really? That is very good.", answer:"સાચે? એ બહુ સારું છે", accept:["સાચે? આ બહુ સારું છે"], roman:"saache? e bahu saaruṁ chhe" },
+    { t:"speak", gu:"ચિંતા ન કરો, બધું બરાબર થશે", roman:"chintaa na karo, badhuṁ baraabar thashe", en:"Don't worry, everything will be fine." },
+  ]},
+  u21c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"કૃપા કરીને",en:"please"},{gu:"એટલે",en:"so / meaning"},{gu:"ખરું ને",en:"right?"},{gu:"ચિંતા ન કરો",en:"don't worry"}] },
+    { t:"build", en:"It is raining, so we are home.", answer:["વરસાદ","છે","એટલે","અમે","ઘરે","છીએ"], extra:["ખરું","ને"], roman:"varsaad chhe eṭle ame ghare chhie" },
+    { t:"cloze", en:"Complete: \"Please speak a little slowly.\"", parts:[{t:"text",v:"કૃપા કરીને જરા ધીમે "},{t:"blank",a:"બોલો"}] },
+    { t:"type", en:"Don't worry, everything will be fine.", answer:"ચિંતા ન કરો, બધું બરાબર થશે", accept:["ચિંતા ન કરો બધું બરાબર થશે"], roman:"chintaa na karo, badhuṁ baraabar thashe" },
+    { t:"speak", gu:"માફ કરશો, જરા મદદ કરશો?", roman:"maaf karsho, jaraa madad karsho?", en:"Excuse me, could you help a little?" },
+  ]},
+});
+UNITS.push({ id:"u21", ku:"Unit 21", title:"Sounding natural", sub:"Polite requests, natural connectors, and everyday reactions", color:"#7A6A4E",
+  lessons:[ {id:"u21l1",label:"Please and polite requests"}, {id:"u21l2",label:"So, that is, and right?"}, {id:"u21l3",label:"Reacting naturally"}, {id:"u21c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u21l1", "u21l2", "u21l3", "u21c");
+/* ============================ MODULE: Shades of meaning (advanced) ============================ */
+Object.assign(LESSONS, {
+  u22l1: { title:"Just, only, and even", ex: [
+    { t:"intro", gu:"જ", roman:"ja", en:"just / only (emphasis)" },
+    { t:"intro", gu:"ફક્ત", roman:"phakta", en:"only" },
+    { t:"intro", gu:"પણ", roman:"paṇ", en:"also / too" },
+    { t:"note", title:"Adding emphasis", body:[
+      "જ comes right after the word it stresses: હું જ (I, specifically), આ જ (exactly this).",
+      "ફક્ત means 'only' before a noun; પણ means 'also' or 'too' after it."], ex:[
+      {gu:"મને આ જ જોઈએ",roman:"mane aa ja joie",en:"I want exactly this."},
+      {gu:"ફક્ત બે",roman:"phakta be",en:"only two"}] },
+    { t:"build", en:"I want exactly this.", answer:["મને","આ","જ","જોઈએ"], extra:["પણ","ફક્ત"], roman:"mane aa ja joie" },
+    { t:"type", en:"only two", answer:"ફક્ત બે", roman:"phakta be" },
+    { t:"speak", gu:"મને આ જ ગમે છે", roman:"mane aa ja game chhe", en:"I like exactly this one." },
+  ]},
+  u22l2: { title:"A little, a lot, enough", ex: [
+    { t:"intro", gu:"થોડું", roman:"thoḍuṁ", en:"a little / some" },
+    { t:"intro", gu:"ઘણું", roman:"ghaṇuṁ", en:"a lot / much" },
+    { t:"intro", gu:"પૂરતું", roman:"poortuṁ", en:"enough" },
+    { t:"note", title:"How much", body:[
+      "These change their ending to match the noun's gender, like adjectives: થોડું, થોડો, થોડી.",
+      "ઘણા લોકો means 'many people'; પૂરતો સમય means 'enough time'."], ex:[
+      {gu:"થોડું પાણી",roman:"thoḍuṁ paṇi",en:"a little water"},
+      {gu:"ઘણા લોકો",roman:"ghaṇaa loko",en:"many people"}] },
+    { t:"build", en:"I want a little water.", answer:["મને","થોડું","પાણી","જોઈએ"], extra:["ઘણું","પૂરતું"], roman:"mane thoḍuṁ paṇi joie" },
+    { t:"type", en:"many people", answer:"ઘણા લોકો", roman:"ghaṇaa loko" },
+    { t:"speak", gu:"મારી પાસે પૂરતો સમય છે", roman:"maari paase poorto samay chhe", en:"I have enough time." },
+  ]},
+  u22l3: { title:"Always, sometimes, never", ex: [
+    { t:"intro", gu:"હંમેશા", roman:"hammeshaa", en:"always" },
+    { t:"intro", gu:"ક્યારેક", roman:"kyaarek", en:"sometimes" },
+    { t:"intro", gu:"ક્યારેય નહીં", roman:"kyaarey nahi", en:"never" },
+    { t:"note", title:"How often", body:[
+      "Put the frequency word before the verb: હું હંમેશા ચા પીઉં છું (I always drink tea).",
+      "For 'never', pair ક્યારેય with the negative: તે ક્યારેય મોડો નથી આવતો."], ex:[
+      {gu:"હું હંમેશા ચા પીઉં છું",roman:"huṁ hammeshaa chaa peeuṁ chuṁ",en:"I always drink tea."}] },
+    { t:"build", en:"I always drink tea.", answer:["હું","હંમેશા","ચા","પીઉં","છું"], extra:["ક્યારેક","પણ"], roman:"huṁ hammeshaa chaa peeuṁ chuṁ" },
+    { t:"type", en:"I sometimes go there.", answer:"હું ક્યારેક ત્યાં જાઉં છું", roman:"huṁ kyaarek tyaan jaauṁ chuṁ" },
+    { t:"speak", gu:"તે ક્યારેય મોડો નથી આવતો", roman:"te kyaarey moḍo nathi aavto", en:"He is never late." },
+  ]},
+  u22c: { title:"Checkpoint", check:true, ex: [
+    { t:"match", pairs:[{gu:"ફક્ત",en:"only"},{gu:"થોડું",en:"a little"},{gu:"હંમેશા",en:"always"},{gu:"ક્યારેક",en:"sometimes"}] },
+    { t:"build", en:"I want exactly this.", answer:["મને","આ","જ","જોઈએ"], extra:["પણ","ઘણું"], roman:"mane aa ja joie" },
+    { t:"type", en:"many people", answer:"ઘણા લોકો", roman:"ghaṇaa loko" },
+    { t:"speak", gu:"હું હંમેશા ચા પીઉં છું", roman:"huṁ hammeshaa chaa peeuṁ chuṁ", en:"I always drink tea." },
+  ]},
+});
+UNITS.push({ id:"u22", ku:"Unit 22", title:"Shades of meaning", sub:"Emphasis, quantity, and frequency: the small words that add nuance", color:"#5A6E7A",
+  lessons:[ {id:"u22l1",label:"Just, only, and even"}, {id:"u22l2",label:"A little, a lot, enough"}, {id:"u22l3",label:"Always, sometimes, never"}, {id:"u22c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u22l1", "u22l2", "u22l3", "u22c");
+
+
 /* Roughly double the practice in every lesson by appending auto-generated
    reinforcement questions (listen and match) built from each lesson's own taught
    words. This reuses words that already have audio, so no new clips are needed.
@@ -8444,6 +8853,12 @@ function expandLesson(l) {
     const showTrue = i % 2 === 0 || !wrong;
     return { t: "tf", gu: p.gu, roman: p.roman, claim: showTrue ? p.en : wrong.en, answer: showTrue ? "true" : "false" };
   };
+  // typeen: show a word, type its English meaning. Accept every listed sense
+  // (glosses are split on "/" and ",") so synonyms all count as correct.
+  const mkTypeEn = (p) => {
+    const senses = p.en.split(/[\/,]/).map((s) => s.trim()).filter(Boolean);
+    return { t: "typeen", gu: p.gu, roman: p.roman, answer: senses[0] || p.en, accept: _uniq([p.en, ...senses]) };
+  };
   // A moderate, varied top-up (listen + translate + a true/false + a match),
   // all built from this lesson's own taught words so no new audio is needed.
   let i = 0;
@@ -8451,6 +8866,7 @@ function expandLesson(l) {
   let j = 0;
   for (const p of withRoman) { if (extras.length >= 5) break; const q = mkTranslate(p, j++); if (q) extras.push(q); }
   if (extras.length < CAP && withRoman.length) { const q = mkTf(withRoman[j % withRoman.length], pairs.length); if (q) extras.push(q); }
+  if (extras.length < CAP && withRoman.length) { extras.push(mkTypeEn(withRoman[(j + 1) % withRoman.length])); }
   if (extras.length < CAP && pairs.length >= 4) extras.push({ t: "match", pairs: pairs.slice(0, 4).map((p) => ({ gu: p.gu, en: p.en })) });
   if (!extras.length) return ex;
   const out = ex.slice();
@@ -8941,6 +9357,81 @@ TOPICS.push(
   ]}
 );
 
+/* ============================ VOCAB: cooking, faith, farming, weddings (added) ============================ */
+TOPICS.push(
+  { id:"cooking", title:"Cooking and recipes", icon:"bowl", note:"The actions of the kitchen, in the -વું dictionary form.", words:[
+    { gu:"રાંધવું", r:"raandhvuṁ", en:"to cook" },
+    { gu:"સમારવું", r:"samaarvuṁ", en:"to chop" },
+    { gu:"તળવું", r:"taḷvuṁ", en:"to fry" },
+    { gu:"બાફવું", r:"baafvuṁ", en:"to boil" },
+    { gu:"શેકવું", r:"shekvuṁ", en:"to roast / bake" },
+    { gu:"હલાવવું", r:"halaavvuṁ", en:"to stir" },
+    { gu:"પીરસવું", r:"peersavuṁ", en:"to serve (food)" },
+    { gu:"ચાખવું", r:"chaakhvuṁ", en:"to taste" },
+  ]},
+  { id:"worship", title:"Faith and worship", icon:"diya", note:"Everyday words of devotion. Used across Hindu, Jain, and other traditions, though each has its own practice.", words:[
+    { gu:"પ્રાર્થના", r:"praarthanaa", en:"prayer" },
+    { gu:"પૂજા", r:"poojaa", en:"worship / puja" },
+    { gu:"આરતી", r:"aarti", en:"aarti (ritual of light)" },
+    { gu:"પ્રસાદ", r:"prasaad", en:"blessed food offering" },
+    { gu:"ભક્તિ", r:"bhakti", en:"devotion" },
+    { gu:"તીર્થ", r:"teerth", en:"pilgrimage place" },
+    { gu:"ઘંટ", r:"ghanṭ", en:"bell" },
+    { gu:"અગરબત્તી", r:"agarbatti", en:"incense stick" },
+  ]},
+  { id:"farming", title:"Farming and the land", icon:"target", note:"Rural and agricultural life, still central to much of Gujarat.", words:[
+    { gu:"ખેતર", r:"khetar", en:"field" },
+    { gu:"પાક", r:"paak", en:"crop" },
+    { gu:"બિયારણ", r:"biyaaraṇ", en:"seed" },
+    { gu:"લણણી", r:"laṇṇi", en:"harvest" },
+    { gu:"કૂવો", r:"koovo", en:"well" },
+    { gu:"માટી", r:"maaṭi", en:"soil / earth" },
+    { gu:"અનાજ", r:"anaaj", en:"grain" },
+    { gu:"સિંચાઈ", r:"sinchaai", en:"irrigation" },
+  ]},
+  { id:"wedding", title:"Weddings and ceremonies", icon:"spark", note:"A Gujarati wedding is a multi-day event. These are the core words.", words:[
+    { gu:"લગ્ન", r:"lagna", en:"wedding / marriage" },
+    { gu:"વરરાજા", r:"varraajaa", en:"groom" },
+    { gu:"કન્યા", r:"kanyaa", en:"bride" },
+    { gu:"મંડપ", r:"manḍap", en:"wedding canopy" },
+    { gu:"આશીર્વાદ", r:"aasheervaad", en:"blessing" },
+    { gu:"મહેમાન", r:"mahemaan", en:"guest" },
+    { gu:"વિધિ", r:"vidhi", en:"ritual / ceremony" },
+    { gu:"વિદાય", r:"vidaay", en:"farewell / send-off" },
+  ]}
+);
+
+/* ============================ VOCAB: airport, cleaning, office (added) ============================ */
+TOPICS.push(
+  { id:"airport", title:"Travel and the airport", icon:"car", note:"Words for flying and going abroad. Several are English loanwords.", words:[
+    { gu:"વિમાનમથક", r:"vimaanmathak", en:"airport" },
+    { gu:"સીટ", r:"seeṭ", en:"seat" },
+    { gu:"પાસપોર્ટ", r:"paasporṭ", en:"passport" },
+    { gu:"સામાન", r:"saamaan", en:"luggage" },
+    { gu:"મુસાફર", r:"musaafar", en:"passenger" },
+    { gu:"ઉડાન", r:"uḍaan", en:"flight" },
+    { gu:"વિદેશ", r:"videsh", en:"abroad / foreign land" },
+  ]},
+  { id:"cleaning", title:"Cleaning and chores", icon:"home", note:"The everyday work of keeping a home.", words:[
+    { gu:"ઝાડુ", r:"jhaaḍu", en:"broom" },
+    { gu:"કચરો", r:"kachro", en:"rubbish / trash" },
+    { gu:"પોતું", r:"potuṁ", en:"mopping cloth" },
+    { gu:"ધૂળ", r:"dhooḷ", en:"dust" },
+    { gu:"ડોલ", r:"ḍol", en:"bucket" },
+    { gu:"સાબુ", r:"saabu", en:"soap" },
+    { gu:"લૂછવું", r:"loochhvuṁ", en:"to wipe" },
+  ]},
+  { id:"office", title:"At the office", icon:"gear", note:"Words for the modern workplace.", words:[
+    { gu:"ઓફિસ", r:"ofis", en:"office" },
+    { gu:"મીટિંગ", r:"meeṭing", en:"meeting" },
+    { gu:"પગાર", r:"pagaar", en:"salary" },
+    { gu:"રજા", r:"rajaa", en:"leave / day off" },
+    { gu:"અરજી", r:"arji", en:"application" },
+    { gu:"સહી", r:"sahi", en:"signature" },
+    { gu:"કર્મચારી", r:"karmachaari", en:"employee" },
+  ]}
+);
+
 Ic.coffee = (p) => (
   <svg {...S(p)}>
     <path d="M5 9h12v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z" />
@@ -9152,6 +9643,11 @@ const ERA_GU_SUMMARY = {
   partition: "૧૯૪૭ના ભાગલા મોટે ભાગે પંજાબ અને બંગાળથી યાદ કરાય છે, પણ ગુજરાતમાં તેનું રૂપ અલગ હતું. અહીં મુખ્યત્વે સિંધથી દરિયા અને રેલમાર્ગે લોકો આવ્યા અને શહેરોમાં વસ્યા. ૧૯૫૧ની વસ્તીગણતરી પ્રમાણે ગુજરાતી બોલતા વિસ્તારોમાં લગભગ દોઢ લાખથી વધુ નિર્વાસિતો નોંધાયા, જેમાંના મોટા ભાગના શહેરી હતા અને આખા પરિવારો સાથે આવ્યા હતા. કચ્છમાં ગાંધીધામ અને આદિપુર જેવાં નવાં નગરો સિંધી શરણાર્થીઓ માટે વસાવવામાં આવ્યાં. અહીં ભાગલાનો ઇતિહાસ હિંસા કરતાં સ્થળાંતર, સ્મૃતિ અને પુનર્વસનનો છે.",
   junagadh: "આઝાદી વખતે દરેક રજવાડાએ ભારત કે પાકિસ્તાનમાં જોડાવાનું હતું. જૂનાગઢ સૌરાષ્ટ્રના દરિયાકિનારે આવેલું રાજ્ય હતું, જ્યાં નવાબ મુસ્લિમ હતા પણ મોટા ભાગની પ્રજા હિન્દુ હતી. ચારે બાજુ ભારતનો પ્રદેશ હોવા છતાં નવાબે ૧૯૪૭માં પાકિસ્તાનમાં જોડાવાનું નક્કી કર્યું. તેની સામે પ્રજાએ 'આરઝી હકૂમત' નામની કામચલાઉ સરકાર રચી, અને દબાણ વધતાં નવાબ પાકિસ્તાન જતા રહ્યા. ૧૯૪૮માં લોકમત લેવાયો, જેમાં ભારે બહુમતીથી પ્રજાએ ભારત સાથે જોડાવાનું પસંદ કર્યું.",
   modern: "૧૯૬૦ પછી ગુજરાત વેપાર અને ઉદ્યોગ માટે જાણીતું બન્યું. સુરતનો હીરા-ઉદ્યોગ અને આણંદની અમૂલ દૂધ-સહકારી મંડળી દુનિયાભરમાં પ્રખ્યાત છે. ઘણા ગુજરાતીઓ વિદેશમાં વસ્યા છે અને વતન સાથે જોડાયેલા રહે છે. પણ આ વિકાસ સાથે અઘરા સવાલો પણ આવ્યા. નર્મદા બંધ જેવા મોટા પ્રોજેક્ટથી હજારો લોકોને વિસ્થાપિત થવું પડ્યું. ૨૦૦૨માં ગુજરાતમાં મોટી કોમી હિંસા થઈ, જેમાં ઘણા લોકો માર્યા ગયા. આજનું ગુજરાત વિકાસ અને તેની કિંમત, બંનેને સાથે લઈને ચાલે છે.",
+  ranikivav: "રાણી કી વાવ પાટણમાં આવેલી એક પ્રખ્યાત વાવ છે. અગિયારમી સદીમાં રાણી ઉદયમતિએ પોતાના પતિ રાજા ભીમદેવની યાદમાં તે બંધાવી. આ વાવ સાત માળ ઊંડી છે અને તેમાં હજારો સુંદર શિલ્પ કોતરેલાં છે, જેમાં વિષ્ણુના અવતારો ખાસ જોવા મળે છે. લાંબા સમય સુધી તે સરસ્વતી નદીના કાંપ નીચે દટાયેલી રહી. ૨૦૧૪માં યુનેસ્કોએ તેને વિશ્વ ધરોહરમાં સ્થાન આપ્યું, અને તે ભારતની સો રૂપિયાની નોટ પર પણ છપાય છે.",
+  champaner: "ચાંપાનેર અને પાવાગઢ વડોદરા પાસે આવેલું એક ઐતિહાસિક સ્થળ છે. પાવાગઢ ડુંગર પર મહાકાળી માતાનું મંદિર છે, જે એક મહત્વનું યાત્રાધામ છે. પંદરમી સદીમાં સુલતાન મહમૂદ બેગડાએ ચાંપાનેરને પોતાની રાજધાની બનાવી. અહીં મસ્જિદો, કિલ્લા, પગથિયાંવાળી વાવ અને જૂનાં મંદિરોનું સુંદર મિશ્રણ જોવા મળે છે. ૨૦૦૪માં યુનેસ્કોએ ચાંપાનેર-પાવાગઢને વિશ્વ ધરોહરમાં સ્થાન આપ્યું. તે હિન્દુ અને ઇસ્લામિક સ્થાપત્યના સંગમનું ઉદાહરણ છે.",
+  swaminarayan: "સ્વામિનારાયણ સંપ્રદાય ઓગણીસમી સદીની શરૂઆતમાં ભગવાન સ્વામિનારાયણ દ્વારા ગુજરાતમાં સ્થપાયો. તેમણે ભક્તિ, અહિંસા અને સદાચાર પર ભાર મૂક્યો. આ સંપ્રદાયનાં અમદાવાદ અને વડતાલમાં જૂનાં મંદિરો છે. આજે બી.એ.પી.એસ. જેવી સંસ્થાઓએ દુનિયાભરમાં મોટાં અક્ષરધામ મંદિરો બાંધ્યાં છે, જેમાં ગાંધીનગરનું અક્ષરધામ ખાસ જાણીતું છે. આ મંદિરો બારીક કોતરણી અને સેવાકાર્ય માટે પ્રખ્યાત છે. સ્વામિનારાયણ પરંપરા ગુજરાતી ભોજનની 'ડુંગળી-લસણ વગરની' રીત સાથે પણ જોડાયેલી છે.",
+  amul: "અમૂલ ગુજરાતના આણંદમાં શરૂ થયેલી દૂધની સહકારી મંડળી છે. ૧૯૪૬માં ખેડા જિલ્લાના ખેડૂતોએ વચેટિયાઓના શોષણ સામે સંગઠિત થઈને આ મંડળી બનાવી. વર્ગીસ કુરિયનના નેતૃત્વમાં શ્વેત ક્રાંતિ થઈ અને ભારત દુનિયાનો સૌથી મોટો દૂધ ઉત્પાદક દેશ બન્યો. અમૂલ ખેડૂતોની માલિકીની મંડળી છે, જ્યાં નફો સીધો ખેડૂતો સુધી પહોંચે છે. આજે આણંદ દૂધની રાજધાની કહેવાય છે.",
+  surat_diamond: "સુરત હીરા ઉદ્યોગ માટે દુનિયાભરમાં પ્રખ્યાત છે. દુનિયાના મોટા ભાગના હીરા અહીં ઘસાઈ અને પોલિશ થાય છે. વીસમી સદીના મધ્યભાગથી આ ઉદ્યોગ વધ્યો અને આજે લાખો લોકોને રોજગાર આપે છે. બહારથી આવેલા કાચા હીરા સુરતમાં કાપીને તૈયાર કરવામાં આવે છે. ૨૦૨૩માં સુરત ડાયમંડ બુર્સ ખૂલ્યું, જે દુનિયાની સૌથી મોટી ઓફિસ ઇમારતોમાંની એક છે. સુરત જૂના જમાનાથી વેપાર અને કારીગરીનું કેન્દ્ર રહ્યું છે.",
 };
 
 /* ---- Category: Ancient Foundations ---- */
@@ -9599,6 +10095,61 @@ ERAS.push(
       "Today the Siddi are a relatively small community, recognized as a Scheduled Tribe in Gujarat, and like many such communities they have faced marginalization and economic hardship. Efforts to document and support their music, sport, and heritage have grown in recent decades.",
       "The Siddi are living evidence that the Indian Ocean carried not only goods but people, and that Gujarat's population has African as well as South Asian, Persian, and other roots. Their presence complicates any tidy story of who counts as Gujarati, and enriches it."],
     sources:["Scholarship on the Siddi of Gujarat and the African diaspora in South Asia","Helene Basu and others on Siddi Dhamal and the Bava Gor tradition","Wikipedia, Siddi and Siddi (Gujarat)"] });
+
+ERAS.push(
+  { id:"ranikivav", category:"kingdoms", yr:"11th century", title:"Rani ki Vav, the queen's stepwell",
+    img: FP + "Rani%20ki%20vav%2002.jpg?width=1000",
+    blurb:"A seven-storey stepwell at Patan, built as a memorial by a queen, buried for centuries by a river, and now on India's hundred-rupee note.",
+    body:[
+      "At Patan, the old Solanki capital, stands one of the most remarkable structures in Gujarat: Rani ki Vav, the queen's stepwell. It was built in the 11th century by Queen Udayamati in memory of her husband, King Bhimdev I, turning a piece of practical water engineering into a monument of grief and devotion.",
+      "A stepwell, or vav, is a well reached by a long descending staircase, designed so people could walk down to the water level as it rose and fell through the seasons. Rani ki Vav is among the grandest ever built: seven storeys deep, lined with more than a thousand carved sculptures. Many panels show the ten avatars of Vishnu, alongside apsaras and other figures, so that descending the well is like walking down through a gallery of stone.",
+      "For much of its later history the stepwell was lost. The nearby Saraswati river flooded and silted it over, and it lay buried and largely forgotten until it was excavated and restored in the 20th century, which is part of why its carvings survived in such fresh condition.",
+      "In 2014 UNESCO inscribed Rani ki Vav as a World Heritage Site, praising it as a supreme example of the stepwell form. It has since become one of the best-known images of Gujarat's heritage, reproduced on the Indian hundred-rupee banknote, a queen's memorial that outlived the kingdom that built it."],
+    site:{ name:"Rani ki Vav, Patan", note:"A UNESCO World Heritage Site (2014), seven storeys deep, featured on the hundred-rupee note." },
+    sources:["UNESCO World Heritage Centre, Rani-ki-Vav (the Queen's Stepwell) at Patan","Archaeological Survey of India","Wikipedia, Rani ki vav"] },
+
+  { id:"champaner", category:"kingdoms", yr:"8th - 16th century", title:"Champaner-Pavagadh",
+    blurb:"A hill shrine and a sultan's abandoned capital sit side by side, a rare unbroken layering of Hindu, Jain, and Islamic Gujarat.",
+    body:[
+      "East of Vadodara rise the Pavagadh hill and, at its foot, the old city of Champaner, together one of Gujarat's most layered historic landscapes. On the hilltop stands the temple of the mother deity Mahakali, an important pilgrimage shrine that has drawn worshippers for many centuries and still does today.",
+      "In the late 15th century the Gujarat sultan Mahmud Begada captured Pavagadh and made Champaner, at its base, his new capital, rebuilding it on a grand scale. For a few decades it was a flourishing planned city, before the Mughal advance and a shift of power back to Ahmedabad left it to decline and, eventually, to be largely abandoned.",
+      "Because it was abandoned rather than continuously rebuilt, Champaner preserves an unusually complete picture of a late-medieval Gujarati city: mosques, gateways, fortification walls, stepwells, granaries, and older temples, spread across the plain and up the hill. The Jama Masjid of Champaner, with its finely carved stone, is often held up as one of the high points of the region's Indo-Islamic architecture.",
+      "In 2004 the Champaner-Pavagadh Archaeological Park became a UNESCO World Heritage Site, valued precisely for this continuity: a single place where a living Hindu shrine, older temples, and an Islamic royal city sit together, a reminder that Gujarat's religious and architectural histories are braided rather than separate."],
+    site:{ name:"Champaner-Pavagadh, near Vadodara", note:"A UNESCO World Heritage Site (2004); a hilltop shrine and an abandoned sultanate capital in one landscape." },
+    sources:["UNESCO World Heritage Centre, Champaner-Pavagadh Archaeological Park","Archaeological Survey of India","Wikipedia, Champaner-Pavagadh Archaeological Park"] },
+
+  { id:"swaminarayan", category:"modern", yr:"1800s - present", title:"The Swaminarayan movement",
+    blurb:"A devotional movement born in early-1800s Gujarat that grew into a global network of temples, social work, and the vast Akshardham complexes.",
+    body:[
+      "In the early 19th century a religious teacher known to his followers as Bhagwan Swaminarayan led a devotional movement across Gujarat. It grew within the broader Vaishnava tradition and stressed bhakti (devotion), non-violence, moral discipline, and service, and it drew a wide following among farming and merchant communities in particular.",
+      "The movement built its early temples in places such as Ahmedabad and Vadtal, installing images and organizing a structured community of householders and ascetics. Over the 20th century it branched into several organizations, of which the best known internationally is BAPS, the Bochasanwasi Akshar Purushottam Swaminarayan Sanstha.",
+      "These organizations became famous for architecture. The Akshardham complexes, above all the large temple at Gandhinagar and later ones elsewhere, are built of intricately carved stone and set within gardens and exhibitions, and they draw very large numbers of visitors. Alongside the temples, the movement runs extensive charitable and social work, from disaster relief to health and education.",
+      "The Swaminarayan tradition also shaped everyday Gujarati life in quieter ways. Its dietary discipline, including the avoidance of onion and garlic, fed directly into the strict 'pure veg' cooking now common across the region, one of many places where faith and the ordinary Gujarati kitchen meet."],
+    site:{ name:"Gandhinagar and worldwide", note:"Early temples at Ahmedabad and Vadtal; the modern Akshardham complexes and a large diaspora network." },
+    sources:["Encyclopaedia Britannica, Swaminarayan and BAPS","Raymond Williams, An Introduction to Swaminarayan Hinduism","Wikipedia, Swaminarayan Sampradaya and Akshardham"] });
+
+ERAS.push(
+
+  { id:"amul", category:"modern", yr:"1946 - present", title:"Amul and the milk revolution",
+    blurb:"A farmers' milk cooperative born in Anand grew into a household name and helped make India the world's largest milk producer.",
+    body:[
+      "In 1946, dairy farmers in the Kaira (Kheda) district of Gujarat were being squeezed by middlemen who set low prices for their milk. Led by local organizers and inspired by Sardar Patel's call to cooperate, the farmers formed their own cooperative union so they could collect, process, and sell milk themselves and keep the profits. The brand they built was Amul, a name drawn from the Sanskrit amulya, meaning priceless.",
+      "The cooperative's rise is tied above all to Verghese Kurien, an engineer who stayed in Anand and helped turn the small union into a model. Under his leadership the movement launched Operation Flood, often called the White Revolution, which spread the milk-cooperative model across the country and, over a few decades, made India the largest milk producer in the world.",
+      "What made Amul distinctive was its structure: it is owned by the farmers themselves, organized into village societies that feed into district unions and a state marketing federation. Payment goes back to the producers rather than to outside shareholders, and the model gave many small and landless families, including many women, a steady income.",
+      "Today Amul is one of the best-known brands in India, and Anand is called the milk capital of the country. The cooperative is also a point of Gujarati pride, a reminder that some of the region's most lasting institutions were built not by rulers or big firms but by ordinary farmers organizing together."],
+    site:{ name:"Anand, central Gujarat", note:"Home of the Amul cooperative and the National Dairy Development Board; the milk capital of India." },
+    sources:["National Dairy Development Board, on Operation Flood","Encyclopaedia Britannica, Verghese Kurien and Amul","Wikipedia, Amul and Anand Milk Union Limited"] },
+
+  { id:"surat_diamond", category:"modern", yr:"1950s - present", title:"Surat, city of diamonds",
+    blurb:"The old port city of Surat now cuts and polishes the great majority of the world's diamonds.",
+    body:[
+      "Surat, long a trading and textile city on the Gujarat coast, became in the second half of the 20th century the center of the world's diamond-cutting industry. Most of the world's rough diamonds, mined elsewhere, are sent to Surat to be cut and polished before they travel on to markets around the globe.",
+      "The industry grew from small workshops into a vast network employing hundreds of thousands of workers, many of them migrants from the Saurashtra countryside. Cutting and polishing a diamond is painstaking skilled work, and Surat's workshops built a reputation for doing it at scale and at competitive cost, which drew more and more of the global trade to the city.",
+      "In 2023 the city opened the Surat Diamond Bourse, a trading hub so large that it is counted among the biggest office buildings in the world, meant to bring the whole business, from rough stones to finished gems, under one roof and to rival the older diamond centers.",
+      "Surat's diamonds sit alongside its textiles and its famous street food as part of a bigger story: a Gujarati port city that keeps reinventing what it trades, from cloth and spices in the age of sail to polished gems in the global economy."],
+    site:{ name:"Surat, south Gujarat", note:"Cuts and polishes most of the world's diamonds; home to the Surat Diamond Bourse (opened 2023)." },
+    sources:["Reporting on Surat's diamond industry and the Surat Diamond Bourse","Gems and Jewellery Export Promotion Council figures","Wikipedia, Surat and the diamond industry of India"] },
+);
 
 ERAS.forEach((e) => { e.guSummary = ERA_GU_SUMMARY[e.id] || ""; });
 
