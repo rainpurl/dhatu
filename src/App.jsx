@@ -1738,6 +1738,21 @@ const CONVERSATIONS = [
     { who:"you", gu:"પોલીસ સ્ટેશન ક્યાં છે?", roman:"polees sṭeshan kyaan chhe?", en:"Where is the police station?" },
     { who:"them", gu:"અહીંથી પાસે છે.", roman:"ahiṁthi paase chhe.", en:"It is near here." },
   ]},
+  { id:"c24", title:"At a hotel", icon:"home", turns:[
+    { who:"you", gu:"એક રૂમ છે?", roman:"ek room chhe?", en:"Is there a room?", choices:["એક રૂમ છે?","કેમ છો?","આભાર"] },
+    { who:"them", gu:"હા, કેટલા દિવસ?", roman:"haa, keṭlaa divas?", en:"Yes, how many days?" },
+    { who:"you", gu:"બે રાત. ભાવ શું છે?", roman:"be raat. bhaav shuṁ chhe?", en:"Two nights. What is the price?" },
+    { who:"them", gu:"રાતના હજાર રૂપિયા.", roman:"raatnaa hajaar roopiyaa.", en:"A thousand rupees a night." },
+    { who:"you", gu:"નાસ્તો સાથે છે?", roman:"naasto saathe chhe?", en:"Is breakfast included?" },
+    { who:"them", gu:"હા, સવારે.", roman:"haa, savaare.", en:"Yes, in the morning." },
+  ]},
+  { id:"c25", title:"Talking about your day", icon:"chat", turns:[
+    { who:"them", gu:"આજે તારો દિવસ કેવો રહ્યો?", roman:"aaje taaro divas kevo rahyo?", en:"How was your day today?" },
+    { who:"you", gu:"સારો રહ્યો. હું કામ પર ગયો.", roman:"saaro rahyo. huṁ kaam par gayo.", en:"It was good. I went to work.", choices:["સારો રહ્યો","આભાર","ના"] },
+    { who:"them", gu:"પછી શું કર્યું?", roman:"pachhi shuṁ karyuṁ?", en:"Then what did you do?" },
+    { who:"you", gu:"મિત્રો સાથે જમ્યો.", roman:"mitro saathe jamyo.", en:"I ate with friends." },
+    { who:"them", gu:"સરસ! આરામ કર.", roman:"saras! aaraam kar.", en:"Nice! Get some rest." },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
