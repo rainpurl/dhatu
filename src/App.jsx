@@ -914,8 +914,9 @@ const CSS = `
 /* vocab */
 .wordcard{display:flex;align-items:center;gap:12px;background:var(--card);border:none;
   border-radius:16px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--bevel-inset)}
-.wordcard .cue{width:40px;height:40px;border-radius:12px;background:var(--brand-soft);display:grid;place-items:center;
-  color:var(--brand);flex:none}
+.wordcard .cue{width:44px;height:44px;border-radius:12px;background:var(--brand-soft);display:grid;place-items:center;
+  color:var(--brand);flex:none;overflow:hidden}
+.wordcard .cue .cueimg{width:100%;height:100%;object-fit:cover}
 .wordcard .gu{font-family:var(--fgu);font-size:20px;font-weight:700}
 .wordcard .rm{font-size:12px;color:var(--muted);font-weight:600}
 .wordcard .en{font-size:14px;margin-top:1px}
@@ -2038,7 +2039,7 @@ const SIGNS = [
   { gu:"ં", say:"કં", roman:"anusvar", hint:"a dot that nasalizes: adds an m or n sound", ex:{gu:"કં", roman:"kaṁ"} },
   { gu:"ઃ", say:"કઃ", roman:"visarg", hint:"a soft h breath at the end of a syllable", ex:{gu:"કઃ", roman:"kaḥ"} },
   { gu:"ઁ", say:"કઁ", roman:"candrabindu", hint:"nasalizes the whole vowel, as in ચાંદ", ex:{gu:"કઁ", roman:"kã"} },
-  { gu:"્", say:"ક્", roman:"halant", hint:"removes the built-in 'a' from a consonant, leaving just the bare consonant sound", ex:{gu:"ક્", roman:"k"} },
+  { gu:"્", roman:"halant", hint:"removes the built-in 'a' from a consonant so it joins the next one, as in the conjuncts below" },
   { gu:"ા", say:"કા", roman:"aa", hint:"the 'aa' sign, added after a consonant", ex:{gu:"કા", roman:"kaa"} },
   { gu:"િ", say:"કિ", roman:"i", hint:"the short 'i' sign, written before the consonant", ex:{gu:"કિ", roman:"ki"} },
   { gu:"ી", say:"કી", roman:"ii", hint:"the long 'ee' sign, added after", ex:{gu:"કી", roman:"kii"} },
@@ -2182,6 +2183,38 @@ const _WORD_IMG_RAW = {
   "વાદળ": "Stratocumulus and cumulus over Gåseberg.jpg",
   "તડકો": "Bright Shades Of Sky Ans Sparkling Sun , Aligarh.jpg",
   "શિયાળો": "Winter in Tatry Mountains - Poland.jpg",
+  // produce
+  "કેળું": "Liat Portal for Foodie Disorder - A Single Banana.jpg",
+  "સફરજન": "Red Apple.jpg",
+  "દ્રાક્ષ": "Bunch of Grapes Tavern.jpg",
+  "દાડમ": "Pomegranate02 edit.jpg",
+  "બટાકા": "Potato tuber (248 03) Potato tuber cross-section.jpg",
+  "ટમેટું": "Bright red tomato and cross section02.jpg",
+  "ગાજર": "Carrots of many colors.jpg",
+  "ડુંગળી": "Red Onion on White.JPG",
+  // nature
+  "નદી": "Chandra river in Batal, Lahaul and Spiti Dist., HP, India, D35 7563 nx01 01.jpg",
+  "પર્વત": "Zagedan Lakes, Mountain cirque, Caucasus Mountains.jpg",
+  "દરિયો": "Beach of Cape Fiolent, Crimea.jpg",
+  "ઝાડ": "Isolated tree - geograph.org.uk - 6657661.jpg",
+  "ચંદ્ર": "Full Moon Luc Viatour.jpg",
+  "સૂરજ": "Mrg sun sky blue.jpg",
+  "જંગલ": "Beech Forest (AU), Great Otway National Park, Beauchamp Falls -- 2019 -- 1271.jpg",
+  // home, clothing, objects
+  "દીવો": "An oil lamp 17 10 2010.JPG",
+  "ચાવી": "Wroclaw National Museum 2022 Iron World Exhibition P07 door lock with a key.jpg",
+  "મેજ": "Small oak dining table, Gordon Russell (Time, Taste and Furniture, Gloag, 1925).jpg",
+  "સાડી": "Sari 2.jpg",
+  "જૂતાં": "A Pair of Leather Clogs - My Dream.jpg",
+  "ટોપી": "Sun hat caps.jpg",
+  "સિક્કો": "Indian 20 Rupee coin Reverse.png",
+  // tech, body, sport, music
+  "ફોન": "Nokia 6630.png",
+  "કમ્પ્યુટર": "IBM Thinkpad R51.jpg",
+  "ટીવી": "1990s Television Set.jpg",
+  "આંખ": "A macro photograph of the human eye with colour sprinkled on it.jpg",
+  "દડો": "GandM Purist-Grace match cricket balls.jpg",
+  "ઢોલ": "Himachali Dhol Used in Traditional Ceremonies,1.jpg",
 };
 const WORD_IMG = Object.fromEntries(Object.entries(_WORD_IMG_RAW).map(([k, v]) => [k, FP + encodeURIComponent(v) + "?width=600"]));
 
@@ -3506,7 +3539,7 @@ function CourseApp({ user }) {
             )}
             {topic.words.map((w, i) => (
               <div key={i} className="wordcard">
-                <div className="cue"><TopicIcon name={topic.icon} size={22} /></div>
+                <div className="cue">{WORD_IMG[w.gu] ? <img className="cueimg" src={WORD_IMG[w.gu]} alt="" referrerPolicy="no-referrer" loading="lazy" /> : <TopicIcon name={topic.icon} size={22} />}</div>
                 <div>
                   <div className="gu">{w.gu}</div>
                   <div className="rm">{w.r}</div>
