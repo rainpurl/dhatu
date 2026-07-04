@@ -147,20 +147,11 @@ const S = (p) => ({
   ...p,
 });
 const Ic = {
-  // Bandhani keri (paisley): the iconic Gujarati tie-dye/textile motif, dotted like bandhani
+  // Dhatu mark: a maroon diamond with a white paisley/seed, echoing the "root" idea
   logo: (p) => (
-    <svg viewBox="0 0 24 24" fill="none" {...p}>
-      <path
-        d="M12.6 21.4C7.1 21.4 3.6 16.9 3.6 12 3.6 6.5 8 2.4 13.6 2.4c4.5 0 7.6 3.3 7.6 7.3 0 3.5-2.7 6.1-6 6.1-2.9 0-5-2.2-5-5 0-2.3 1.8-4 4-4 1.7 0 2.9 1 3.2 2.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="13.4" cy="11.3" r="1.45" fill="currentColor" />
-      <circle cx="7.4" cy="12.6" r="1.05" fill="currentColor" />
-      <circle cx="9.6" cy="7.4" r="1" fill="currentColor" />
-      <circle cx="12.2" cy="16.9" r="1" fill="currentColor" />
+    <svg viewBox="0 0 1500 1500" fill="none" {...p}>
+      <path fill="#8A1C3B" d="M 800.824219 55.152344 L 1390.3125 694.847656 C 1419.03125 726.007812 1419.03125 773.992188 1390.3125 805.152344 L 800.824219 1444.847656 C 787.738281 1459.046875 769.308594 1467.125 750 1467.125 C 730.691406 1467.125 712.261719 1459.046875 699.175781 1444.847656 L 109.6875 805.152344 C 80.96875 773.992188 80.96875 726.007812 109.6875 694.847656 L 699.175781 55.152344 C 712.261719 40.953125 730.691406 32.875 750 32.875 C 769.308594 32.875 787.738281 40.953125 800.824219 55.152344 Z" />
+      <path fill="#ffffff" d="M 628.160156 655.632812 C 682.261719 577.417969 762.332031 579.539062 835.515625 630.171875 C 904.566406 677.941406 933.582031 760.914062 890.046875 832.714844 C 843.59375 909.332031 728.949219 926.042969 658.042969 881.066406 C 573.917969 827.703125 571.050781 738.191406 628.160156 655.632812 Z" />
     </svg>
   ),
   cup: (p) => (
@@ -1270,6 +1261,9 @@ const CSS = `
 .splash-panel{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:12px;
   padding:40px 52px;border-radius:26px;background:var(--card);box-shadow:var(--bevel-raise), 0 18px 48px rgba(70,45,40,.18)}
 .splash-mark{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;color:#fff;background:var(--brand);box-shadow:var(--sink-brand)}
+/* The logo is now a self-contained colored diamond, so its containers drop the
+   maroon tile background and shadow and just size/center the mark. */
+.top .brandmark, .onb .big-mark, .gate .big-mark, .navbrand .nbm, .splash-mark{background:transparent;box-shadow:none}
 .splash-word{font-size:42px;font-weight:800;letter-spacing:-1.2px;color:var(--brand);line-height:1}
 .splash-load{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.3px}
 .spacer-lg{height:8px}

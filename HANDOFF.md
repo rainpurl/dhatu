@@ -474,35 +474,40 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
 
 ## 9. Pending / next steps
 
-### >>> IMMEDIATE NEXT STEPS (planned right after this compaction) <<<
+### >>> APP / STORE PROGRESS <<<
 
-**A. Update the logo.** The current mark is the inline SVG `Ic.logo` in
-`src/App.jsx` (onboarding screen + desktop sidebar `.navbrand`), plus the browser
-favicon in `index.html` (a bandhani-style favicon). To change it, edit `Ic.logo`
-(and the favicon + any og:image/meta in `index.html`). Keep it a clean SVG so it
-scales for app icons. The user wants this done FIRST, before packaging below.
+**A. Logo: DONE.** The new mark is a maroon (`#8A1C3B`) diamond with a white
+paisley/seed. It lives in `Ic.logo` (`src/App.jsx`), the favicon + apple-touch +
+manifest icons (`index.html` -> `/logo.svg`, `/icon-192.png`, `/icon-512.png`,
+`/apple-touch-icon.png`), and `public/logo.svg`. The brand-mark containers
+(`.big-mark`, `.splash-mark`, `.navbrand .nbm`, `.top .brandmark`) were made
+**transparent** (they used to be maroon tiles) so the diamond shows; if the
+diamond ever looks off on a maroon surface, that's the CSS to revisit.
 
-**B. Build real Android + iOS apps and publish to the Play Store and App Store.**
-The app is a single-page React site (Vite build to `dist/`, on Cloudflare Pages).
-Wrap the web build rather than rewriting:
-- **Recommended: Capacitor** (`@capacitor/core` + `@capacitor/android` +
-  `@capacitor/ios`). `npm run build` makes `dist/`; Capacitor wraps it into native
-  Android (Android Studio/Gradle) and iOS (Xcode) projects. Alternative: PWA + TWA
-  (Bubblewrap) for Android and a WKWebView wrapper for iOS, but Capacitor is cleaner.
-- **Gotchas to solve while packaging:**
-  - **Google sign-in in a webview** breaks the current `signInWithPopup` flow. Use
-    `@capacitor-firebase/authentication` (native Google sign-in) or a redirect/native
-    flow. Auth lives in `src/firebase.js`; this is the main code change needed.
-  - Audio is static in `public/audio/` (bundles fine); Culture images are hotlinked
-    from Wikimedia Commons (need network; note offline behavior).
-  - App **icons + splash** (from the new logo), a **privacy-policy URL** (both stores
-    require one), store listings, and screenshots.
-  - **Store accounts cost money**, which crosses the hard no-cost rule: **Apple
-    Developer ~$99/year** and **Google Play Console ~$25 one-time**. Flag to the
-    owner as an explicit decision before publishing; the code/build stay free, store
-    distribution does not.
-- Order: logo -> add Capacitor -> run in Android emulator + iOS simulator -> fix
-  sign-in -> generate icons/splash -> store listings -> submit.
+**B. PWA foundation: DONE.** `public/manifest.webmanifest`, `public/sw.js`
+(same-origin stale-while-revalidate; caches app shell + audio for offline),
+`public/.well-known/assetlinks.json` (placeholder), and PNG icons (192/512 +
+apple-touch 180, generated from the logo with `qlmanage` + `sips` since no
+rsvg/inkscape/cairosvg is installed). `index.html` links the manifest, icons,
+theme-color, and registers the service worker. The site is now an installable PWA.
+
+**C. Google Play (Android) via TWA: OWNER TO RUN, see `PLAY.md`.** We chose a
+**Trusted Web Activity** (Bubblewrap) over Capacitor because it reuses the live
+site, and **Google sign-in keeps working** (a TWA runs in real Chrome, so
+`signInWithPopup` is fine, no auth code change needed). Only cost is the **$25
+one-time** Play Console fee. Steps (deploy PWA -> `bubblewrap init/build` ->
+fill `assetlinks.json` with the signing SHA-256 -> Play listing + privacy policy
+-> submit) are all in `PLAY.md`. The owner must run these (needs the Android SDK,
+which Bubblewrap installs, and a Play Console account).
+
+**D. iOS App Store: LATER.** Needs the $99/year Apple Developer Program and a
+Capacitor/WKWebView shell; **there** the webview breaks `signInWithPopup`, so it
+needs a native Firebase-auth plugin or redirect flow (`src/firebase.js`). Do
+Android first.
+
+Reminder: store distribution costs money (Apple $99/yr, Google $25 once), which
+crosses the hard no-cost rule, so it is an explicit owner decision. The free
+alternative already shipped is the **installable PWA** (no store, no fee).
 
 ### Other pending items
 
@@ -567,6 +572,7 @@ dhatu/
 ├── AUDIO.md              <- how to generate audio (owner guide)
 ├── AUTH.md               <- Firebase + staff-portal setup, full Firestore rules
 ├── GRADER.md             <- optional AI writing-feedback design + owner setup
+├── PLAY.md               <- how to publish the Android app to Google Play (TWA)
 ├── README.md
 ├── index.html            <- title, bandhani favicon, meta
 ├── package.json          <- react 18, vite 8, firebase; "audio" script
