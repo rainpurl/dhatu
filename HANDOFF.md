@@ -46,7 +46,7 @@ script, grammar, vocabulary, conversation practice, and a **Culture** section
 ## 3. Tech stack and architecture
 
 - **Single-file React app:** essentially everything lives in `src/App.jsx`
-  (~5,700 lines): all screens, content, CSS (one big template string injected via
+  (~8,800 lines): all screens, content, CSS (one big template string injected via
   `<style>{CSS}</style>`), and SVG icons (the `Ic` object). Edits must be careful;
   prefer targeted string replacements and watch brace balance.
 - **Build:** Vite 8 (`vite build` to `dist/`). React 18. No router (screen state
@@ -122,7 +122,7 @@ progress; it fully resets only accounts with no local copy.
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **2,826 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **3,253 clips**). The app's
   `speak(text, lang, voice)` plays a clip when the manifest has one, else falls
   back to browser TTS. A missing manifest just means TTS-as-before.
 - **Voices (multi-voice):** the default narrator is Google **Chirp3-HD**
@@ -142,12 +142,16 @@ progress; it fully resets only accounts with no local copy.
   - **Review:** each word plays in a per-word voice (`_voiceForId(item.gu)`).
 - **IPA / special-voice overrides** (`PRONUNCIATION_OVERRIDES`, baked in so
   re-runs keep the sounds): four vowels (ઇ ɪ, ઐ ɛː, ઔ ɔː, ઍ æ) and the candra-e
-  matra કૅ (kæ) are synthesized by IPA on an English WaveNet voice; the halant
-  demo ક્ is a bare "k" (no vowel); the rare/borrowed nukta letters get IPA
-  (ફ઼ fə, જ઼ zə, ૹ ʒə, ચ઼ tsə, ત૽ tə) and the Perso-Arabic ones are spoken on an
-  **Arabic voice** (ખ઼ خا, ગ઼ غا, ક઼ قا via `{text, voice:"ar-XA-Wavenet-A",
-  lang:"ar-XA"}`), because an English voice cannot make ɣ/q/x. Override items are
-  single-voice (skipped by the variant pass). ઑ was left as-is.
+  matra કૅ (kæ) are synthesized by IPA on an English WaveNet voice; the
+  rare/borrowed nukta letters get IPA (ફ઼ fə, જ઼ zə, ૹ ʒə, ચ઼ tsə, ત૽ tə) and the
+  Perso-Arabic ones are spoken on an **Arabic voice** (ખ઼ خا, ગ઼ غا, ક઼ قا via
+  `{text, voice:"ar-XA-Wavenet-A", lang:"ar-XA"}`), because an English voice
+  cannot make ɣ/q/x. Override items are single-voice (skipped by the variant
+  pass). ઑ was left as-is. The **halant (્) has no audio on purpose**: TTS cannot
+  voice a vowel-less consonant (it adds a vowel or reads a fallback letter), so
+  the halant tile is a silent, visual-only mark. `MANUAL_CLIPS` is the mechanism
+  for hand-placed recorded clips (currently empty) if a real recording is ever
+  needed.
 - **Self-heal:** the generator retries any suspiciously small (<1800 byte) clip
   with a WaveNet voice, because Chirp3-HD occasionally returns near-silence for
   very short words.
@@ -286,17 +290,20 @@ progress; it fully resets only accounts with no local copy.
   user has review items** (`srs.length > 0`), so a new learner never sees an empty
   tab.
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
+  Noun word-cards show a **photo thumbnail** when the word is in `WORD_IMG`
+  (Wikimedia hotlinks, ~70 nouns across food, animals, transport, places,
+  weather, produce, nature, home, clothing, tech, body, sport, music).
   Words with a common variation carry an optional `alt:[{gu,r}]` list, shown as a
   tappable "also ..." line under the word (e.g. potato બટાકા / બટાટા, onion
   ડુંગળી / કાંદા, hospital દવાખાનું / હોસ્પિટલ). 14 variant pairs so far.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
   the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat, Textiles and
   Fashion, Food and Cooking), each with
-  photo cover cards; **34 chapters** with photo covers + inline photos, dual
+  photo cover cards; **36 chapters** with photo covers + inline photos, dual
   "Listen in English / Listen in Gujarati" (Gujarati is a full multi-sentence
   summary per chapter), sources. A "Did you know?" fun-fact card rotates every
   10 hours (one fact notes the kaudi shell as early Gujarati currency).
-- **Grammar guide:** 13 topics. **Conversations (Talk):** 21 dialogues with
+- **Grammar guide:** 14 topics. **Conversations (Talk):** 25 dialogues with
   speaking practice, beginner through advanced (the two speakers use different
   voices).
 - **Profile:** account card (name, @username, change username), stats, streak
@@ -321,9 +328,10 @@ message. This is a platform limit, intentionally left as graceful fallback.
 ## 8. Content inventory
 
 **Scale (current):** 20 Learn units / ~95 lessons; 16 "Learn the letters" script
-lessons; ~41 vocab topics; 13 grammar patterns; 21 conversations; 7 Culture
-categories / 34 chapters; **2,826 audio clips across 3 voices** (~42 MB); ~34
-noun images + body/family diagrams + color swatches. Units 1-15 are
+lessons; ~46 vocab topics; 14 grammar patterns; 25 conversations; 7 Culture
+categories / 36 chapters; 4 timed proficiency exams; **3,253 audio clips across
+3 voices** (~47 MB); ~70 noun images (`WORD_IMG`, shown in lessons and the Vocab
+list) + body/family diagrams + color swatches; 14 variant pairs (`alt`). Units 1-15 are
 foundations/themes/practical systems; Units 16-18 are an advanced grammar arc
 (opinions and comparisons; conditionals and modality; reported speech and
 subordinate clauses).
@@ -335,7 +343,7 @@ spellings), no in-topic or cross-topic vocab duplicates. Run it after any conten
 change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ ṇ ḷ
 ṣ ṁ) and "oo" for long-u (doodh, phool, roopiyaa).
 
-- **Culture: 7 categories, 34 chapters.** Ancient: indus, maurya, vallabhi,
+- **Culture: 7 categories, 36 chapters.** Ancient: indus, maurya, vallabhi,
   dwarka. Kingdoms: solanki, modhera, sultanate, palitana, narsinh, somnath.
   Trade: surat_trade, diaspora, parsi. Colonial Rule and Resistance (expanded from
   a deep-research report): colonial, many_rulers, peasant, gandhi, rajkot,
@@ -344,7 +352,7 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
   textiles, t_bandhani, t_patola. Food and Cooking: food, f_street, f_faith,
   f_ports. (Textiles/Food are Culture *modules* built from the two md files; the
   Learn Units 7/8 are separate.)
-- **Vocab topics (~41):** slang split into slang + slang2 (from a modern-slang
+- **Vocab topics (~46):** slang split into slang + slang2 (from a modern-slang
   research md; slang2 carries the New tag), family (expanded: son/daughter, child/
   offspring, didi, cousin, nephew/niece, and gender-neutral spouse/parents/
   siblings/family/elder), numbers, food, verbs, verbs2, transport, colors, animals,
@@ -385,7 +393,7 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
 - **Grammar (13):** word order, postpositions, gender/my, present tense, past/-e
   marker, polite you, negation, questions, future tense, commands/requests,
   want-like-need (joie/game), this-that-here-there, have (paase/mane + chhe).
-- **Conversations (21):** hello, tea stall, asking the way, market haggling,
+- **Conversations (25):** hello, tea stall, asking the way, market haggling,
   meeting family, at the doctor, at the station, making plans, work, telling time,
   on the phone, buying clothes, restaurant, Diwali, please-repeat, catching up
   (slang + code-mix), at the temple, auto-rickshaw haggling, weather, weekend
@@ -406,14 +414,14 @@ change; all five must read 0. Romanization house style uses diacritics (ṭ ḍ 
    **App name** to "Dhatu Learning" so the sign-in popup reads nicely (AUTH.md).
 2. **Owner: rotate the Google TTS API key** (it appeared in chat repeatedly and
    was used again this session). Audio is fully static, so nothing needs a live key.
-3. **All current content is voiced** (**2,826 clips, 3 voices**). Re-run
+3. **All current content is voiced** (**3,253 clips, 3 voices**). Re-run
    `npm run audio` only after adding new Gujarati content; it is idempotent and
    self-syncing (default clip + v2/v3 variants for short items). If you change an
    override or the pause-list rule, delete the affected clips first so they
    regenerate. Generation of all variants takes ~15 min; run in the background.
 4. **Verify by ear, live:** the vowel/candra IPA overrides (ઇ ઐ ઔ ઍ, કૅ), the
-   Perso-Arabic Arabic-voice letters (ખ઼ ગ઼ ક઼), the bare-k halant, and that each
-   Script Style / lesson / conversation speaker uses a distinct voice. Also
+   Perso-Arabic Arabic-voice letters (ખ઼ ગ઼ ક઼), and that each Script Style /
+   lesson / conversation speaker uses a distinct voice. Also
    **social features** (follow/poke, after rules + index). None testable from here.
 5. Open ideas not yet done: matras/conjuncts have letter-recognition lessons but
    no handwriting/CV-*building* exercises; a true Gujarati **handwriting font**
