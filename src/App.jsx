@@ -1531,6 +1531,7 @@ const LESSON_ICON = {
   u17l1:"link", u17l2:"star", u17l3:"gear",
   u18l1:"chats", u18l2:"clock", u18l3:"link",
   u19l1:"chat", u19l2:"chats", u19l3:"talk",
+  u20l1:"link", u20l2:"chats", u20l3:"book",
 };
 const lessonIcon = (l) => {
   if (l.kind === "check") return Ic.trophy;
@@ -1627,7 +1628,7 @@ const EXAMS = [
     { t:"oddone", options:[{gu:"સોમવાર",roman:"somvaar",en:"Monday"},{gu:"શુક્રવાર",roman:"shukravaar",en:"Friday"},{gu:"રવિવાર",roman:"ravivaar",en:"Sunday"},{gu:"સવાર",roman:"savaar",en:"morning"}], answer:"સવાર" },
     { t:"listen", say:"ટિકિટ", options:["ticket","journey","station"], answer:"ticket" },
   ]},
-  { id:"ex_pf", afterUnit:"u19", ilr:"ILR 4", title:"Primary Fluency", timeSec:480, passPct:75, final:true, questions:[
+  { id:"ex_pf", afterUnit:"u20", ilr:"ILR 4", title:"Primary Fluency", timeSec:1500, passPct:80, final:true, questions:[
     { t:"translate", en:"if", options:[{gu:"જો",roman:"jo"},{gu:"તો",roman:"to"},{gu:"કારણ કે",roman:"kaaraṇ ke"}], answer:"જો" },
     { t:"tf", gu:"કાશ", roman:"kaash", claim:"if only / I wish", answer:"true" },
     { t:"translate", en:"when", options:[{gu:"જ્યારે",roman:"jyaare"},{gu:"ત્યારે",roman:"tyaare"},{gu:"પછી",roman:"pachhi"}], answer:"જ્યારે" },
@@ -5360,6 +5361,59 @@ Object.assign(LESSONS, {
 UNITS.push({ id:"u19", ku:"Unit 19", title:"Carrying a conversation", sub:"Reactions, agreeing and disagreeing, and stringing a reply together", color:"#985684",
   lessons:[ {id:"u19l1",label:"Reacting and following up"}, {id:"u19l2",label:"Agreeing and disagreeing"}, {id:"u19l3",label:"Putting a reply together"}, {id:"u19c",label:"Checkpoint",kind:"check"} ] });
 LESSON_ORDER.push("u19l1", "u19l2", "u19l3", "u19c");
+
+/* ============================ MODULE: Complex sentences (advanced) ============================ */
+Object.assign(LESSONS, {
+  u20l1: { title:"Linking two ideas", ex: [
+    { t:"note", title:"Joining clauses", body:[
+      "Long Gujarati sentences link short clauses with words like જો...તો (if...then), કારણ કે (because), and પણ (but).",
+      "Keep each clause in subject-object-verb order, then join them."], ex:[
+      {gu:"હું ઘરે છું કારણ કે વરસાદ છે",roman:"huṁ ghare chuṁ kaaraṇ ke varsaad chhe",en:"I am at home because it is raining."}] },
+    { t:"build", en:"If there is time, I will come.", answer:["જો","સમય","હશે","તો","હું","આવીશ"], extra:["કારણ કે","પણ"], roman:"jo samay hashe to huṁ aaveesh" },
+    { t:"build", en:"I am at home because it is raining.", answer:["હું","ઘરે","છું","કારણ કે","વરસાદ","છે"], extra:["તો","જ્યારે"], roman:"huṁ ghare chuṁ kaaraṇ ke varsaad chhe" },
+    { t:"order", en:"Order this little reasoning.", lines:[
+      {gu:"આજે વરસાદ છે.",roman:"aaje varsaad chhe."},
+      {gu:"તેથી હું ઘરે રહીશ.",roman:"tethi huṁ ghare raheesh."},
+      {gu:"કાલે બહાર જઈશ.",roman:"kaale bahaar jaish."}] },
+    { t:"speak", gu:"જો સમય હશે તો હું આવીશ", roman:"jo samay hashe to huṁ aaveesh", en:"If there is time, I will come." },
+  ]},
+  u20l2: { title:"More in one sentence", ex: [
+    { t:"note", title:"Building a longer sentence", body:[
+      "Fold a description in with જે...તે (the one that), and report speech with કે (that).",
+      "The verb still lands at the end of each clause."], ex:[
+      {gu:"જે મિત્ર આવ્યો તે સરસ છે",roman:"je mitra aavyo te saras chhe",en:"The friend who came is nice."}] },
+    { t:"build", en:"The friend who came is nice.", answer:["જે","મિત્ર","આવ્યો","તે","સરસ","છે"], extra:["કે","જો"], roman:"je mitra aavyo te saras chhe" },
+    { t:"build", en:"He said that he will come tomorrow.", answer:["તેણે","કહ્યું","કે","તે","કાલે","આવશે"], extra:["જ્યારે","પણ"], roman:"teṇe kahyuṁ ke te kaale aavshe" },
+    { t:"speak", gu:"મને લાગે છે કે તે સાચું છે", roman:"mane laage chhe ke te saachuṁ chhe", en:"I think that it is true." },
+  ]},
+  u20l3: { title:"Telling a longer story", ex: [
+    { t:"note", title:"A short narrative", body:[
+      "String past-tense events in order, linking them with પછી (then) and અને (and).",
+      "Arrange the lines into a natural sequence."], ex:[
+      {gu:"સવારે હું ઊઠ્યો અને ચા પીધી",roman:"savaare huṁ ooṭhyo ane chaa peedhi",en:"In the morning I woke up and drank tea."}] },
+    { t:"order", en:"Order this morning story.", lines:[
+      {gu:"સવારે હું ઊઠ્યો.",roman:"savaare huṁ ooṭhyo."},
+      {gu:"પછી મેં ચા પીધી.",roman:"pachhi meṁ chaa peedhi."},
+      {gu:"પછી હું કામ પર ગયો.",roman:"pachhi huṁ kaam par gayo."}] },
+    { t:"order", en:"Order this plan for tomorrow.", lines:[
+      {gu:"કાલે હું વહેલો ઊઠીશ.",roman:"kaale huṁ vahelo ooṭheesh."},
+      {gu:"પછી બજાર જઈશ.",roman:"pachhi bajaar jaish."},
+      {gu:"સાંજે મિત્રોને મળીશ.",roman:"saanje mitrone maḷeesh."}] },
+    { t:"speak", gu:"પછી હું કામ પર ગયો", roman:"pachhi huṁ kaam par gayo", en:"Then I went to work." },
+  ]},
+  u20c: { title:"Checkpoint", check:true, ex: [
+    { t:"build", en:"If there is time, I will come.", answer:["જો","સમય","હશે","તો","હું","આવીશ"], extra:["કારણ કે","પણ"], roman:"jo samay hashe to huṁ aaveesh" },
+    { t:"order", en:"Order the morning story.", lines:[
+      {gu:"સવારે હું ઊઠ્યો.",roman:"savaare huṁ ooṭhyo."},
+      {gu:"પછી મેં ચા પીધી.",roman:"pachhi meṁ chaa peedhi."},
+      {gu:"પછી હું કામ પર ગયો.",roman:"pachhi huṁ kaam par gayo."}] },
+    { t:"tf", gu:"કારણ કે", roman:"kaaraṇ ke", claim:"because", answer:"true" },
+    { t:"speak", gu:"જે મિત્ર આવ્યો તે સરસ છે", roman:"je mitra aavyo te saras chhe", en:"The friend who came is nice." },
+  ]},
+});
+UNITS.push({ id:"u20", ku:"Unit 20", title:"Complex sentences", sub:"Linking clauses, saying more in one sentence, and telling a longer story", color:"#4E7A5C",
+  lessons:[ {id:"u20l1",label:"Linking two ideas"}, {id:"u20l2",label:"More in one sentence"}, {id:"u20l3",label:"Telling a longer story"}, {id:"u20c",label:"Checkpoint",kind:"check"} ] });
+LESSON_ORDER.push("u20l1", "u20l2", "u20l3", "u20c");
 
 /* Roughly double the practice in every lesson by appending auto-generated
    reinforcement questions (listen and match) built from each lesson's own taught
