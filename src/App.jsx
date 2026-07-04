@@ -1704,6 +1704,22 @@ const CONVERSATIONS = [
     { who:"you", gu:"જૂનમાં, કદાચ.", roman:"joonmaan, kadaach.", en:"In June, maybe." },
     { who:"them", gu:"વરસાદ સારો પડે તો સારું.", roman:"varsaad saaro paḍe to saaruṁ.", en:"It would be good if it rains well." },
   ]},
+  { id:"c20", title:"Making weekend plans", icon:"spark", turns:[
+    { who:"them", gu:"આ શનિવારે શું કરીશ?", roman:"aa shanivaare shuṁ karish?", en:"What will you do this Saturday?" },
+    { who:"you", gu:"કદાચ ફરવા જઈશ. તું?", roman:"kadaach pharvaa jaish. tuṁ?", en:"Maybe I will go out. You?", choices:["કદાચ ફરવા જઈશ","આભાર","ના"] },
+    { who:"them", gu:"જો હવામાન સારું હોય તો દરિયે જઈએ.", roman:"jo havaamaan saaruṁ hoy to dariye jaie.", en:"If the weather is good, let's go to the sea." },
+    { who:"you", gu:"જોરદાર! હું આવીશ.", roman:"jordaar! huṁ aaveesh.", en:"Awesome! I will come." },
+    { who:"them", gu:"સવારે મળીએ?", roman:"savaare maḷie?", en:"Shall we meet in the morning?" },
+    { who:"you", gu:"હા, આશા છે કે વરસાદ નહીં પડે.", roman:"haa, aashaa chhe ke varsaad nahi paḍe.", en:"Yes, I hope it will not rain." },
+  ]},
+  { id:"c21", title:"A job interview", icon:"gear", turns:[
+    { who:"them", gu:"તમને આ કામનો અનુભવ છે?", roman:"tamne aa kaamno anubhav chhe?", en:"Do you have experience in this work?" },
+    { who:"you", gu:"હા, મને બે વર્ષનો અનુભવ છે.", roman:"haa, mane be varshno anubhav chhe.", en:"Yes, I have two years of experience.", choices:["મને બે વર્ષનો અનુભવ છે","કેમ છો?","આભાર"] },
+    { who:"them", gu:"તમે ગુજરાતી બોલી શકો છો?", roman:"tame gujaraati boli shako chho?", en:"Can you speak Gujarati?" },
+    { who:"you", gu:"હા, હું સારી રીતે બોલી શકું છું.", roman:"haa, huṁ saari reete boli shakuṁ chuṁ.", en:"Yes, I can speak it well." },
+    { who:"them", gu:"ક્યારે શરૂ કરી શકશો?", roman:"kyaare shuroo kari shaksho?", en:"When can you start?" },
+    { who:"you", gu:"આવતા અઠવાડિયે.", roman:"aavtaa aṭhvaaḍiye.", en:"Next week." },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
