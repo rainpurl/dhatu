@@ -1730,6 +1730,14 @@ const CONVERSATIONS = [
     { who:"you", gu:"મને ગરબા બહુ ગમે છે.", roman:"mane garbaa bahu game chhe.", en:"I really like garba." },
     { who:"them", gu:"ઢોલ સાંભળીને મજા આવશે.", roman:"ḍhol saambhaḷine majaa aavshe.", en:"It will be fun hearing the dhol." },
   ]},
+  { id:"c23", title:"Asking for help", icon:"target", turns:[
+    { who:"you", gu:"મદદ કરો!", roman:"madad karo!", en:"Help!", choices:["મદદ કરો!","આભાર","કેમ છો?"] },
+    { who:"them", gu:"શું થયું?", roman:"shuṁ thayuṁ?", en:"What happened?" },
+    { who:"you", gu:"મારો ફોન ખોવાઈ ગયો.", roman:"maaro phon khovaai gayo.", en:"My phone got lost." },
+    { who:"them", gu:"ચિંતા ન કરો, હું મદદ કરીશ.", roman:"chintaa na karo, huṁ madad karish.", en:"Don't worry, I will help." },
+    { who:"you", gu:"પોલીસ સ્ટેશન ક્યાં છે?", roman:"polees sṭeshan kyaan chhe?", en:"Where is the police station?" },
+    { who:"them", gu:"અહીંથી પાસે છે.", roman:"ahiṁthi paase chhe.", en:"It is near here." },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
@@ -5375,6 +5383,22 @@ TOPICS.push(
     { gu:"દરેક", r:"darek", en:"each / every" },
     { gu:"ઓછું", r:"ochhuṁ", en:"less / few" },
     { gu:"પૂરતું", r:"poortuṁ", en:"enough" },
+  ]}
+);
+
+/* ============================ VOCAB: getting help (added) ============================ */
+TOPICS.push(
+  { id:"help", title:"Getting help", icon:"target", note:"Words for when something goes wrong and you need to ask for help.", words:[
+    { gu:"મદદ", r:"madad", en:"help" },
+    { gu:"બચાવો", r:"bachaavo", en:"save me / help!" },
+    { gu:"પોલીસ", r:"polees", en:"police" },
+    { gu:"આગ", r:"aag", en:"fire" },
+    { gu:"ખતરો", r:"khataro", en:"danger" },
+    { gu:"અકસ્માત", r:"akasmaat", en:"accident" },
+    { gu:"ચોર", r:"chor", en:"thief" },
+    { gu:"જલદી", r:"jaldi", en:"quickly" },
+    { gu:"સંભાળો", r:"sambhaaḷo", en:"be careful" },
+    { gu:"ગુમ", r:"gum", en:"lost" },
   ]}
 );
 
