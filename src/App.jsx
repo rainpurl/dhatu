@@ -1720,6 +1720,13 @@ const CONVERSATIONS = [
     { who:"them", gu:"ક્યારે શરૂ કરી શકશો?", roman:"kyaare shuroo kari shaksho?", en:"When can you start?" },
     { who:"you", gu:"આવતા અઠવાડિયે.", roman:"aavtaa aṭhvaaḍiye.", en:"Next week." },
   ]},
+  { id:"c22", title:"At a Garba night", icon:"spark", turns:[
+    { who:"them", gu:"આજે ગરબા રમવા આવીશ?", roman:"aaje garbaa ramvaa aaveesh?", en:"Will you come play garba tonight?" },
+    { who:"you", gu:"હા, ચોક્કસ! ક્યાં છે?", roman:"haa, chokkas! kyaan chhe?", en:"Yes, definitely! Where is it?", choices:["હા, ચોક્કસ!","ના","આભાર"] },
+    { who:"them", gu:"મેદાનમાં, નવ વાગ્યે.", roman:"medaanmaan, nav vaagye.", en:"At the ground, at nine." },
+    { who:"you", gu:"મને ગરબા બહુ ગમે છે.", roman:"mane garbaa bahu game chhe.", en:"I really like garba." },
+    { who:"them", gu:"ઢોલ સાંભળીને મજા આવશે.", roman:"ḍhol saambhaḷine majaa aavshe.", en:"It will be fun hearing the dhol." },
+  ]},
 ];
 
 /* ============================ VOCAB TOPICS ============================ */
@@ -5328,6 +5335,22 @@ TOPICS.push(
     { gu:"પાંચમો", r:"paanchmo", en:"fifth" },
     { gu:"છઠ્ઠો", r:"chhaṭhṭho", en:"sixth" },
     { gu:"છેલ્લો", r:"chhello", en:"last" },
+  ]}
+);
+
+/* ============================ VOCAB: music and dance (added) ============================ */
+TOPICS.push(
+  { id:"music", title:"Music and dance", icon:"film", note:"Performance is central to Gujarati life, from Garba nights to folk theatre.", words:[
+    { gu:"ગીત", r:"geet", en:"song" },
+    { gu:"સંગીત", r:"sangeet", en:"music" },
+    { gu:"નૃત્ય", r:"nrutya", en:"dance" },
+    { gu:"નાચવું", r:"naachvuṁ", en:"to dance" },
+    { gu:"રાસ", r:"raas", en:"raas (stick dance)" },
+    { gu:"ઢોલ", r:"ḍhol", en:"drum" },
+    { gu:"વાંસળી", r:"vaansḷi", en:"flute" },
+    { gu:"તાળી", r:"taaḷi", en:"clap" },
+    { gu:"ગાયક", r:"gaayak", en:"singer" },
+    { gu:"સૂર", r:"soor", en:"tune / note" },
   ]}
 );
 
