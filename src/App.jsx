@@ -10157,7 +10157,7 @@ const VOCAB_SENT = {
   "જૂતાં": {s:"મારાં જૂતાં કાળાં છે", r:"maaraan jootaan kaaḷaan chhe", e:"My shoes are black"},
   "જૂનું": {s:"આ ઘર બહુ જૂનું છે", r:"aa ghar bahu joonuṁ chhe", e:"This house is very old"},
   "જોરદાર": {s:"કાલની મેચ જોરદાર હતી", r:"kaalni mech jordaar hati", e:"Yesterday's match was amazing"},
-  "જોવું": {s:"મને ફિલ્મ જોવું ગમે છે", r:"mane film jovuṁ game chhe", e:"I like to watch a movie"},
+  "જોવું": {s:"મને ફિલ્મ જોવી ગમે છે", r:"mane film jovuṁ game chhe", e:"I like to watch a movie"},
   "ઝડપી": {s:"આ ગાડી બહુ ઝડપી છે", r:"aa gaaḍi bahu jhaḍpi chhe", e:"This car is very fast"},
   "ઝભ્ભો": {s:"પપ્પાનો ઝભ્ભો સફેદ છે", r:"pappaano jhabbho saphed chhe", e:"Dad's kurta is white"},
   "ઝાડ": {s:"ઝાડ પર પક્ષી બેઠું છે", r:"jhaaḍ par pakshi beṭhuṁ chhe", e:"A bird is sitting on the tree"},
