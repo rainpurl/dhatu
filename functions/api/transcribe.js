@@ -27,10 +27,21 @@ const GLOBAL_DAILY = 300; // soft global cap/day (keeps us well under KV write l
 const USER_DAILY = 40;    // soft per-account cap/day
 const MAX_AUDIO_B64 = 1_500_000; // ~1.1MB of audio (~30s); bounds per-call cost
 
+const CORS = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "POST, OPTIONS",
+  "access-control-allow-headers": "Content-Type, Authorization",
+  "access-control-max-age": "86400",
+};
 function jsonResponse(obj, status = 200) {
-  return new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json" } });
+  return new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json", ...CORS } });
 }
 const fallback = (reason, status = 200) => jsonResponse({ fallback: true, reason }, status);
+
+// CORS preflight (a cross-origin POST with JSON triggers one).
+export function onRequestOptions() {
+  return new Response(null, { status: 204, headers: CORS });
+}
 
 export async function onRequestPost(context) {
   const { request, env } = context;
