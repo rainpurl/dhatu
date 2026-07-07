@@ -6616,13 +6616,18 @@ function CourseApp({ user }) {
     const word = topic.words[practiceIdx];
     const isLast = practiceIdx + 1 >= topic.words.length;
     // Speech recognition loops/hallucinates on very short audio, so practice a
-    // lone word inside a carrier sentence ("mane ___ game chhe" = "I like ___").
-    // It is long enough for Whisper to lock on and stays grammatical for nouns,
-    // infinitive verbs, and adjectives. Words that are already phrases are spoken
-    // as-is. The learner still hears the word itself via the play button.
-    const sayGu = _isSingleWord(word.gu) ? "મને " + word.gu + " ગમે છે" : word.gu;
-    const sayR = _isSingleWord(word.gu) ? "mane " + word.r + " game chhe" : word.r;
-    const sayEn = _isSingleWord(word.gu) ? "I like " + word.en : word.en;
+    // lone word inside a carrier sentence (varied per word so it is not
+    // repetitive). Function-word topics (questions, connectors, greetings) do not
+    // fit a carrier, so speech is skipped there. Words that are already phrases
+    // are spoken as-is. The learner still hears the word via the play button.
+    const single = _isSingleWord(word.gu);
+    const skipSpeech = single && CARRIER_SKIP_TOPICS.has(topic.id);
+    const carrier = single && !skipSpeech ? _carrierFor(topic.id, word) : null;
+    const sayGu = carrier ? carrier.gu : word.gu;
+    const sayR = carrier ? carrier.r : word.r;
+    const sayEn = carrier ? carrier.en : word.en;
+    // Bias Whisper toward the expected phrase only when we show a phrase.
+    const sayHint = _isSingleWord(sayGu) ? null : sayGu;
     return (
       <div className="dhatu">
         <style>{CSS}</style>
@@ -6642,7 +6647,7 @@ function CourseApp({ user }) {
             </div>
           )}
           <div className="playrow"><button className="playbtn" onClick={() => speakGu(word.gu, _voiceForId(topic.id))}><Ic.play /></button></div>
-          <SpeakCheck key={selTopic + "-" + practiceIdx} target={sayGu} hint={sayGu} />
+          <SpeakCheck key={selTopic + "-" + practiceIdx} target={sayGu} hint={sayHint} />
           <div style={{ height: 100 }} />
         </div>
         <div className="foot">
@@ -9940,6 +9945,47 @@ function _gradeSpeech(heard, target) {
 // these and only offers it for phrases and sentences.
 function _isSingleWord(s) {
   return !/[\s,،]/.test(String(s || "").trim());
+}
+
+// Vocab practice wraps a lone word in a carrier sentence so speech recognition
+// has enough audio to work. Several variants keep it from feeling repetitive.
+// "{}" is replaced by the word (gu), roman (r), and gloss (en) respectively.
+const CARRIER_DEFAULT = [
+  { gu: "મને {} ગમે છે", r: "mane {} game chhe", en: "I like {}" },
+  { gu: "મને {} બહુ ગમે છે", r: "mane {} bahu game chhe", en: "I really like {}" },
+  { gu: "મારી પાસે {} છે", r: "maari paase {} chhe", en: "I have {}" },
+  { gu: "મને {} જોઈએ છે", r: "mane {} joie chhe", en: "I want {}" },
+  { gu: "તમને {} ગમે છે?", r: "tamne {} game chhe?", en: "Do you like {}?" },
+  { gu: "શું આ {} છે?", r: "shuṁ aa {} chhe?", en: "Is this {}?" },
+  { gu: "આ {} સરસ છે", r: "aa {} saras chhe", en: "This {} is nice" },
+  { gu: "આ {} ક્યાં છે?", r: "aa {} kyaan chhe?", en: "Where is this {}?" },
+  { gu: "મને {} નથી ગમતું", r: "mane {} nathi gamtuṁ", en: "I don't like {}" },
+  { gu: "તમારી પાસે {} છે?", r: "tamaari paase {} chhe?", en: "Do you have {}?" },
+];
+// Counting words: frames that make sense with a number.
+const CARRIER_NUMBER = [
+  { gu: "મારી પાસે {} છે", r: "maari paase {} chhe", en: "I have {}" },
+  { gu: "મને {} જોઈએ છે", r: "mane {} joie chhe", en: "I want {}" },
+  { gu: "શું આ {} છે?", r: "shuṁ aa {} chhe?", en: "Is this {}?" },
+  { gu: "તમારી પાસે {} છે?", r: "tamaari paase {} chhe?", en: "Do you have {}?" },
+  { gu: "આ {} છે", r: "aa {} chhe", en: "This is {}" },
+];
+const CARRIER_NUMBER_TOPICS = new Set(["numbers", "numbers2", "ordinals"]);
+// Function words (and, what, hello...) do not fit a carrier sentence, so speech
+// practice is skipped for these; the learner just listens and repeats.
+const CARRIER_SKIP_TOPICS = new Set(["questions", "connectors", "greetings"]);
+function _carrierFor(topicId, word) {
+  const set = CARRIER_NUMBER_TOPICS.has(topicId) ? CARRIER_NUMBER : CARRIER_DEFAULT;
+  // Stable choice per word so it does not change on every render.
+  let h = 0;
+  const s = String(word.gu || "");
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  const t = set[h % set.length];
+  return {
+    gu: t.gu.replace("{}", word.gu),
+    r: t.r.replace("{}", word.r),
+    en: t.en.replace("{}", word.en),
+  };
 }
 
 // Base URL for the app's own API (Cloudflare Pages Functions). On the web this
