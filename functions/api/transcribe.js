@@ -65,6 +65,9 @@ export async function onRequestPost(context) {
     const audio = String(body.audio || "");
     if (!audio) return fallback("empty");
     if (audio.length > MAX_AUDIO_B64) return fallback("too-long");
+    // Optional expected phrase: biases Whisper so it locks onto the target words
+    // instead of looping on short audio. Used by vocab practice.
+    const hint = String(body.hint || "").slice(0, 120);
 
     const today = new Date().toISOString().slice(0, 10);
 
@@ -84,7 +87,9 @@ export async function onRequestPost(context) {
     try {
       // vad_filter strips silence around the utterance, which sharply reduces
       // Whisper's tendency to hallucinate words on short/near-silent clips.
-      const r = await env.AI.run(MODEL, { audio, language: LANG, task: "transcribe", vad_filter: true });
+      const input = { audio, language: LANG, task: "transcribe", vad_filter: true };
+      if (hint) input.initial_prompt = hint;
+      const r = await env.AI.run(MODEL, input);
       text = (r && (typeof r.text === "string" ? r.text : r.response)) || "";
     } catch (e) {
       return fallback("model-error");
