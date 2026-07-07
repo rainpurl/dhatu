@@ -103,7 +103,7 @@ export async function signInWithGoogle() {
   // Capacitor global, so the plain web build never needs the plugin.
   const cap = typeof window !== "undefined" ? window.Capacitor : null;
   if (cap && cap.isNativePlatform && cap.isNativePlatform()) {
-    const { FirebaseAuthentication } = await import(/* @vite-ignore */ "@capacitor-firebase/authentication");
+    const { FirebaseAuthentication } = await import("@capacitor-firebase/authentication");
     const result = await FirebaseAuthentication.signInWithGoogle();
     const idToken = result && result.credential && result.credential.idToken;
     const accessToken = result && result.credential && result.credential.accessToken;

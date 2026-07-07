@@ -14,6 +14,19 @@ What is already set up in this repo:
   popup. (No change needed by you; it switches automatically.)
 - App icons in `public/` (from the new logo) and the privacy policy at
   `public/privacy.html` -> https://dhatu.pages.dev/privacy.html
+- Speech recognition for the speaking exercises (`src/App.jsx` `useVoiceCheck`),
+  three engines in order of preference so it works the same on every device:
+  1. **Cloud Whisper** (primary): records audio with `capacitor-voice-recorder`
+     and transcribes it server-side via the free `/api/transcribe` Pages Function
+     (Cloudflare Workers AI Whisper). Uniform across devices, no on-device model
+     needed. Needs internet, the Cloudflare **AI** binding enabled (same one the
+     writing grader uses), and a signed-in user (or `STT_ALLOW_ANON=1` for
+     pre-launch testing). See GRADER.md.
+  2. **Device recognizer** (`@capacitor-community/speech-recognition`): used when
+     the cloud is offline or over its free budget.
+  3. **Self-check** ("say it out loud, then continue") if neither is available.
+  Both native engines add the **RECORD_AUDIO** permission and prompt for the mic
+  the first time. On the web the app uses the browser Web Speech API.
 
 You run the rest on your Mac. You need **Android Studio** (with a JDK and the
 Android SDK) and, to publish, a **Google Play Console** account (one-time $25).
@@ -93,6 +106,11 @@ export those from `public/logo.svg` / `public/icon-512.png`.)
    - **Privacy policy URL:** `https://dhatu.pages.dev/privacy.html`
    - **Data safety** form: declare account info (name, email) + app activity,
      stored via Firebase, used for sign-in and saving progress; not sold/shared.
+     The app records audio **only on-device** for the speaking exercises (mic
+     permission); no audio is uploaded or stored, so declare it as processed on
+     the device and not collected.
+   - **Permissions:** the store will show RECORD_AUDIO. It is used for
+     pronunciation checking in the speaking exercises.
    - Content rating questionnaire, target audience.
 4. Submit for review (first review usually a few days).
 
@@ -109,5 +127,8 @@ npx cap add ios && npx cap sync
 npx cap open ios
 ```
 Add `GoogleService-Info.plist` (iOS Firebase app) and the reversed-client-ID URL
-scheme for Google sign-in; the same `src/firebase.js` native path works. Then
-archive in Xcode and submit via App Store Connect. Do Android first.
+scheme for Google sign-in; the same `src/firebase.js` native path works. For the
+speaking exercises, add `NSMicrophoneUsageDescription` and
+`NSSpeechRecognitionUsageDescription` to `Info.plist` (the speech-recognition
+plugin needs both). Then archive in Xcode and submit via App Store Connect. Do
+Android first.

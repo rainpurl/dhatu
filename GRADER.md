@@ -19,8 +19,24 @@ bindings; it is purely additive.
 - **Owner action to switch AI on (one-time, dashboard):** (1) confirm Workers
   **Free** plan, no billing; (2) add the **`AI`** Workers AI binding to the Pages
   project; (3) create a KV namespace bound as **`GRADER`**; (4) redeploy.
-  See "Owner setup" below.
-- **Phase 2 (speech): not built.** Scoped below.
+  See "Owner setup" below. The **same two bindings** power both the writing
+  grader and the speech transcriber; set them up once.
+- **Phase 2 (speech recognition + full fallback): BUILT.** Code is in
+  `functions/api/transcribe.js` and the client `useVoiceCheck` / `sttTranscribe`
+  in `src/App.jsx`. In the native app the speaking exercises record audio and
+  send it to `POST /api/transcribe`, which runs Whisper
+  (`@cf/openai/whisper-large-v3-turbo`) and returns the transcript; the app then
+  grades it with the existing deterministic `_gradeSpeech()`. Same safety model as
+  Phase 1: soft caps (global 300/day, per-user 40/day), and any failure returns
+  `{fallback}` so the client drops to the device recognizer, then to self-check.
+  It uses the **`AI`** and **`GRADER`** bindings (no new bindings).
+  - **Auth:** requires a signed-in user's Firebase ID token, exactly like the
+    grader. To test the cloud path **before** native sign-in is wired
+    (`google-services.json`), set a Pages env var **`STT_ALLOW_ANON=1`** to accept
+    anonymous calls under the global cap; remove it once sign-in works in the app.
+  - Native calls target `https://dhatu.pages.dev/api/*` absolutely (the WebView
+    origin is localhost), so the site must be deployed for the cloud path to work;
+    otherwise the app falls back automatically.
 
 ## The one hard rule this design protects
 

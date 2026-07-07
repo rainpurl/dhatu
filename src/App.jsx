@@ -7022,7 +7022,7 @@ async function aiGradeWriting({ text, en, promptId, level }) {
   if (!token) return { fallback: true, reason: "signin" };
   let res;
   try {
-    res = await fetch("/api/grade-writing", {
+    res = await fetch(API_BASE + "/api/grade-writing", {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
       body: JSON.stringify({ text: t, en: en || "", promptId: promptId || "", level: level || "ILR 1" }),
@@ -9923,10 +9923,41 @@ function _gradeSpeech(heard, target) {
   return { heard, score, verdict };
 }
 
+// Base URL for the app's own API (Cloudflare Pages Functions). On the web this
+// is same-origin (""); inside the native app the WebView origin is localhost, so
+// calls must target the deployed site explicitly or they hit nothing.
+const API_BASE =
+  typeof window !== "undefined" && window.Capacitor &&
+  window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()
+    ? "https://dhatu.pages.dev" : "";
+
+// Send recorded audio to the free Whisper transcription endpoint and return the
+// recognized text, or null if the cloud check is unavailable (offline, over the
+// free daily budget, or not deployed yet) so the caller can fall back.
+async function sttTranscribe(audioB64, mime) {
+  if (!audioB64) return null;
+  let token = null;
+  try { token = await getIdToken(); } catch (e) { token = null; }
+  try {
+    const headers = { "Content-Type": "application/json" };
+    if (token) headers.Authorization = "Bearer " + token;
+    const res = await fetch(API_BASE + "/api/transcribe", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ audio: audioB64, mime: mime || "" }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json().catch(() => null);
+    if (!data || data.fallback || typeof data.text !== "string") return null;
+    return data.text.trim();
+  } catch (e) {
+    return null;
+  }
+}
+
 // Errors that mean automatic checking simply is not available here (as opposed
-// to something the learner can retry). Gujarati recognition is unsupported in
-// most desktop browsers, so we present these calmly, not as a failure.
-const _MIC_UNAVAILABLE = new Set(["language-not-supported", "network", "audio-capture", "error"]);
+// to something the learner can retry). We present these calmly, not as a failure.
+const _MIC_UNAVAILABLE = new Set(["language-not-supported", "network", "audio-capture", "error", "cloud-retry"]);
 function _micErrorMessage(err) {
   switch (err) {
     case "no-speech":
@@ -9934,46 +9965,142 @@ function _micErrorMessage(err) {
       return "Didn't catch that. Try again, or continue below.";
     case "not-allowed":
     case "service-not-allowed":
-      return "Microphone access is blocked. Allow it in your browser settings, or continue below.";
+      return "Microphone access is blocked. Allow microphone permission for the app, or continue below.";
+    case "cloud-retry":
+      return "Couldn't reach the speech checker. Tap the mic to try again, or continue below.";
     default:
-      return "Automatic speech check isn't available in this browser. Say it out loud, then continue.";
+      return "Automatic speech check isn't available here. Say it out loud, then continue.";
   }
 }
 
 function useVoiceCheck(lang) {
-  const [supported] = useState(() => !!_getRecognitionCtor());
+  // Three engines, in order of preference:
+  //   1. Cloud Whisper     - record audio, transcribe server-side. Uniform on
+  //      every device; needs no on-device language model. (native)
+  //   2. Device recognizer - the OS speech recognizer, used when the cloud is
+  //      offline or over its free budget. (native)
+  //   3. Web Speech API    - the browser engine, on the web.
+  const isNative =
+    typeof window !== "undefined" && window.Capacitor &&
+    window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+  const [supported] = useState(() => (isNative ? true : !!_getRecognitionCtor()));
   const [listening, setListening] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [result, setResult] = useState(null);
   const [err, setErr] = useState(null);
-  const recRef = useRef(null);
+  const recRef = useRef(null);          // web SpeechRecognition instance
+  const srRef = useRef(null);           // native OS recognizer plugin
+  const vrRef = useRef(null);           // native audio recorder plugin
+  const engineRef = useRef(null);       // 'cloud' | 'device' | 'web'
+  const cloudBrokenRef = useRef(false); // once the cloud fails, prefer the device
+  const timerRef = useRef(null);
+  const targetRef = useRef("");
 
   useEffect(() => {
+    let cancelled = false;
+    if (isNative) {
+      import("capacitor-voice-recorder")
+        .then((m) => { if (!cancelled) vrRef.current = m.VoiceRecorder; })
+        .catch(() => {});
+      import("@capacitor-community/speech-recognition")
+        .then((m) => { if (!cancelled) srRef.current = m.SpeechRecognition; })
+        .catch(() => {});
+    }
     return () => {
-      if (recRef.current) {
-        try { recRef.current.stop(); } catch (e) {}
-      }
+      cancelled = true;
+      if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
+      try { if (srRef.current) { srRef.current.removeAllListeners(); srRef.current.stop(); } } catch (e) {}
+      try { if (vrRef.current) vrRef.current.stopRecording(); } catch (e) {}
+      try { if (recRef.current) recRef.current.stop(); } catch (e) {}
     };
   }, []);
 
-  function start(target) {
+  // ---- cloud: record now, transcribe on stop ----
+  async function startCloud() {
+    const VR = vrRef.current;
+    if (!VR) return false;
+    try {
+      let has = await VR.hasAudioRecordingPermission().catch(() => ({ value: false }));
+      if (!has || !has.value) {
+        const req = await VR.requestAudioRecordingPermission().catch(() => ({ value: false }));
+        if (!req || !req.value) { setErr("not-allowed"); return true; } // handled; do not fall through
+      }
+      const s = await VR.startRecording();
+      if (!s || s.value !== true) return false;
+      engineRef.current = "cloud";
+      setListening(true);
+      timerRef.current = setTimeout(() => { stop(); }, 8000); // safety auto-stop
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function finishCloud() {
+    const VR = vrRef.current;
+    setListening(false);
+    let rec = null;
+    try { rec = await VR.stopRecording(); } catch (e) { rec = null; }
+    const val = rec && rec.value;
+    const b64 = val && val.recordDataBase64;
+    const ms = val && typeof val.msDuration === "number" ? val.msDuration : null;
+    if (!b64 || (ms != null && ms < 350)) { setErr("no-speech"); return; }
+    setChecking(true);
+    const text = await sttTranscribe(b64, val && val.mimeType);
+    setChecking(false);
+    if (text === null) {
+      // Cloud unavailable: prefer the device recognizer for the rest of the session.
+      cloudBrokenRef.current = true;
+      setErr(srRef.current ? "cloud-retry" : "network");
+      return;
+    }
+    setResult(_gradeSpeech(text, targetRef.current));
+  }
+
+  // ---- device OS recognizer ----
+  async function startDevice() {
+    const SR = srRef.current;
+    if (!SR) { setErr("unsupported"); return; }
+    try {
+      const a = await SR.available().catch(() => ({ available: false }));
+      if (!a || !a.available) { setErr("unsupported"); return; }
+      let perm = await SR.checkPermissions();
+      if (perm.speechRecognition !== "granted") perm = await SR.requestPermissions();
+      if (perm.speechRecognition !== "granted") { setErr("not-allowed"); return; }
+      await SR.removeAllListeners();
+      SR.addListener("partialResults", (data) => {
+        const heard = data && data.matches && data.matches[0] ? data.matches[0] : "";
+        if (heard) setResult(_gradeSpeech(heard, targetRef.current));
+      });
+      SR.addListener("listeningState", (data) => {
+        if (data && data.status === "stopped") setListening(false);
+      });
+      engineRef.current = "device";
+      setListening(true);
+      const res = await SR.start({ language: lang || "gu-IN", maxResults: 3, partialResults: true, popup: false });
+      if (res && res.matches && res.matches[0]) setResult(_gradeSpeech(res.matches[0], targetRef.current));
+    } catch (e) {
+      setErr("error");
+      setListening(false);
+    }
+  }
+
+  // ---- web Speech API ----
+  function startWeb() {
     const Ctor = _getRecognitionCtor();
     if (!Ctor) { setErr("unsupported"); return; }
-    setErr(null);
-    setResult(null);
     try {
       const rec = new Ctor();
       rec.lang = lang || "gu-IN";
       rec.interimResults = false;
       rec.maxAlternatives = 1;
       recRef.current = rec;
+      engineRef.current = "web";
       rec.onresult = (e) => {
         const heard = e.results && e.results[0] && e.results[0][0] ? e.results[0][0].transcript : "";
-        setResult(_gradeSpeech(heard, target));
+        setResult(_gradeSpeech(heard, targetRef.current));
       };
-      rec.onerror = (e) => {
-        setErr((e && e.error) || "error");
-        setListening(false);
-      };
+      rec.onerror = (e) => { setErr((e && e.error) || "error"); setListening(false); };
       rec.onend = () => setListening(false);
       setListening(true);
       rec.start();
@@ -9982,17 +10109,38 @@ function useVoiceCheck(lang) {
       setListening(false);
     }
   }
-  function stop() {
-    if (recRef.current) {
-      try { recRef.current.stop(); } catch (e) {}
+
+  async function start(target) {
+    targetRef.current = target;
+    setErr(null);
+    setResult(null);
+    if (!isNative) { startWeb(); return; }
+    const online = typeof navigator === "undefined" || navigator.onLine !== false;
+    if (online && vrRef.current && !cloudBrokenRef.current) {
+      const handled = await startCloud();
+      if (handled) return;
     }
+    if (srRef.current) { startDevice(); return; }
+    setErr("unsupported");
+  }
+
+  async function stop() {
+    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null; }
+    if (engineRef.current === "cloud") { await finishCloud(); return; }
+    if (engineRef.current === "device" && srRef.current) {
+      try { await srRef.current.stop(); } catch (e) {}
+      setListening(false);
+      return;
+    }
+    if (recRef.current) { try { recRef.current.stop(); } catch (e) {} }
     setListening(false);
   }
+
   function reset() {
     setResult(null);
     setErr(null);
   }
-  return { supported, listening, result, err, start, stop, reset };
+  return { supported, listening, checking, result, err, start, stop, reset };
 }
 
 function SpeakCheck({ target, onResult }) {
@@ -10006,7 +10154,7 @@ function SpeakCheck({ target, onResult }) {
   if (!vc.supported) {
     return (
       <div className="speakcheck">
-        <div className="speakcheck-unsupported">Speaking practice needs Chrome, Edge, or Safari on this device.</div>
+        <div className="speakcheck-unsupported">Automatic speech checking isn't available here. Say it out loud, then tap continue.</div>
         <button className="btn ghost sm" onClick={() => onResult && onResult({ verdict: "skip", score: 0, heard: "" })}>
           I said it out loud
         </button>
@@ -10018,14 +10166,16 @@ function SpeakCheck({ target, onResult }) {
     <div className="speakcheck">
       <button
         className={"micbtn" + (vc.listening ? " on" : "")}
+        disabled={vc.checking}
         onClick={() => {
+          if (vc.checking) return;
           if (vc.listening) { vc.stop(); }
           else { vc.reset(); vc.start(target); }
         }}
       >
         <Ic.mic />
       </button>
-      <div className="speakcheck-label">{vc.listening ? "Listening..." : "Tap and say it"}</div>
+      <div className="speakcheck-label">{vc.checking ? "Checking..." : vc.listening ? "Listening... tap when done" : "Tap and say it"}</div>
       {vc.err && <div className={"speakcheck-msg " + (_MIC_UNAVAILABLE.has(vc.err) ? "info" : "bad")}>{_micErrorMessage(vc.err)}</div>}
       {vc.err && vc.err !== "no-speech" && vc.err !== "aborted" && (
         <button className="btn sm" onClick={() => onResult && onResult({ verdict: "skip", score: 0, heard: "" })}>
