@@ -1267,6 +1267,20 @@ const CSS = `
 .splash-word{font-size:42px;font-weight:800;letter-spacing:-1.2px;color:var(--brand);line-height:1}
 .splash-load{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.3px}
 .spacer-lg{height:8px}
+/* ---- motion pass: screen + content entrances, staggered lists, micro-interactions ---- */
+.scr{animation:screenIn .3s var(--ease)}
+.q-title,.q-sub,.bigword,.romanline,.wordimg,.colorswatch{animation:riseIn .3s var(--ease) both}
+.romanline{animation-delay:.04s}
+.cardgrid>*,.opts>*,.wordcard,.grid2>*{animation:riseIn .34s var(--ease) both}
+.cardgrid>*:nth-child(1),.opts>*:nth-child(1),.wordcard:nth-child(1),.grid2>*:nth-child(1){animation-delay:.03s}
+.cardgrid>*:nth-child(2),.opts>*:nth-child(2),.wordcard:nth-child(2),.grid2>*:nth-child(2){animation-delay:.08s}
+.cardgrid>*:nth-child(3),.opts>*:nth-child(3),.wordcard:nth-child(3),.grid2>*:nth-child(3){animation-delay:.13s}
+.cardgrid>*:nth-child(4),.opts>*:nth-child(4),.wordcard:nth-child(4),.grid2>*:nth-child(4){animation-delay:.18s}
+.cardgrid>*:nth-child(5),.opts>*:nth-child(5),.wordcard:nth-child(5),.grid2>*:nth-child(5){animation-delay:.23s}
+.cardgrid>*:nth-child(6),.opts>*:nth-child(6),.wordcard:nth-child(6),.grid2>*:nth-child(6){animation-delay:.28s}
+.cardgrid>*:nth-child(n+7),.opts>*:nth-child(n+7),.wordcard:nth-child(n+7),.grid2>*:nth-child(n+7){animation-delay:.32s}
+.bar>i{transition:width .5s var(--ease)}
+.btn:active,.iconbtn:active,.playbtn:active,.opt:active,.mtile:active,.pick:active,.tok:active,.orderline:active,.gkey:active,.chip:active,.navb:active{transform:translateY(1px)}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }
@@ -5494,6 +5508,32 @@ function TopicIcon({ name, size = 24 }) {
   return <C width={size} height={size} />;
 }
 
+// Bundled colorful flat illustration for a vocab word. Art lives in public/art/
+// as <slug>.svg, keyed by a stable hash of the Gujarati word (see scripts). The
+// slug hash here MUST match the generator's. Colors show a swatch; if a word has
+// no art, we fall back to the topic's line icon (or nothing if none is given).
+const ART_BASE = "/art/";
+function _artSlug(gu) {
+  let h = 5381;
+  const s = String(gu || "");
+  for (let k = 0; k < s.length; k++) h = ((h * 33) ^ s.charCodeAt(k)) >>> 0;
+  return "v" + (h >>> 0).toString(36);
+}
+function VocabArt({ gu, fallbackIcon, className, size = 22 }) {
+  const [failed, setFailed] = useState(false);
+  if (COLOR_SWATCH[gu]) return <div className="colorswatch" style={{ background: COLOR_SWATCH[gu] }} />;
+  if (failed) return fallbackIcon ? <TopicIcon name={fallbackIcon} size={size} /> : null;
+  return (
+    <img
+      className={className || "cueimg"}
+      src={ART_BASE + _artSlug(gu) + ".svg"}
+      alt=""
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 // Inline body figure that removes itself entirely if the image fails to load.
 function BodyFig({ src, cap }) {
   const [ok, setOk] = useState(true);
@@ -6562,7 +6602,7 @@ function CourseApp({ user }) {
             )}
             {topic.words.map((w, i) => (
               <div key={i} className="wordcard">
-                <div className="cue">{WORD_IMG[w.gu] ? <img className="cueimg" src={WORD_IMG[w.gu]} alt="" referrerPolicy="no-referrer" loading="lazy" /> : <TopicIcon name={topic.icon} size={22} />}</div>
+                <div className="cue"><VocabArt gu={w.gu} fallbackIcon={topic.icon} className="cueimg" /></div>
                 <div>
                   <div className="gu">{w.gu}</div>
                   <div className="rm">{w.r}</div>
@@ -6635,6 +6675,7 @@ function CourseApp({ user }) {
             <div className="bar"><i style={{ width: `${(practiceIdx / topic.words.length) * 100}%` }} /></div>
             <div className="chip gold">{practiceIdx + 1}/{topic.words.length}</div>
           </div>
+          <VocabArt gu={word.gu} fallbackIcon={topic.icon} className="wordimg" size={40} />
           <div className="q-title" style={{ textAlign: "center" }}>Say this out loud</div>
           <div className="bigword gu">{sayGu}</div>
           <div className="romanline">{sayR}</div>
@@ -7732,7 +7773,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
               ? <FamilyTree node={FAMILY_NODE[ex.gu]} />
               : COLOR_SWATCH[ex.gu]
               ? <div className="colorswatch" style={{ background: COLOR_SWATCH[ex.gu] }} />
-              : WORD_IMG[ex.gu] && <img className="wordimg" src={WORD_IMG[ex.gu]} alt={ex.en} referrerPolicy="no-referrer" loading="lazy" />}
+              : <VocabArt gu={ex.gu} className="wordimg" />}
             {readWrite ? (
               <>
                 <div className="bigword gu">{ex.gu}</div>
