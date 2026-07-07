@@ -10238,7 +10238,7 @@ const VOCAB_SENT = {
   "નદી": {s:"નદીમાં પાણી વહે છે", r:"nadimaaṁ paaṇi vahe chhe", e:"Water flows in the river"},
   "નવ": {s:"વર્ગમાં નવ છોકરા છે", r:"vargmaaṁ nav chhokraa chhe", e:"There are nine boys in the class"},
   "નવરાત્રિ": {s:"નવરાત્રિમાં અમે ગરબા રમીએ છીએ", r:"navraatrimaa ame garbaa ramie chhie", e:"During Navratri we play Garba"},
-  "નવું": {s:"મારી પાસે નવું ફોન છે", r:"maari paase navuṁ phon chhe", e:"I have a new phone"},
+  "નવું": {s:"મારી પાસે નવો ફોન છે", r:"maari paase navo phon chhe", e:"I have a new phone"},
   "નહાવું": {s:"હું રોજ સવારે નહાઉં છું", r:"huṁ roj savaare nahaauṁ chhuṁ", e:"I bathe every morning"},
   "નાક": {s:"તારું નાક લાલ છે", r:"taaruṁ naak laal chhe", e:"Your nose is red"},
   "નાચવું": {s:"ચાલો, આપણે સાથે નાચીએ", r:"chaalo, aapṇe saathe naachie", e:"Come, let us dance together"},
