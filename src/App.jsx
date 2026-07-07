@@ -983,7 +983,7 @@ const CSS = `
 /* vocab */
 .wordcard{display:flex;align-items:center;gap:12px;background:var(--card);border:none;
   border-radius:16px;padding:12px 14px;margin-bottom:10px;box-shadow:var(--bevel-inset)}
-.wordcard .cue{width:44px;height:44px;border-radius:12px;background:var(--brand-soft);display:grid;place-items:center;
+.wordcard .cue{width:44px;height:44px;border-radius:21%;background:var(--brand-soft);display:grid;place-items:center;
   color:var(--brand);flex:none;overflow:hidden}
 .wordcard .cue .cueimg{width:100%;height:100%;object-fit:cover}
 .wordcard .gu{font-family:var(--fgu);font-size:20px;font-weight:700}
@@ -1103,7 +1103,7 @@ const CSS = `
 .contactlink .ic{width:42px;height:42px;border-radius:12px;background:var(--bg);color:var(--muted);
   display:grid;place-items:center;flex:none;box-shadow:var(--bevel-inset)}
 .contactlink b{font-size:15px}
-.wordimg{display:block;width:200px;height:200px;max-width:70%;object-fit:cover;border-radius:20px;margin:0 auto 16px;box-shadow:var(--bevel-inset), 0 8px 20px rgba(70,45,40,.12);animation:riseIn .28s var(--ease) both}
+.wordimg{display:block;width:200px;height:200px;max-width:70%;object-fit:cover;border-radius:21%;margin:0 auto 16px;box-shadow:var(--bevel-inset), 0 8px 20px rgba(70,45,40,.12);animation:riseIn .28s var(--ease) both}
 .bodydiagram{width:150px;max-width:52%;margin:0 auto 16px;padding:12px;border-radius:20px;background:var(--card);box-shadow:var(--bevel-inset);animation:riseIn .28s var(--ease) both}
 .bodydiagram svg{width:100%;height:auto;display:block}
 .familytree{width:260px;max-width:80%;margin:0 auto 16px;padding:12px 14px;border-radius:20px;background:var(--card);box-shadow:var(--bevel-inset);animation:riseIn .28s var(--ease) both}
