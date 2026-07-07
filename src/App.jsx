@@ -6615,13 +6615,14 @@ function CourseApp({ user }) {
     const topic = TOPICS.find((t) => t.id === selTopic);
     const word = topic.words[practiceIdx];
     const isLast = practiceIdx + 1 >= topic.words.length;
-    // Speech recognition is unreliable on a lone word, so practice it inside a
-    // short carrier phrase ("aa ___ chhe" = "this is ___"). Words that are
-    // already phrases are spoken as-is. The phrase is what the learner says and
-    // what gets graded; they still hear the word itself via the play button.
-    const sayGu = _isSingleWord(word.gu) ? "આ " + word.gu + " છે" : word.gu;
-    const sayR = _isSingleWord(word.gu) ? "aa " + word.r + " chhe" : word.r;
-    const sayEn = _isSingleWord(word.gu) ? "This is " + word.en : word.en;
+    // Speech recognition loops/hallucinates on very short audio, so practice a
+    // lone word inside a carrier sentence ("mane ___ game chhe" = "I like ___").
+    // It is long enough for Whisper to lock on and stays grammatical for nouns,
+    // infinitive verbs, and adjectives. Words that are already phrases are spoken
+    // as-is. The learner still hears the word itself via the play button.
+    const sayGu = _isSingleWord(word.gu) ? "મને " + word.gu + " ગમે છે" : word.gu;
+    const sayR = _isSingleWord(word.gu) ? "mane " + word.r + " game chhe" : word.r;
+    const sayEn = _isSingleWord(word.gu) ? "I like " + word.en : word.en;
     return (
       <div className="dhatu">
         <style>{CSS}</style>
@@ -6641,7 +6642,7 @@ function CourseApp({ user }) {
             </div>
           )}
           <div className="playrow"><button className="playbtn" onClick={() => speakGu(word.gu, _voiceForId(topic.id))}><Ic.play /></button></div>
-          <SpeakCheck key={selTopic + "-" + practiceIdx} target={sayGu} />
+          <SpeakCheck key={selTopic + "-" + practiceIdx} target={sayGu} hint={sayGu} />
           <div style={{ height: 100 }} />
         </div>
         <div className="foot">
@@ -9949,6 +9950,57 @@ const API_BASE =
   window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()
     ? "https://dhatu.pages.dev" : "";
 
+// Convert the recorder's AAC audio to clean 16 kHz mono 16-bit WAV in the
+// WebView before sending. Whisper decodes WAV reliably but chokes on short AAC
+// clips (it loops/hallucinates, e.g. "આ આ આ આ"). Returns base64 WAV, or null on
+// failure so the caller can fall back to the original bytes.
+function _encodeWavBase64(samples, rate) {
+  const n = samples.length;
+  const buf = new ArrayBuffer(44 + n * 2);
+  const view = new DataView(buf);
+  const ws = (o, s) => { for (let i = 0; i < s.length; i++) view.setUint8(o + i, s.charCodeAt(i)); };
+  ws(0, "RIFF"); view.setUint32(4, 36 + n * 2, true); ws(8, "WAVE");
+  ws(12, "fmt "); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+  view.setUint32(24, rate, true); view.setUint32(28, rate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+  ws(36, "data"); view.setUint32(40, n * 2, true);
+  let o = 44;
+  for (let i = 0; i < n; i++) {
+    let s = Math.max(-1, Math.min(1, samples[i]));
+    view.setInt16(o, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+    o += 2;
+  }
+  const bytes = new Uint8Array(buf);
+  let bin = "";
+  const CH = 0x8000;
+  for (let i = 0; i < bytes.length; i += CH) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+  return btoa(bin);
+}
+async function _toWavBase64(b64) {
+  try {
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    const ctx = new AC();
+    const decoded = await ctx.decodeAudioData(bytes.buffer.slice(0));
+    if (ctx.close) ctx.close();
+    const rate = 16000;
+    const frames = Math.max(1, Math.ceil(decoded.duration * rate));
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!OAC) return null;
+    const off = new OAC(1, frames, rate);
+    const src = off.createBufferSource();
+    src.buffer = decoded;
+    src.connect(off.destination);
+    src.start(0);
+    const rendered = await off.startRendering();
+    return _encodeWavBase64(rendered.getChannelData(0), rate);
+  } catch (e) {
+    return null;
+  }
+}
+
 // Send recorded audio to the free Whisper transcription endpoint and return the
 // recognized text, or null if the cloud check is unavailable (offline, over the
 // free daily budget, or not deployed yet) so the caller can fall back.
@@ -9956,7 +10008,7 @@ const API_BASE =
 // otherwise text is null and reason says why, so the caller can tell a transient
 // miss ("no-speech") from the cloud being genuinely down ("network"/"config"),
 // and only fall back to the device recognizer for the latter.
-async function sttTranscribe(audioB64, mime) {
+async function sttTranscribe(audioB64, mime, hint) {
   if (!audioB64) return { text: null, reason: "empty" };
   let token = null;
   try { token = await getIdToken(); } catch (e) { token = null; }
@@ -9964,6 +10016,7 @@ async function sttTranscribe(audioB64, mime) {
   const headers = { "Content-Type": "application/json" };
   if (token) headers.Authorization = "Bearer " + token;
   const bodyObj = { audio: audioB64, mime: mime || "" };
+  if (hint) bodyObj.hint = hint; // biases Whisper toward the expected phrase (vocab)
   const isNative =
     typeof window !== "undefined" && window.Capacitor &&
     window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
@@ -10015,7 +10068,8 @@ function _micErrorMessage(err) {
   }
 }
 
-function useVoiceCheck(lang) {
+function useVoiceCheck(lang, opts) {
+  const hint = opts && opts.hint; // expected phrase, sent to bias Whisper (vocab)
   // Three engines, in order of preference:
   //   1. Cloud Whisper     - record audio, transcribe server-side. Uniform on
   //      every device; needs no on-device language model. (native)
@@ -10095,7 +10149,13 @@ function useVoiceCheck(lang) {
     setDbg((d) => d + " | mime:" + ((val && val.mimeType) || "?") + " ms:" + (ms == null ? "?" : ms) + " b64:" + (b64 ? b64.length : 0));
     if (!b64 || (ms != null && ms < 350)) { setErr("no-speech"); return; }
     setChecking(true);
-    const { text, reason } = await sttTranscribe(b64, val && val.mimeType);
+    // Prefer WAV (Whisper decodes it reliably); fall back to the raw AAC if the
+    // in-app conversion fails for any reason.
+    const wav = await _toWavBase64(b64);
+    setDbg((d) => d + (wav ? " | wav:" + wav.length : " | wav:fail"));
+    const { text, reason } = wav
+      ? await sttTranscribe(wav, "audio/wav", hint)
+      : await sttTranscribe(b64, val && val.mimeType, hint);
     setChecking(false);
     if (text) { setResult(_gradeSpeech(text, targetRef.current)); return; }
     setDbg((d) => d + " | stt-fail:" + (reason || "?"));
@@ -10193,8 +10253,8 @@ function useVoiceCheck(lang) {
   return { supported, listening, checking, result, err, engine, dbg, start, stop, reset };
 }
 
-function SpeakCheck({ target, onResult }) {
-  const vc = useVoiceCheck("gu-IN");
+function SpeakCheck({ target, onResult, hint }) {
+  const vc = useVoiceCheck("gu-IN", { hint });
   // Press-and-hold to record. Tap-to-toggle was racy: start() is async, so a
   // quick second tap fired before listening was true and started again instead
   // of stopping. Holding is unambiguous - press records, release checks.
