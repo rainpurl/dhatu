@@ -6626,8 +6626,6 @@ function CourseApp({ user }) {
     const sayGu = carrier ? carrier.gu : word.gu;
     const sayR = carrier ? carrier.r : word.r;
     const sayEn = carrier ? carrier.en : word.en;
-    // Bias Whisper toward the expected phrase only when we show a phrase.
-    const sayHint = _isSingleWord(sayGu) ? null : sayGu;
     return (
       <div className="dhatu">
         <style>{CSS}</style>
@@ -6647,7 +6645,7 @@ function CourseApp({ user }) {
             </div>
           )}
           <div className="playrow"><button className="playbtn" onClick={() => speakGu(word.gu, _voiceForId(topic.id))}><Ic.play /></button></div>
-          <SpeakCheck key={selTopic + "-" + practiceIdx} target={sayGu} hint={sayHint} />
+          <SpeakCheck key={selTopic + "-" + practiceIdx} target={sayGu} />
           <div style={{ height: 100 }} />
         </div>
         <div className="foot">
@@ -10130,8 +10128,6 @@ function useVoiceCheck(lang, opts) {
   const [checking, setChecking] = useState(false);
   const [result, setResult] = useState(null);
   const [err, setErr] = useState(null);
-  const [engine, setEngine] = useState(null); // which engine last ran (diagnostic)
-  const [dbg, setDbg] = useState("");   // TEST-ONLY diagnostic string
   const recRef = useRef(null);          // web SpeechRecognition instance
   const srRef = useRef(null);           // native OS recognizer plugin
   const vrRef = useRef(null);           // native audio recorder plugin
@@ -10143,11 +10139,11 @@ function useVoiceCheck(lang, opts) {
     let cancelled = false;
     if (isNative) {
       import("capacitor-voice-recorder")
-        .then((m) => { if (!cancelled) { vrRef.current = m.VoiceRecorder; setDbg((d) => d + " vr:ok"); } })
-        .catch((e) => { if (!cancelled) setDbg((d) => d + " vr:import-fail"); });
+        .then((m) => { if (!cancelled) vrRef.current = m.VoiceRecorder; })
+        .catch(() => {});
       import("@capacitor-community/speech-recognition")
-        .then((m) => { if (!cancelled) { srRef.current = m.SpeechRecognition; setDbg((d) => d + " sr:ok"); } })
-        .catch((e) => { if (!cancelled) setDbg((d) => d + " sr:import-fail"); });
+        .then((m) => { if (!cancelled) srRef.current = m.SpeechRecognition; })
+        .catch(() => {});
     }
     return () => {
       cancelled = true;
@@ -10161,24 +10157,21 @@ function useVoiceCheck(lang, opts) {
   // ---- cloud: record now, transcribe on stop ----
   async function startCloud() {
     const VR = vrRef.current;
-    if (!VR) { setDbg((d) => d + " | vr:null"); return false; }
+    if (!VR) return false;
     try {
       let has = await VR.hasAudioRecordingPermission().catch((e) => ({ value: false, _e: e }));
       if (!has || !has.value) {
         const req = await VR.requestAudioRecordingPermission().catch((e) => ({ value: false, _e: e }));
-        if (!req || !req.value) { setDbg((d) => d + " | perm:no"); setErr("not-allowed"); return true; }
+        if (!req || !req.value) { setErr("not-allowed"); return true; }
       }
       let s;
-      try { s = await VR.startRecording(); }
-      catch (e) { setDbg((d) => d + " | startRec-throw:" + (e && (e.message || e.code || String(e))).slice(0, 60)); return false; }
-      if (!s || s.value !== true) { setDbg((d) => d + " | startRec-no:" + JSON.stringify(s).slice(0, 60)); return false; }
+      try { s = await VR.startRecording(); } catch (e) { return false; }
+      if (!s || s.value !== true) return false;
       engineRef.current = "cloud";
-      setEngine("cloud");
       setListening(true);
       timerRef.current = setTimeout(() => { stop(); }, 10000); // safety auto-stop
       return true;
     } catch (e) {
-      setDbg((d) => d + " | cloud-throw:" + (e && (e.message || String(e))).slice(0, 60));
       return false;
     }
   }
@@ -10192,19 +10185,16 @@ function useVoiceCheck(lang, opts) {
     const val = rec && rec.value;
     const b64 = val && val.recordDataBase64;
     const ms = val && typeof val.msDuration === "number" ? val.msDuration : null;
-    setDbg((d) => d + " | mime:" + ((val && val.mimeType) || "?") + " ms:" + (ms == null ? "?" : ms) + " b64:" + (b64 ? b64.length : 0));
     if (!b64 || (ms != null && ms < 350)) { setErr("no-speech"); return; }
     setChecking(true);
     // Prefer WAV (Whisper decodes it reliably); fall back to the raw AAC if the
     // in-app conversion fails for any reason.
     const wav = await _toWavBase64(b64);
-    setDbg((d) => d + (wav ? " | wav:" + wav.length : " | wav:fail"));
     const { text, reason } = wav
       ? await sttTranscribe(wav, "audio/wav", hint)
       : await sttTranscribe(b64, val && val.mimeType, hint);
     setChecking(false);
     if (text) { setResult(_gradeSpeech(text, targetRef.current)); return; }
-    setDbg((d) => d + " | stt-fail:" + (reason || "?"));
     // Do not permanently switch engines on a single failure; let the user retry.
     setErr(reason === "no-speech" || reason === "empty" || reason === "notext" ? "no-speech" : "cloud-retry");
   }
@@ -10228,7 +10218,6 @@ function useVoiceCheck(lang, opts) {
         if (data && data.status === "stopped") setListening(false);
       });
       engineRef.current = "device";
-      setEngine("device");
       setListening(true);
       const res = await SR.start({ language: lang || "gu-IN", maxResults: 3, partialResults: true, popup: false });
       if (res && res.matches && res.matches[0]) setResult(_gradeSpeech(res.matches[0], targetRef.current));
@@ -10249,7 +10238,6 @@ function useVoiceCheck(lang, opts) {
       rec.maxAlternatives = 1;
       recRef.current = rec;
       engineRef.current = "web";
-      setEngine("web");
       rec.onresult = (e) => {
         const heard = e.results && e.results[0] && e.results[0][0] ? e.results[0][0].transcript : "";
         setResult(_gradeSpeech(heard, targetRef.current));
@@ -10296,7 +10284,7 @@ function useVoiceCheck(lang, opts) {
     setResult(null);
     setErr(null);
   }
-  return { supported, listening, checking, result, err, engine, dbg, start, stop, reset };
+  return { supported, listening, checking, result, err, start, stop, reset };
 }
 
 function SpeakCheck({ target, onResult, hint }) {
@@ -10381,10 +10369,6 @@ function SpeakCheck({ target, onResult, hint }) {
         <Ic.mic />
       </button>
       <div className="speakcheck-label">{vc.checking ? "Checking..." : vc.listening ? "Listening... release to check" : "Hold and speak"}</div>
-      {/* TEST-ONLY diagnostic: shows which engine ran + why. Remove before committing. */}
-      <div style={{ fontSize: 10, opacity: 0.55, marginTop: 2, wordBreak: "break-all", maxWidth: 320 }}>
-        engine: {vc.engine || "-"}{vc.err ? " / " + vc.err : ""}{vc.dbg ? " |" + vc.dbg.slice(-140) : ""}
-      </div>
       {vc.err && <div className={"speakcheck-msg " + (_MIC_UNAVAILABLE.has(vc.err) ? "info" : "bad")}>{_micErrorMessage(vc.err)}</div>}
       {vc.err && vc.err !== "no-speech" && vc.err !== "aborted" && (
         <button className="btn sm" onClick={() => onResult && onResult({ verdict: "skip", score: 0, heard: "" })}>
