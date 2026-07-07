@@ -6615,6 +6615,13 @@ function CourseApp({ user }) {
     const topic = TOPICS.find((t) => t.id === selTopic);
     const word = topic.words[practiceIdx];
     const isLast = practiceIdx + 1 >= topic.words.length;
+    // Speech recognition is unreliable on a lone word, so practice it inside a
+    // short carrier phrase ("aa ___ chhe" = "this is ___"). Words that are
+    // already phrases are spoken as-is. The phrase is what the learner says and
+    // what gets graded; they still hear the word itself via the play button.
+    const sayGu = _isSingleWord(word.gu) ? "આ " + word.gu + " છે" : word.gu;
+    const sayR = _isSingleWord(word.gu) ? "aa " + word.r + " chhe" : word.r;
+    const sayEn = _isSingleWord(word.gu) ? "This is " + word.en : word.en;
     return (
       <div className="dhatu">
         <style>{CSS}</style>
@@ -6624,12 +6631,17 @@ function CourseApp({ user }) {
             <div className="bar"><i style={{ width: `${(practiceIdx / topic.words.length) * 100}%` }} /></div>
             <div className="chip gold">{practiceIdx + 1}/{topic.words.length}</div>
           </div>
-          <div className="q-title" style={{ textAlign: "center" }}>Say this word</div>
-          <div className="bigword gu">{word.gu}</div>
-          <div className="romanline">{word.r}</div>
-          <div style={{ textAlign: "center", fontWeight: 600, marginTop: 6 }}>{word.en}</div>
+          <div className="q-title" style={{ textAlign: "center" }}>Say this out loud</div>
+          <div className="bigword gu">{sayGu}</div>
+          <div className="romanline">{sayR}</div>
+          <div style={{ textAlign: "center", fontWeight: 600, marginTop: 6 }}>{sayEn}</div>
+          {sayGu !== word.gu && (
+            <div style={{ textAlign: "center", fontSize: 13, color: "var(--muted)", marginTop: 4 }}>
+              practicing <span className="gu">{word.gu}</span> ({word.en})
+            </div>
+          )}
           <div className="playrow"><button className="playbtn" onClick={() => speakGu(word.gu, _voiceForId(topic.id))}><Ic.play /></button></div>
-          <SpeakCheck key={selTopic + "-" + practiceIdx} target={word.gu} />
+          <SpeakCheck key={selTopic + "-" + practiceIdx} target={sayGu} />
           <div style={{ height: 100 }} />
         </div>
         <div className="foot">
@@ -9922,6 +9934,12 @@ function _gradeSpeech(heard, target) {
   const verdict = score >= 0.72 ? "good" : score >= 0.42 ? "close" : "retry";
   return { heard, score, verdict };
 }
+// A single word has no internal spaces/commas. Speech recognition is unreliable
+// on isolated words (Whisper has no sentence context), so the UI skips it for
+// these and only offers it for phrases and sentences.
+function _isSingleWord(s) {
+  return !/[\s,،]/.test(String(s || "").trim());
+}
 
 // Base URL for the app's own API (Cloudflare Pages Functions). On the web this
 // is same-origin (""); inside the native app the WebView origin is localhost, so
@@ -9934,26 +9952,50 @@ const API_BASE =
 // Send recorded audio to the free Whisper transcription endpoint and return the
 // recognized text, or null if the cloud check is unavailable (offline, over the
 // free daily budget, or not deployed yet) so the caller can fall back.
+// Returns { text, reason }. text is the transcript on success (reason null);
+// otherwise text is null and reason says why, so the caller can tell a transient
+// miss ("no-speech") from the cloud being genuinely down ("network"/"config"),
+// and only fall back to the device recognizer for the latter.
 async function sttTranscribe(audioB64, mime) {
-  if (!audioB64) return null;
+  if (!audioB64) return { text: null, reason: "empty" };
   let token = null;
   try { token = await getIdToken(); } catch (e) { token = null; }
+  const url = API_BASE + "/api/transcribe";
+  const headers = { "Content-Type": "application/json" };
+  if (token) headers.Authorization = "Bearer " + token;
+  const bodyObj = { audio: audioB64, mime: mime || "" };
+  const isNative =
+    typeof window !== "undefined" && window.Capacitor &&
+    window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
   try {
-    const headers = { "Content-Type": "application/json" };
-    if (token) headers.Authorization = "Bearer " + token;
-    const res = await fetch(API_BASE + "/api/transcribe", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ audio: audioB64, mime: mime || "" }),
-    });
-    if (!res.ok) return null;
-    const data = await res.json().catch(() => null);
-    if (!data || data.fallback || typeof data.text !== "string") return null;
-    return data.text.trim();
+    let status, data;
+    if (isNative) {
+      // Native HTTP: bypasses the WebView's cross-origin CORS entirely (the app
+      // origin is localhost, the endpoint is dhatu.pages.dev). Only this one call
+      // uses it, so Firestore/audio/browser fetch are untouched.
+      const { CapacitorHttp } = await import("@capacitor/core");
+      const res = await CapacitorHttp.post({ url, headers, data: bodyObj });
+      status = res.status;
+      data = res.data;
+      if (typeof data === "string") { try { data = JSON.parse(data); } catch (e) { data = null; } }
+    } else {
+      const res = await fetch(url, { method: "POST", headers, body: JSON.stringify(bodyObj) });
+      status = res.status;
+      data = await res.json().catch(() => null);
+    }
+    if (status < 200 || status >= 300) return { text: null, reason: status === 401 ? "signin" : "http" + status };
+    if (!data) return { text: null, reason: "badjson" };
+    if (data.fallback) return { text: null, reason: data.reason || "fallback" };
+    if (typeof data.text !== "string") return { text: null, reason: "notext" };
+    return { text: data.text.trim(), reason: null };
   } catch (e) {
-    return null;
+    return { text: null, reason: "net:" + ((e && (e.message || e.code)) || "?").toString().slice(0, 40) };
   }
 }
+// Reasons that mean the cloud is genuinely unreachable/unconfigured (persistent),
+// so switching to the device recognizer for the session is warranted. A plain
+// "no-speech" or transient model error is NOT here: keep using the cloud.
+const _STT_CLOUD_DOWN = new Set(["network", "http", "signin", "badjson", "not-configured"]);
 
 // Errors that mean automatic checking simply is not available here (as opposed
 // to something the learner can retry). We present these calmly, not as a failure.
@@ -9988,11 +10030,12 @@ function useVoiceCheck(lang) {
   const [checking, setChecking] = useState(false);
   const [result, setResult] = useState(null);
   const [err, setErr] = useState(null);
+  const [engine, setEngine] = useState(null); // which engine last ran (diagnostic)
+  const [dbg, setDbg] = useState("");   // TEST-ONLY diagnostic string
   const recRef = useRef(null);          // web SpeechRecognition instance
   const srRef = useRef(null);           // native OS recognizer plugin
   const vrRef = useRef(null);           // native audio recorder plugin
   const engineRef = useRef(null);       // 'cloud' | 'device' | 'web'
-  const cloudBrokenRef = useRef(false); // once the cloud fails, prefer the device
   const timerRef = useRef(null);
   const targetRef = useRef("");
 
@@ -10000,11 +10043,11 @@ function useVoiceCheck(lang) {
     let cancelled = false;
     if (isNative) {
       import("capacitor-voice-recorder")
-        .then((m) => { if (!cancelled) vrRef.current = m.VoiceRecorder; })
-        .catch(() => {});
+        .then((m) => { if (!cancelled) { vrRef.current = m.VoiceRecorder; setDbg((d) => d + " vr:ok"); } })
+        .catch((e) => { if (!cancelled) setDbg((d) => d + " vr:import-fail"); });
       import("@capacitor-community/speech-recognition")
-        .then((m) => { if (!cancelled) srRef.current = m.SpeechRecognition; })
-        .catch(() => {});
+        .then((m) => { if (!cancelled) { srRef.current = m.SpeechRecognition; setDbg((d) => d + " sr:ok"); } })
+        .catch((e) => { if (!cancelled) setDbg((d) => d + " sr:import-fail"); });
     }
     return () => {
       cancelled = true;
@@ -10018,43 +10061,46 @@ function useVoiceCheck(lang) {
   // ---- cloud: record now, transcribe on stop ----
   async function startCloud() {
     const VR = vrRef.current;
-    if (!VR) return false;
+    if (!VR) { setDbg((d) => d + " | vr:null"); return false; }
     try {
-      let has = await VR.hasAudioRecordingPermission().catch(() => ({ value: false }));
+      let has = await VR.hasAudioRecordingPermission().catch((e) => ({ value: false, _e: e }));
       if (!has || !has.value) {
-        const req = await VR.requestAudioRecordingPermission().catch(() => ({ value: false }));
-        if (!req || !req.value) { setErr("not-allowed"); return true; } // handled; do not fall through
+        const req = await VR.requestAudioRecordingPermission().catch((e) => ({ value: false, _e: e }));
+        if (!req || !req.value) { setDbg((d) => d + " | perm:no"); setErr("not-allowed"); return true; }
       }
-      const s = await VR.startRecording();
-      if (!s || s.value !== true) return false;
+      let s;
+      try { s = await VR.startRecording(); }
+      catch (e) { setDbg((d) => d + " | startRec-throw:" + (e && (e.message || e.code || String(e))).slice(0, 60)); return false; }
+      if (!s || s.value !== true) { setDbg((d) => d + " | startRec-no:" + JSON.stringify(s).slice(0, 60)); return false; }
       engineRef.current = "cloud";
+      setEngine("cloud");
       setListening(true);
-      timerRef.current = setTimeout(() => { stop(); }, 8000); // safety auto-stop
+      timerRef.current = setTimeout(() => { stop(); }, 10000); // safety auto-stop
       return true;
     } catch (e) {
+      setDbg((d) => d + " | cloud-throw:" + (e && (e.message || String(e))).slice(0, 60));
       return false;
     }
   }
 
   async function finishCloud() {
     const VR = vrRef.current;
+    engineRef.current = null; // claim it so the safety timer + release can't both finish
     setListening(false);
     let rec = null;
     try { rec = await VR.stopRecording(); } catch (e) { rec = null; }
     const val = rec && rec.value;
     const b64 = val && val.recordDataBase64;
     const ms = val && typeof val.msDuration === "number" ? val.msDuration : null;
+    setDbg((d) => d + " | mime:" + ((val && val.mimeType) || "?") + " ms:" + (ms == null ? "?" : ms) + " b64:" + (b64 ? b64.length : 0));
     if (!b64 || (ms != null && ms < 350)) { setErr("no-speech"); return; }
     setChecking(true);
-    const text = await sttTranscribe(b64, val && val.mimeType);
+    const { text, reason } = await sttTranscribe(b64, val && val.mimeType);
     setChecking(false);
-    if (text === null) {
-      // Cloud unavailable: prefer the device recognizer for the rest of the session.
-      cloudBrokenRef.current = true;
-      setErr(srRef.current ? "cloud-retry" : "network");
-      return;
-    }
-    setResult(_gradeSpeech(text, targetRef.current));
+    if (text) { setResult(_gradeSpeech(text, targetRef.current)); return; }
+    setDbg((d) => d + " | stt-fail:" + (reason || "?"));
+    // Do not permanently switch engines on a single failure; let the user retry.
+    setErr(reason === "no-speech" || reason === "empty" || reason === "notext" ? "no-speech" : "cloud-retry");
   }
 
   // ---- device OS recognizer ----
@@ -10076,6 +10122,7 @@ function useVoiceCheck(lang) {
         if (data && data.status === "stopped") setListening(false);
       });
       engineRef.current = "device";
+      setEngine("device");
       setListening(true);
       const res = await SR.start({ language: lang || "gu-IN", maxResults: 3, partialResults: true, popup: false });
       if (res && res.matches && res.matches[0]) setResult(_gradeSpeech(res.matches[0], targetRef.current));
@@ -10096,6 +10143,7 @@ function useVoiceCheck(lang) {
       rec.maxAlternatives = 1;
       recRef.current = rec;
       engineRef.current = "web";
+      setEngine("web");
       rec.onresult = (e) => {
         const heard = e.results && e.results[0] && e.results[0][0] ? e.results[0][0].transcript : "";
         setResult(_gradeSpeech(heard, targetRef.current));
@@ -10115,8 +10163,10 @@ function useVoiceCheck(lang) {
     setErr(null);
     setResult(null);
     if (!isNative) { startWeb(); return; }
+    // Online: always use the cloud recorder (uniform recognition). Only use the
+    // device recognizer when genuinely offline or the recorder is unavailable.
     const online = typeof navigator === "undefined" || navigator.onLine !== false;
-    if (online && vrRef.current && !cloudBrokenRef.current) {
+    if (online && vrRef.current) {
       const handled = await startCloud();
       if (handled) return;
     }
@@ -10140,16 +10190,65 @@ function useVoiceCheck(lang) {
     setResult(null);
     setErr(null);
   }
-  return { supported, listening, checking, result, err, start, stop, reset };
+  return { supported, listening, checking, result, err, engine, dbg, start, stop, reset };
 }
 
 function SpeakCheck({ target, onResult }) {
   const vc = useVoiceCheck("gu-IN");
+  // Press-and-hold to record. Tap-to-toggle was racy: start() is async, so a
+  // quick second tap fired before listening was true and started again instead
+  // of stopping. Holding is unambiguous - press records, release checks.
+  const hold = useRef({ starting: false, active: false, stopWanted: false });
 
   useEffect(() => {
     if (vc.result && onResult) onResult(vc.result);
     // eslint-disable-next-line
   }, [vc.result]);
+
+  const beginHold = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const h = hold.current;
+    // Only block while a start is genuinely in flight. Do NOT block on h.active:
+    // if a prior release event was missed, h.active could be stuck and would
+    // permanently dead-lock the button.
+    if (h.starting || vc.checking) return;
+    if (e && e.currentTarget && e.pointerId != null) {
+      try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+    }
+    h.starting = true;
+    h.stopWanted = false;
+    try {
+      vc.reset();
+      // Race against a timeout: if a native call ever hangs, the button still frees.
+      await Promise.race([vc.start(target), new Promise((r) => setTimeout(r, 5000))]);
+    } finally {
+      // Always clear starting, even if start() rejected, so the button can never wedge.
+      h.starting = false;
+    }
+    h.active = true;
+    if (h.stopWanted) { h.active = false; vc.stop(); } // released before start finished
+  };
+  const endHold = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const h = hold.current;
+    if (h.starting) { h.stopWanted = true; return; }
+    if (h.active) { h.active = false; vc.stop(); }
+  };
+
+  // Speech recognition is only offered for phrases and sentences. For a single
+  // word it is unreliable, so we skip it: where progression depends on it (lesson
+  // speak cards pass onResult) we show a self-confirm button; elsewhere (vocab
+  // practice) we show nothing and let the learner just listen and repeat.
+  if (_isSingleWord(target)) {
+    if (!onResult) return null;
+    return (
+      <div className="speakcheck">
+        <button className="btn ghost sm" onClick={() => onResult({ verdict: "skip", score: 0, heard: "" })}>
+          I said it out loud
+        </button>
+      </div>
+    );
+  }
 
   if (!vc.supported) {
     return (
@@ -10167,15 +10266,19 @@ function SpeakCheck({ target, onResult }) {
       <button
         className={"micbtn" + (vc.listening ? " on" : "")}
         disabled={vc.checking}
-        onClick={() => {
-          if (vc.checking) return;
-          if (vc.listening) { vc.stop(); }
-          else { vc.reset(); vc.start(target); }
-        }}
+        style={{ touchAction: "none", userSelect: "none", WebkitUserSelect: "none" }}
+        onPointerDown={beginHold}
+        onPointerUp={endHold}
+        onPointerCancel={endHold}
+        onContextMenu={(e) => e.preventDefault()}
       >
         <Ic.mic />
       </button>
-      <div className="speakcheck-label">{vc.checking ? "Checking..." : vc.listening ? "Listening... tap when done" : "Tap and say it"}</div>
+      <div className="speakcheck-label">{vc.checking ? "Checking..." : vc.listening ? "Listening... release to check" : "Hold and speak"}</div>
+      {/* TEST-ONLY diagnostic: shows which engine ran + why. Remove before committing. */}
+      <div style={{ fontSize: 10, opacity: 0.55, marginTop: 2, wordBreak: "break-all", maxWidth: 320 }}>
+        engine: {vc.engine || "-"}{vc.err ? " / " + vc.err : ""}{vc.dbg ? " |" + vc.dbg.slice(-140) : ""}
+      </div>
       {vc.err && <div className={"speakcheck-msg " + (_MIC_UNAVAILABLE.has(vc.err) ? "info" : "bad")}>{_micErrorMessage(vc.err)}</div>}
       {vc.err && vc.err !== "no-speech" && vc.err !== "aborted" && (
         <button className="btn sm" onClick={() => onResult && onResult({ verdict: "skip", score: 0, heard: "" })}>
