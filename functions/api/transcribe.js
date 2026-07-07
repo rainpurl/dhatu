@@ -34,7 +34,8 @@ const CORS = {
   "access-control-max-age": "86400",
 };
 function jsonResponse(obj, status = 200) {
-  return new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json", ...CORS } });
+  // Explicit UTF-8 so the native HTTP client does not mangle Gujarati text.
+  return new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json; charset=utf-8", ...CORS } });
 }
 const fallback = (reason, status = 200) => jsonResponse({ fallback: true, reason }, status);
 
@@ -81,7 +82,9 @@ export async function onRequestPost(context) {
     // ---- transcribe ----
     let text = "";
     try {
-      const r = await env.AI.run(MODEL, { audio, language: LANG, task: "transcribe" });
+      // vad_filter strips silence around the utterance, which sharply reduces
+      // Whisper's tendency to hallucinate words on short/near-silent clips.
+      const r = await env.AI.run(MODEL, { audio, language: LANG, task: "transcribe", vad_filter: true });
       text = (r && (typeof r.text === "string" ? r.text : r.response)) || "";
     } catch (e) {
       return fallback("model-error");
