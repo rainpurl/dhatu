@@ -5799,6 +5799,77 @@ function CourseApp({ user }) {
     setScreen("learn");
   }
 
+  // Unified in-app "back": unwind one navigation level instead of leaving the
+  // app. Mirrors what each screen's on-screen back/close button does. Returns
+  // true if it handled the press, false when already at the root (Learn home or
+  // onboarding) so the caller can let the OS exit the app / leave the page.
+  function goBack() {
+    // 1. Detail views layered on top of a tab screen -> close the detail first.
+    if (screen === "history" && selEra) { setSelEra(null); stopSpeak(); setErAudioLang(null); return true; }
+    if (screen === "history" && selCat) { setSelCat(null); return true; }
+    if (screen === "talk" && selConvo) { setSelConvo(null); setConvoStep(0); stopSpeak(); return true; }
+    if (screen === "vocab" && selTopic) { setSelTopic(null); return true; }
+
+    // 2. Sub-screens -> their parent screen.
+    switch (screen) {
+      case "lesson": exitLesson(); return true;
+      case "exam": stopSpeak(); setActiveExam(null); setScreen("learn"); return true;
+      case "complete": setScreen("learn"); setTab("learn"); return true;
+      case "vocabPractice": stopSpeak(); setPracticeIdx(0); setScreen("vocab"); return true;
+      case "scriptLearn": stopSpeak(); setScreen("scriptLessons"); return true;
+      case "scriptLessons": setScreen("script"); return true;
+      case "grammar": setScreen("learn"); return true;
+      case "talk": setScreen("learn"); return true;
+      default: break;
+    }
+
+    // 3. A secondary tab -> back to the Learn home tab.
+    if (["script", "review", "vocab", "history", "profile"].includes(screen)) {
+      setTab("learn"); setScreen("learn"); return true;
+    }
+
+    // 4. Learn home / onboarding: nothing to unwind.
+    return false;
+  }
+  // Keep a live handle so the once-registered listeners always call the current
+  // closure (fresh screen/selection state), without re-registering each render.
+  const goBackRef = useRef(goBack);
+  goBackRef.current = goBack;
+
+  // Wire the Android hardware back button (native) and the browser Back arrow
+  // (web/PWA) to goBack so they navigate within the app rather than exiting it.
+  useEffect(() => {
+    const isNative =
+      typeof window !== "undefined" && window.Capacitor &&
+      window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+
+    if (isNative) {
+      let handle = null;
+      import("@capacitor/app")
+        .then(({ App }) =>
+          App.addListener("backButton", () => {
+            const handled = goBackRef.current && goBackRef.current();
+            if (!handled) App.exitApp();
+          })
+        )
+        .then((h) => { handle = h; })
+        .catch(() => {});
+      return () => { if (handle && handle.remove) handle.remove(); };
+    }
+
+    // Seed one history entry so the first Back fires popstate (keeping us in the
+    // SPA) instead of navigating away; re-seed after each handled Back so the
+    // next press is caught too. An unhandled Back at the root is left to the
+    // browser (leaves the app).
+    try { window.history.pushState({ dhatu: true }, ""); } catch (e) {}
+    const onPop = () => {
+      const handled = goBackRef.current && goBackRef.current();
+      if (handled) { try { window.history.pushState({ dhatu: true }, ""); } catch (e) {} }
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
   // Update the day streak and this-week activity when the learner is active.
   function recordActivity() {
     const now = new Date();
