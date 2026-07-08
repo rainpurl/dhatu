@@ -6338,6 +6338,7 @@ function CourseApp({ user }) {
     return <LessonRunner
       key={activeLesson + "-" + exIdx}
       lesson={lesson}
+      lessonId={activeLesson}
       ex={ex}
       exIdx={exIdx}
       total={list.length}
@@ -7644,11 +7645,11 @@ function ExamRunner({ exam, onFinish, onExit }) {
 
 /* ============================ LESSON RUNNER ============================ */
 function _unitOf(id) { const m = /^u(\d+)/.exec(String(id || "")); return m ? parseInt(m[1], 10) : 1; }
-function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback, setFeedback, onCorrect, onWrong, onNext, onExit, onSnooze }) {
+function LessonRunner({ lesson, lessonId, ex, exIdx, total, progress, readWrite, feedback, setFeedback, onCorrect, onWrong, onNext, onExit, onSnooze }) {
   // After Unit 1, hide the romanization under the Gujarati in read-and-write mode
   // to reduce clutter and build reading comprehension. Speak-only mode always
   // keeps roman (those learners never see the script).
-  const showRoman = !readWrite || _unitOf(lesson && lesson.id) <= 1;
+  const showRoman = !readWrite || _unitOf(lessonId) <= 1;
   const [picked, setPicked] = useState(null);
   const [matchLeft, setMatchLeft] = useState(null);
   const [matchDone, setMatchDone] = useState([]);
@@ -7679,7 +7680,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
   // stays consistent across this lesson's exercises (the component remounts per
   // exercise) while varying from lesson to lesson. Shadowing speak routes every
   // in-lesson utterance through that voice.
-  const lessonVoice = React.useMemo(() => _voiceForId(lesson && lesson.id), [lesson && lesson.id]);
+  const lessonVoice = React.useMemo(() => _voiceForId(lessonId), [lessonId]);
   const speak = (t) => speakGu(t, lessonVoice);
 
   // Auto-play the audio for listening questions as soon as they appear (this
@@ -7979,7 +7980,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
             {ex.hint && <div className="typehint">{ex.hint}</div>}
             <input className="typein gu" value={typed} disabled={!!feedback} onChange={(e) => setTyped(e.target.value)} placeholder="…" spellCheck={false} autoComplete="off" />
             {!feedback && <GuKeyboard onInsert={kbInsert} onBackspace={kbBackspace} />}
-            {feedback && <AIFeedback text={typed} en={ex.en} promptId={(lesson && lesson.id ? lesson.id : "") + ":" + exIdx} level={_ilrForLesson(lesson && lesson.id)} modelAnswer={ex.answer} modelRoman={ex.roman} />}
+            {feedback && <AIFeedback text={typed} en={ex.en} promptId={(lessonId || "") + ":" + exIdx} level={_ilrForLesson(lessonId)} modelAnswer={ex.answer} modelRoman={ex.roman} />}
           </>
         )}
 
