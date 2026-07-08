@@ -33,6 +33,39 @@ Android SDK) and, to publish, a **Google Play Console** account (one-time $25).
 
 ---
 
+## Release build config (already applied in the local `android/`, git-ignored)
+
+The `android/` folder is git-ignored, so if it is ever regenerated (`npx cap add
+android`) these manual steps must be re-applied. They are what makes a working
+signed release build:
+
+1. **`android/app/google-services.json`** — downloaded from the Firebase Android
+   app (package `app.dhatu.learning`). Required; Firebase can't init without it.
+2. **play-services-auth** — add to `android/app/build.gradle` `dependencies {}`:
+   `implementation "com.google.android.gms:play-services-auth:20.7.0"`.
+   REQUIRED: the Firebase-auth Google provider needs `GoogleSignIn`; without it
+   the app crashes on launch with `NoClassDefFoundError`.
+3. **server_client_id** — in `android/app/src/main/res/values/strings.xml`:
+   `<string name="server_client_id">…apps.googleusercontent.com</string>`
+   (the OAuth **web** client id from `google-services.json`), for Google sign-in.
+4. **Signing** — `android/keystore.properties` (git-ignored) holds `storeFile`,
+   `keyAlias`, `storePassword`, `keyPassword`; `android/app/build.gradle` has a
+   `signingConfigs.release` reading it and `buildTypes.release` using it. The
+   keystore itself is `~/dhatu-release.keystore` (SHA-1 `12:DF:6D:…`) — back it up.
+5. **Launcher icons** — source in `assets/icon-foreground.png`,
+   `icon-background.png`, `icon-only.png`; regenerate with
+   `npx @capacitor/assets generate --android`.
+
+Build the signed artifacts:
+```
+npm run build && npx cap copy android
+cd android && ./gradlew bundleRelease assembleRelease
+```
+Outputs: `android/app/build/outputs/bundle/release/app-release.aab` (upload to
+Play) and `.../apk/release/app-release.apk` (sideload test).
+
+---
+
 ## One-time setup
 
 1. **Install dependencies** (pulls the Capacitor packages now in package.json):
