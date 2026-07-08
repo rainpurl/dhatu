@@ -55,6 +55,14 @@ signed release build:
 5. **Launcher icons** - source in `assets/icon-foreground.png`,
    `icon-background.png`, `icon-only.png`; regenerate with
    `npx @capacitor/assets generate --android`.
+6. **Target API 35 (Play requirement).** Play rejects targetSdk < 35. In
+   `android/variables.gradle` set `compileSdkVersion = 35` and
+   `targetSdkVersion = 35`. compileSdk 35 needs a newer toolchain than Capacitor
+   6's default, so also bump: `android/build.gradle` classpath
+   `com.android.tools.build:gradle:8.7.2` (was 8.2.1), and
+   `android/gradle/wrapper/gradle-wrapper.properties` `gradle-8.9-all.zip`
+   (was 8.2.1). Requires SDK `platforms;android-35` + `build-tools;35.0.0`
+   installed via `sdkmanager`. Builds clean with JDK 17.
 
 Build the signed artifacts:
 ```
