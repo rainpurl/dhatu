@@ -7643,7 +7643,12 @@ function ExamRunner({ exam, onFinish, onExit }) {
 }
 
 /* ============================ LESSON RUNNER ============================ */
+function _unitOf(id) { const m = /^u(\d+)/.exec(String(id || "")); return m ? parseInt(m[1], 10) : 1; }
 function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback, setFeedback, onCorrect, onWrong, onNext, onExit, onSnooze }) {
+  // After Unit 1, hide the romanization under the Gujarati in read-and-write mode
+  // to reduce clutter and build reading comprehension. Speak-only mode always
+  // keeps roman (those learners never see the script).
+  const showRoman = !readWrite || _unitOf(lesson && lesson.id) <= 1;
   const [picked, setPicked] = useState(null);
   const [matchLeft, setMatchLeft] = useState(null);
   const [matchDone, setMatchDone] = useState([]);
@@ -7783,7 +7788,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
             {readWrite ? (
               <>
                 <div className="bigword gu">{ex.gu}</div>
-                <div className="romanline">{ex.roman}</div>
+                {showRoman && <div className="romanline">{ex.roman}</div>}
               </>
             ) : (
               <div className="bigword" style={{ fontSize: 32 }}>{ex.roman}</div>
@@ -7803,7 +7808,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
                 <button key={i} className={"gopt" + (picked === o.roman ? " sel" : "") + (feedback && o.roman === ex.answer ? " good" : "") + (feedback === "bad" && picked === o.roman ? " bad" : "")}
                   onClick={() => { speak(o.gu); if (!feedback) setPicked(o.roman); }}>
                   <div className="gu">{o.gu}</div>
-                  <small>{o.roman}</small>
+                  {showRoman && <small>{o.roman}</small>}
                 </button>
               ))}
             </div>
@@ -8029,7 +8034,7 @@ function LessonRunner({ lesson, ex, exIdx, total, progress, readWrite, feedback,
             {readWrite ? (
               <>
                 <div className="bigword gu">{ex.gu}</div>
-                <div className="romanline">{ex.roman}</div>
+                {showRoman && <div className="romanline">{ex.roman}</div>}
               </>
             ) : (
               <div className="bigword" style={{ fontSize: 30 }}>{ex.roman}</div>
