@@ -50,10 +50,18 @@
           ("Kaudi"), words saved for review, and similar in-app activity.</li>
           <li><b>Social connections</b> you create in the app: people you follow
           and "pokes" you send or receive.</li>
+          <li><b>Short voice recordings for pronunciation practice (optional):</b>
+          when you choose to practice speaking, the app records a brief audio clip
+          while you hold the microphone button. To score your pronunciation, that
+          clip may be sent to a speech-to-text service that converts it to text.
+          The clip is processed to produce the transcript and is not stored by us
+          after that; it is used only to give you feedback, never for advertising.
+          If speech recognition is unavailable, the app instead asks you to confirm
+          you said the phrase, and no audio leaves your device.</li>
         </ul>
-        <p>We do not collect your location, contacts, photos, microphone, or any
-        sensitive personal data. Pronunciation practice happens on your device and
-        is not recorded or uploaded.</p>
+        <p>We do not collect your location, contacts, or photos, and we do not
+        record audio except during pronunciation practice as described above. We do
+        not collect any other sensitive personal data.</p>
 
         <h2>How we use it</h2>
         <ul>
@@ -67,13 +75,17 @@
         <p>Your account and progress are stored using <b>Google Firebase</b>
         (Firebase Authentication and Cloud Firestore), operated by Google. Their
         handling of that data is governed by Google's privacy policy. Lesson audio
-        and images are delivered as ordinary web content.</p>
+        and images are delivered as ordinary web content. Pronunciation audio clips
+        are processed by a <b>speech-to-text service (Cloudflare Workers AI)</b>
+        only to produce a transcript for feedback, and are not retained.</p>
 
         <h2>Sharing</h2>
         <p>We do not sell or rent your data, and we do not share it with advertisers
-        or data brokers. The only third party involved is Google Firebase, which
-        stores the data on our behalf. Information you choose to make visible to
-        friends (your public profile) is shared with those friends within the app.</p>
+        or data brokers. The third parties involved are Google Firebase, which stores
+        your account and progress on our behalf, and the speech-to-text service that
+        transcribes pronunciation clips on our behalf. Information you choose to make
+        visible to friends (your public profile) is shared with those friends within
+        the app.</p>
 
         <h2>Your choices and deletion</h2>
         <p>You can sign out at any time from the Profile tab. To request deletion of
