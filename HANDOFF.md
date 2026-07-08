@@ -23,30 +23,37 @@ script, grammar, vocabulary, conversation practice, and a **Culture** section
 - **Working folder:** `/Users/rain/Documents/GitHub/dhatu` (GitHub Desktop clone).
   It is inside iCloud-synced Documents, which once caused the folder to vanish
   mid-session. If files act strange, suspect iCloud.
-- **Node is NOT installed system-wide** on this Mac (`node`/`npm` are absent from
-  PATH, no Homebrew). A working copy of Node 22 was downloaded to the scratchpad
-  at:
-  `/private/tmp/claude-501/-Users-rain-Documents-dhatu/e0ccfccd-3caf-4e51-bd6a-6d1cdcab137a/scratchpad/node-v22.13.1-darwin-arm64/bin`
-  (may not persist across sessions; re-download Node 22 from nodejs.org if gone).
-  To build: `export PATH="<that bin>:$PATH"` then `npm run build`. Vite 8 needs
-  Node 20.19+ or 22.12+.
+- **Node IS now installed system-wide** (`node` v24 on PATH). Just `npm install`
+  and `npm run build`. (Older sessions had no Node; resolved.)
+- **Android build toolchain is installed locally** (no admin, no Homebrew): JDK 17
+  at `~/dhatu-buildtools/jdk/Contents/Home` (use as `JAVA_HOME`) and the Android
+  SDK at `~/Library/Android/sdk` (build-tools 34, platform-tools, android-34; use
+  as `ANDROID_HOME`/`ANDROID_SDK_ROOT`, add `platform-tools` to PATH for `adb`).
+- **On-device testing via `adb`:** a physical Android phone can be connected (USB
+  debugging). Install/drive/inspect with `adb install -r`, `adb shell monkey`,
+  `adb shell input tap|swipe`, `adb exec-out screencap -p > f.png`,
+  `adb logcat -d -b crash`. This is how the native crash was diagnosed and the UI
+  verified on-device this session.
 - **GitHub Desktop auto-commits and pushes** in the background. Commits you make
   on the CLI sometimes get pre-empted and land as commits named "Update App.jsx".
   This is harmless (code is preserved) but means `git push` from the CLI is
   usually unnecessary and CLI credentials are not set up (push from Desktop).
 - **The user drives GitHub.** Do not assume you can push; the user pushes via
   Desktop. Commit locally; they publish.
-- **Live preview is blocked** for signed-in screens: the app requires Google
-  sign-in and this environment cannot complete OAuth. To eyeball UI, rasterize a
-  static HTML mock of the relevant CSS with `qlmanage -t -s 500 -o <dir> f.html`
-  then read the PNG. This is how the logo and Learn-path redesigns were verified.
+- **UI verification:** the app requires sign-in, so a browser dev-server can't
+  reach inner screens. Working methods: (a) **on the connected phone** via `adb`
+  screenshots (the signed release app is installed and signed in); (b) for debug
+  builds, a temporary **guest bypass** (a "Skip for now (test)" button added to the
+  SignIn screen only during a build, then reverted) so a debug APK reaches every
+  screen; (c) `qlmanage -t -s N -o <dir> f.svg` to rasterize SVG/CSS mocks (used to
+  QA the 510 vocab illustrations). NEVER commit the guest bypass.
 
 ---
 
 ## 3. Tech stack and architecture
 
 - **Single-file React app:** essentially everything lives in `src/App.jsx`
-  (~8,800 lines): all screens, content, CSS (one big template string injected via
+  (~10,500 lines; includes the `VOCAB_SENT` sentence map): all screens, content, CSS (one big template string injected via
   `<style>{CSS}</style>`), and SVG icons (the `Ic` object). Edits must be careful;
   prefer targeted string replacements and watch brace balance.
 - **Build:** Vite 8 (`vite build` to `dist/`). React 18. No router (screen state
@@ -57,7 +64,11 @@ script, grammar, vocabulary, conversation practice, and a **Culture** section
   **Rasa** (serif) and **Mogra** (display) for the Script tab's 3-style toggle.
   All from Google Fonts in the CSS `@import`.
 - **Images:** Culture covers/inline photos are hotlinked from Wikimedia Commons
-  via `FP + "<url-encoded filename>?width=1000"` (FP = Special:FilePath base).
+  (`FP + <url-encoded filename>?width=...`). **Vocab word art is now bundled and
+  offline:** 510 colorful flat **SVG illustrations** in `public/art/<slug>.svg`
+  (one per word, keyed by a hash of the Gujarati; `_artSlug` + `VocabArt` in
+  App.jsx, with color-swatch/topic-icon fallback), replacing the old external
+  vocab hotlinks.
 - **Audio:** pre-generated mp3s in `public/audio/` served as static assets.
 - **Staff portal:** a separate static page at `public/staff/` served at `/staff`.
 
@@ -113,7 +124,11 @@ Until rules/index are applied, social features fail quietly (app still works).
    the `AIFeedback` component on `type` exercises). It is dormant and shows a
    non-AI fallback until, in the Cloudflare dashboard: confirm the **Workers Free**
    plan (no billing), add the **`AI`** Workers AI binding, and create a KV
-   namespace bound as **`GRADER`**. Then redeploy. Full design, budget caps,
+   namespace bound as **`GRADER`**. Then redeploy. **The same `AI`+`GRADER`
+   bindings also power `/api/transcribe`** (the speech-recognition Whisper endpoint
+   used by vocab/lesson speaking practice); to test it before native sign-in is
+   relied on, set the Pages env var **`STT_ALLOW_ANON=1`** (accepts anonymous calls
+   under a global cap). Both endpoints degrade to a fallback if the bindings are absent. Full design, budget caps,
    fallback ladder, and setup steps are in **GRADER.md**. It never bills (free
    plan overage errors instead of charging) and never gates progress (advisory
    only; the deterministic exams stay the source of truth).
@@ -131,7 +146,8 @@ progress; it fully resets only accounts with no local copy.
 ## 5. Audio pipeline
 
 - All spoken Gujarati and the English Culture narration are pre-recorded mp3s in
-  `public/audio/` with `manifest.json` (currently **3,959 clips**). The app's
+  `public/audio/` with `manifest.json` (currently **5,522 clips**, including the
+  full vocab example-sentence phrases). The app's
   `speak(text, lang, voice)` plays a clip when the manifest has one, else falls
   back to browser TTS. A missing manifest just means TTS-as-before.
 - **Voices (multi-voice):** the default narrator is Google **Chirp3-HD**
@@ -202,8 +218,9 @@ progress; it fully resets only accounts with no local copy.
   title, status (Completed / Continue / Start / Checkpoint), chevron.
 - **Palette:** warm maroon + gold. `--brand:#8A1C3B`, `--gold:#E0A63C`,
   `--diya:#F2892E`. Light mode only.
-- **Logo:** a **bandhani keri (paisley)** SVG (`Ic.logo`), dotted; used in top
-  bar, onboarding, sign-in, favicon. (An earlier dot-rosette was rejected.)
+- **Logo:** a maroon (`#8A1C3B`) **diamond** with a white paisley/seed (`Ic.logo`,
+  `public/logo.svg`); used in the top bar, onboarding, sign-in, favicon, and the
+  Android launcher icons. Brand-mark containers were made transparent so it shows.
 - **NO em dashes** anywhere (code, UI, docs). Verify: `grep -c $'\u2014'
   src/App.jsx` must be `0`.
 - **NO emojis** in the app UI. All icons are SVG (`Ic.*`); topic/lesson icons map
@@ -255,6 +272,13 @@ progress; it fully resets only accounts with no local copy.
   auto-added once per lesson by `expandLesson()` (read/write mode only).
   Higher units (16-20) lean on build/order/type/cloze/note over vocab drills,
   emphasizing tense, tone, and carrying a conversation. Tapping any Gujarati word in an exercise plays its audio.
+  **Romanization is hidden from Unit 2 onward** in read-and-write mode
+  (`showRoman = !readWrite || _unitOf(lessonId) <= 1` in `LessonRunner`): Unit 1
+  keeps the roman under the Gujarati as training wheels, later units drop it to
+  force reading comprehension; speak-only mode always keeps roman. (Fixing this
+  also repaired a latent bug where `lesson.id` was undefined inside LessonRunner -
+  the lesson key is now passed as the `lessonId` prop, which also fixed per-lesson
+  voice selection and the AI-feedback ILR level.)
   "Snooze speaking/listening for 5 min" buttons on those exercise types.
   `expandLesson()` auto-generates a varied reinforcement top-up (listen +
   translate + a true/false + a **typeen** + a match) from each lesson's own taught
@@ -329,12 +353,18 @@ progress; it fully resets only accounts with no local copy.
   user has review items** (`srs.length > 0`), so a new learner never sees an empty
   tab.
 - **Vocab:** themed topics (icons via `TopicIcon`); tap-to-practice speaking.
-  Noun word-cards show a **photo thumbnail** when the word is in `WORD_IMG`
-  (Wikimedia hotlinks, ~70 nouns across food, animals, transport, places,
-  weather, produce, nature, home, clothing, tech, body, sport, music).
-  Words with a common variation carry an optional `alt:[{gu,r}]` list, shown as a
-  tappable "also ..." line under the word (e.g. potato બટાકા / બટાટા, onion
-  ડુંગળી / કાંદા, hospital દવાખાનું / હોસ્પિટલ). 14 variant pairs so far.
+  **Every word now has a bundled colorful flat SVG illustration** (`VocabArt` ->
+  `public/art/<slug>.svg`, 510 generated), shown in the word list, practice screen,
+  and lesson exercises; color words use a swatch, body/family use diagrams, and a
+  missing art falls back to the topic icon. This replaced the old Wikimedia
+  `WORD_IMG` vocab hotlinks (offline now).
+  **Practice speaks a full example sentence, not a lone word:** each single word is
+  wrapped in a natural, grammar-checked sentence from **`VOCAB_SENT`** (515 entries,
+  `{s: gu sentence, r: roman, e: english}`, generated per word then proofread), so
+  Whisper can grade it; the sentence is shown + spoken + graded, with a "practicing
+  <word>" note. Function-word topics (questions/connectors/greetings) skip speech.
+  Words with a common variation still carry an optional `alt:[{gu,r}]` "also ..."
+  line (e.g. potato બટાકા / બટાટા). 14 variant pairs.
 - **Culture:** 7 categories (Ancient Foundations, Kingdoms and Courts, Trade and
   the Indian Ocean, Colonial Rule and Resistance, Modern Gujarat, Textiles and
   Fashion, Food and Cooking), each with
@@ -382,9 +412,21 @@ progress; it fully resets only accounts with no local copy.
   (wrong) clips were deleted from `public/audio/` + the manifest, so the next
   `npm run audio` regenerates them correctly.
 
-Speech check note: browser speech recognition barely supports gu-IN, so speaking
-checks degrade to an "I said it out loud" self-confirm with a calm (not red)
-message. This is a platform limit, intentionally left as graceful fallback.
+**Speaking practice (rebuilt this session): real speech recognition.**
+`useVoiceCheck` in `src/App.jsx` has three engines, in order: (1) **cloud Whisper**
+- records audio (native `capacitor-voice-recorder`), converts to 16 kHz mono WAV
+in-app, POSTs to the free **`/api/transcribe`** Pages Function (Cloudflare Workers
+AI, `@cf/openai/whisper-large-v3-turbo`, `vad_filter` on) via **native HTTP**
+(`CapacitorHttp`, which bypasses the WebView cross-origin block); (2) the **device
+recognizer** (`@capacitor-community/speech-recognition`) when offline/over budget;
+(3) the **self-check** ("say it out loud") if neither works. Web uses the browser
+Web Speech API. UI is **hold-to-talk**. Grades with the deterministic
+`_gradeSpeech()`. Free/no-cost + fallback like the writing grader (GRADER.md);
+needs the Cloudflare **AI**+**GRADER** bindings and a signed-in token (or
+`STT_ALLOW_ANON=1` for pre-launch). Whisper is weak on lone words, so vocab
+practice speaks the word inside a full sentence (see Vocab bullet); single-word
+`speak` cards fall back to self-confirm. API calls use an absolute base
+(`dhatu.pages.dev`) on native (the WebView origin is localhost).
 
 ---
 
@@ -392,17 +434,17 @@ message. This is a platform limit, intentionally left as graceful fallback.
 
 **Scale (current):** 23 Learn units / ~107 lessons; 16 "Learn the letters" script
 lessons; ~60 vocab topics; 16 grammar patterns; 30 conversations; 7 Culture
-categories / 46 chapters; 4 timed proficiency exams; **3,959 audio clips across
-3 voices** (Units 1-21 + earlier content fully generated); ~70 noun images
-(`WORD_IMG`, shown in lessons and the Vocab list) + body/family diagrams + color
-swatches; 14 variant pairs (`alt`). Units 1-15 are
+categories / 46 chapters; 4 timed proficiency exams; **5,522 audio clips across
+3 voices** (all content incl. the 515 vocab example sentences); **510 bundled
+vocab SVG illustrations** (`public/art/`) + 515 vocab example sentences
+(`VOCAB_SENT`) + body/family diagrams + color swatches; 14 variant pairs (`alt`). Units 1-15 are
 foundations/themes/practical systems; Units 16-18 are an advanced grammar arc
 (opinions and comparisons; conditionals and modality; reported speech and
 subordinate clauses); Units 19-22 are conversation, complex sentences, sounding
 natural, and shades of meaning (emphasis/quantity/frequency nuance). The Primary
 Fluency final exam is anchored `afterUnit: "u23"` so it stays at the very end.
 
-**AUDIO STATUS: all content is voiced.** The manifest is at **3,959 clips** and the consistency gate reports 0 missing audio. Re-run `GOOGLE_TTS_KEY=<key> npm run audio` only after adding new Gujarati content (it skips existing clips).
+**AUDIO STATUS: all content is voiced.** The manifest is at **5,522 clips** (incl. full vocab example-sentence phrases) and the consistency gate reports 0 missing audio. Re-run `GOOGLE_TTS_KEY=<key> npm run audio` only after adding new Gujarati content (it skips existing clips).
 
 **Consistency gate:** a checker script (kept in the session scratchpad,
 `check.mjs`) extracts every gu+romanization pair and verifies: every spoken word
@@ -493,27 +535,43 @@ remain (they are reused by the native app). A hostable **privacy policy** is at
 `public/privacy.html` (-> https://dhatu.pages.dev/privacy.html) and is linked from
 the Profile settings.
 
-**C. Native app via CAPACITOR: SCAFFOLDED, owner finishes on their Mac. See
-`NATIVE.md`.** Per the user's request for a real native app (not a PWA/TWA), we
-use **Capacitor**: the web build (`dist/`) is bundled inside a genuine native
-Android app (a real `.aab`), with native plugins. Already in the repo:
-- `capacitor.config.json` (appId `app.dhatu.learning`, `webDir: dist`).
-- Capacitor deps in `package.json` (`@capacitor/core|android|cli|app|status-bar`,
-  `@capacitor-firebase/authentication`). NOT installed here (no network for
-  `npm install` in this env); the web build stays green because nothing imports
-  them statically.
-- **Native Google sign-in** in `src/firebase.js`: `signInWithGoogle()` checks the
-  `window.Capacitor` global and, on native, does a **dynamic `import(/* @vite-ignore
-  */ "@capacitor-firebase/authentication")`** + `signInWithCredential`; on web it
-  still uses `signInWithPopup`. The `@vite-ignore` is what keeps the web build from
-  needing the plugin. (`signInWithPopup` does NOT work in a native WebView, which
-  is why this exists.)
-- `/android` and `/ios` are git-ignored (generated by `npx cap add`).
-- Owner steps (all in NATIVE.md): `npm install` -> `npx cap add android` ->
-  register an **Android app in Firebase** (package `app.dhatu.learning`, add signing
-  SHA-1/256, drop `google-services.json` into `android/app/`) -> `npx cap sync` ->
-  build a signed `.aab` in Android Studio -> Play Console ($25) -> listing (uses
-  `privacy.html`) -> submit.
+**C. Native Android app via CAPACITOR: BUILT, SIGNED, and verified on a real
+phone. Only the Play Console upload remains (owner). See `NATIVE.md` ("Release
+build config").** The web build (`dist/`) is bundled inside a genuine native
+Android app. Done this session:
+- Capacitor packages installed and used: `@capacitor/core|android|cli|app|
+  status-bar`, `@capacitor-firebase/authentication`,
+  `@capacitor-community/speech-recognition`, `capacitor-voice-recorder`.
+  `capacitor.config.json` appId `app.dhatu.learning`.
+- **Native plugin imports are now bundled** (the old `@vite-ignore` dynamic imports
+  were removed once the packages became real deps). `src/firebase.js` native Google
+  sign-in and the speech plugins `import(...)` normally so the WebView resolves
+  them; native paths are guarded by `window.Capacitor.isNativePlatform()`. Web build
+  stays green (Cloudflare installs the deps too).
+- **Firebase Android app registered** (package `app.dhatu.learning`); its
+  `google-services.json` sits at `android/app/` (git-ignored).
+- **Crash fix (important):** the Firebase-auth Google provider needs
+  **`play-services-auth`** (`implementation "com.google.android.gms:play-services-auth:20.7.0"`
+  in `android/app/build.gradle`) or the app dies on launch with
+  `NoClassDefFoundError: GoogleSignIn`. Also `server_client_id` (web OAuth client id
+  from google-services.json) in `android/app/src/main/res/values/strings.xml`.
+- **Signing:** release keystore `~/dhatu-release.keystore` (alias `dhatu`, SHA-1
+  `12:DF:6D:F0:3B:98:5E:82:A3:41:AD:A0:C7:65:AD:81:D4:6D:A9:CD`); passwords in
+  `android/keystore.properties` (git-ignored); `signingConfigs.release` reads it.
+  **Owner must back up the keystore + password** (losing them = cannot update the app).
+- **Launcher icons:** diamond icons generated from `assets/icon-*.png` (committed)
+  via `npx @capacitor/assets generate --android`.
+- **Signed artifacts built + verified on-device (Google sign-in works):**
+  `~/Downloads/Dhatu-release.aab` (Play upload) and `Dhatu-release.apk` (sideload),
+  from `npm run build && npx cap copy android && (cd android && ./gradlew
+  bundleRelease assembleRelease)`. `/android` is git-ignored, so all the above is
+  documented in NATIVE.md ("Release build config") to re-apply after a clean
+  regenerate.
+- **LEFT (owner):** Google Play Console account ($25) -> upload the `.aab` (Internal
+  testing -> Production) -> listing (uses `privacy.html`), Data-safety, content
+  rating -> submit. **After upload, add Play App Signing's SHA-1 to Firebase**, or
+  sign-in fails for Play-installed users (the sideload APK works because its
+  upload-key SHA-1 is already registered).
 
 **D. iOS App Store: LATER.** Same Capacitor project, `npx cap add ios`; needs the
 $99/year Apple Developer Program, `GoogleService-Info.plist`, and the reversed
@@ -525,15 +583,17 @@ builds stay free.
 
 ### Other pending items
 
-1. **Owner: publish the Firestore rules in the Firebase console** (the rules are
-   NOT deployed from the repo). Use the full block in AUTH.md; the two admin UIDs
-   are already set in `public/staff/index.html` and in AUTH.md's `isAdmin()`. Also:
-   enable Google sign-in, create Firestore, add `dhatu.pages.dev` authorized
-   domain, create the pokes composite index, and (optional) set the OAuth consent
-   **App name** to "Dhatu Learning" so the sign-in popup reads nicely (AUTH.md).
+1. **Owner: verify the Firestore rules are published** and create the **pokes
+   composite index** for social features. Google sign-in is **enabled and working**
+   (verified on web and in the native app; username claiming works, so Firestore +
+   basic rules are live), and `dhatu.pages.dev` + the `app.dhatu.learning` Android
+   app are registered. Ensure AUTH.md's full rules block is applied (admin UIDs are
+   set in `public/staff/index.html` and AUTH.md's `isAdmin()`); create the pokes
+   index when Firestore prompts. Optional: set the OAuth consent **App name** to
+   "Dhatu Learning".
 2. **Owner: rotate the Google TTS API key** (it appeared in chat repeatedly and
    was used again this session). Audio is fully static, so nothing needs a live key.
-3. **All current content is voiced** (**3,959 clips, 3 voices**). Re-run
+3. **All current content is voiced** (**5,522 clips, 3 voices**). Re-run
    `npm run audio` only after adding new Gujarati content; it is idempotent and
    self-syncing (default clip + v2/v3 variants for short items). If you change an
    override or the pause-list rule, delete the affected clips first so they
@@ -588,16 +648,18 @@ dhatu/
 ├── GRADER.md             <- optional AI writing-feedback design + owner setup
 ├── NATIVE.md             <- build the native app (Capacitor) + publish to Google Play
 ├── capacitor.config.json <- Capacitor app id / config
+├── assets/               <- launcher-icon sources (input to npx @capacitor/assets)
 ├── README.md
 ├── index.html            <- title, diamond-logo favicon, manifest + icon links, meta
 ├── package.json          <- react 18, vite 8, firebase; "audio" script
 ├── vite.config.js
 ├── functions/
-│   └── api/              <- Cloudflare Pages Functions (AI grader + health)
+│   └── api/              <- Cloudflare Pages Functions (grade-writing, grader-health, transcribe = Whisper STT)
 ├── scripts/
 │   └── generate-audio.mjs  <- cloud-TTS generator (npm run audio)
 ├── public/
-│   ├── audio/            <- generated mp3s + manifest.json (committed)
+│   ├── audio/            <- generated mp3s + manifest.json (committed, 5522 clips)
+│   ├── art/              <- 510 bundled vocab SVG illustrations (committed)
 │   ├── logo.svg + icon-192/512.png + apple-touch-icon.png  <- app/logo icons
 │   ├── manifest.webmanifest  <- web app metadata (icons/theme; not a full PWA)
 │   ├── privacy.html      <- privacy policy, served at /privacy.html
