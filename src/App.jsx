@@ -1008,9 +1008,10 @@ const CSS = `
 .day{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:700}
 .day .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:1.5px solid var(--line)}
 .day.hit .dot{background:#FDECD9;border-color:var(--diya);color:var(--diya)}
-.badges{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.badges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .badge2{display:flex;gap:12px;align-items:center;background:var(--card);border:none;border-radius:16px;padding:12px;box-shadow:var(--bevel-inset)}
 .badge2 .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--line);color:var(--muted);box-shadow:var(--bevel-inset)}
+.badge2>div{min-width:0;overflow-wrap:break-word}
 .badge2 b{font-size:14px} .badge2 small{color:var(--muted);font-size:11.5px;font-weight:600;display:block}
 /* Achieved awards turn gold */
 .badge2.won .ic{background:var(--gold);color:#3b2a06;box-shadow:var(--bevel-raise)}
@@ -1118,7 +1119,7 @@ const CSS = `
 .acct-info small{color:var(--muted);font-size:12.5px;font-weight:600;display:block;margin-top:1px}
 
 /* streak repair card */
-.lifetimek{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:700;color:var(--gold-dark);margin:-4px 0 14px}
+.lifetimek{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:700;color:var(--gold-dark);margin:8px 0 18px;padding:2px 0}
 .heal{display:flex;align-items:center;gap:12px;background:#FBEFD6;border-radius:16px;padding:12px 14px;margin-bottom:16px;box-shadow:var(--bevel-inset)}
 .heal-ic{width:42px;height:42px;border-radius:12px;background:var(--diya);color:#fff;display:grid;place-items:center;flex:none;box-shadow:var(--sink-gold)}
 .heal-tx{flex:1}.heal-tx b{font-size:14.5px;display:block}
@@ -1279,6 +1280,10 @@ const CSS = `
 .cardgrid>*:nth-child(5),.opts>*:nth-child(5),.wordcard:nth-child(5),.grid2>*:nth-child(5){animation-delay:.23s}
 .cardgrid>*:nth-child(6),.opts>*:nth-child(6),.wordcard:nth-child(6),.grid2>*:nth-child(6){animation-delay:.28s}
 .cardgrid>*:nth-child(n+7),.opts>*:nth-child(n+7),.wordcard:nth-child(n+7),.grid2>*:nth-child(n+7){animation-delay:.32s}
+.stats>*{animation:riseIn .34s var(--ease) both}
+.stats>*:nth-child(2){animation-delay:.05s}
+.stats>*:nth-child(3){animation-delay:.1s}
+.stats>*:nth-child(4){animation-delay:.15s}
 .bar>i{transition:width .5s var(--ease)}
 .btn:active,.iconbtn:active,.playbtn:active,.opt:active,.mtile:active,.pick:active,.tok:active,.orderline:active,.gkey:active,.chip:active,.navb:active{transform:translateY(1px)}
 @media (prefers-reduced-motion:reduce){
