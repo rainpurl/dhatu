@@ -29,7 +29,7 @@
 
 const FIREBASE_PROJECT_ID = "dhatu-9f586";
 const MODEL = "@cf/openai/whisper-large-v3-turbo";
-const GROQ_MODEL = "whisper-large-v3-turbo"; // Groq overflow (OpenAI-compatible Whisper; free tier, fast)
+const GROQ_MODEL = "whisper-large-v3"; // Groq overflow (OpenAI-compatible Whisper; free tier). large-v3 (10.3% WER) beats turbo (12%) with identical free rate limits, and short clips make the latency difference negligible.
 const LANG = "gu"; // hint Gujarati; improves short-utterance accuracy and script
 const GLOBAL_DAILY = 300; // soft global cap/day (keeps us well under KV write limits)
 const USER_DAILY = 40;    // soft per-account cap/day

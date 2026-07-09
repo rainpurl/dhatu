@@ -32,7 +32,8 @@ bindings; it is purely additive.
   It uses the **`AI`** and **`GRADER`** bindings (no new bindings).
   - **Overflow engine (Groq): BUILT.** When the CF global daily cap is hit (or CF
     is unconfigured / errors / returns empty), the Function transcribes via
-    **Groq's** OpenAI-compatible Whisper (`whisper-large-v3-turbo`) so learners
+    **Groq's** OpenAI-compatible Whisper (`whisper-large-v3`, 10.3% WER, better
+    than turbo's 12% at the same free rate limits) so learners
     keep getting real recognition as usage grows. Enable it by setting the Pages
     env var **`GROQ_API_KEY`** (free tier). Left unset -> CF-only, unchanged.
     Per-user daily caps still apply across both engines; the CF global counter
