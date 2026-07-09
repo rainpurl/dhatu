@@ -30,6 +30,15 @@ bindings; it is purely additive.
   Phase 1: soft caps (global 300/day, per-user 40/day), and any failure returns
   `{fallback}` so the client drops to the device recognizer, then to self-check.
   It uses the **`AI`** and **`GRADER`** bindings (no new bindings).
+  - **Overflow engine (Groq): BUILT.** When the CF global daily cap is hit (or CF
+    is unconfigured / errors / returns empty), the Function transcribes via
+    **Groq's** OpenAI-compatible Whisper (`whisper-large-v3-turbo`) so learners
+    keep getting real recognition as usage grows. Enable it by setting the Pages
+    env var **`GROQ_API_KEY`** (free tier). Left unset -> CF-only, unchanged.
+    Per-user daily caps still apply across both engines; the CF global counter
+    only counts CF hits, so once it caps, traffic routes to Groq. Groq rate-limit
+    or failure -> device recognizer, as before. The key is a **server-side secret**
+    (never in the client), same model as the AI binding.
   - **Auth:** requires a signed-in user's Firebase ID token, exactly like the
     grader. To test the cloud path **before** native sign-in is wired
     (`google-services.json`), set a Pages env var **`STT_ALLOW_ANON=1`** to accept

@@ -15,6 +15,13 @@
  * We add our own soft caps well under the platform limit, so we always degrade
  * gracefully. See GRADER.md.
  *
+ * Tiered engines (so we stay free as usage grows):
+ *   1. Cloudflare Workers AI Whisper (primary, free plan).
+ *   2. Groq Whisper (overflow) - kicks in when the CF daily global cap is hit,
+ *      or CF is unconfigured / errors / returns empty. Free tier; set the
+ *      GROQ_API_KEY env var to enable it. Left unset -> behaves exactly as
+ *      before (CF only). The client then falls back to the device recognizer.
+ *
  * Auth: a signed-in user's Firebase ID token ties usage to a real account. For
  * pre-launch testing before sign-in is wired into the native app, set the env
  * var STT_ALLOW_ANON="1" to also accept anonymous calls (global cap only).
@@ -22,6 +29,7 @@
 
 const FIREBASE_PROJECT_ID = "dhatu-9f586";
 const MODEL = "@cf/openai/whisper-large-v3-turbo";
+const GROQ_MODEL = "whisper-large-v3-turbo"; // Groq overflow (OpenAI-compatible Whisper; free tier, fast)
 const LANG = "gu"; // hint Gujarati; improves short-utterance accuracy and script
 const GLOBAL_DAILY = 300; // soft global cap/day (keeps us well under KV write limits)
 const USER_DAILY = 40;    // soft per-account cap/day
@@ -44,11 +52,48 @@ export function onRequestOptions() {
   return new Response(null, { status: 204, headers: CORS });
 }
 
+// Base64 -> bytes (standard base64; the client sends WAV/AAC bytes base64-encoded).
+function b64ToBytes(b64) {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+// Groq overflow transcription via its OpenAI-compatible Whisper endpoint.
+// Returns the recognized text, or "" on any failure (unset key, rate limit,
+// network) so the caller degrades to the device recognizer. Never throws.
+async function transcribeGroq(env, audioB64, mime, hint) {
+  try {
+    if (!env.GROQ_API_KEY) return "";
+    const form = new FormData();
+    form.append("file", new Blob([b64ToBytes(audioB64)], { type: mime || "audio/wav" }), "audio.wav");
+    form.append("model", GROQ_MODEL);
+    form.append("language", LANG);
+    form.append("response_format", "json");
+    form.append("temperature", "0");
+    if (hint) form.append("prompt", hint); // biases toward the expected phrase
+    const res = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + env.GROQ_API_KEY },
+      body: form,
+    });
+    if (!res.ok) return "";
+    const data = await res.json().catch(() => ({}));
+    return String((data && data.text) || "").trim();
+  } catch (e) {
+    return "";
+  }
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
   try {
-    // Bindings not set up yet -> graceful fallback, no error.
-    if (!env.AI || !env.GRADER) return fallback("not-configured");
+    // Primary engine = Cloudflare Workers AI (needs AI + GRADER bindings).
+    // Overflow engine = Groq (needs GROQ_API_KEY). If neither is available,
+    // degrade gracefully so the client uses the device recognizer / self-check.
+    const haveCF = !!(env.AI && env.GRADER);
+    if (!haveCF && !env.GROQ_API_KEY) return fallback("not-configured");
 
     // ---- auth: verify the Firebase ID token; ties spend to a real account ----
     const authz = request.headers.get("Authorization") || "";
@@ -72,37 +117,54 @@ export async function onRequestPost(context) {
     const today = new Date().toISOString().slice(0, 10);
 
     // ---- soft caps (read-only checks; degrade before the platform limit) ----
-    const gKey = "stt:g:" + today;
-    const gN = parseInt((await env.GRADER.get(gKey)) || "0", 10) || 0;
-    if (gN >= GLOBAL_DAILY) return fallback("global-cap");
-    let uKey = null, uN = 0;
-    if (uid) {
+    // Global cap hit -> overflow to Groq (keep serving users) instead of failing.
+    // Per-user cap hit -> stop that user on either engine (abuse guard).
+    let cfOk = haveCF;
+    let gKey = null, gN = 0, uKey = null, uN = 0;
+    if (haveCF) {
+      gKey = "stt:g:" + today;
+      gN = parseInt((await env.GRADER.get(gKey)) || "0", 10) || 0;
+      if (gN >= GLOBAL_DAILY) cfOk = false; // CF budget spent for today -> Groq overflow
+    }
+    if (uid && env.GRADER) {
       uKey = "stt:u:" + uid + ":" + today;
       uN = parseInt((await env.GRADER.get(uKey)) || "0", 10) || 0;
       if (uN >= USER_DAILY) return fallback("user-cap");
     }
 
-    // ---- transcribe ----
-    let text = "";
-    try {
-      // vad_filter strips silence around the utterance, which sharply reduces
-      // Whisper's tendency to hallucinate words on short/near-silent clips.
-      const input = { audio, language: LANG, task: "transcribe", vad_filter: true };
-      if (hint) input.initial_prompt = hint;
-      const r = await env.AI.run(MODEL, input);
-      text = (r && (typeof r.text === "string" ? r.text : r.response)) || "";
-    } catch (e) {
-      return fallback("model-error");
+    // ---- transcribe: Cloudflare Whisper primary, Groq overflow ----
+    let text = "", engine = "", ranModel = false;
+    if (cfOk) {
+      try {
+        // vad_filter strips silence around the utterance, which sharply reduces
+        // Whisper's tendency to hallucinate words on short/near-silent clips.
+        const input = { audio, language: LANG, task: "transcribe", vad_filter: true };
+        if (hint) input.initial_prompt = hint;
+        const r = await env.AI.run(MODEL, input);
+        text = String((r && (typeof r.text === "string" ? r.text : r.response)) || "").trim();
+        engine = "cf"; ranModel = true;
+      } catch (e) { text = ""; } // fall through to Groq overflow
     }
-    text = String(text || "").trim();
-    if (!text) return fallback("no-speech");
+    // Overflow to Groq when CF is over budget, unconfigured, errored, or empty.
+    if (!text && env.GROQ_API_KEY) {
+      ranModel = true;
+      const g = await transcribeGroq(env, audio, body.mime, hint);
+      if (g) { text = g; engine = "groq"; }
+    }
+    // no-speech = a model ran and heard nothing; over-capacity = no engine ran.
+    if (!text) return fallback(ranModel ? "no-speech" : "over-capacity");
 
-    // record spend (best-effort; soft counters, eventual consistency is fine)
-    const writes = [env.GRADER.put(gKey, String(gN + 1), { expirationTtl: 60 * 60 * 48 })];
-    if (uKey) writes.push(env.GRADER.put(uKey, String(uN + 1), { expirationTtl: 60 * 60 * 48 }));
-    context.waitUntil(Promise.all(writes));
+    // record spend (best-effort; soft counters, eventual consistency is fine).
+    // Global counter tracks the CF Neuron budget (only CF hits count it, so once
+    // it caps we route to Groq); the per-user counter counts either engine.
+    if (env.GRADER) {
+      const writes = [];
+      if (engine === "cf" && gKey) writes.push(env.GRADER.put(gKey, String(gN + 1), { expirationTtl: 60 * 60 * 48 }));
+      if (uKey) writes.push(env.GRADER.put(uKey, String(uN + 1), { expirationTtl: 60 * 60 * 48 }));
+      if (writes.length) context.waitUntil(Promise.all(writes));
+    }
 
-    return jsonResponse({ text });
+    return jsonResponse({ text, engine });
   } catch (e) {
     return fallback("error");
   }
