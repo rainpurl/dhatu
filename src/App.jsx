@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { onAuthChange, signInWithGoogle, signOutUser, loadProgressToLocal, clearLocalProgress, scheduleSave, hasUsername, getUsername, setUsername, usernameAvailable, validUsername, followByUsername, unfollowUser, getFollowing, pokeUser, getPokes, dismissPoke, getIdToken } from "./firebase";
+import { onAuthChange, signInWithGoogle, signOutUser, loadProgressToLocal, clearLocalProgress, scheduleSave, hasUsername, getUsername, setUsername, usernameAvailable, validUsername, followByUsername, unfollowUser, getFollowing, pokeUser, getPokes, dismissPoke, getIdToken, deleteAccount } from "./firebase";
 
 /* ============================================================
    Dhatu (ધાતુ) - a research-based Gujarati course for English
@@ -506,7 +506,18 @@ const CSS = `
 .btn.ghost{background:transparent;color:var(--ink);box-shadow:none}
 .btn.ghost:hover{background:var(--hover);box-shadow:var(--bevel-raise)}
 .btn.ghost:active{box-shadow:var(--bevel-press);transform:translateY(1px)}
+.btn.danger{background:transparent;color:#a3182f;box-shadow:none}
+.btn.danger:hover{background:rgba(163,24,47,.08);box-shadow:none}
+.btn.danger:active{transform:translateY(1px)}
 .btn:disabled{opacity:.5;cursor:default;box-shadow:var(--bevel-inset);transform:none;filter:none}
+.delconfirm{margin-top:12px;padding:16px;border-radius:14px;background:rgba(163,24,47,.06);border:1px solid rgba(163,24,47,.22)}
+.delconfirm>b{color:#a3182f;font-size:15px}
+.delconfirm>p{margin:6px 0 0;font-size:13px;color:var(--muted);line-height:1.5}
+.delerr{color:#a3182f!important;font-weight:600}
+.delrow{display:flex;gap:8px;margin-top:12px}
+.delrow>.btn{flex:1;margin:0}
+.delrow>.btn.danger{background:#a3182f;color:#fff}
+.delrow>.btn.danger:hover{background:#8a1428}
 .btn.sm{width:auto;padding:9px 14px;font-size:14px;border-radius:12px}
 
 /* cards */
@@ -5667,6 +5678,13 @@ function useLocalState(key, initial) {
   return [state, setState];
 }
 
+// True only inside the native iOS app. Apple's donation rules (Guideline 3.2.1)
+// disallow a personal tip-jar link, so the Ko-fi "support" link is hidden on iOS;
+// Android and the plain web (not subject to App Store review) keep it.
+const IS_IOS =
+  typeof window !== "undefined" && window.Capacitor &&
+  window.Capacitor.getPlatform && window.Capacitor.getPlatform() === "ios";
+
 function CourseApp({ user }) {
   const [onboarded, setOnboarded] = useLocalState("dhatu_onboarded", false);
   const [screen, setScreen] = useState(() => (onboarded ? "learn" : "onboarding"));
@@ -5729,6 +5747,23 @@ function CourseApp({ user }) {
   const [snooze, setSnooze] = useState({ speak: 0, listen: 0 });
   const isSnoozed = (t) => (t === "speak" && Date.now() < snooze.speak) || (t === "listen" && Date.now() < snooze.listen);
   const snoozeType = (t) => setSnooze((s) => ({ ...s, [t]: Date.now() + 5 * 60 * 1000 }));
+  // In-app account deletion (App Store 5.1.1(v) + Google Play requirement).
+  const [confirmDel, setConfirmDel] = useState(false);
+  const [delBusy, setDelBusy] = useState(false);
+  const [delErr, setDelErr] = useState("");
+  async function deleteMyAccount() {
+    setDelBusy(true);
+    setDelErr("");
+    try {
+      await deleteAccount();
+      // Deleting the auth user fires onAuthChange(null); the app routes to the
+      // sign-in screen on its own, so nothing else to do here.
+    } catch (e) {
+      setDelErr("Could not delete your account. Check your connection and try again.");
+      setDelBusy(false);
+      setConfirmDel(false);
+    }
+  }
 
   useEffect(() => {
     try {
@@ -7098,13 +7133,15 @@ function CourseApp({ user }) {
               </div>
             )}
           </div>
-          <a href="https://ko-fi.com/rainglade" target="_blank" rel="noopener noreferrer" className="supportlink">
-            <span className="ic"><Ic.coffee /></span>
-            <span>
-              <b>Support Dhatu</b>
-              <small>Buy the developer a coffee on Ko-fi</small>
-            </span>
-          </a>
+          {!IS_IOS && (
+            <a href="https://ko-fi.com/rainglade" target="_blank" rel="noopener noreferrer" className="supportlink">
+              <span className="ic"><Ic.coffee /></span>
+              <span>
+                <b>Support Dhatu</b>
+                <small>Buy the developer a coffee on Ko-fi</small>
+              </span>
+            </a>
+          )}
           <a href="mailto:dhatulearning@katr.es" className="contactlink">
             <span className="ic">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>
@@ -7120,6 +7157,21 @@ function CourseApp({ user }) {
           <button className="btn ghost" style={{ marginTop: 14 }} onClick={async () => { await signOutUser(); clearLocalProgress(); }}>
             Sign out
           </button>
+          {!confirmDel ? (
+            <button className="btn danger" style={{ marginTop: 10 }} onClick={() => { setConfirmDel(true); setDelErr(""); }}>
+              Delete account
+            </button>
+          ) : (
+            <div className="delconfirm">
+              <b>Delete your account?</b>
+              <p>This permanently removes your account, username, progress, and friends. It cannot be undone.</p>
+              {delErr && <p className="delerr">{delErr}</p>}
+              <div className="delrow">
+                <button className="btn ghost" disabled={delBusy} onClick={() => { setConfirmDel(false); setDelErr(""); }}>Cancel</button>
+                <button className="btn danger" disabled={delBusy} onClick={deleteMyAccount}>{delBusy ? "Deleting..." : "Delete"}</button>
+              </div>
+            </div>
+          )}
           <div style={{ height: 10 }} />
         </div>
         <NavBar />

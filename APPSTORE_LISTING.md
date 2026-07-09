@@ -114,29 +114,27 @@ Play Data-safety form. If one changes, change all three.
 
 ---
 
-## COMPLIANCE - resolve before submitting to App Review
+## COMPLIANCE - status before submitting to App Review
 
-Apple rejects on these more strictly than Google. Three items found in the app:
+Apple rejects on these more strictly than Google. Three items were found; two are
+fixed, one remains and needs the Apple Developer account to complete.
 
-1. **Sign in with Apple is required (Guideline 4.8).** The app's only login is
-   "Continue with Google" (a third-party social login). Apps that offer a
+1. **[REMAINING] Sign in with Apple is required (Guideline 4.8).** The app's only
+   login is "Continue with Google" (a third-party social login). Apps that offer a
    third-party login must ALSO offer a privacy-focused equivalent; Sign in with
-   Apple satisfies it. This is a near-certain iOS rejection as-is. Needs: enable
-   Apple as a Firebase auth provider, add the `@capacitor-firebase/authentication`
-   Apple path + an "Sign in with Apple" button, and add the Sign in with Apple
-   capability in Xcode (requires the Apple Developer account). Web/Android can
-   keep Google-only.
+   Apple satisfies it. Near-certain iOS rejection as-is. To fix (needs the Apple
+   Developer account): enable Apple as a Firebase auth provider, add the
+   `@capacitor-firebase/authentication` Apple sign-in path + a "Sign in with Apple"
+   button, and add the Sign in with Apple capability in Xcode. Web/Android keep
+   Google-only. **This is the one iOS blocker left; do it during iOS setup.**
 
-2. **In-app account deletion is required (Guideline 5.1.1(v)).** The app creates
-   accounts but has no in-app "delete my account" flow (privacy.html only offers
-   email deletion, which Apple does not accept). Needs a Profile-screen control
-   that deletes the Firebase auth user + their Firestore data. Google Play now
-   requires this too.
+2. **[FIXED] In-app account deletion (Guideline 5.1.1(v)).** Added a Profile-tab
+   "Delete account" control that re-authenticates and deletes the Firebase auth
+   user plus all their Firestore data (username, public profile, progress, pokes).
+   `deleteAccount()` in `src/firebase.js`; privacy.html updated. Satisfies Google
+   Play too.
 
-3. **Ko-fi "buy the developer a coffee" link (Guideline 3.2.1).** `src/App.jsx`
-   links to a personal Ko-fi (ko-fi.com/rainglade). Under a nonprofit this is
-   doubly problematic: Apple restricts donations (approved nonprofits must use
-   Apple Pay and disclose fund use; personal tip jars tied to an app are not
-   allowed), and a nonprofit app should not route money to a personal account.
-   Recommended: remove it from the app (keep it on the plain website only), or
-   replace it later with a compliant nonprofit donation flow.
+3. **[FIXED] Ko-fi link (Guideline 3.2.1).** The personal Ko-fi "support" link is
+   now hidden inside the native iOS app (`IS_IOS` gate in `src/App.jsx`); Android
+   and the plain web keep it. If the nonprofit later wants in-app donations on iOS,
+   it must be an Apple-approved nonprofit using Apple Pay.

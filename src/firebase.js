@@ -16,6 +16,9 @@ import {
   signInWithCredential,
   signOut,
   onAuthStateChanged,
+  deleteUser,
+  reauthenticateWithCredential,
+  reauthenticateWithPopup,
 } from "firebase/auth";
 import {
   getFirestore, doc, getDoc, setDoc, getDocs, collection, query, where,
@@ -31,6 +34,10 @@ const provider = new GoogleAuthProvider();
 let currentUid = null;
 let currentUser = null;
 let currentUsername = null;
+// Set while an account deletion is in flight so the reauth step (which briefly
+// re-signs the user in) can't race the sync functions into re-creating the very
+// docs we are deleting.
+let _deleting = false;
 
 const PREFIX = "dhatu_";
 
@@ -55,7 +62,7 @@ const _n = (k) => { try { return JSON.parse(window.localStorage.getItem(PREFIX +
 /* Public profile: the only fields other users can see (streak, Kaudi, name).
    Kept in a separate collection so private progress is never exposed. */
 async function updatePublicProfile() {
-  if (!currentUid) return;
+  if (!currentUid || _deleting) return;
   try {
     await setDoc(
       doc(db, "publicProfiles", currentUid),
@@ -117,6 +124,75 @@ export function signOutUser() {
   return signOut(auth);
 }
 
+/* Permanently delete the signed-in user's account and data, in-app. Required by
+   both the App Store (Guideline 5.1.1(v)) and Google Play. Removes the Firestore
+   footprint (username reservation, public profile, progress doc, and pokes to/from
+   the user) and then the Firebase auth user. Firebase requires a recent login to
+   delete an account, so if the session is stale we transparently re-authenticate
+   (native Google plugin, or popup on web) and retry. Clears local data on success.
+   Throws on failure so the UI can show an error. */
+export async function deleteAccount() {
+  const user = auth.currentUser;
+  if (!user) throw new Error("not signed in");
+  const uid = user.uid;
+  const name = currentUsername;
+  _deleting = true;
+  try {
+    await deleteUserData(uid, name);
+    try {
+      await deleteUser(user);
+    } catch (e) {
+      if (e && e.code === "auth/requires-recent-login") {
+        await reauthCurrent(user);
+        // The reauth briefly re-signed the user in; re-clean anything touched.
+        await deleteUserData(uid, name);
+        await deleteUser(user);
+      } else {
+        throw e;
+      }
+    }
+    clearLocalProgress();
+    try { window.localStorage.removeItem(UNAME_KEY); } catch (e) {}
+    currentUid = null;
+    currentUser = null;
+    currentUsername = null;
+  } finally {
+    _deleting = false;
+  }
+}
+
+// Best-effort delete of every Firestore doc tied to the account. Idempotent:
+// missing docs are fine, so it is safe to call twice (see the reauth retry).
+async function deleteUserData(uid, name) {
+  const ops = [];
+  if (name) ops.push(deleteDoc(doc(db, "usernames", name.toLowerCase())));
+  ops.push(deleteDoc(doc(db, "publicProfiles", uid)));
+  ops.push(deleteDoc(doc(db, "users", uid)));
+  for (const field of ["to", "from"]) {
+    try {
+      const snap = await getDocs(query(collection(db, "pokes"), where(field, "==", uid)));
+      snap.docs.forEach((d) => ops.push(deleteDoc(doc(db, "pokes", d.id))));
+    } catch (e) {}
+  }
+  await Promise.all(ops.map((p) => p.catch(() => {})));
+}
+
+// Re-establish a recent login so deleteUser is allowed. Native path reuses the
+// Google plugin; web uses a reauth popup.
+async function reauthCurrent(user) {
+  const cap = typeof window !== "undefined" ? window.Capacitor : null;
+  if (cap && cap.isNativePlatform && cap.isNativePlatform()) {
+    const { FirebaseAuthentication } = await import("@capacitor-firebase/authentication");
+    const result = await FirebaseAuthentication.signInWithGoogle();
+    const idToken = result && result.credential && result.credential.idToken;
+    const accessToken = result && result.credential && result.credential.accessToken;
+    const cred = GoogleAuthProvider.credential(idToken, accessToken);
+    await reauthenticateWithCredential(user, cred);
+  } else {
+    await reauthenticateWithPopup(user, provider);
+  }
+}
+
 // A short-lived Firebase ID token for the current user, or null if signed out.
 // Used to authenticate calls to the AI-feedback Pages Function so spend is tied
 // to a real account. Returns null (never throws) so callers fall back cleanly.
@@ -134,7 +210,7 @@ export async function getIdToken() {
    values. On a brand-new account we seed the doc from whatever is local. */
 export async function loadProgressToLocal(user) {
   const uid = typeof user === "string" ? user : user && user.uid;
-  if (!uid) return;
+  if (!uid || _deleting) return;
   // Start from the locally remembered username so a failed/slow cloud read does
   // not send an already-registered user back to the username screen.
   currentUsername = readLocalUsername(uid);
@@ -185,9 +261,10 @@ let _saveTimer = null;
    user. Called by useLocalState whenever a value changes. */
 export function scheduleSave() {
   if (!currentUid) return;
+  if (_deleting) return;
   if (_saveTimer) clearTimeout(_saveTimer);
   _saveTimer = setTimeout(async () => {
-    if (!currentUid) return;
+    if (!currentUid || _deleting) return;
     const snapshot = localSnapshot();
     // Never overwrite the cloud copy with an empty snapshot. Local can be briefly
     // empty (right after a clear, a sign-out race, or before load finishes); saving

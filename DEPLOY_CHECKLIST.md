@@ -61,6 +61,12 @@ for nonprofits (Google for Nonprofits; Apple's nonprofit fee waiver).
       download **`GoogleService-Info.plist`**, drag it into the App target in Xcode.
 - [ ] Add the **`REVERSED_CLIENT_ID`** URL scheme (Info -> URL Types) for Google
       sign-in.
+- [ ] **Add Sign in with Apple (REQUIRED for App Review, Guideline 4.8).** The app
+      offers Google login, so Apple requires an equivalent privacy-focused option.
+      Enable **Apple** as a provider in Firebase Auth, add the **Sign in with Apple**
+      capability in Xcode, and add a "Sign in with Apple" button using
+      `@capacitor-firebase/authentication`'s Apple path (mirrors the Google path in
+      `src/firebase.js`). This is the one remaining iOS code blocker.
 - [ ] Set the team under **Signing & Capabilities**; set version + build number.
 - [ ] **Product -> Archive -> Distribute -> App Store Connect.**
 - [ ] In **App Store Connect**: create the app, reuse the PLAY_LISTING.md copy,
@@ -77,6 +83,9 @@ See **NATIVE.md** for the full iOS detail (already-applied config vs. remaining)
 - Store listing copy + graphics (PLAY_LISTING.md, assets/).
 - Privacy policy corrected for cloud speech; Data-safety answers drafted.
 - Speech backend: Cloudflare Whisper primary + Groq (whisper-large-v3) overflow.
+- In-app account deletion (Profile -> Delete account); satisfies App Store
+  5.1.1(v) and Google Play. Privacy policy updated.
+- Ko-fi support link hidden inside the iOS app (kept on Android + web).
 
 ## Standing reminders
 - **Back up** `~/dhatu-release.keystore` + its password (losing it = cannot update
