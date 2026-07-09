@@ -119,14 +119,16 @@ Play Data-safety form. If one changes, change all three.
 Apple rejects on these more strictly than Google. Three items were found; two are
 fixed, one remains and needs the Apple Developer account to complete.
 
-1. **[REMAINING] Sign in with Apple is required (Guideline 4.8).** The app's only
-   login is "Continue with Google" (a third-party social login). Apps that offer a
-   third-party login must ALSO offer a privacy-focused equivalent; Sign in with
-   Apple satisfies it. Near-certain iOS rejection as-is. To fix (needs the Apple
-   Developer account): enable Apple as a Firebase auth provider, add the
-   `@capacitor-firebase/authentication` Apple sign-in path + a "Sign in with Apple"
-   button, and add the Sign in with Apple capability in Xcode. Web/Android keep
-   Google-only. **This is the one iOS blocker left; do it during iOS setup.**
+1. **[CODE DONE - needs config] Sign in with Apple (Guideline 4.8).** A "Sign in
+   with Apple" button is now on the sign-in screen for the iOS app and the website
+   (hidden on native Android); `signInWithApple()` is in `src/firebase.js` (native
+   Apple sheet via the Capacitor plugin, popup on web). It stays inert with a
+   friendly "not available yet" message until Apple is enabled as a Firebase auth
+   provider, which requires the **Apple Developer account**. To activate: in the
+   Apple Developer portal enable the Sign in with Apple capability on the App ID
+   and create a Services ID (web) + key; in the Firebase console enable the Apple
+   provider (Services ID, Team ID, Key ID, private key); in Xcode add the Sign in
+   with Apple capability. No further app-code change needed.
 
 2. **[FIXED] In-app account deletion (Guideline 5.1.1(v)).** Added a Profile-tab
    "Delete account" control that re-authenticates and deletes the Firebase auth

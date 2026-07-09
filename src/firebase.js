@@ -12,6 +12,7 @@ import { initializeApp } from "firebase/app";
 import {
   getAuth,
   GoogleAuthProvider,
+  OAuthProvider,
   signInWithPopup,
   signInWithCredential,
   signOut,
@@ -30,6 +31,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
+const appleProvider = new OAuthProvider("apple.com");
+appleProvider.addScope("email");
+appleProvider.addScope("name");
 
 let currentUid = null;
 let currentUser = null;
@@ -118,6 +122,25 @@ export async function signInWithGoogle() {
     return signInWithCredential(auth, cred);
   }
   return signInWithPopup(auth, provider);
+}
+
+/* Sign in with Apple. Required on iOS because the app also offers Google login
+   (App Store Guideline 4.8); also offered on the web. Native uses the Capacitor
+   Firebase plugin (which does the native Apple sheet) and hands the credential to
+   the JS SDK; web uses a popup. Needs Apple enabled as a Firebase auth provider
+   (Services ID + key), which requires an Apple Developer account - until that is
+   configured, this throws auth/operation-not-allowed, handled by the caller. */
+export async function signInWithApple() {
+  const cap = typeof window !== "undefined" ? window.Capacitor : null;
+  if (cap && cap.isNativePlatform && cap.isNativePlatform()) {
+    const { FirebaseAuthentication } = await import("@capacitor-firebase/authentication");
+    const result = await FirebaseAuthentication.signInWithApple();
+    const idToken = result && result.credential && result.credential.idToken;
+    const rawNonce = result && result.credential && result.credential.nonce;
+    const cred = appleProvider.credential({ idToken, rawNonce });
+    return signInWithCredential(auth, cred);
+  }
+  return signInWithPopup(auth, appleProvider);
 }
 
 export function signOutUser() {

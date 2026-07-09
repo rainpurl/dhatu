@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { onAuthChange, signInWithGoogle, signOutUser, loadProgressToLocal, clearLocalProgress, scheduleSave, hasUsername, getUsername, setUsername, usernameAvailable, validUsername, followByUsername, unfollowUser, getFollowing, pokeUser, getPokes, dismissPoke, getIdToken, deleteAccount } from "./firebase";
+import { onAuthChange, signInWithGoogle, signInWithApple, signOutUser, loadProgressToLocal, clearLocalProgress, scheduleSave, hasUsername, getUsername, setUsername, usernameAvailable, validUsername, followByUsername, unfollowUser, getFollowing, pokeUser, getPokes, dismissPoke, getIdToken, deleteAccount } from "./firebase";
 
 /* ============================================================
    Dhatu (ધાતુ) - a research-based Gujarati course for English
@@ -1177,6 +1177,9 @@ const CSS = `
 .gbtn:active{transform:translateY(1px);box-shadow:var(--bevel-press)}
 .gbtn:disabled{opacity:.6;cursor:default}
 .gbtn .g{width:20px;height:20px;flex:none}
+.gbtn.apple{background:#000;color:#fff;box-shadow:none;margin-top:10px}
+.gbtn.apple:hover{background:#1a1a1a}
+.gbtn.apple .g{width:17px;height:20px}
 
 /* sidebar brand header (desktop only) */
 .navbrand{display:none}
@@ -5684,6 +5687,13 @@ function useLocalState(key, initial) {
 const IS_IOS =
   typeof window !== "undefined" && window.Capacitor &&
   window.Capacitor.getPlatform && window.Capacitor.getPlatform() === "ios";
+const IS_NATIVE =
+  typeof window !== "undefined" && window.Capacitor &&
+  window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+// Offer Sign in with Apple on the iOS app (required by Guideline 4.8 since we also
+// offer Google) and on the website; not on native Android (Google is native there
+// and Apple would be a web redirect the user did not ask for).
+const SHOW_APPLE = IS_IOS || !IS_NATIVE;
 
 function CourseApp({ user }) {
   const [onboarded, setOnboarded] = useLocalState("dhatu_onboarded", false);
@@ -11713,6 +11723,14 @@ function GoogleG(props) {
   );
 }
 
+function AppleLogo(props) {
+  return (
+    <svg className="g" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M16.365 1.43c0 1.14-.417 2.2-1.11 2.98-.84.94-2.2 1.66-3.33 1.57-.14-1.1.42-2.27 1.08-2.99.75-.83 2.06-1.46 3.13-1.5.02.05.13.32.13.94zM20.6 17.02c-.55 1.27-.82 1.84-1.53 2.96-.98 1.56-2.37 3.5-4.08 3.51-1.52.02-1.91-.99-3.98-.98-2.06.01-2.49.99-4.01.97-1.71-.01-3.02-1.76-4-3.32-2.74-4.34-3.03-9.44-1.34-12.15C2.86 6.06 4.72 5 6.47 5c1.78 0 2.9 1 4.37 1 1.43 0 2.3-1 4.36-1 1.56 0 3.21.85 4.39 2.32-3.86 2.11-3.23 7.62.99 9.7z"/>
+    </svg>
+  );
+}
+
 /* A tie-dye (bandhani) style field of dotted rosettes, tiled across the page. */
 function BandhaniField() {
   return (
@@ -11756,8 +11774,21 @@ function Splash() {
 }
 
 function SignIn() {
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState("");
   const [err, setErr] = useState("");
+  const doSignIn = async (which, fn) => {
+    setErr("");
+    setBusy(which);
+    try {
+      await fn();
+    } catch (e) {
+      const code = e && e.code;
+      if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") setErr("Sign-in was cancelled.");
+      else if (code === "auth/operation-not-allowed") setErr("Apple sign-in isn't available yet. Please use Google for now.");
+      else setErr("Could not sign in. Please try again.");
+      setBusy("");
+    }
+  };
   return (
     <div className="dhatu">
       <style>{CSS}</style>
@@ -11765,24 +11796,14 @@ function SignIn() {
         <div className="big-mark"><Ic.logo width={56} height={56} /></div>
         <h1>Dhātu</h1>
         <p className="tagline">Learn Gujarati, from the roots up. Sign in to save your progress and keep it across devices.</p>
-        <button
-          className="gbtn"
-          disabled={busy}
-          onClick={async () => {
-            setErr("");
-            setBusy(true);
-            try {
-              await signInWithGoogle();
-            } catch (e) {
-              const code = e && e.code;
-              if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") setErr("Sign-in was cancelled.");
-              else setErr("Could not sign in. Please try again.");
-              setBusy(false);
-            }
-          }}
-        >
-          <GoogleG /> {busy ? "Signing in..." : "Continue with Google"}
+        <button className="gbtn" disabled={!!busy} onClick={() => doSignIn("google", signInWithGoogle)}>
+          <GoogleG /> {busy === "google" ? "Signing in..." : "Continue with Google"}
         </button>
+        {SHOW_APPLE && (
+          <button className="gbtn apple" disabled={!!busy} onClick={() => doSignIn("apple", signInWithApple)}>
+            <AppleLogo /> {busy === "apple" ? "Signing in..." : "Sign in with Apple"}
+          </button>
+        )}
         {err && <div className="err">{err}</div>}
         <p className="fineprint">Your streak, Kaudi, and finished lessons stay tied to your account.</p>
       </div>

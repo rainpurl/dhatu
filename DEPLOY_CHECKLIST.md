@@ -61,12 +61,12 @@ for nonprofits (Google for Nonprofits; Apple's nonprofit fee waiver).
       download **`GoogleService-Info.plist`**, drag it into the App target in Xcode.
 - [ ] Add the **`REVERSED_CLIENT_ID`** URL scheme (Info -> URL Types) for Google
       sign-in.
-- [ ] **Add Sign in with Apple (REQUIRED for App Review, Guideline 4.8).** The app
-      offers Google login, so Apple requires an equivalent privacy-focused option.
-      Enable **Apple** as a provider in Firebase Auth, add the **Sign in with Apple**
-      capability in Xcode, and add a "Sign in with Apple" button using
-      `@capacitor-firebase/authentication`'s Apple path (mirrors the Google path in
-      `src/firebase.js`). This is the one remaining iOS code blocker.
+- [ ] **Activate Sign in with Apple (REQUIRED for App Review, Guideline 4.8).**
+      The button + `signInWithApple()` are already built (iOS app + website). Only
+      config remains: Apple Developer portal -> enable Sign in with Apple on the
+      App ID + create a Services ID (web) and key; Firebase console -> enable the
+      Apple provider (Services ID, Team ID, Key ID, private key); Xcode -> add the
+      Sign in with Apple capability. No app-code change needed.
 - [ ] Set the team under **Signing & Capabilities**; set version + build number.
 - [ ] **Product -> Archive -> Distribute -> App Store Connect.**
 - [ ] In **App Store Connect**: create the app, reuse the PLAY_LISTING.md copy,
