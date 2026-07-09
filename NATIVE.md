@@ -160,16 +160,56 @@ version, rebuild the signed `.aab` with the **same keystore**, upload.
 
 ---
 
-## iOS (later, separate effort)
+## iOS
 
-Needs the **$99/year Apple Developer Program** and a Mac with Xcode:
-```
-npx cap add ios && npx cap sync
-npx cap open ios
-```
-Add `GoogleService-Info.plist` (iOS Firebase app) and the reversed-client-ID URL
-scheme for Google sign-in; the same `src/firebase.js` native path works. For the
-speaking exercises, add `NSMicrophoneUsageDescription` and
-`NSSpeechRecognitionUsageDescription` to `Info.plist` (the speech-recognition
-plugin needs both). Then archive in Xcode and submit via App Store Connect. Do
-Android first.
+Needs a Mac with **full Xcode** (not just Command Line Tools), **CocoaPods**, and
+an **Apple Developer Program** membership. The `ios/` folder is git-ignored, like
+`android/`, so the manual config below must be re-applied if it is regenerated.
+
+**Apple Developer Program cost + nonprofit waiver.** It is normally **$99/year**,
+but Apple **waives that fee for eligible nonprofits** (501(c)(3) etc.) via its
+fee-waiver / Apple School-and-nonprofit program - apply once the org's D-U-N-S
+and Apple Developer enrollment are in place, same idea as Google for Nonprofits.
+
+**Already scaffolded + applied on this machine (survives in the local `ios/`):**
+- `@capacitor/ios@6.2.1` installed (in `package.json`); iOS platform added via
+  `npx cap add ios` (appId `app.dhatu.learning`, display name `Dhātu`).
+- **Permission strings** added to `ios/App/App/Info.plist` (REQUIRED - the app
+  crashes / App Review rejects without them): `NSMicrophoneUsageDescription` and
+  `NSSpeechRecognitionUsageDescription` (both needed for the speaking exercises:
+  `capacitor-voice-recorder` + `@capacitor-community/speech-recognition`).
+- **App icons** generated into the asset catalog via
+  `npx @capacitor/assets generate --ios` (same diamond as Android).
+
+**Remaining owner steps (need Xcode + Apple account, so pending):**
+1. **Install the toolchain:** full **Xcode** from the App Store, then
+   `xcode-select --install` is not enough - run `sudo xcode-select -s
+   /Applications/Xcode.app/Contents/Developer`. Install **CocoaPods**
+   (`sudo gem install cocoapods` or via Homebrew).
+2. **Sync (runs `pod install`, which failed here for lack of CocoaPods):**
+   ```
+   npm run build && npx cap sync ios
+   npx cap open ios
+   ```
+3. **Firebase iOS app:** in the Firebase console add an **iOS** app (bundle id
+   `app.dhatu.learning`), download **`GoogleService-Info.plist`**, and drag it
+   into the `App` target in Xcode (checked "Copy items if needed").
+4. **Google sign-in URL scheme:** open `GoogleService-Info.plist`, copy
+   `REVERSED_CLIENT_ID`, and add it as a URL scheme under the target's
+   **Info -> URL Types** (or a `CFBundleURLTypes` entry in `Info.plist`). The same
+   `src/firebase.js` native path (`@capacitor-firebase/authentication`) then works
+   on iOS - it is gated on `window.Capacitor.isNativePlatform()`, which is true on
+   iOS too, so no code change.
+5. **Signing:** in Xcode target **Signing & Capabilities**, select the org team;
+   let Xcode manage signing (creates the App ID + provisioning profile).
+6. **Version:** set `MARKETING_VERSION` (e.g. 1.0) and `CURRENT_PROJECT_VERSION`
+   (build number) in the target's build settings.
+7. **Archive + upload:** Xcode **Product -> Archive**, then **Distribute App ->
+   App Store Connect**. Create the app in **App Store Connect** (same listing copy
+   as `PLAY_LISTING.md`, App Privacy answers mirroring `privacy.html`), attach the
+   build, and submit for review.
+8. **Speech backend** is shared with Android (the Cloudflare `/api/transcribe`
+   Function + Groq overflow), so nothing iOS-specific there.
+
+The web bundle, Firebase, speech, and back-button handling are all shared with
+Android - iOS is purely the native shell + signing.
