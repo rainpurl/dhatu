@@ -15,15 +15,22 @@ Dhatu: Learn Gujarati
 
 **Short description** (max 80 chars)
 ```
-Learn to read, write, and speak Gujarati with bite-size lessons and audio.
+Learn to read, write & speak Gujarati - plus its rich culture and history.
 ```
 
 **Full description** (max 4000 chars)
 ```
 Dhatu is a free, ad-free app for learning Gujarati from scratch - the script,
-the sounds, the words, and real conversation. Whether you are reconnecting with
-your family's language or starting fresh, Dhatu takes you step by step from your
-first letter to holding a conversation.
+the sounds, the words, real conversation, and the culture behind it all. Whether
+you are reconnecting with your family's language or starting fresh, Dhatu takes
+you step by step from your first letter to holding a conversation.
+
+WHAT SETS DHATU APART: CULTURE
+Dhatu is more than a phrasebook. A built-in Culture section takes you deep into
+where the language comes from - Gujarat's history, food, music, communities, and
+landmarks - in illustrated, carefully sourced stories you can listen to in both
+English and Gujarati. It is the part learners say they cannot find in any other
+app.
 
 WHAT YOU LEARN
 - The Gujarati script (kakko), one sound at a time, with native audio.
@@ -33,6 +40,8 @@ WHAT YOU LEARN
 - Grammar and sentence-building through short, guided exercises.
 - Speaking practice: hold the button, say the phrase, and get feedback on your
   pronunciation.
+- Gujarat's culture and history: eras, communities, food, music, and places,
+  with narration in both languages.
 
 HOW IT WORKS
 - Bite-size lessons grouped into units and chapters, so progress feels natural.
@@ -42,12 +51,14 @@ HOW IT WORKS
 - Connect with friends, follow their progress, and cheer each other on.
 
 WHY DHATU
+- Culture at its heart: understand the people, places, and history behind the
+  words, not just the vocabulary.
 - Completely free. No ads, no paywalls, no upsells.
 - Built for real comprehension, not just matching games - later lessons drop the
   training-wheel romanization so you actually read Gujarati.
 - Respectful, culturally grounded content.
 
-Sign in with your Google account to save your progress and sync across devices.
+Sign in to save your progress and sync across devices.
 
 Start today - your first lesson is one tap away.
 ```
