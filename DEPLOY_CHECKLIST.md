@@ -38,7 +38,7 @@ for nonprofits (Google for Nonprofits; Apple's nonprofit fee waiver).
 - [ ] Accept **Play App Signing** enrollment when prompted.
 - [ ] **CRITICAL - Firebase SHA-1:** Play Console -> Setup -> App integrity ->
       copy the **App signing key SHA-1** -> add it as a fingerprint to the
-      `app.dhatu.learning` app in the Firebase console. Without this, Google
+      `app.dhatu.gujarati` app in the Firebase console. Without this, Google
       sign-in fails for everyone who installs from Play.
 - [ ] Fill the listing from **PLAY_LISTING.md**; upload the icon + feature
       graphic from `assets/` (`play-store-icon-512.png`, `play-feature-1024x500.png`).
@@ -57,7 +57,7 @@ for nonprofits (Google for Nonprofits; Apple's nonprofit fee waiver).
       `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`.
 - [ ] `npm run build && npx cap sync ios && npx cap open ios` (this runs the
       `pod install` that could not run without CocoaPods).
-- [ ] Firebase console -> add an **iOS** app (bundle id `app.dhatu.learning`),
+- [ ] Firebase console -> add an **iOS** app (bundle id `app.dhatu.gujarati`),
       download **`GoogleService-Info.plist`**, drag it into the App target in Xcode.
 - [ ] Add the **`REVERSED_CLIENT_ID`** URL scheme (Info -> URL Types) for Google
       sign-in.

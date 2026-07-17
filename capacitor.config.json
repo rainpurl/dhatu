@@ -1,12 +1,12 @@
 {
-  "appId": "app.dhatu.learning",
+  "appId": "app.dhatu.gujarati",
   "appName": "Dhātu",
   "webDir": "dist",
   "backgroundColor": "#F3ECE6",
   "plugins": {
     "FirebaseAuthentication": {
       "skipNativeAuth": false,
-      "providers": ["google.com"]
+      "providers": ["google.com", "apple.com"]
     }
   }
 }

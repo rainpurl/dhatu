@@ -6,7 +6,7 @@ with native plugins (native Google sign-in, status bar) and full offline. It is 
 genuine `.aab` you upload to Google Play, not a shortcut to the website.
 
 What is already set up in this repo:
-- `capacitor.config.json` (appId `app.dhatu.learning`, appName Dhātu, `webDir: dist`).
+- `capacitor.config.json` (appId `app.dhatu.gujarati`, appName Dhātu, `webDir: dist`).
 - Capacitor + plugin deps in `package.json` (`@capacitor/core`, `/android`,
   `/cli`, `/app`, `/status-bar`, and `@capacitor-firebase/authentication`).
 - Native Google sign-in wired in `src/firebase.js`: on a native build it uses the
@@ -40,7 +40,7 @@ android`) these manual steps must be re-applied. They are what makes a working
 signed release build:
 
 1. **`android/app/google-services.json`** - downloaded from the Firebase Android
-   app (package `app.dhatu.learning`). Required; Firebase can't init without it.
+   app (package `app.dhatu.gujarati`). Required; Firebase can't init without it.
 2. **play-services-auth** - add to `android/app/build.gradle` `dependencies {}`:
    `implementation "com.google.android.gms:play-services-auth:20.7.0"`.
    REQUIRED: the Firebase-auth Google provider needs `GoogleSignIn`; without it
@@ -91,7 +91,7 @@ Play) and `.../apk/release/app-release.apk` (sideload test).
 
 3. **Register the app in Firebase (needed for native Google sign-in):**
    - Firebase console -> project **dhatu-9f586** -> Add app -> **Android**.
-   - Package name: **`app.dhatu.learning`** (must match `capacitor.config.json`).
+   - Package name: **`app.dhatu.gujarati`** (must match `capacitor.config.json`).
    - Add your signing **SHA-1** and **SHA-256** fingerprints. Get the debug one
      from Android Studio (Gradle tab -> `signingReport`) or:
      ```
@@ -145,11 +145,13 @@ export those from `public/logo.svg` / `public/icon-512.png`.)
    - Feature graphic 1024x500, and at least 2 phone screenshots (grab from the app).
    - Description: reuse the site copy.
    - **Privacy policy URL:** `https://dhatu.pages.dev/privacy.html`
-   - **Data safety** form: declare account info (name, email) + app activity,
-     stored via Firebase, used for sign-in and saving progress; not sold/shared.
-     The app records audio **only on-device** for the speaking exercises (mic
-     permission); no audio is uploaded or stored, so declare it as processed on
-     the device and not collected.
+   - **Data safety** form: use the paste-ready answers in **PLAY_LISTING.md**
+     (authoritative). In brief: account info (name, email) + app activity stored
+     via Firebase for sign-in and progress; not sold/shared. Speaking practice
+     records a short audio clip that IS sent to a speech-to-text service
+     (Cloudflare Whisper / Groq) to score pronunciation - declare Audio, processed
+     transiently, not stored. (The old "audio never leaves the device" note was
+     from before cloud STT; keep this consistent with privacy.html.)
    - **Permissions:** the store will show RECORD_AUDIO. It is used for
      pronunciation checking in the speaking exercises.
    - Content rating questionnaire, target audience.
@@ -173,7 +175,7 @@ and Apple Developer enrollment are in place, same idea as Google for Nonprofits.
 
 **Already scaffolded + applied on this machine (survives in the local `ios/`):**
 - `@capacitor/ios@6.2.1` installed (in `package.json`); iOS platform added via
-  `npx cap add ios` (appId `app.dhatu.learning`, display name `Dhātu`).
+  `npx cap add ios` (appId `app.dhatu.gujarati`, display name `Dhātu`).
 - **Permission strings** added to `ios/App/App/Info.plist` (REQUIRED - the app
   crashes / App Review rejects without them): `NSMicrophoneUsageDescription` and
   `NSSpeechRecognitionUsageDescription` (both needed for the speaking exercises:
@@ -192,7 +194,7 @@ and Apple Developer enrollment are in place, same idea as Google for Nonprofits.
    npx cap open ios
    ```
 3. **Firebase iOS app:** in the Firebase console add an **iOS** app (bundle id
-   `app.dhatu.learning`), download **`GoogleService-Info.plist`**, and drag it
+   `app.dhatu.gujarati`), download **`GoogleService-Info.plist`**, and drag it
    into the `App` target in Xcode (checked "Copy items if needed").
 4. **Google sign-in URL scheme:** open `GoogleService-Info.plist`, copy
    `REVERSED_CLIENT_ID`, and add it as a URL scheme under the target's

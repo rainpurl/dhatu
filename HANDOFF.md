@@ -542,13 +542,13 @@ Android app. Done this session:
 - Capacitor packages installed and used: `@capacitor/core|android|cli|app|
   status-bar`, `@capacitor-firebase/authentication`,
   `@capacitor-community/speech-recognition`, `capacitor-voice-recorder`.
-  `capacitor.config.json` appId `app.dhatu.learning`.
+  `capacitor.config.json` appId `app.dhatu.gujarati`.
 - **Native plugin imports are now bundled** (the old `@vite-ignore` dynamic imports
   were removed once the packages became real deps). `src/firebase.js` native Google
   sign-in and the speech plugins `import(...)` normally so the WebView resolves
   them; native paths are guarded by `window.Capacitor.isNativePlatform()`. Web build
   stays green (Cloudflare installs the deps too).
-- **Firebase Android app registered** (package `app.dhatu.learning`); its
+- **Firebase Android app registered** (package `app.dhatu.gujarati`); its
   `google-services.json` sits at `android/app/` (git-ignored).
 - **Crash fix (important):** the Firebase-auth Google provider needs
   **`play-services-auth`** (`implementation "com.google.android.gms:play-services-auth:20.7.0"`
@@ -586,7 +586,7 @@ builds stay free.
 1. **Owner: verify the Firestore rules are published** and create the **pokes
    composite index** for social features. Google sign-in is **enabled and working**
    (verified on web and in the native app; username claiming works, so Firestore +
-   basic rules are live), and `dhatu.pages.dev` + the `app.dhatu.learning` Android
+   basic rules are live), and `dhatu.pages.dev` + the `app.dhatu.gujarati` Android
    app are registered. Ensure AUTH.md's full rules block is applied (admin UIDs are
    set in `public/staff/index.html` and AUTH.md's `isAdmin()`); create the pokes
    index when Firestore prompts. Optional: set the OAuth consent **App name** to

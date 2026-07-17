@@ -1,6 +1,6 @@
 # App Store Connect listing + App Privacy - paste-ready copy
 
-App: **Dhātu** (Gujarati learning). Bundle id `app.dhatu.learning`. Free, no ads,
+App: **Dhātu** (Gujarati learning). Bundle id `app.dhatu.gujarati`. Free, no ads,
 no in-app purchases. Primary category: **Education**. Privacy policy:
 https://dhatu.pages.dev/privacy.html
 

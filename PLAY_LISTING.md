@@ -1,6 +1,6 @@
 # Google Play listing + Data Safety - paste-ready copy
 
-App: **Dhātu** (Gujarati learning). Package `app.dhatu.learning`. Free, no ads,
+App: **Dhātu** (Gujarati learning). Package `app.dhatu.gujarati`. Free, no ads,
 no in-app purchases. Category: **Education**. Contact: dhatulearning@katr.es.
 Privacy policy URL: https://dhatu.pages.dev/privacy.html
 
