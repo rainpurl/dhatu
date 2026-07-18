@@ -18,7 +18,7 @@ Dhatu: Learn Gujarati
 
 **Subtitle** (max 30 chars)
 ```
-Learn Gujarati + its culture
+Gujarati Language & Culture
 ```
 
 **Promotional Text** (max 170 chars, editable without a new build)
