@@ -1,0 +1,49 @@
+---
+// Reusable Zeffy embed. Drops a Zeffy form (shop, donation, or ticketing) into
+// the page as a responsive iframe so supporters never leave the site. The form
+// is live, so anything added or changed in the Zeffy dashboard shows up here
+// automatically. Kept deliberately plain (transparent, no hard frame) so a
+// Zeffy form whose colours are set to match the site reads as part of the page
+// rather than an embed. With `fill`, it sizes to the viewport (see shop.astro).
+interface Props {
+  src: string;
+  height?: number;
+  title?: string;
+  fill?: boolean;
+  eager?: boolean;
+  cropTop?: number;
+}
+const { src, height = 1100, title = "Powered by Zeffy", fill = false, eager = false, cropTop = 0 } = Astro.props;
+
+// When cropTop is set, grow the iframe by that many pixels and shift it up, so
+// the container's overflow:hidden clips that much off the top of the form. Used
+// to hide a heading we cannot remove from inside the cross-origin Zeffy frame.
+const iframeStyle = cropTop > 0
+  ? `position:absolute;border:0;left:0;right:0;top:-${cropTop}px;width:100%;height:calc(100% + ${cropTop}px)`
+  : `position:absolute;border:0;top:0;left:0;bottom:0;right:0;width:100%;height:100%`;
+---
+
+<div class={`zeffy-embed${fill ? " zeffy-embed--fill" : ""}`} style={fill ? undefined : `height:${height}px`}>
+  <iframe
+    title={title}
+    src={src}
+    loading={eager ? "eager" : "lazy"}
+    allowpaymentrequest
+    allowtransparency="true"
+    style={iframeStyle}
+  ></iframe>
+</div>
+
+<style>
+  .zeffy-embed {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: transparent;
+    border-radius: 10px;
+  }
+  .zeffy-embed--fill {
+    height: var(--zeffy-h, calc(100dvh - 84px));
+    border-radius: 0;
+  }
+</style>

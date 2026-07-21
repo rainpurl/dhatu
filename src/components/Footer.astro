@@ -1,0 +1,111 @@
+---
+import { BRAND, cdnUrl } from "../lib/brand";
+import ZeffyEmbed from "./ZeffyEmbed.astro";
+import footer from "../data/footer.json";
+const year = new Date().getFullYear();
+const socials = footer.socials;
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+---
+
+<footer class="ft">
+  <div class="wrap ft__inner">
+    <div class="ft__brand">
+      <span class="ft__mark" style={`background-image:url('${cdnUrl(BRAND.mark)}')`} aria-hidden="true"></span>
+      <div class="ft__sub">
+        <span class="ft__sub-l">Join our list</span>
+        <ZeffyEmbed
+          src="https://www.zeffy.com/en-US/embed/newsletter-form/subscribe-3"
+          height={240}
+          cropTop={60}
+          title="Join our list (newsletter powered by Zeffy)"
+        />
+      </div>
+    </div>
+
+    <nav class="ft__cols" aria-label="Footer">
+      {footer.columns.map((col) => (
+        <div class="ft__hidemobile">
+          <span class="tag">{col.title}</span>
+          {col.links.map((l) =>
+            isExternal(l.href) ? (
+              <a href={l.href} target="_blank" rel="noopener">{l.label}</a>
+            ) : (
+              <a href={l.href}>{l.label}</a>
+            )
+          )}
+        </div>
+      ))}
+      <div class="ft__follow">
+        <span class="tag">{footer.followTitle}</span>
+        {socials.map((s) => <a href={s.href} target="_blank" rel="noopener">{s.label}</a>)}
+      </div>
+    </nav>
+
+    <div class="ft__legal">
+      {footer.legal.map((p) => <p>{p}</p>)}
+      <p class="ft__copy">© {year} {footer.copyright}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ft { background: var(--navy); color: color-mix(in srgb, var(--paper) 82%, transparent); }
+  .ft__inner {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    grid-template-areas: "brand cols legal";
+    gap: 3rem; padding-block: 4rem 3rem; align-items: stretch;
+  }
+  .ft__brand { grid-area: brand; display: flex; flex-direction: column; gap: 1.2rem; }
+  .ft__mark {
+    width: var(--ft-mark-w, 200px); height: calc(var(--ft-mark-w, 200px) * 32 / 168);
+    background-size: 100% auto; background-repeat: no-repeat; background-position: left top;
+  }
+  .ft__cols { grid-area: cols; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .ft__cols > div { display: flex; flex-direction: column; gap: .6rem; }
+  .ft__cols .tag { margin-bottom: .5rem; }
+  .ft__cols a { color: color-mix(in srgb, var(--paper) 82%, transparent); font-size: .9rem; }
+  .ft__cols a:hover { color: var(--gold-soft); }
+  .ft__legal {
+    grid-area: legal; display: flex; flex-direction: column; gap: .5rem;
+    font-size: .72rem; line-height: 1.5; color: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+  @media (max-width: 900px) {
+    .ft__inner {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "brand cols"
+        "legal legal";
+    }
+  }
+  @media (max-width: 560px) {
+    .ft__inner {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "brand"
+        "cols"
+        "legal";
+      gap: 2rem;
+    }
+    .ft__cols { grid-template-columns: 1fr; }
+    .ft__hidemobile { display: none; }
+  }
+  .ft__sub { margin-top: auto; max-width: 320px; }
+  .ft__sub-l { display: block; font-size: .8rem; color: var(--gold-soft); margin-bottom: .4rem; font-weight: 600; }
+  .ft__sub-row { display: flex; gap: .4rem; }
+  .ft__sub input[type="email"] {
+    flex: 1; min-width: 0; padding: .55rem .7rem; border-radius: 6px; border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent);
+    background: color-mix(in srgb, var(--paper) 8%, transparent); color: var(--paper); font: inherit; font-size: .9rem;
+  }
+  .ft__sub input::placeholder { color: color-mix(in srgb, var(--paper) 45%, transparent); }
+  .ft__sub button {
+    padding: .55rem 1rem; border-radius: 6px; border: none; background: var(--terracotta); color: #fff; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  .ft__sub button:hover { background: var(--gold); color: var(--ink); }
+  .ft__hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .ft__sub-msg { font-size: .82rem; margin-top: .5rem; color: var(--gold-soft); min-height: 1.1em; }
+  .ft__sub-msg:empty { min-height: 0; margin-top: 0; }
+  .ft__copy { margin-top: auto; padding-top: .6rem; }
+</style>
+
+

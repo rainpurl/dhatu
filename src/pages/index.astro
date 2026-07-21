@@ -1,0 +1,388 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ZeffyEmbed from "../components/ZeffyEmbed.astro";
+import { getCollection } from "astro:content";
+import { BRAND, cdnUrl } from "../lib/brand";
+export const prerender = true;
+
+const featuredProjects = (await getCollection("projects"))
+  .map((e) => ({ id: e.id, ...e.data }))
+  .sort((a, b) => (a.num > b.num ? 1 : a.num < b.num ? -1 : 0));
+
+const posts = (await getCollection("blog", (p) => !p.data.draft))
+  .sort((a, b) => +b.data.date - +a.data.date)
+  .slice(0, 5);
+
+const events = (await getCollection("events"))
+  .filter((e) => e.data.start >= new Date())
+  .sort((a, b) => +a.data.start - +b.data.start);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+---
+
+<Layout>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div class="hero__text">
+        <h1 class="hero__title rise rise-2">
+          <span data-txtslot="home.heroTitleLine1">Indian diasporic art,</span><br /><em data-txtslot="home.heroTitleLine2">divinely gathered.</em>
+        </h1>
+        <p class="hero__lede rise rise-3" data-txtslot="home.heroLede" data-rich>
+          House of Devi, an initiative of Dalwadi Foundation (501c3), is an arts focused platform
+          dedicated to showcasing Indian diasporic art and to cultivating meaningful engagement
+          with art through the framework of the divine feminine.
+        </p>
+        <div class="hero__cta rise rise-4">
+          <button class="btn btn--primary" type="button" id="subToggle" aria-expanded="false" aria-controls="subPanel">Subscribe</button>
+          <a class="btn btn--ghost" href="/about-us" data-linkslot="home.heroBtn2">Our story</a>
+        </div>
+      </div>
+      <div class="hero__mark rise rise-3" aria-hidden="true">
+        <div class="hero__logo" style={`background-image:url('${cdnUrl(BRAND.hero)}')`}></div>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero__sub" id="subPanel">
+        <ZeffyEmbed
+          src="https://www.zeffy.com/en-US/embed/newsletter-form/subscribe-3"
+          height={600}
+          title="Subscribe to House of Devi (newsletter powered by Zeffy)"
+          eager
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- DEVOTION -->
+  <section class="section devotion">
+    <div class="wrap split">
+      <span class="eyebrow">Devotion Statement</span>
+      <h2 class="split__head" data-txtslot="home.devotionHead">
+        We create space for South Asian art and the people who are drawn to it.
+      </h2>
+      <p class="split__body" data-txtslot="home.devotionBody" data-rich>
+        We support artists, bring collectors into the conversation, and create events that help
+        people connect to art in a way that feels personal and culturally relevant. Rooted in the
+        divine feminine, this is more than a gallery, it's a space for memory, ritual, and
+        transformation.
+      </p>
+    </div>
+  </section>
+
+  <!-- PROJECTS (pinned horizontal scroll) -->
+  <section class="hsec cream2" id="projHsec" data-carousel-key="projects">
+    <div class="hsec__pin">
+      <div class="wrap hsec__head">
+        <div class="rowhead">
+          <span class="eyebrow">Projects</span>
+        </div>
+        <p class="projlede">
+          House of Devi projects are where our vision becomes practice, exhibitions, artist
+          directories, public art mapping, community forums, and cultural gatherings that build a
+          stronger ecosystem for Indian diasporic and South Asian art in Houston.
+        </p>
+      </div>
+      <div class="hsec__vp" id="projVp">
+        <div class="hsec__row" id="projRow">
+          {
+            featuredProjects.map((p) => (
+              <a
+                class="ptile hcard"
+                href={p.subpage ? `/projects/${p.id}` : p.href}
+                {...(!p.subpage && p.external ? { target: "_blank", rel: "noopener" } : {})}
+              >
+                <div
+                  class:list={["ptile__art", `tint${p.tint}`, p.cover && "has-img"]}
+                  style={p.cover ? `background-image:url('${cdnUrl(p.cover)}')` : undefined}
+                >
+                  <span>{p.art}</span>
+                </div>
+                <div class="ptile__body">
+                  <span class="ptile__num">{p.num}</span>
+                  <h3 class="ptile__title">{p.title}</h3>
+                </div>
+              </a>
+            ))
+          }
+          <a class="ptile hcard jr-cta" href="/projects" data-cursor="See more">
+            <span class="jr-cta__txt">See more →</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS (pinned horizontal scroll, upcoming only) -->
+  {
+    events.length > 0 && (
+      <section class="hsec hsec--cream" id="evHsec" data-carousel-key="events">
+        <div class="hsec__pin">
+          <div class="wrap hsec__head">
+            <div class="rowhead">
+              <span class="eyebrow">Upcoming</span>
+            </div>
+          </div>
+          <div class="hsec__vp" id="evVp">
+            <div class="hsec__row" id="evRow">
+              {events.map((e) => (
+                <a class="ecard hcard" href="/events">
+                  {e.data.cover
+                    ? <img class="ecard__media" src={cdnUrl(e.data.cover)} alt={e.data.title} />
+                    : <div class="ecard__media imgph" aria-hidden="true" />}
+                  <div class="ecard__body">
+                    <span class="tag">{fmt(e.data.start)} · {e.data.venue}</span>
+                    <h3>{e.data.title}</h3>
+                    <p>{e.data.summary}</p>
+                  </div>
+                </a>
+              ))}
+              <a class="ecard hcard jr-cta" href="/events" data-cursor="See past events">
+                <span class="jr-cta__txt">See past events →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- JOURNAL (pinned horizontal scroll, 5 most recent + view-all) -->
+  <section class="hsec cream2" id="jrHsec" data-carousel-key="journal">
+    <div class="hsec__pin">
+      <div class="wrap hsec__head">
+        <div class="rowhead">
+          <span class="eyebrow">Cultural Conversations</span>
+        </div>
+      </div>
+      <div class="hsec__vp" id="jrVp">
+        <div class="hsec__row" id="jrRow">
+          {
+            posts.map((p) => (
+              <a class="pcard hcard" href={`/blog/${p.id}`}>
+                {p.data.cover
+                  ? <img class="pcard__media" src={cdnUrl(p.data.cover)} alt={p.data.title} />
+                  : <div class="pcard__media imgph" aria-hidden="true" />}
+                <h3>{p.data.title}</h3>
+                <p>{p.data.excerpt}</p>
+                <span class="pcard__more">Continue reading →</span>
+              </a>
+            ))
+          }
+          <a class="pcard hcard jr-cta" href="/blog" data-cursor="View Journal">
+            <span class="jr-cta__txt">View the full journal →</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="section quote">
+    <div class="wrap center">
+      <p class="quote__text" data-txtslot="home.quoteText">
+        "Art is the language of the soul, and we are here to ensure every South Asian story finds
+        its voice."
+      </p>
+      <span class="quote__by" data-txtslot="home.quoteBy">House of Devi</span>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero { padding-block: clamp(1.5rem, 3.5vw, 3rem) clamp(2rem, 5vw, 4rem); }
+  .hero__grid { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 3rem; }
+  .hero__title { font-size: clamp(3rem, 9vw, 6.6rem); margin: 1.2rem 0; }
+  .hero__title em { color: var(--terracotta); font-style: normal; }
+  .hero__lede { font-size: 1.15rem; max-width: 46ch; margin-bottom: 2rem; }
+  .hero__cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .hero__sub {
+    max-width: 520px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height .42s ease, opacity .32s ease;
+  }
+  .hero__sub .zeffy-embed { margin-top: 1.6rem; }
+  .hero__sub.is-open { max-height: 780px; opacity: 1; }
+  .hero__mark { display: grid; place-items: center; }
+  .hero__logo { width: min(var(--hero-logo-w, 380px), 72vw); aspect-ratio: 1; border-radius: 12px; background-size: contain; background-repeat: no-repeat; background-position: center; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 4rem; align-items: start; }
+  .devotion {
+    background-color: var(--cream);
+    background-image: linear-gradient(rgba(242, 232, 212, 0.82), rgba(242, 232, 212, 0.82)),
+      url("/cdn/media/inacircle.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .split .eyebrow { grid-column: 1 / -1; }
+  .split__head { font-size: clamp(1.8rem, 4vw, 3rem); }
+  .split__body { font-size: 1.1rem; align-self: center; }
+
+  .heart { background: var(--cream-deep); }
+  .heart__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+  .heart h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); }
+  .heart p { margin-bottom: 1.5rem; font-size: 1.08rem; }
+
+  .rowhead { display: flex; align-items: baseline; justify-content: center; margin-bottom: 2.5rem; gap: 1rem; flex-wrap: wrap; }
+  .rowhead .eyebrow::before { display: none; }
+  .rowhead__link { font-weight: 600; font-size: .85rem; }
+  .cards3 { grid-template-columns: repeat(3, 1fr); }
+
+  .ecard, .pcard {
+    display: flex; flex-direction: column; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line); border-radius: 6px; overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .ecard:hover, .pcard:hover { transform: translateY(-5px); box-shadow: 0 24px 50px -28px rgba(44,21,16,.4); }
+  .ecard__media, .pcard__media {
+    aspect-ratio: 16/10;
+    
+    position: relative;
+  }
+  img.ecard__media, img.pcard__media { width: 100%; object-fit: cover; object-position: center; display: block; }
+  .ecard__body { padding: 1.4rem; display: flex; flex-direction: column; gap: .5rem; }
+  .ecard h3, .pcard h3 { font-size: 1.3rem; }
+  .pcard { padding: 0; }
+  .pcard h3 { padding: 1.4rem 1.4rem 0; }
+  .pcard p { padding: .5rem 1.4rem 0; }
+  .pcard__more { padding: 1rem 1.4rem 1.4rem; font-weight: 600; font-size: .82rem; color: var(--terracotta); margin-top: auto; }
+  .ecard p { color: var(--ink-soft); font-size: .95rem; }
+
+  .cream2 { background: var(--cream-deep); }
+  .projlede { max-width: 72ch; margin-bottom: 2.4rem; color: var(--ink-soft); font-size: 1.05rem; line-height: 1.8; }
+  .quote {
+    background-color: var(--navy);
+    background-image: linear-gradient(rgba(57, 69, 94, 0.72), rgba(57, 69, 94, 0.72)),
+      url("/cdn/media/screenshot-2026-06-07-160312-mq4culhrobeh.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .quote__text { font-family: var(--display); font-size: clamp(1.6rem, 4vw, 2.6rem); color: var(--paper); max-width: 22ch; margin: 0 auto 1rem; line-height: 1.2; }
+  .quote__by { color: var(--gold-soft); letter-spacing: .1em; font-size: .85rem; }
+
+  @media (max-width: 860px) {
+    .hero__grid, .split, .heart__inner { grid-template-columns: 1fr; }
+    .hero__mark { order: -1; }
+    .cards3 { grid-template-columns: 1fr; }
+  }
+
+  /* Pinned horizontal projects scroller */
+  .hsec { position: relative; background: var(--cream-deep); }
+  .hsec__pin { padding-block: clamp(2.5rem, 6vw, 5rem); }
+  .hsec__head { margin-bottom: 2rem; }
+  .hsec__head .projlede { margin-bottom: 0; }
+  .hsec__vp { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .hsec__vp::-webkit-scrollbar { display: none; }
+  .hsec__row { display: flex; gap: clamp(1.2rem, 2.5vw, 2.2rem); padding-inline: var(--pad-x, 24px); width: max-content; margin-inline: auto; }
+  .hcard { flex: 0 0 clamp(255px, 26vw, 360px); width: clamp(255px, 26vw, 360px); }
+  .hsec--cream { background: var(--cream); }
+  .jr-cta { background: var(--terracotta); border-color: var(--terracotta); align-items: center; justify-content: center; text-align: center; padding: 2rem; }
+  .jr-cta:hover { background: var(--gold); border-color: var(--gold); }
+  .jr-cta:hover .jr-cta__txt { color: var(--ink); }
+  .jr-cta__txt { color: var(--paper); font-family: var(--display); font-size: 1.5rem; line-height: 1.3; transition: color .2s ease; }
+
+  /* When JS pins the section, it gets a tall height and the inner stays put. */
+  .hsec.is-pinned .hsec__pin {
+    position: sticky; top: 0; height: 100vh; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: center; gap: 1rem;
+    padding-block: 0;
+  }
+  .hsec.is-pinned .hsec__vp { overflow: hidden; }
+  .hsec.is-pinned .hsec__row { will-change: transform; }
+</style>
+
+<script>
+  (function () {
+    const mqWide = window.matchMedia("(min-width: 860px)");
+    const mqMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const scrollers = [];
+    document.querySelectorAll(".hsec").forEach(function (sec) {
+      const vp = sec.querySelector(".hsec__vp");
+      const row = sec.querySelector(".hsec__row");
+      if (vp && row) scrollers.push({ sec: sec, vp: vp, row: row, dist: 0 });
+    });
+    if (!scrollers.length) return;
+
+    function measure() {
+      const enable = mqWide.matches && !mqMotion.matches;
+      scrollers.forEach(function (s) {
+        s.sec.classList.remove("is-pinned");
+        s.sec.style.height = "";
+        s.row.style.transform = "";
+        s.dist = enable ? Math.max(0, s.row.scrollWidth - s.vp.clientWidth) : 0;
+        if (enable && s.dist > 0) {
+          s.sec.classList.add("is-pinned");
+          s.sec.style.height = window.innerHeight + s.dist + "px";
+        }
+      });
+      update();
+    }
+
+    function update() {
+      scrollers.forEach(function (s) {
+        if (!s.sec.classList.contains("is-pinned")) return;
+        const top = s.sec.getBoundingClientRect().top;
+        const scrolled = Math.min(Math.max(-top, 0), s.dist);
+        s.row.style.transform = "translate3d(" + -scrolled + "px,0,0)";
+      });
+    }
+
+    let ticking = false;
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(function () {
+            update();
+            ticking = false;
+          });
+        }
+      },
+      { passive: true }
+    );
+
+    let rt;
+    function reflow() {
+      clearTimeout(rt);
+      rt = setTimeout(measure, 150);
+    }
+    window.addEventListener("resize", reflow);
+    mqWide.addEventListener("change", measure);
+    mqMotion.addEventListener("change", measure);
+    window.addEventListener("load", measure);
+    measure();
+  })();
+</script>
+
+<script>
+  import { applyPageContent } from "../lib/page-content";
+  applyPageContent();
+</script>
+
+<script>
+  (function () {
+    const btn = document.getElementById("subToggle");
+    const panel = document.getElementById("subPanel");
+    if (!btn || !panel) return;
+    btn.addEventListener("click", function () {
+      const opening = !panel.classList.contains("is-open");
+      panel.classList.toggle("is-open", opening);
+      btn.setAttribute("aria-expanded", opening ? "true" : "false");
+      if (opening) panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+    // The pinned horizontal scrollers below the hero cache their offsets from
+    // page height, so re-measure once the expand/collapse finishes.
+    panel.addEventListener("transitionend", function (e) {
+      if (e.propertyName === "max-height") {
+        try { window.dispatchEvent(new Event("resize")); } catch (err) {}
+      }
+    });
+  })();
+</script>
